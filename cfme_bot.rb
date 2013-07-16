@@ -2,112 +2,106 @@
 
 require 'grit'
 require 'timers'
-INTERVAL = 300
-PAGE_SIZE = 3
-REPOSITORY_BASE = "/Users/mysorota/dev/"
+require 'yaml'
+SLEEPTIME = 180
+PAGE_SIZE = 5
+REPOSITORY_BASE = "/Users/bronaghsorota/dev/"
 
 class Bot
   def initialize
-    @repo_branches = { "cfme" =>['master', '5.1.0.x', '5.2.0.x']}
-		       #"cfme_tools" =>['master']}
+    @repo_branches = { "cfme" =>['master', '5.1.0.x', '5.2.0.x'],
+		       "cfme_tools" =>['master']}
     @last_fetch_times = Hash.new
+    load_yaml_file
   end
 
   def get_commit_details
-    @repo_branches.each do |repository_name, branches|
-      repository = "#{REPOSITORY_BASE}" "#{repository_name}"
+    @repo_branches.each do |repo_name, branches|
+      repository = make_repo_path(repo_name)
       branches.each do |branch|
-
-        puts "REPO: #{repository_name}"
-	puts "BRANCH: #{branch}"
         page_start = 0
-        complete = :false
+        complete = false
+	make_repo_path(repo_name)
 
         repo = Grit::Repo.new(repository)
-	do_checkout_and_pull(repository, branch)
-	key = "#{repository_name} - #{branch}"
+	#do_checkout_and_pull(repository, branch)
 
-        while complete == :false do 
-          puts "START POINT #{page_start}"
+	Grit::Repo.new(repository).git.checkout
+	Grit::Repo.new(repository).git.pull
+
+	key = make_key(repo_name, branch)
+        while !complete do 
 	  commits = repo.commits(branch, PAGE_SIZE, page_start )
-	  if commits.empty?
-	    complete = :true
-	  end
-	  puts "TOTAL PAGE COMMITS #{commits.count}"
+	  complete = commits.empty?	  
 	  commits.each do |commit| 
-	    puts "COMMIT DATE #{commit.committed_date}"
-	    puts "Last fetch time: #{within_interval_range?(key)}"
-
-	    if commit.committed_date >=within_interval_range?(key)
-	      print_commit(commit)
-	      match = commit.message.match(/(?<=Bug[\s.])[0-9]+/)
-	      if match
-	        puts "BUG ID #{match[0]}"
-	      end
+	    if commit.committed_date >= within_interval_range?(key)
+	      puts #{key}
+	      process_commit(commit)
 	    else 
-	      puts "COMMIT OUTSIDE WINDOW. BAILING ON THIS PAGE"
-	      complete= :true
+	      complete = true
 	      break
-	    end # end of if
-	  end #end of looping through this page of commits
-	  puts "\n\n"
-	  page_start +=PAGE_SIZE
-        end   #end of while loop
-	@last_fetch_times[key]= Time.now
-	puts "Last fetch times:  #{@last_fetch_times.inspect}"
-      end  # end of looping through branches
-    end # end of looping through repos
+	    end
+	  end 
+	  page_start += PAGE_SIZE
+        end  
+	add_and_yaml_timestamps(key)
+      end  
+    end 
+    sleep(SLEEPTIME)
+  end
 
-    sleep(180)
+  def process_commit(commit)
+    print_commit(commit)
+    match = commit.message.match(/(?<=Bug[\s.])[0-9]+/)
   end
 
   def print_commit(commit)
     puts "commit id:\t#{commit.id} \n"
-    puts "commit author:\t#{commit.author}"
-    puts "authored date:\t #{commit.authored_date}"
     puts "committer:\t#{commit.committer}"
     puts "committed date:\t#{commit.committed_date}"
     puts "message:\t#{commit.message}"
+    puts "\n"
     puts "\n"
   end
 end
 
 def within_interval_range?(key)
-  if @last_fetch_times.include?(key) == false
-    last_fetch_time = Time.now() - 600
-  else
-    last_fetch_time = @last_fetch_times[key]
-  end
-  #return last_fetch_time
+  @last_fetch_times[key] || Time.now - 600 
+end
+
+def make_key(repo_name, branch)
+  "#{repo_name}-#{branch}"	
+end
+
+def make_repo_path(repo_name)
+  File.join(REPOSITORY_BASE, repo_name)
+end
+
+def add_and_yaml_timestamps(key)
+  @last_fetch_times[key] = Time.now
+    File.open("cfme_bot.yml", 'w+') {|f| f.write(@last_fetch_times.to_yaml) }
 end
 
 def do_checkout_and_pull(repository, branch)
+  puts %x{pwd}
+  Dir.chdir(repository) do
+    puts %x{pwd}
+    puts %x{git checkout #{branch}}
+    puts %x{git pull}
+  end
+  puts %x{pwd}
+end
 
-  puts "#{%x'pwd'}"
+def load_yaml_file
+  # We store the last time a branch was monitored for commits
+  # We store this in a yaml file so should the BOT be restarted
+  # we know exactly when to monitor a branch from
 
-  Dir.chdir(repository){
-    puts "#{%x'pwd'}"
-    puts "#{%x"git checkout #{branch}"}"
-    puts "#{%x'git pull'}"
-  }
-  puts "#{%x'pwd'}"
+  times = YAML.load_file('cfme_bot.yml')
 end
 
 bot = Bot.new
-
 loop {
   bot.get_commit_details
 }
 
-
-
-	#commit_list = repo.git.rev_list({:pretty => "raw", :since=>'2013-06-24 15:25:55'}, 'master') #Get a stack eror on this even with the since parameter set.
-	#commits = Grit::Commit.list_from_string(repo, commit_list)
-
-	
-	#commits = repo.commits_since(branch, @fetch_from_time) #THIS DOESNT WORK ON CFME
-        #commits = repo.commits(branch)   #THIS WORKS ON CFME, GRABS ALL
-
-        #repo.git.native :checkout, {}, branch
-	#      repo.git.native(:checkout, {}, branch)
-        #repo.git.native(:pull, {})
