@@ -24,13 +24,18 @@ class Bot
 	make_repo_path(repo_name)
 
         repo = Grit::Repo.new(repository)
-	#do_checkout_and_pull(repository, branch)
-
 	Grit::Repo.new(repository).git.checkout
 	Grit::Repo.new(repository).git.pull
 
 	key = make_key(repo_name, branch)
         while !complete do 
+
+	  # Get the list of commits on this repo and branch
+	  # and pull out the bug ID, then update the ticket in 
+	  # Bugzilla
+	  # We need to get the results in pages, otherwise 
+	  # the grit::commits method errors out
+
 	  commits = repo.commits(branch, PAGE_SIZE, page_start )
 	  complete = commits.empty?	  
 	  commits.each do |commit| 
