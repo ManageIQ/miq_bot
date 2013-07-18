@@ -44,7 +44,6 @@ class Bot
         add_and_yaml_timestamps(key)
       end  
       sleep(SLEEPTIME)
-      puts "\n\n"
     end
   end
 
