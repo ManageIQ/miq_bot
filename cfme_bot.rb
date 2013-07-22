@@ -62,36 +62,35 @@ class Bot
     puts "\n"
   end
 
+  # Get commits for a page
+  #
+  # page_start: Initialized to 0 and increased by PAGE_SIZE
+  # each time we move to a new page. This means the first page 
+  # processed will be the first 5 commits (0-4 inclusive). 
+  # The second page of commits will be the next 5 commits 
+  # (5-9 inclusive) etc. Results are returned in chronological order so
+  # as soon as we reach a commit that was made before time of the
+  # last check we know we have captured all the relevant commits.
+  #
+  # Returns true to indicate we have processed all the commits
+  # for this time window, either none were returned or we have
+  # come across one that was already processed.
   def get_commits(repo, branch, key, page_start)
     # NOTE : We need to get the results in pages, otherwise 
     # the grit::commits method errors out.
 
-    # page_start is initialized to 0 and increased by PAGE_SIZE
-    # each time we move to a new page. This means the first page 
-    # processed will be the first 5 commits (0-4 inclusive). 
-    # The second page of commits will be the next 5 commits 
-    # (5-9 inclusive) etc. Results are returned in chronological order so
-    # as soon as we reach a commit that was made before time of the
-    # last check we know we have captured all the relevant commits.
-
     commits = repo.commits(branch, PAGE_SIZE, page_start )
-    complete = false
-
-    # the complete variable indicates we have processed all
-    # the commits for this time window, either none were 
-    # returned or we have come across one that was already
-    # processed.
    
     commits.each do |commit| 
       if commit.committed_date < within_interval_range?(key)
-        complete
-        break
+        return true
       else 
-        puts #{key}
+        puts key
         process_commit(commit)
-        !complete
       end
-    end 
+    end
+
+    return false
   end
 
   def within_interval_range?(key)
