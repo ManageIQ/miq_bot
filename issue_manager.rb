@@ -22,10 +22,10 @@ class IssueManager
       @timestamps = Hash.new(0)
     end
     load_permitted_labels("MANAGEIQ/sandbox")
+    load_organization_members
   end
 
   def get_notifications
-    puts "get_notifications"
     notifications = client.repository_notifications("ManageIQ/sandbox", "all" => false)
     notifications.each do |notification|
       process_notification(notification)
@@ -41,10 +41,10 @@ class IssueManager
   end
 
   def load_permitted_labels(repo)
-    permitted_labels ||= {}
+    @permitted_labels ||= Set.new
     labels = client.labels(repo)
     labels.each do |label|
-      permitted_labels[label.name] = 0
+      @permitted_labels.add(label.name)
     end
   end
 
@@ -116,7 +116,6 @@ class IssueManager
     # than the one in the hash/yaml for this issue 
 
   def process_comment(comment, issue, repo)
-    print_comment(comment)
     last_comment_timestamp = @timestamps[issue.number] || 0  
 
     if last_comment_timestamp != 0 && last_comment_timestamp >= comment.updated_at
@@ -144,12 +143,6 @@ class IssueManager
     else
       self.send(method_name, repo, issue, command_value)
     end
-    add_and_yaml_timestamps(issue.number, comment.updated_at)       
-  end
-
-
-  def parse_command_value(comment)
-    
   end
 
   def assign_to_issue(repo, issue, assign_to_user)
@@ -166,17 +159,24 @@ class IssueManager
        add_assignee_comment(repo, issue, assign_to_user)
        return
     end
- 
-    if user.login.nil? || user.company.nil? 
+    if check_user_organization(user)
+      client.update_issue(repo, issue.number, issue.title, issue.body, "assignee" => assign_to_user)
+    else
       add_assignee_comment(repo, issue, assign_to_user)
-      return
     end
+  end
 
-    if user.company.downcase.delete(' ') != "redhat"
-      add_assignee_comment(repo, issue, assign_to_user)
-      return
+  def check_user_organization(user)
+    @organization_members.include?(user.login)
+  end
+
+  def load_organization_members
+    @organization_members = Set.new
+
+    members_array = client.organization_members("ManageIQ")
+    members_array.collect do |members_hash|
+      @organization_members.add(members_hash["login"])
     end
-    client.update_issue(repo, issue.number, issue.title, issue.body, "assignee" => assign_to_user)
   end
 
   def remove_labels_from_issue(repo, issue, command_value)
@@ -206,23 +206,9 @@ class IssueManager
     end
   end
 
-
   def add_assignee_comment(repo, issue, assign_to_user)
     message = "Assignee #{assign_to_user} is an invalid user."
     client.add_comment(repo, issue.number, message)
-  end
-
-
-  def check_user_organization(user)
-    oragnization_members.include?(user)
-  end
-
-  def oragnization_members
-    members_array = client.organization_members("ManageIQ")
-    member_names = members_array.collect do |members_hash|
-      members_hash["username"]
-    end
-    Set.new(member_names)
   end
 
   def add_labels_to_an_issue(repo, issue, command_value)
@@ -233,7 +219,8 @@ class IssueManager
     allowed_labels    = Array.new
 
     new_labels.each do |new_label|
-      if !permitted_labels[new_label]
+      if !check_permitted_label(new_label)
+
         message << " " << new_label << ","
         next
       else
@@ -248,6 +235,10 @@ class IssueManager
     if !allowed_labels.empty?
       client.add_labels_to_an_issue(repo, issue.number, allowed_labels)
     end
+  end
+
+  def check_permitted_label(new_label)
+    @permitted_labels.include?(new_label)
   end
 
   def mark_thread_as_read(thread_id)
