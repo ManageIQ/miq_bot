@@ -17,6 +17,7 @@ class IssueManager
     "rm_label"     => :remove_labels_from_issue,
     "remove_label" => :remove_labels_from_issue,
     "assign"       => :assign_to_issue,
+    "set_milestone" => :set_milestone
   }
 
   def initialize
@@ -26,6 +27,7 @@ class IssueManager
     get_credentials
     load_permitted_labels(REPO)
     load_organization_members
+    load_milestones(REPO)
   end
 
   def print_error(msg)
@@ -64,6 +66,14 @@ class IssueManager
     labels = client.labels(repo)
     labels.each do |label|
       @permitted_labels.add(label.name)
+    end
+  end
+
+  def load_milestones(repo)
+    @milestones = {}
+    defined_milestones = client.list_milestones(repo)
+    defined_milestones.each do |milestone|
+      @milestones[milestone.title] = milestone.number
     end
   end
 
@@ -193,6 +203,12 @@ class IssueManager
       add_assignee_comment(repo, issue, assign_to_user)
     end
   end
+
+
+  def set_milestone(repo, issue, milestone)  
+    client.update_issue(repo, issue.number, issue.title, issue.body, "milestone" => @milestones[milestone].to_i)
+  end
+
 
   def check_user_organization(user)
     @organization_members.include?(user.login)
