@@ -125,23 +125,29 @@ class IssueManager
     # bot command or not, we need to update the yaml file so next time we 
     # pull in the comments we can skip this one.
 
-    add_and_yaml_timestamps(issue.number, comment.updated_at)       
+    add_and_yaml_timestamps(issue.number, comment.updated_at)   
+    lines = comment.body.split("\n")    
+    lines.each do |line|
 
-    match = comment.body.match(/^@cfme-bot\s+([-@a-z0-9_]+)\s+/i)
-    return unless match
-    command = match.captures.first
-    command_value = match.post_match
+      match = line.match(/^@cfme-bot\s+([-@a-z0-9_]+)\s+/i)
+      if !match
+        next 
+      end
 
-    method_name = COMMANDS[command]
-    if method_name.nil?
+      command = match.captures.first
+      command_value = match.post_match
 
-      # How to distinguish between the a typo in a command that needs reported back
-      # to the user and just a regular comment that starts with @cfme-bot...?
-      # client.add_comment(repo, issue.id, "invalid command #{command}, ignoring.")
+      method_name = COMMANDS[command]
+      if method_name.nil?
 
-      return
-    else
-      self.send(method_name, repo, issue, command_value)
+        # How to distinguish between the a typo in a command that needs reported back
+        # to the user and just a regular comment that starts with @cfme-bot...?
+        # client.add_comment(repo, issue.id, "invalid command #{command}, ignoring.")
+
+        next
+      else
+        self.send(method_name, repo, issue, command_value)
+      end
     end
   end
 
@@ -218,9 +224,11 @@ class IssueManager
     new_labels_length = new_labels.length
     allowed_labels    = Array.new
 
-    new_labels.each do |new_label|
-      if !check_permitted_label(new_label)
 
+    new_labels.each do |new_label|
+      new_label = new_label.strip
+
+      if !check_permitted_label(new_label)
         message << " " << new_label << ","
         next
       else
