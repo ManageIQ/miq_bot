@@ -3,8 +3,12 @@ require 'bundler/setup'
 require 'octokit'
 require 'yaml'
 require 'time'
-SLEEPTIME = 5
-YAML_FILE = File.join(File.dirname(__FILE__), '/issue_manager.yml')
+
+SLEEPTIME   = 5
+YAML_FILE   = File.join(File.dirname(__FILE__), '/issue_manager.yml')
+CREDENTIALS_YAML_FILE = File.join(File.dirname(__FILE__), '/issue_manager_credentials.yml')
+REPO          = "MANAGEIQ/sandbox"
+ORGANIZATION  = "ManageIQ"
 
 class IssueManager
 
@@ -15,18 +19,33 @@ class IssueManager
     "assign"       => :assign_to_issue,
   }
 
-
   def initialize
     @timestamps = load_yaml_file
-    if !@timestamps
-      @timestamps = Hash.new(0)
-    end
-    load_permitted_labels("MANAGEIQ/sandbox")
+    @timestamps ||= Hash.new(0)
+
+    get_credentials
+    load_permitted_labels(REPO)
     load_organization_members
   end
 
+  def print_error(msg)
+    puts msg
+  end
+
+  def get_credentials
+    @credentials = load_credentials_yaml_file
+    @username = @credentials["username"] 
+    @password = @credentials["password"]
+
+    if @username.nil? || @password.nil?
+      #TODO: LOGGING WILL BETTER HANDLE THIS ERROR
+      print_error ("Incorrect credentials. Exiting..") 
+      exit 1
+    end
+  end
+
   def get_notifications
-    notifications = client.repository_notifications("ManageIQ/sandbox", "all" => false)
+    notifications = client.repository_notifications(REPO, "all" => false)
     notifications.each do |notification|
       process_notification(notification)
     end
@@ -37,7 +56,7 @@ class IssueManager
   attr_accessor :permitted_labels
 
   def client
-    @client ||= Octokit::Client.new(:login => "xxxxxx", :password => "xxxxxx", :auto_traversal => true)
+    @client ||= Octokit::Client.new(:login => @username, :password => @password, :auto_traversal => true)
   end
 
   def load_permitted_labels(repo)
@@ -56,15 +75,15 @@ class IssueManager
   end
 
   def add_label(issue_id, labels)
-    client.add_labels_to_an_issue("ManageIQ/sandbox", issue_id, labels)
+    client.add_labels_to_an_issue(REPO, issue_id, labels)
   end
 
   def remove_label(issue_id, label)
-    client.remove_label("ManageIQ/sandbox", issueID, label)
+    client.remove_label(REPO, issueID, label)
   end
 
   def get_issue_comments(issue_id)
-    client.issue_comments("ManageIQ/sandbox", issue_id)
+    client.issue_comments(REPO, issue_id)
   end
 
   def find_issue(repository, issue_id)
@@ -182,7 +201,7 @@ class IssueManager
   def load_organization_members
     @organization_members = Set.new
 
-    members_array = client.organization_members("ManageIQ")
+    members_array = client.organization_members(ORGANIZATION)
     members_array.collect do |members_hash|
       @organization_members.add(members_hash["login"])
     end
@@ -257,7 +276,7 @@ class IssueManager
   end
 
   def split(labels)
-    labels.split(", ")
+    labels.split(/,* \s*/)
   end
 
   def add_and_yaml_timestamps(key, updated_at)
@@ -276,16 +295,26 @@ class IssueManager
       retry       
     end 
   end
+
+  def load_credentials_yaml_file
+    begin
+      @credentials = YAML.load_file(CREDENTIALS_YAML_FILE)
+    rescue Errno::ENOENT
+      puts "No issue_manager_credentials.yml found. Exiting..."
+      # TODO: LOGGING WILL BETTER HANDLE THIS ERROR
+      exit 1
+    end 
+  end
 end
 
 if __FILE__ == $0
   issue_manager = IssueManager.new
-  loop {
+  loop do
     begin
       issue_manager.get_notifications
     rescue =>err
       puts "ERROR: #{err.message} \n #{err.backtrace} \n"
     end
     sleep(SLEEPTIME)
-  }
+  end
 end
