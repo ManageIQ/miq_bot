@@ -128,28 +128,31 @@ class IssueManager
     add_and_yaml_timestamps(issue.number, comment.updated_at)   
     lines = comment.body.split("\n")    
     lines.each do |line|
-
-      match = line.match(/^@cfme-bot\s+([-@a-z0-9_]+)\s+/i)
-      if !match
-        next 
-      end
-
-      command = match.captures.first
-      command_value = match.post_match
-
-      method_name = COMMANDS[command]
-      if method_name.nil?
-
-        # How to distinguish between the a typo in a command that needs reported back
-        # to the user and just a regular comment that starts with @cfme-bot...?
-        # client.add_comment(repo, issue.id, "invalid command #{command}, ignoring.")
-
-        next
-      else
-        self.send(method_name, repo, issue, command_value)
-      end
+      process_command(line, repo, issue)
     end
   end
+
+  def process_command(line, repo, issue)
+    match = line.match(/^@cfme-bot\s+([-@a-z0-9_]+)\s+/i)
+    return if !match
+       
+
+    command = match.captures.first
+    command_value = match.post_match
+
+    method_name = COMMANDS[command]
+    if method_name.nil?
+
+      # How to distinguish between the a typo in a command that needs reported back
+      # to the user and just a regular comment that starts with @cfme-bot...?
+      # client.add_comment(repo, issue.id, "invalid command #{command}, ignoring.")
+
+      return
+    else
+      self.send(method_name, repo, issue, command_value)
+    end
+  end
+
 
   def assign_to_issue(repo, issue, assign_to_user)
     assign_to_user = assign_to_user.delete('@').rstrip
