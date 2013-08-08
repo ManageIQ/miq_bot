@@ -3,24 +3,44 @@ require 'bundler/setup'
 require 'octokit'
 require 'yaml'
 require 'time'
+require 'logger'
 
-SLEEPTIME   = 5
-YAML_FILE   = File.join(File.dirname(__FILE__), '/issue_manager.yml')
-CREDENTIALS_YAML_FILE = File.join(File.dirname(__FILE__), '/issue_manager_credentials.yml')
+ISSUE_MANAGER_YAML_FILE       = File.join(File.dirname(__FILE__), '/issue_manager.yml')
+ISSUE_MANAGER_LOG_FILE        = File.join(File.dirname(__FILE__), '/issue_manager.log')
+GITHUB_CREDENTIALS_YAML_FILE  = File.join(File.dirname(__FILE__), '/issue_manager_credentials.yml')
+
 REPO          = "MANAGEIQ/sandbox"
 ORGANIZATION  = "ManageIQ"
 
 class IssueManager
 
   COMMANDS = {
-    "add_label"    => :add_labels_to_an_issue,
-    "rm_label"     => :remove_labels_from_issue,
-    "remove_label" => :remove_labels_from_issue,
-    "assign"       => :assign_to_issue,
+    "add_label"     => :add_labels_to_an_issue,
+    "add_labels"    => :add_labels_to_an_issue,
+    "rm_label"      => :remove_labels_from_issue,
+    "rm_labels"     => :remove_labels_from_issue,
+    "remove_label"  => :remove_labels_from_issue,
+    "remove_labels" => :remove_labels_from_issue,
+    "assign"        => :assign_to_issue,
     "set_milestone" => :set_milestone
   }
 
+  def self.logger
+    @logger ||= begin
+      Logger.new(ISSUE_MANAGER_LOG_FILE)
+    end
+  end
+
+  def self.logger=(l)
+    @logger = l
+  end
+
+  def logger
+    self.class.logger
+  end
+
   def initialize
+
     @timestamps = load_yaml_file
     @timestamps ||= Hash.new(0)
 
@@ -30,8 +50,19 @@ class IssueManager
     load_milestones(REPO)
   end
 
-  def print_error(msg)
-    puts msg
+  def get_notifications
+    notifications = client.repository_notifications(REPO, "all" => false)
+    notifications.each do |notification|
+      process_notification(notification)
+    end
+  end
+  
+  private
+
+  attr_accessor :permitted_labels
+
+  def client
+    @client ||= Octokit::Client.new(:login => @username, :password => @password, :auto_traversal => true)
   end
 
   def get_credentials
@@ -40,25 +71,9 @@ class IssueManager
     @password = @credentials["password"]
 
     if @username.nil? || @password.nil?
-      #TODO: LOGGING WILL BETTER HANDLE THIS ERROR
-      print_error ("Incorrect credentials. Exiting..") 
+      logger.error("Credentials are not configured. Exiting..") 
       exit 1
     end
-  end
-
-  def get_notifications
-    notifications = client.repository_notifications(REPO, "all" => false)
-    notifications.each do |notification|
-      process_notification(notification)
-    end
-  end
-
-  private
-
-  attr_accessor :permitted_labels
-
-  def client
-    @client ||= Octokit::Client.new(:login => @username, :password => @password, :auto_traversal => true)
   end
 
   def load_permitted_labels(repo)
@@ -78,10 +93,10 @@ class IssueManager
   end
 
   def print_issue(issue)
-    puts "Title:\t #{issue.title}"
-    puts "Body:\t #{issue.body}"
-    puts "Number:\t #{issue.number}"
-    puts "State:\t #{issue.state}"
+    logger.info("Title:\t #{issue.title}")
+    logger.info("Body:\t #{issue.body}")
+    logger.info("Number:\t #{issue.number}")
+    logger.info("State:\t #{issue.state}")
   end
 
   def add_label(issue_id, labels)
@@ -101,13 +116,13 @@ class IssueManager
   end
 
   def print_notification(notification)
-    puts "Notification repo: #{notification.repository.name}"
-    puts "Notification subject title: #{notification.subject.title}"
+    logger.info("Notification repo: #{notification.repository.name}")
+    logger.info("Notification subject title: #{notification.subject.title}")
   end
 
   def print_comment(comment)
-    puts "\tComment body: #{comment.body}"
-    puts "\tComment added at: #{comment.updated_at}\n"
+    logger.info("\tComment body: #{comment.body}")
+    logger.info("\tComment added at: #{comment.updated_at}\n")
   end
 
   def extract_comment_id(notification)
@@ -164,7 +179,6 @@ class IssueManager
   def process_command(line, repo, issue)
     match = line.match(/^@cfme-bot\s+([-@a-z0-9_]+)\s+/i)
     return if !match
-       
 
     command = match.captures.first
     command_value = match.post_match
@@ -188,8 +202,7 @@ class IssueManager
   
     # We cannot rely on rescuing the error Octokit::UnprocessableEntity
     # because assignee names unknown to manageiq might be valid in the 
-    # global community, so we just check the company name of each
-    # assignee and ignore it if it is not set to redhat.
+    # global community..
     
     begin
       user = client.user(assign_to_user)
@@ -204,11 +217,9 @@ class IssueManager
     end
   end
 
-
   def set_milestone(repo, issue, milestone)  
-    client.update_issue(repo, issue.number, issue.title, issue.body, "milestone" => @milestones[milestone].to_i)
+    client.update_issue(repo, issue.number, issue.title, issue.body, "milestone" => @milestones[milestone])
   end
-
 
   def check_user_organization(user)
     @organization_members.include?(user.login)
@@ -256,7 +267,7 @@ class IssueManager
   end
 
   def add_labels_to_an_issue(repo, issue, command_value)
-    message = "Applying the following label(s) is not permitted:"
+    message = "Cannot apply the following label(s) because they are not recognized:"
 
     new_labels        = split(command_value)
     new_labels_length = new_labels.length
@@ -292,45 +303,33 @@ class IssueManager
   end
 
   def split(labels)
-    labels.split(/,* \s*/)
+    labels.split(", ")
   end
 
   def add_and_yaml_timestamps(key, updated_at)
     @timestamps[key]=updated_at
-    File.open("issue_manager.yml", 'w+') do |f| 
+    File.open(ISSUE_MANAGER_YAML_FILE, 'w+') do |f| 
       YAML.dump(@timestamps, f) 
     end
   end
 
   def load_yaml_file
     begin
-      @timestamps = YAML.load_file(YAML_FILE)
+      @timestamps = YAML.load_file(ISSUE_MANAGER_YAML_FILE)
     rescue Errno::ENOENT
-      puts "#{Time.now} #{YAML_FILE} was missing, recreating it..."
-      File.open(YAML_FILE, 'w+')
+      logger.warn("#{Time.now} #{ISSUE_MANAGER_YAML_FILE} was missing, recreating it...")
+      File.open(ISSUE_MANAGER_YAML_FILE, 'w+')
       retry       
     end 
   end
 
   def load_credentials_yaml_file
     begin
-      @credentials = YAML.load_file(CREDENTIALS_YAML_FILE)
+      @credentials = YAML.load_file(GITHUB_CREDENTIALS_YAML_FILE)
     rescue Errno::ENOENT
-      puts "No issue_manager_credentials.yml found. Exiting..."
-      # TODO: LOGGING WILL BETTER HANDLE THIS ERROR
+      logger.error("No #{GITHUB_CREDENTIALS_YAML_FILE} found. Exiting...")
       exit 1
     end 
   end
 end
 
-if __FILE__ == $0
-  issue_manager = IssueManager.new
-  loop do
-    begin
-      issue_manager.get_notifications
-    rescue =>err
-      puts "ERROR: #{err.message} \n #{err.backtrace} \n"
-    end
-    sleep(SLEEPTIME)
-  end
-end
