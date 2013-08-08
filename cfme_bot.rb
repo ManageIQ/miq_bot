@@ -8,9 +8,7 @@ SLEEPTIME = 5
 
 
 def self.logger
-  @logger ||= begin
-    Logger.new(CFME_BOT_LOG_FILE)
-  end
+  @logger ||= Logger.new(CFME_BOT_LOG_FILE)
 end
 
 def self.logger=(l)

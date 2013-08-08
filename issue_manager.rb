@@ -4,6 +4,7 @@ require 'octokit'
 require 'yaml'
 require 'time'
 require 'logger'
+require 'fileutils'
 
 ISSUE_MANAGER_YAML_FILE       = File.join(File.dirname(__FILE__), '/issue_manager.yml')
 ISSUE_MANAGER_LOG_FILE        = File.join(File.dirname(__FILE__), '/issue_manager.log')
@@ -26,9 +27,7 @@ class IssueManager
   }
 
   def self.logger
-    @logger ||= begin
-      Logger.new(ISSUE_MANAGER_LOG_FILE)
-    end
+    @logger ||= Logger.new(ISSUE_MANAGER_LOG_FILE)
   end
 
   def self.logger=(l)
@@ -318,7 +317,7 @@ class IssueManager
       @timestamps = YAML.load_file(ISSUE_MANAGER_YAML_FILE)
     rescue Errno::ENOENT
       logger.warn("#{Time.now} #{ISSUE_MANAGER_YAML_FILE} was missing, recreating it...")
-      File.open(ISSUE_MANAGER_YAML_FILE, 'w+')
+      FileUtils.touch(ISSUE_MANAGER_YAML_FILE)
       retry       
     end 
   end
