@@ -1,11 +1,9 @@
 module GitHubApi
-
 	class Organization
+    attr_accessor :fq_repo_name, :repo, :client
 
-    attr_accessor :fq_repo_name, :repo
-
-		def initialize(octokit_org, user, client)
-      @client = client
+    def initialize(octokit_org, user)
+      @client = user.client
       @name = octokit_org.login
       load_organization_members
 		end
@@ -22,7 +20,7 @@ module GitHubApi
     def get_repository(repo_name)
       @fq_repo_name  = "#{@name}/#{repo_name}"
       octokit_repo   = @client.repo(@fq_repo_name)
-      @repo = GitHubApi::Repo.new(octokit_repo, self, @client)
+      @repo = Repo.new(octokit_repo, self)
     end
 
     private

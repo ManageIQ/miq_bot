@@ -6,6 +6,8 @@ require_relative 'logging'
 
 ISSUE_MANAGER_YAML_FILE       = File.join(File.dirname(__FILE__), '/issue_manager.yml')
 GITHUB_CREDENTIALS_YAML_FILE  = File.join(File.dirname(__FILE__), '/issue_manager_credentials.yml')
+ORGANIZATION = "ManageIQ"
+
 
 COMMANDS = {
   "add_label"     => :add_labels,
@@ -26,7 +28,7 @@ class IssueManager
   def initialize(repo_name)
     get_credentials
     @user         = GitHubApi.connect(@username, @password)
-    @org          = @user.get_organization
+    @org          = @user.find_organization(ORGANIZATION)
     @repo         = @org.get_repository(repo_name)
     @timestamps   = load_yaml_file
     @timestamps ||= Hash.new(0)
@@ -41,14 +43,13 @@ class IssueManager
 
   def process_notification(notification)
     issue               = notification.issue
-    comments            = issue.comments
-    process_comments(comments, issue)
+    process_issue(issue)
     notification.mark_thread_as_read
   end
 
-  def process_comments(comments, issue)
-    comments.each do |comment|
-      process(comment, issue)
+  def process_issue(issue)
+    issue.comments.each do |comment|
+      process(comment)
     end
   end
 
@@ -58,18 +59,19 @@ class IssueManager
   # When a new comment is made it will be processed if its timestamp is more recent
   # than the one in the hash/yaml for this issue 
 
-  def process(comment, issue)
-    last_comment_timestamp = @timestamps[comment.issue_number] || 0
+  def process(comment)
+
+    last_comment_timestamp = @timestamps[comment.issue.number] || 0
     return if last_comment_timestamp != 0 && last_comment_timestamp >= comment.updated_at
 
     # bot command or not, we need to update the yaml file so next time we 
     # pull in the comments we can skip this one.
 
-    add_and_yaml_timestamps(comment.updated_at, comment.issue_number)   
+    add_and_yaml_timestamps(comment.updated_at, comment.issue.number)   
 
     lines = comment.body.split("\n")    
     lines.each do |line|
-      process_command(line, comment.author, issue)
+      process_command(line, comment.author, comment.issue)
     end
   end
  

@@ -1,14 +1,12 @@
 require_relative 'git_hub_api'
 
 module GitHubApi
-  
   class Repo
-
     attr_accessor :fq_repo_name, :milestones, :labels, :client
 
-    def initialize(octokit_repo, organization, client)
+    def initialize(octokit_repo, organization)
       @fq_repo_name   = organization.fq_repo_name
-      @client = client
+      @client = organization.client
       load_milestones
       load_valid_labels
     end

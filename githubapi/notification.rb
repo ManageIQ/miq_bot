@@ -2,12 +2,8 @@ require_relative 'git_hub_api'
 require_relative '../logging'
 
 module GitHubApi
-
   class Notification
-
     include Logging
-
-    attr_accessor :thread_id
 
     def initialize(octokit_notification, repo)
       @repo           = repo

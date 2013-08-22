@@ -1,18 +1,15 @@
 require_relative 'git_hub_api'
 
 module GitHubApi
-
   class User
-
-    ORGANIZATION = "ManageIQ"
     attr_accessor :username, :password, :client
 
     def initialize
     end
 
-    def get_organization
+    def find_organization(organization_name)
       octokit_org = @client.organization(ORGANIZATION)
-      @organization  = GitHubApi::Organization.new(octokit_org, self, @client)
+      @organization  = Organization.new(octokit_org, self)
     end
   end
 end
