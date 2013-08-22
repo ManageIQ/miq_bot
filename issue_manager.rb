@@ -42,15 +42,20 @@ class IssueManager
   end 
 
   def process_notification(notification)
-    issue               = notification.issue
+    issue = notification.issue
     process_issue(issue)
     notification.mark_thread_as_read
   end
 
   def process_issue(issue)
+    process_issue_body(issue)
     issue.comments.each do |comment|
-      process(comment)
+      process_comment(comment)
     end
+  end
+
+  def process_issue_body(issue)
+    process_message(issue.body, issue.author, issue)
   end
 
   # comment: The goal is to find the comments that have not been processed by the BOT. 
@@ -59,7 +64,7 @@ class IssueManager
   # When a new comment is made it will be processed if its timestamp is more recent
   # than the one in the hash/yaml for this issue 
 
-  def process(comment)
+  def process_comment(comment)
 
     last_comment_timestamp = @timestamps[comment.issue.number] || 0
     return if last_comment_timestamp != 0 && last_comment_timestamp >= comment.updated_at
@@ -68,15 +73,19 @@ class IssueManager
     # pull in the comments we can skip this one.
 
     add_and_yaml_timestamps(comment.updated_at, comment.issue.number)   
-
-    lines = comment.body.split("\n")    
-    lines.each do |line|
-      process_command(line, comment.author, comment.issue)
-    end
+    process_message(comment.body, comment.author, comment.issue)
   end
  
+  def process_message(body, author, issue)
+    lines = body.split("\n")    
+    lines.each do |line|
+      process_command(line, author, issue)
+    end
+  end
+
   def process_command(line, author, issue)
-    match = line.match(/^@cfme-bot\s+([-@a-z0-9_]+)\s+/i)
+    match = line.match(/^@#{@username}\s+([-@a-z0-9_]+)\s+/i)
+
     return if !match
 
     command       = match.captures.first

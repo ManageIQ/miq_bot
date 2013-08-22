@@ -2,7 +2,7 @@ require_relative 'git_hub_api'
 
 module GitHubApi
   class Issue
-    attr_accessor :comments, :number
+    attr_accessor :comments, :number, :body, :author
 
     def initialize(octokit_issue, repo)
       @repo       = repo
@@ -10,6 +10,7 @@ module GitHubApi
       @title      = octokit_issue.title
       @body       = octokit_issue.body
       @number     = octokit_issue.number
+      @author     = octokit_issue.user.login
       @client     = repo.client
       load_applied_labels
     end
@@ -56,7 +57,7 @@ module GitHubApi
       @applied_labels = Hash.new 
       results = @client.labels_for_issue(@repo_name, @number)
       results.each do |result| 
-        label = GitHubApi::Label.new(@repo, result.name, self) 
+        label = Label.new(@repo, result.name, self) 
         @applied_labels[result.name] = label
       end
     end
