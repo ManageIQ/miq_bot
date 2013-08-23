@@ -14,12 +14,12 @@ module GitHubApi
     end
 
     def issue
-      octokit_issue   = @client.issue(@repo_name, @issue_id)  
+      octokit_issue   = GitHubApi.execute(@client, :issue, @repo_name, @issue_id) 
       issue           = Issue.new(octokit_issue, @repo)
     end
 
     def mark_thread_as_read
-      @client.mark_thread_as_read(@thread_id, "read" => false )
+      GitHubApi.execute(@client, :mark_thread_as_read, @thread_id, "read" => false)
     end
 
     private

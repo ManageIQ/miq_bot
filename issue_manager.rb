@@ -105,7 +105,6 @@ class IssueManager
 
   def assign(assign_to_user_arg, author, issue)
     assign_to_user = assign_to_user_arg.delete('@').rstrip
-
     if @org.member?(assign_to_user)
       issue.assign(assign_to_user)
     else
@@ -133,7 +132,6 @@ class IssueManager
       message << invalid_labels.join(", ")
       issue.add_comment(message)
     end
-
     if !valid_labels.empty?
       issue.add_labels(valid_labels)
     end
@@ -151,7 +149,6 @@ class IssueManager
         invalid_labels << label_text
       end
     end
-
     unless invalid_labels.empty?
       message = "@#{author} Cannot remove the following label(s) because they have not been applied: "
       message << invalid_labels.join(", ")

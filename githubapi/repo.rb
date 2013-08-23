@@ -12,8 +12,8 @@ module GitHubApi
     end
 
     def notifications
-      @notifications ||= begin
-        octokit_notifications = @client.repository_notifications(@fq_repo_name, "all" => false)        
+      @notifications = begin
+        octokit_notifications = GitHubApi.execute(@client, :repository_notifications, @fq_repo_name, "all" => false)    
         octokit_notifications.collect do |octokit_notification|
           Notification.new(octokit_notification, self)
         end
@@ -32,7 +32,7 @@ module GitHubApi
 
     def load_valid_labels
       @labels     = Set.new
-      repo_labels = @client.labels(@fq_repo_name)
+      repo_labels = GitHubApi.execute(@client, :labels, @fq_repo_name)
       repo_labels.each do |label|
         @labels.add(label.name)
       end
@@ -40,7 +40,7 @@ module GitHubApi
  
     def load_milestones
       @milestones = Hash.new
-      octokit_milestones = @client.list_milestones(@fq_repo_name)
+      octokit_milestones = GitHubApi.execute(@client, :list_milestones, @fq_repo_name)
       octokit_milestones.each do |octokit_milestone|
         milestone = Milestone.new(octokit_milestone, self)
         @milestones[milestone.title] = milestone.number
