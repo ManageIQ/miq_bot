@@ -2,7 +2,7 @@ require_relative 'git_hub_api'
 
 module GitHubApi
   class Issue
-    attr_accessor :comments, :number, :body, :author
+    attr_accessor :comments, :number, :body, :author, :created_at
 
     def initialize(octokit_issue, repo)
       @repo       = repo
@@ -11,6 +11,7 @@ module GitHubApi
       @body       = octokit_issue.body
       @number     = octokit_issue.number
       @author     = octokit_issue.user.login
+      @created_at = octokit_issue.created_at 
       @client     = repo.client
       load_applied_labels
     end

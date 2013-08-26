@@ -43,19 +43,15 @@ class IssueManager
 
   def process_notification(notification)
     issue = notification.issue
-    process_issue(issue)
+    process(issue)
     notification.mark_thread_as_read
   end
 
-  def process_issue(issue)
-    process_issue_body(issue)
+  def process(issue)
+    process_input(issue, issue.author, issue.created_at, issue.body)
     issue.comments.each do |comment|
-      process_comment(comment)
+      process_input(comment.issue, comment.author, comment.updated_at, comment.body)
     end
-  end
-
-  def process_issue_body(issue)
-    process_message(issue.body, issue.author, issue)
   end
 
   # comment: The goal is to find the comments that have not been processed by the BOT. 
@@ -64,16 +60,16 @@ class IssueManager
   # When a new comment is made it will be processed if its timestamp is more recent
   # than the one in the hash/yaml for this issue 
 
-  def process_comment(comment)
+  def process_input(issue, author, timestamp, body)
 
-    last_comment_timestamp = @timestamps[comment.issue.number] || 0
-    return if last_comment_timestamp != 0 && last_comment_timestamp >= comment.updated_at
+    last_comment_timestamp = @timestamps[issue.number] || 0
+    return if last_comment_timestamp != 0 && last_comment_timestamp >= timestamp
 
     # bot command or not, we need to update the yaml file so next time we 
     # pull in the comments we can skip this one.
 
-    add_and_yaml_timestamps(comment.updated_at, comment.issue.number)   
-    process_message(comment.body, comment.author, comment.issue)
+    add_and_yaml_timestamps(timestamp, issue.number)   
+    process_message(body, author, issue)
   end
  
   def process_message(body, author, issue)
