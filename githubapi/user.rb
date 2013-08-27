@@ -8,7 +8,7 @@ module GitHubApi
     end
 
     def find_organization(organization_name)
-      octokit_org = @client.organization(ORGANIZATION)
+      octokit_org = GitHubApi.execute(@client, :organization, organization_name)
       @organization  = Organization.new(octokit_org, self)
     end
   end

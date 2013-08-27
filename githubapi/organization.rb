@@ -10,7 +10,8 @@ module GitHubApi
 
     def member?(user)
       begin
-        octokit_user = @client.user(user)
+        octokit_user = GitHubApi.execute(@client, :user, user)
+        return true
       rescue Octokit::NotFound
         return false
       end
@@ -19,7 +20,7 @@ module GitHubApi
 
     def get_repository(repo_name)
       @fq_repo_name  = "#{@name}/#{repo_name}"
-      octokit_repo   = @client.repo(@fq_repo_name)
+      octokit_repo   = GitHubApi.execute(@client, :repo, @fq_repo_name)
       @repo = Repo.new(octokit_repo, self)
     end
 
@@ -27,7 +28,8 @@ module GitHubApi
 
     def load_organization_members
       @organization_members = Set.new
-      octokit_members = @client.organization_members(@name)
+      octokit_members = GitHubApi.execute(@client, :organization_members, @name)
+
       octokit_members.collect do |members_hash|
         @organization_members.add(members_hash["login"])
       end

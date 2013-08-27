@@ -1,10 +1,9 @@
 require_relative 'issue_manager'
 
-CFME_BOT_YAML_FILE            = File.join(File.dirname(__FILE__), '/cfme_bot.yml')
+CFME_BOT_YAML_FILE  = File.join(File.dirname(__FILE__), '/cfme_bot.yml')
 SLEEPTIME = 15
 
 class CfmeBot
-
   include Logging
 
   def initialize
@@ -22,15 +21,24 @@ class CfmeBot
 
   def run
     loop do
-      @repo_names.each do |repo_name|
-        issue_manager = IssueManager.new(repo_name)
-        begin
-          issue_manager.get_notifications
-        rescue =>err
-          logger.error ("ERROR: #{err.message} \n #{err.backtrace} \n")
-        end
-      end
+      handle_issue_managers
       sleep(SLEEPTIME)
+    end
+  end
+
+  private
+
+  def issue_managers
+    @issue_managers ||= @repo_names.collect { |r| IssueManager.new(r) }
+  end
+
+  def handle_issue_managers
+    issue_managers.each do |im|
+      begin
+        im.get_notifications
+      rescue =>err
+        logger.error ("ERROR: #{err.message} \n #{err.backtrace} \n")
+      end
     end
   end
 end

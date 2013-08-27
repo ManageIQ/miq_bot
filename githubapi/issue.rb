@@ -18,7 +18,7 @@ module GitHubApi
 
     def comments
       @comments ||= begin
-        @octokit_comments = @client.issue_comments(@repo_name, @number)
+        @octokit_comments = GitHubApi.execute(@client, :issue_comments, @repo_name, @number)
         @octokit_comments.collect do |octokit_comment|
           Comment.new(octokit_comment, self, @repo)
         end
@@ -35,7 +35,7 @@ module GitHubApi
     end
 
     def add_comment(message)
-      @client.add_comment(@repo_name, @number, message)
+      GitHubApi.execute(@client, :add_comment, @repo_name, @number, message)
     end
 
     def applied_label?(label_text)
@@ -44,19 +44,19 @@ module GitHubApi
 
     def add_labels(labels_input)
       labels = labels_input.collect(&:text)
-      @client.add_labels_to_an_issue(@repo_name, @number, labels)
+      GitHubApi.execute(@client, :add_labels_to_an_issue, @repo_name, @number, labels)
     end
 
     def remove_label(label_name)
       @applied_labels.delete(label_name)
-      @client.remove_label(@repo_name, @number, label_name)  
+      GitHubApi.execute(@client, :remove_label, @repo_name, @number, label_name)
     end
 
     private
 
     def load_applied_labels
       @applied_labels = Hash.new 
-      results = @client.labels_for_issue(@repo_name, @number)
+      results = GitHubApi.execute(@client, :labels_for_issue, @repo_name, @number)
       results.each do |result| 
         label = Label.new(@repo, result.name, self) 
         @applied_labels[result.name] = label
@@ -64,7 +64,7 @@ module GitHubApi
     end
 
     def update(options)
-      @client.update_issue(@repo_name, @number, @title, @body, options)
+      GitHubApi.execute(@client, :update_issue, @repo_name, @number, @title, @body, options)
     end
 
   end
