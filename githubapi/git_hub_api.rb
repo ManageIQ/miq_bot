@@ -20,7 +20,7 @@ module GitHubApi
     return @user
   end
 
-    def self.execute(client, cmd, *args)
+  def self.execute(client, cmd, *args)
     rate_limit_remaining = client.rate_limit_remaining
     logger.debug("Executing #{cmd} #{args.inspect}...api calls remaining #{rate_limit_remaining}")
     val = nil
