@@ -1,7 +1,11 @@
 require_relative 'spec_helper'
 require_relative '../issue_manager'
+require_relative '../githubapi/git_hub_api'
 
 describe IssueManager do
+
+  RSPEC_ORGANIZATION  = "ManageIQ"
+  RSPEC_REPO          = "ManageIQ/sandbox"
   before do
     File.delete(YAML_FILE) rescue nil
   end
@@ -14,139 +18,164 @@ describe IssueManager do
     context "against github.com" do
       it "when there are no notifications" do
         VCR.use_cassette 'issue_manager/no_notifications' do
-          lambda { IssueManager.new.get_notifications }.should_not raise_error
+          lambda { IssueManager.new("sandbox").get_notifications }.should_not raise_error
         end
       end
 
       it "when there are notifications" do
         VCR.use_cassette 'issue_manager/with_notifications' do
-          lambda { IssueManager.new.get_notifications }.should_not raise_error
+          lambda { IssueManager.new("sandbox").get_notifications }.should_not raise_error
         end
       end
     end
 
-    context "with mocked data" do
+    context "comment processing" do
       before do
-        @issue = double("issue",
+        @client             = double("client")
+        Octokit::Client.stub(:new => @client)
+
+        octokit_org         = double("octokit_org",
+          :login => RSPEC_ORGANIZATION)
+         
+        octokit_org_members = [{"login" => "bronaghs"}, {"login" => "cfme-bot"}]
+
+        octokit_repo        = double("octokit_repo")
+
+        octokit_milestone   = double("octokit_milestone",
+          :title => "5.4",
+          :number => 1)
+
+        octokit_label1      = double("octokit_label",
+          :name => "question")
+        octokit_label2      = double("octokit_label",
+          :name => "wontfix")
+
+        octokit_notification = double("octokit_notification",
+         :url        => "https://github.com/ManageIQ/sandbox/issues/123", 
+         :subject    => double("subject", :url => "https://github.com/ManageIQ/sandbox/issues/123"))
+
+        octokit_repo_milestones = [octokit_milestone]
+        octokit_repo_labels     = [octokit_label1, octokit_label2]
+        octokit_notifications   = [octokit_notification]
+
+        @octokit_user   = double("octokit_user",
+          :login => "cfme-bot")
+
+        @octokit_issue  = double("octokit_issue",
           :number => "123",
           :title  => "Some title",
-          :body   => "Some body"
+          :created_at => Time.now,
+          :user => @octokit_user,
+          :body   => "any body"
         )
 
-        r = double("repository", :name => "sandbox")
-        n1 = double("notification",
-          :repository => r,
-          :url        => "https://github.com/ManageIQ/sandbox/issues/#{@issue.number}", 
-          :subject    => double("subject", :url => "https://github.com/ManageIQ/sandbox/issues/#{@issue.number}"), 
-        )
+        GitHubApi.stub(:execute).with(@client, :organization, RSPEC_ORGANIZATION).and_return(octokit_org)
+        GitHubApi.stub(:execute).with(@client, :organization_members, RSPEC_ORGANIZATION).and_return(octokit_org_members)
+        GitHubApi.stub(:execute).with(@client, :repo, RSPEC_REPO).and_return(octokit_repo)
+        GitHubApi.stub(:execute).with(@client, :list_milestones, RSPEC_REPO).and_return(octokit_repo_milestones)
+        GitHubApi.stub(:execute).with(@client, :labels, RSPEC_REPO).and_return(octokit_repo_labels)
+        GitHubApi.stub(:execute).with(@client, :repository_notifications, RSPEC_REPO, "all" => false).and_return(octokit_notifications)
+        GitHubApi.stub(:execute).with(@client, :issue, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_issue)
+        GitHubApi.stub(:execute).with(@client, :labels_for_issue, RSPEC_REPO, @octokit_issue.number).and_return(octokit_repo_labels)
+        GitHubApi.stub(:execute).with(@client, :mark_thread_as_read, @octokit_issue.number, {"read" => false})
+        GitHubApi::Issue.any_instance.stub(:add_comment) do | message | puts message end
 
-        u = double("user",
-          :login => "jrafanie",
-          :company => "redhat"
-        )
+        @octokit_comment = double("octokit_comment",
+          :updated_at => Time.now,
+          :user => @octokit_user)
 
-        @label = double("label",
-          :url      => "https://api.github.com/repos/octocat/Hello-World/labels/bug",
-          :name     => "bug",
-          :color    => "f29513"
-        )
-
-
-        @client = double("client",
-          :repository_notifications => [n1],
-          :issue                    => @issue,
-          :user                     => u
-        )
-         
-        IssueManager.any_instance.stub(:check_user_organization => "true")
-        IssueManager.any_instance.stub(:load_organization_members => ["bronaghs", "cfme-bot"])
-        IssueManager.any_instance.stub(:load_permitted_labels => ["bug", "question", "wontfix"])
-        IssueManager.any_instance.stub(:client => @client)
-
+        @octokit_comments = [@octokit_comment]
       end
 
       it "assigns to a user" do
-        ic = double("issue_comment",
-          :body       => "@cfme-bot assign @jrafanie",
-          :updated_at => Time.now
-        )
+        @octokit_comment.stub(:body => "@cfme-bot assign bronaghs")
+        GitHubApi.stub(:execute).with(@client, :user, "bronaghs").and_return(true)
+        GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
+        
+        GitHubApi.should_receive(:execute).with(@client, :update_issue, RSPEC_REPO,  @octokit_issue.number, @octokit_issue.title, @octokit_issue.body, {"assignee"=>"bronaghs"})
+        GitHubApi::Issue.any_instance.should_not_receive(:add_comment)
 
-        @client.stub(:issue_comments => [ic])
-        @client.should_receive(:update_issue).with("ManageIQ/sandbox", @issue.number, @issue.title, @issue.body, {"assignee"=>"jrafanie"})
-        @client.should_receive(:mark_thread_as_read).with(@issue.number, {"read" => false})
-        IssueManager.new.get_notifications
+        im = IssueManager.new("sandbox")
+        im.get_notifications
       end
 
-      it "should not assign to an invalid user" do
-        ic = double("issue_comment",
-          :body       => "@cfme-bot assign @blah",
-          :updated_at => Time.now
-        )
+      it "does not assign to an invalid user" do
+        @octokit_comment.stub(:body => "@cfme-bot assign Idontexist")
+        GitHubApi.stub(:execute).with(@client, :user, "Idontexist").and_raise(Octokit::NotFound)
+        GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
+        
+        GitHubApi.should_not_receive(:execute).with(@client, :update_issue, RSPEC_REPO,  @octokit_issue.number, @octokit_issue.title, @octokit_issue.body, {"assignee"=>"Idontexist"})
+        GitHubApi::Issue.any_instance.should_receive(:add_comment).with(/invalid user/)
 
-        @client.stub(:issue_comments => [ic])
-        @client.should_not_receive(:update_issue).with("ManageIQ/sandbox", @issue.number, @issue.title, @issue.body, {"assignee"=>"@blah"})
-        @client.should_receive(:mark_thread_as_read).with(@issue.number, {"read" => false})
-        IssueManager.new.get_notifications
+        im = IssueManager.new("sandbox")
+        im.get_notifications
       end
 
-      it "adds labels to an issue" do
-        ic = double("issue_comment",
-          :body       => "@cfme-bot add_label bug, question",
-          :updated_at => Time.now
-        )
+      it "adds valid labels" do
+        @octokit_comment.stub(:body => "@cfme-bot add_label question, wontfix")
+        GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
 
-        @client.stub(:issue_comments => [ic])
-        @client.should_receive(:add_labels_to_an_issue).with("ManageIQ/sandbox", @issue.number,  ["bug", "question"])
-        @client.should_receive(:mark_thread_as_read).with(@issue.number.to_s, {"read" => false})
-        IssueManager.any_instance.stub(:check_permitted_label => true)
-        IssueManager.new.get_notifications
+        GitHubApi.should_receive(:execute).with(@client, :add_labels_to_an_issue, RSPEC_REPO,  @octokit_issue.number, ["question", "wontfix"])
+        GitHubApi::Issue.any_instance.should_not_receive(:add_comment)
 
+        im = IssueManager.new("sandbox")
+        im.get_notifications
       end
 
-      it "invalid labels are not applied to an issue" do
-        ic = double("issue_comment",
-          :body       => "@cfme-bot add_label invalid, invalidagain",
-          :updated_at => Time.now
-        )
-        @client.stub(:issue_comments => [ic])
+      it "add invalid labels" do
+        @octokit_comment.stub(:body => "@cfme-bot add_label invalidlabel")
+        GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
 
-        @client.should_not_receive(:add_labels_to_an_issue)
-        @client.should_receive(:add_comment).with("ManageIQ/sandbox", @issue.number,  "Applying the following label(s) is not permitted: invalid, invalidagain")
-        @client.should_receive(:mark_thread_as_read).with(@issue.number, {"read" => false})
+        GitHubApi.should_not_receive(:execute).with(@client, :add_labels_to_an_issue, RSPEC_REPO,  @octokit_issue.number, "invalidlabel")
+        GitHubApi::Issue.any_instance.should_receive(:add_comment).with(/Cannot apply/)
 
-        IssueManager.any_instance.stub(:check_permitted_label => false)
-        IssueManager.new.get_notifications
-
+        im = IssueManager.new("sandbox")
+        im.get_notifications
       end
 
-      it "removes labels that do not exist from an issue" do
-        ic = double("issue_comment",
-          :body       => "@cfme-bot rm_label doesntexist",
-          :updated_at => Time.now
-        )
+      it "remove applied label" do
+        @octokit_comment.stub(:body => "@cfme-bot remove_label question")
+        GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
 
-        @client.stub(:issue_comments => [ic])
-        @client.stub(:label).and_raise(Octokit::NotFound)
-        @client.should_receive(:add_comment).with("ManageIQ/sandbox", @issue.number,  "Cannot remove the following label(s) because they are not recognized:  doesntexist")
+        GitHubApi.should_receive(:execute).with(@client, :remove_label, RSPEC_REPO,  @octokit_issue.number, "question")
+        GitHubApi::Issue.any_instance.should_not_receive(:add_comment)
 
-        @client.should_not_receive(:remove_label)
-        @client.should_receive(:mark_thread_as_read).with(@issue.number, {"read" => false})
-        IssueManager.new.get_notifications
+        im = IssueManager.new("sandbox")
+        im.get_notifications
       end
 
-      it "removes labels that exist from an issue" do
-        ic = double("issue_comment",
-          :body       => "@cfme-bot rm_label bug",
-          :updated_at => Time.now
-        )        
+      it "remove unapplied label" do
+        @octokit_comment.stub(:body => "@cfme-bot remove_label invalidlabel")
+        GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
 
-        @client.stub(:issue_comments => [ic])
-        @client.stub(:label => @label)
-        @client.should_receive(:remove_label).with("ManageIQ/sandbox", @issue.number, @label.name)
-        @client.should_receive(:mark_thread_as_read).with(@issue.number, {"read" => false})
-        IssueManager.new.get_notifications
+        GitHubApi.should_not_receive(:execute).with(@client, :remove_label, RSPEC_REPO,  @octokit_issue.number, "invalidlabel")
+        GitHubApi::Issue.any_instance.should_receive(:add_comment).with(/Cannot remove/)
+
+        im = IssueManager.new("sandbox")
+        im.get_notifications
       end
 
+      it "extra space in command" do
+        @octokit_comment.stub(:body => "@cfme-bot add label question, wontfix")
+        GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
+
+        GitHubApi.should_not_receive(:execute).with(@client, :add_labels_to_an_issue, RSPEC_REPO,  @octokit_issue.number, "question, wontfix")
+        GitHubApi::Issue.any_instance.should_receive(:add_comment).with(/unrecognized command/)
+
+        im = IssueManager.new("sandbox")
+        im.get_notifications
+      end
+
+      it "extra comma in command values" do
+        @octokit_comment.stub(:body => "@cfme-bot add_label question, wontfix,")
+        GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
+
+        GitHubApi.should_receive(:execute).with(@client, :add_labels_to_an_issue, RSPEC_REPO,  @octokit_issue.number, ["question", "wontfix"])
+        GitHubApi::Issue.any_instance.should_not_receive(:add_comment)
+
+        im = IssueManager.new("sandbox")
+        im.get_notifications
+      end
     end
   end
 end
