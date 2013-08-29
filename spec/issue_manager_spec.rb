@@ -62,11 +62,11 @@ describe IssueManager do
           :login => "cfme-bot")
 
         @octokit_issue  = double("octokit_issue",
-          :number => "123",
-          :title  => "Some title",
+          :number     => "123",
+          :title      => "Some title",
           :created_at => Time.now,
-          :user => @octokit_user,
-          :body   => "any body"
+          :user       => @octokit_user,
+          :body       => "any body"
         )
 
         GitHubApi.stub(:execute).with(@client, :organization, RSPEC_ORGANIZATION).and_return(octokit_org)
@@ -78,7 +78,6 @@ describe IssueManager do
         GitHubApi.stub(:execute).with(@client, :issue, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_issue)
         GitHubApi.stub(:execute).with(@client, :labels_for_issue, RSPEC_REPO, @octokit_issue.number).and_return(octokit_repo_labels)
         GitHubApi.stub(:execute).with(@client, :mark_thread_as_read, @octokit_issue.number, {"read" => false})
-        GitHubApi::Issue.any_instance.stub(:add_comment) do | message | puts message end
 
         @octokit_comment = double("octokit_comment",
           :updated_at => Time.now,
