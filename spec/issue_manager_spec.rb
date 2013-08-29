@@ -48,7 +48,8 @@ describe IssueManager do
         )
 
         octokit_label1      = double("octokit_label",
-          :name => "question")
+          :name => "question"
+        )
         octokit_label2      = double("octokit_label",
           :name => "wontfix"
         )
