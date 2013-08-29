@@ -35,7 +35,8 @@ describe IssueManager do
         Octokit::Client.stub(:new => @client)
 
         octokit_org         = double("octokit_org",
-          :login => RSPEC_ORGANIZATION)
+          :login => RSPEC_ORGANIZATION
+        )
          
         octokit_org_members = [{"login" => "bronaghs"}, {"login" => "cfme-bot"}]
 
@@ -43,23 +44,27 @@ describe IssueManager do
 
         octokit_milestone   = double("octokit_milestone",
           :title => "5.4",
-          :number => 1)
+          :number => 1
+        )
 
         octokit_label1      = double("octokit_label",
           :name => "question")
         octokit_label2      = double("octokit_label",
-          :name => "wontfix")
+          :name => "wontfix"
+        )
 
         octokit_notification = double("octokit_notification",
          :url        => "https://github.com/ManageIQ/sandbox/issues/123", 
-         :subject    => double("subject", :url => "https://github.com/ManageIQ/sandbox/issues/123"))
+         :subject    => double("subject", :url => "https://github.com/ManageIQ/sandbox/issues/123")
+        )
 
         octokit_repo_milestones = [octokit_milestone]
         octokit_repo_labels     = [octokit_label1, octokit_label2]
         octokit_notifications   = [octokit_notification]
 
         @octokit_user   = double("octokit_user",
-          :login => "cfme-bot")
+          :login => "cfme-bot"
+        )
 
         @octokit_issue  = double("octokit_issue",
           :number     => "123",
@@ -81,7 +86,8 @@ describe IssueManager do
 
         @octokit_comment = double("octokit_comment",
           :updated_at => Time.now,
-          :user => @octokit_user)
+          :user => @octokit_user
+        )
 
         @octokit_comments = [@octokit_comment]
       end
