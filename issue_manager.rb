@@ -1,6 +1,6 @@
 require 'octokit'
 require 'yaml'
-require 'FileUtils'
+require 'fileutils'
 require_relative 'githubapi/git_hub_api'
 require_relative 'logging'
 
