@@ -2,7 +2,7 @@ require_relative 'git_hub_api'
 
 module GitHubApi
   class Issue
-    attr_accessor :comments, :number, :body, :author, :created_at
+    attr_accessor :comments, :number, :body, :author, :created_at, :applied_labels
 
     def initialize(octokit_issue, repo)
       @repo       = repo
@@ -45,6 +45,11 @@ module GitHubApi
     def add_labels(labels_input)
       labels = labels_input.collect(&:text)
       GitHubApi.execute(@client, :add_labels_to_an_issue, @repo_name, @number, labels)
+
+      labels.each do |l|
+        label = Label.new(@repo, l, self) 
+        @applied_labels[l] = label
+      end
     end
 
     def remove_label(label_name)

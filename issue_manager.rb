@@ -2,6 +2,7 @@ require 'octokit'
 require 'yaml'
 require 'fileutils'
 require_relative 'githubapi/git_hub_api'
+require_relative 'Huboard'
 require_relative 'logging'
 
 ISSUE_MANAGER_YAML_FILE       = File.join(File.dirname(__FILE__), '/issue_manager.yml')
@@ -17,7 +18,8 @@ COMMANDS = {
   "remove_label"  => :remove_labels,
   "remove_labels" => :remove_labels,
   "assign"        => :assign,
-  "set_milestone" => :set_milestone
+  "set_milestone" => :set_milestone,
+  "state"         => :state
 }  
 
 class IssueManager
@@ -61,7 +63,6 @@ class IssueManager
   # than the one in the hash/yaml for this issue 
 
   def process_input(issue, author, timestamp, body)
-
     last_comment_timestamp = @timestamps[issue.number] || 0
     return if last_comment_timestamp != 0 && last_comment_timestamp >= timestamp
 
@@ -116,7 +117,7 @@ class IssueManager
       issue.add_comment("@#{author} #{assign_to_user_arg} is an invalid user, ignoring... ")
     end
   end
-
+  
   def add_labels(command_value, author, issue)
     new_label_names   = split(command_value)
     valid_labels      = []
@@ -163,6 +164,64 @@ class IssueManager
 
   def split(labels)
     labels.split(",")
+  end
+
+  def state(state, author, issue)
+    state = state.strip
+    existing_huboard_label = get_existing_huboard_label(issue)
+    index = get_new_huboard_label_index(existing_huboard_label, state, issue, author)  
+
+    return if !valid_state?(index, author, issue)
+      
+    if !existing_huboard_label.nil?
+      issue.remove_label(existing_huboard_label)
+    end
+    add_new_huboard_label(index, author, issue)
+  end
+
+  def get_new_huboard_label_index(existing_huboard_label, state, issue, author)
+    index = 0
+    if !existing_huboard_label.nil?
+      index = get_existing_huboard_label_index(existing_huboard_label)
+    end
+
+    if state.casecmp("prev") == 0
+      index -= 1
+    elsif state.casecmp("next") == 0
+      index += 1
+    elsif state.match(/\d/)
+      index = state.to_i
+    else
+      issue.add_comment("@#{author} - the command value '#{state}' is not recognized. Ignoring...")
+    end
+    
+    return index
+  end
+
+  def valid_state?(state_id, author, issue)
+    if !Huboard.valid_state?(state_id)
+      issue.add_comment("@#{author} state #{state_id} is invalid. Ignoring...")
+      return false
+    else
+      return true
+    end
+  end
+
+  def add_new_huboard_label(state_id, author, issue)
+    text = get_huboard_label_text(state_id)
+    add_labels(text, author, issue)
+  end
+
+  def get_existing_huboard_label(issue)
+    return (Huboard.get_labels & issue.applied_labels.keys).pop
+  end
+
+  def get_huboard_label_text(state_id)
+    return Huboard.get_label_text(state_id)
+  end
+
+  def get_existing_huboard_label_index(huboard_label)
+    return Huboard.get_labels.index(huboard_label)
   end
 
   def get_credentials
