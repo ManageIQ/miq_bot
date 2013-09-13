@@ -5,10 +5,10 @@ class Huboard
 
   def self.get_labels(repo)
     @huboard_labels = []
-    labels = GitHubApi.execute(repo.client, :labels, repo.fq_repo_name)
+    labels = repo.labels
     labels.each do |l|
-      if l.name.match(/^\d+ -/)
-        @huboard_labels << l.name
+      if l.match(/^\d+ -/)
+        @huboard_labels << l
       end
     end
     return @huboard_labels
