@@ -5,27 +5,27 @@ require_relative 'githubapi/git_hub_api'
 require_relative 'Huboard'
 require_relative 'logging'
 
-ISSUE_MANAGER_YAML_FILE       = File.join(File.dirname(__FILE__), '/issue_manager.yml')
-GITHUB_CREDENTIALS_YAML_FILE  = File.join(File.dirname(__FILE__), '/issue_manager_credentials.yml')
-ORGANIZATION = "ManageIQ"
-
-
-COMMANDS = {
-  "add_label"     => :add_labels,
-  "add_labels"    => :add_labels,
-  "rm_label"      => :remove_labels,
-  "rm_labels"     => :remove_labels,
-  "remove_label"  => :remove_labels,
-  "remove_labels" => :remove_labels,
-  "assign"        => :assign,
-  "set_milestone" => :set_milestone,
-  "state"         => :state
-}  
-
 class IssueManager
 
   include Logging
   include GitHubApi
+
+  ISSUE_MANAGER_YAML_FILE       = File.join(File.dirname(__FILE__), '/issue_manager.yml')
+  GITHUB_CREDENTIALS_YAML_FILE  = File.join(File.dirname(__FILE__), '/issue_manager_credentials.yml')
+  ORGANIZATION = "ManageIQ"
+
+
+  COMMANDS = {
+    "add_label"     => :add_labels,
+    "add_labels"    => :add_labels,
+    "rm_label"      => :remove_labels,
+    "rm_labels"     => :remove_labels,
+    "remove_label"  => :remove_labels,
+    "remove_labels" => :remove_labels,
+    "assign"        => :assign,
+    "set_milestone" => :set_milestone,
+    "state"         => :state
+  }  
 
   def initialize(repo_name)
     get_credentials
@@ -167,34 +167,32 @@ class IssueManager
   end
 
   def state(state, author, issue)
-    state = state.strip
-    existing_huboard_label = get_existing_huboard_label(issue)
-    index = get_new_huboard_label_index(existing_huboard_label, state, issue, author)  
+    state                     = state.strip
+    huboard_labels            = get_huboard_labels
+    existing_huboard_lbl      = (huboard_labels & issue.applied_labels.keys).last
+    existing_huboard_lbl_idx  = huboard_labels.index(existing_huboard_lbl)
+    index = get_new_huboard_label_idx(existing_huboard_lbl_idx, state, issue, author)  
 
-    return if !valid_state?(index, author, issue)
+    return unless valid_state?(index, author, issue)
       
-    if !existing_huboard_label.nil?
-      issue.remove_label(existing_huboard_label)
+    if existing_huboard_lbl
+      issue.remove_label(existing_huboard_lbl)
     end
     add_new_huboard_label(index, author, issue)
   end
 
-  def get_new_huboard_label_index(existing_huboard_label, state, issue, author)
-    index = 0
-    if !existing_huboard_label.nil?
-      index = get_existing_huboard_label_index(existing_huboard_label)
-    end
+  def get_new_huboard_label_idx(index, state, issue, author)
 
-    if state.casecmp("prev") == 0
+    if state.downcase == "prev"
       index -= 1
-    elsif state.casecmp("next") == 0
+    elsif state.downcase == "next"
       index += 1
-    elsif state.match(/\d/)
+    elsif state.match(/\d+/)
       index = state.to_i
     else
       issue.add_comment("@#{author} - the command value '#{state}' is not recognized. Ignoring...")
     end
-    
+
     return index
   end
 
@@ -212,16 +210,16 @@ class IssueManager
     add_labels(text, author, issue)
   end
 
-  def get_existing_huboard_label(issue)
-    return (Huboard.get_labels & issue.applied_labels.keys).pop
-  end
-
   def get_huboard_label_text(state_id)
-    return Huboard.get_label_text(state_id)
+    Huboard.get_label_text(state_id)
   end
 
-  def get_existing_huboard_label_index(huboard_label)
-    return Huboard.get_labels.index(huboard_label)
+  def get_existing_huboard_label_idx(huboard_label)
+    Huboard.get_labels.index(huboard_label)
+  end
+
+  def get_huboard_labels
+    Huboard.get_labels(@repo)
   end
 
   def get_credentials
