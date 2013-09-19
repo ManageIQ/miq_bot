@@ -2,7 +2,7 @@ require 'octokit'
 require 'yaml'
 require 'fileutils'
 require_relative 'githubapi/git_hub_api'
-require_relative 'Huboard'
+require_relative 'huboard'
 require_relative 'logging'
 
 class IssueManager

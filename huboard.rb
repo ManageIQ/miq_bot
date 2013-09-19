@@ -11,7 +11,7 @@ class Huboard
         @huboard_labels << l
       end
     end
-    return @huboard_labels
+    return @huboard_labels.sort #TODO: reevaluate when the array has > 10 elements
   end
 
   def self.valid_state?(state_id)
