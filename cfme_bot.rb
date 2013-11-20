@@ -16,7 +16,7 @@ class CfmeBot
     rescue Errno::ENOENT
       logger.error ("#{Time.now} #{CFME_BOT_YAML_FILE} is missing, exiting...")
       exit 1
-    end 
+    end
   end
 
   def run
@@ -43,5 +43,4 @@ class CfmeBot
   end
 end
 
-CfmeBot.new.run 
-
+CfmeBot.new.run

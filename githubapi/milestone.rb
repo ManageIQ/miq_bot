@@ -1,9 +1,7 @@
 require_relative 'git_hub_api'
 
 module GitHubApi
-
   class Milestone
-
     attr_accessor :title, :number
 
   	def initialize(octokit_milestone, repo)

@@ -1,6 +1,6 @@
 include GitHubApi
 
-class Huboard 
+class Huboard
   attr_accessor :huboard_labels
 
   def self.get_labels(repo)

@@ -9,7 +9,7 @@ module GitHubApi
       @issue_number  = issue.number
       @updated_at    = octokit_comment.updated_at
       @body          = octokit_comment.body
-      @author        = octokit_comment.user.login 
+      @author        = octokit_comment.user.login
       @repo          = repo
   	end
   end

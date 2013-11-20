@@ -11,7 +11,7 @@ module GitHubApi
       @body       = octokit_issue.body
       @number     = octokit_issue.number
       @author     = octokit_issue.user.login
-      @created_at = octokit_issue.created_at 
+      @created_at = octokit_issue.created_at
       @client     = repo.client
       load_applied_labels
     end
@@ -47,7 +47,7 @@ module GitHubApi
       GitHubApi.execute(@client, :add_labels_to_an_issue, @repo_name, @number, labels)
 
       labels.each do |l|
-        label = Label.new(@repo, l, self) 
+        label = Label.new(@repo, l, self)
         @applied_labels[l] = label
       end
     end
@@ -60,10 +60,10 @@ module GitHubApi
     private
 
     def load_applied_labels
-      @applied_labels = Hash.new 
+      @applied_labels = Hash.new
       results = GitHubApi.execute(@client, :labels_for_issue, @repo_name, @number)
-      results.each do |result| 
-        label = Label.new(@repo, result.name, self) 
+      results.each do |result|
+        label = Label.new(@repo, result.name, self)
         @applied_labels[result.name] = label
       end
     end
@@ -71,6 +71,5 @@ module GitHubApi
     def update(options)
       GitHubApi.execute(@client, :update_issue, @repo_name, @number, @title, @body, options)
     end
-
   end
 end

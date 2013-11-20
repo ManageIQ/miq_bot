@@ -6,14 +6,12 @@ require_relative 'huboard'
 require_relative 'logging'
 
 class IssueManager
-
   include Logging
   include GitHubApi
 
   ISSUE_MANAGER_YAML_FILE       = File.join(File.dirname(__FILE__), '/issue_manager.yml')
   GITHUB_CREDENTIALS_YAML_FILE  = File.join(File.dirname(__FILE__), '/issue_manager_credentials.yml')
   ORGANIZATION = "ManageIQ"
-
 
   COMMANDS = {
     "add_label"     => :add_labels,
@@ -25,7 +23,7 @@ class IssueManager
     "assign"        => :assign,
     "set_milestone" => :set_milestone,
     "state"         => :state
-  }  
+  }
 
   def initialize(repo_name)
     get_credentials
@@ -41,7 +39,7 @@ class IssueManager
     notifications.each do |notification|
       process_notification(notification)
     end
-  end 
+  end
 
   def process_notification(notification)
     issue = notification.issue
@@ -56,25 +54,25 @@ class IssueManager
     end
   end
 
-  # comment: The goal is to find the comments that have not been processed by the BOT. 
+  # comment: The goal is to find the comments that have not been processed by the BOT.
   # As each comment is processed it overwrites the entry in the hash @timestamps for this
   # issue ID. Then the hash @timestamps is written to a yaml file.
   # When a new comment is made it will be processed if its timestamp is more recent
-  # than the one in the hash/yaml for this issue 
+  # than the one in the hash/yaml for this issue
 
   def process_input(issue, author, timestamp, body)
     last_comment_timestamp = @timestamps[issue.number] || 0
     return if last_comment_timestamp != 0 && last_comment_timestamp >= timestamp
 
-    # bot command or not, we need to update the yaml file so next time we 
+    # bot command or not, we need to update the yaml file so next time we
     # pull in the comments we can skip this one.
 
-    add_and_yaml_timestamps(timestamp, issue.number)   
+    add_and_yaml_timestamps(timestamp, issue.number)
     process_message(body, author, issue)
   end
- 
+
   def process_message(body, author, issue)
-    lines = body.split("\n")    
+    lines = body.split("\n")
     lines.each do |line|
       process_command(line, author, issue)
     end
@@ -94,11 +92,11 @@ class IssueManager
       issue.add_comment(message)
       return
     else
-      self.send(method_name, command_value, author, issue) 
+      self.send(method_name, command_value, author, issue)
     end
   end
 
-  def set_milestone(milestone, author, issue)  
+  def set_milestone(milestone, author, issue)
     milestone = milestone.strip
 
     if @repo.valid_milestone?(milestone)
@@ -117,7 +115,7 @@ class IssueManager
       issue.add_comment("@#{author} #{assign_to_user_arg} is an invalid user, ignoring... ")
     end
   end
-  
+
   def add_labels(command_value, author, issue)
     new_label_names   = split(command_value)
     valid_labels      = []
@@ -171,10 +169,10 @@ class IssueManager
     huboard_labels            = get_huboard_labels
     existing_huboard_lbl      = (huboard_labels & issue.applied_labels.keys).last
     existing_huboard_lbl_idx  = huboard_labels.index(existing_huboard_lbl)
-    index = get_new_huboard_label_idx(existing_huboard_lbl_idx, state, issue, author)  
+    index = get_new_huboard_label_idx(existing_huboard_lbl_idx, state, issue, author)
 
     return unless valid_state?(index, author, issue)
-      
+
     if existing_huboard_lbl
       issue.remove_label(existing_huboard_lbl)
     end
@@ -228,13 +226,13 @@ class IssueManager
     rescue Errno::ENOENT
       logger.error("Missing file #{GITHUB_CREDENTIALS_YAML_FILE}. Exiting...")
       exit 1
-    end 
+    end
 
-    @username      = credentials["username"] 
+    @username      = credentials["username"]
     @password      = credentials["password"]
 
     if @username.nil? || @password.nil?
-      logger.error("Credentials are not configured. Exiting..") 
+      logger.error("Credentials are not configured. Exiting..")
       exit 1
     end
   end
@@ -245,15 +243,14 @@ class IssueManager
     rescue Errno::ENOENT
       logger.warn("#{Time.now} #{ISSUE_MANAGER_YAML_FILE} was missing, recreating it...")
       FileUtils.touch(ISSUE_MANAGER_YAML_FILE)
-      retry       
-    end 
+      retry
+    end
   end
 
   def add_and_yaml_timestamps(updated_at, issue_number)
     @timestamps[issue_number]=updated_at
-    File.open(ISSUE_MANAGER_YAML_FILE, 'w+') do |f| 
-      YAML.dump(@timestamps, f) 
+    File.open(ISSUE_MANAGER_YAML_FILE, 'w+') do |f|
+      YAML.dump(@timestamps, f)
     end
   end
 end
-

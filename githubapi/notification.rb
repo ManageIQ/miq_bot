@@ -14,7 +14,7 @@ module GitHubApi
     end
 
     def issue
-      octokit_issue   = GitHubApi.execute(@client, :issue, @repo_name, @issue_id) 
+      octokit_issue   = GitHubApi.execute(@client, :issue, @repo_name, @issue_id)
       issue           = Issue.new(octokit_issue, @repo)
     end
 

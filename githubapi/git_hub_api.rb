@@ -12,7 +12,6 @@ require_relative '../logging'
 
 include Logging
 module GitHubApi
-
   def self.connect(username, password)
     @user = GitHubApi::User.new
     @user.client ||= Octokit::Client.new(:login => username, :password => password, :auto_traversal => true)
@@ -33,5 +32,4 @@ module GitHubApi
     logger.error(err.backtrace.join("\n"))
     raise
   end
-
 end

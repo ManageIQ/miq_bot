@@ -34,6 +34,5 @@ module GitHubApi
         @organization_members.add(members_hash["login"])
       end
     end
-    
 	end
 end
