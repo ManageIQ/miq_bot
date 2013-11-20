@@ -12,6 +12,10 @@ module Logging
   end
 
   def logger
-    Logging.logger
+    @logger ||= Logging.logger
+  end
+
+  def logger=(l)
+    @logger = l
   end
 end
