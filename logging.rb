@@ -1,6 +1,6 @@
 require 'logger'
 
-CFME_BOT_LOG_FILE = File.join(File.dirname(__FILE__), '/cfme_bot.log')
+CFME_BOT_LOG_FILE = File.join(File.dirname(__FILE__), 'log/cfme_bot.log')
 
 module Logging
   def self.logger
