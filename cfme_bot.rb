@@ -1,6 +1,6 @@
 require_relative 'issue_manager'
 
-CFME_BOT_YAML_FILE  = File.join(File.dirname(__FILE__), '/cfme_bot.yml')
+CFME_BOT_YAML_FILE  = File.join(File.dirname(__FILE__), 'config/cfme_bot.yml')
 SLEEPTIME = 15
 
 class CfmeBot

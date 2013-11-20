@@ -9,8 +9,8 @@ class IssueManager
   include Logging
   include GitHubApi
 
-  ISSUE_MANAGER_YAML_FILE       = File.join(File.dirname(__FILE__), '/issue_manager.yml')
-  GITHUB_CREDENTIALS_YAML_FILE  = File.join(File.dirname(__FILE__), '/issue_manager_credentials.yml')
+  ISSUE_MANAGER_YAML_FILE       = File.join(File.dirname(__FILE__), 'config/issue_manager.yml')
+  GITHUB_CREDENTIALS_YAML_FILE  = File.join(File.dirname(__FILE__), 'config/issue_manager_credentials.yml')
   ORGANIZATION = "ManageIQ"
 
   COMMANDS = {
