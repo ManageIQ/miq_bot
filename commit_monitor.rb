@@ -9,7 +9,6 @@ require 'ruby_bugzilla'
 class CommitMonitor
   include Logging
 
-  REPOSITORY_BASE = File.expand_path("~/dev")
   BZ_CREDS_YAML             = File.join(File.dirname(__FILE__), 'config/bugzilla_credentials.yml')
   COMMIT_MONITOR_REPOS_YAML = File.join(File.dirname(__FILE__), 'config/commit_monitor_repos.yml')
   COMMIT_MONITOR_YAML       = File.join(File.dirname(__FILE__), 'config/commit_monitor.yml')
@@ -17,11 +16,12 @@ class CommitMonitor
 
   def initialize
     load_yaml_files
+    @repo_base = File.expand_path(@options["repository_base"])
   end
 
   def process_new_commits
     @repos.each do |repo_name, branches|
-      git = MiniGit::Capturing.new(File.join(REPOSITORY_BASE, repo_name))
+      git = MiniGit::Capturing.new(File.join(@repo_base, repo_name))
 
       branches.each do |branch, last_commit|
         git.checkout branch
