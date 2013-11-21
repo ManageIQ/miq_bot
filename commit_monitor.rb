@@ -61,7 +61,7 @@ class CommitMonitor
     bz.login
     output = bz.query(:product => @options[:product], :bug_id => bug_id).chomp
     if output.length == 0
-      logger.error "Unable to write for bug id #{bug_id}: Not a '#{options[:product]}' bug."
+      logger.error "Unable to write for bug id #{bug_id}: Not a '#{@options[:product]}' bug."
     else
       logger.info "Writing to bugzilla"
       bz.modify(bug_id, :comment => message)
