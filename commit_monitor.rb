@@ -45,7 +45,7 @@ class CommitMonitor
   end
 
   def process_commit(git, branch, commit)
-    message = git.log("-1", commit)
+    message = git.log({:pretty => "fuller"}, "-1", commit)
     message.each_line do |line|
       match = %r{^\s*https://bugzilla\.redhat\.com/show_bug\.cgi\?id=(?<bug_id>\d+)$}.match(line)
       if match
