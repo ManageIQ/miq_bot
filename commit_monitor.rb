@@ -59,9 +59,9 @@ class CommitMonitor
     logger.info("Updating bug id #{bug_id} in Bugzilla.")
     bz = RubyBugzilla.new(*@bz_creds.values_at("bugzilla_uri", "username", "password"))
     bz.login
-    output = bz.query(:product => @options[:product], :bug_id => bug_id).chomp
+    output = bz.query(:product => @options["product"], :bug_id => bug_id).chomp
     if output.length == 0
-      logger.error "Unable to write for bug id #{bug_id}: Not a '#{@options[:product]}' bug."
+      logger.error "Unable to write for bug id #{bug_id}: Not a '#{@options["product"]}' bug."
     else
       logger.info "Writing to bugzilla"
       bz.modify(bug_id, :comment => message)
