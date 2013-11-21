@@ -3,17 +3,20 @@
 require_relative 'logging'
 require 'yaml'
 require 'minigit'
+require 'ruby_bugzilla'
 
 # Watches git branches for new commits, and on each new commit, triggers a callback.
 class CommitMonitor
   include Logging
 
   REPOSITORY_BASE = File.expand_path("~/dev")
-  COMMIT_MONITOR_YAML_FILE  = File.join(File.dirname(__FILE__), 'commit_monitor.yml')
-  COMMIT_MONITOR_LOG_FILE   = File.join(File.dirname(__FILE__), 'commit_monitor.log')
+  BZ_CREDS_YAML             = File.join(File.dirname(__FILE__), 'config/bugzilla_credentials.yml')
+  COMMIT_MONITOR_REPOS_YAML = File.join(File.dirname(__FILE__), 'config/commit_monitor_repos.yml')
+  COMMIT_MONITOR_YAML       = File.join(File.dirname(__FILE__), 'config/commit_monitor.yml')
+  COMMIT_MONITOR_LOG        = File.join(File.dirname(__FILE__), 'log/commit_monitor.log')
 
   def initialize
-    load_yaml_file
+    load_yaml_files
   end
 
   def process_new_commits
@@ -26,11 +29,11 @@ class CommitMonitor
 
         commits = find_new_commits(git, last_commit)
         commits.each do |commit|
-          process_commit(git, commit)
+          process_commit(git, branch, commit)
         end
 
         @repos[repo_name][branch] = commits.last || last_commit
-        dump_yaml_file
+        dump_repos_file
       end
     end
   end
@@ -41,21 +44,40 @@ class CommitMonitor
     git.rev_list({:reverse => true}, "#{last_commit}..HEAD").chomp.split("\n")
   end
 
-  def process_commit(git, commit)
+  def process_commit(git, branch, commit)
     message = git.log("-1", commit)
     message.each_line do |line|
-      if line =~ %r{^\s*https://bugzilla\.redhat\.com/show_bug\.cgi\?id=(\d+)$}
-        logger.info("Updating bug id #{$1} in Bugzilla.")
+      match = %r{^\s*https://bugzilla\.redhat\.com/show_bug\.cgi\?id=(?<bug_id>\d+)$}.match(line)
+      if match
+        branch_message = "On branch #{branch}:\n#{message}"
+        write_to_bugzilla(match[:bug_id], branch_message)
       end
     end
   end
 
-  def load_yaml_file
-    @repos = YAML.load_file(COMMIT_MONITOR_YAML_FILE)
+  def write_to_bugzilla(bug_id, message)
+    logger.info("Updating bug id #{bug_id} in Bugzilla.")
+    bz = RubyBugzilla.new(*@bz_creds.values_at("bugzilla_uri", "username", "password"))
+    bz.login
+    output = bz.query(:product => @options[:product], :bug_id => bug_id).chomp
+    if output.length == 0
+      logger.error "Unable to write for bug id #{bug_id}: Not a CFME bug."
+    else
+      logger.info "Writing to bugzilla"
+      bz.modify(bug_id, :comment => message)
+    end
+  rescue => err
+    logger.error "Unable to write for bug id #{bug_id}: #{err}"
   end
 
-  def dump_yaml_file
-    File.open(COMMIT_MONITOR_YAML_FILE, 'w+') do |f|
+  def load_yaml_files
+    @repos    = YAML.load_file(COMMIT_MONITOR_REPOS_YAML)
+    @options  = YAML.load_file(COMMIT_MONITOR_YAML)
+    @bz_creds = YAML.load_file(BZ_CREDS_YAML)
+  end
+
+  def dump_repos_file
+    File.open(COMMIT_MONITOR_REPOS_YAML, 'w+') do |f|
       f.write(YAML.dump(@repos))
     end
   end
@@ -71,4 +93,3 @@ if $0 == __FILE__
     sleep(5)
   end
 end
-
