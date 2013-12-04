@@ -29,7 +29,8 @@ class CommitMonitor
 
         commits = find_new_commits(git, last_commit)
         commits.each do |commit|
-          process_commit(git, branch, commit)
+          message_prefix = "Repo: #{repo_name} Branch: #{branch}"
+          process_commit(git, message_prefix, commit)
         end
 
         @repos[repo_name][branch] = commits.last || last_commit
@@ -44,14 +45,12 @@ class CommitMonitor
     git.rev_list({:reverse => true}, "#{last_commit}..HEAD").chomp.split("\n")
   end
 
-  def process_commit(git, branch, commit)
+  def process_commit(git, message_prefix, commit)
     message = git.log({:pretty => "fuller"}, "-1", commit)
     message.each_line do |line|
       match = %r{^\s*https://bugzilla\.redhat\.com/show_bug\.cgi\?id=(?<bug_id>\d+)$}.match(line)
-      if match
-        branch_message = "On branch #{branch}:\n#{message}"
-        write_to_bugzilla(match[:bug_id], branch_message)
-      end
+
+      write_to_bugzilla(match[:bug_id], "#{message_prefix}\n#{message}") if match
     end
   end
 
