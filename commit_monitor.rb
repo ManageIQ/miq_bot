@@ -29,7 +29,7 @@ class CommitMonitor
 
         commits = find_new_commits(git, last_commit)
         commits.each do |commit|
-          message_prefix = "Repo: #{repo_name} Branch: #{branch}"
+          message_prefix = "New commit detected on #{repo_name}/#{branch}:\n"
           process_commit(git, message_prefix, commit)
         end
 
@@ -46,7 +46,7 @@ class CommitMonitor
   end
 
   def process_commit(git, message_prefix, commit)
-    message = git.log({:pretty => "fuller"}, "-1", commit)
+    message = git.log({:pretty => "fuller"}, "--stat", "-1", commit)
     message.each_line do |line|
       match = %r{^\s*https://bugzilla\.redhat\.com/show_bug\.cgi\?id=(?<bug_id>\d+)$}.match(line)
 
