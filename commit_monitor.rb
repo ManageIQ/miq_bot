@@ -23,17 +23,19 @@ class CommitMonitor
     @repos.each do |repo_name, branches|
       git = MiniGit::Capturing.new(File.join(@repo_base, repo_name))
 
-      branches.each do |branch, last_commit|
+      branches.each do |branch, options|
+        last_commit, commit_uri = options.values_at("last_commit", "commit_uri")
+
         git.checkout branch
         git.pull
 
         commits = find_new_commits(git, last_commit)
         commits.each do |commit|
-          message_prefix = "New commit detected on #{repo_name}/#{branch}:\n"
-          process_commit(git, message_prefix, commit)
+          message_prefix = "New commit detected on #{repo_name}/#{branch}:"
+          process_commit(git, commit, message_prefix, commit_uri)
         end
 
-        @repos[repo_name][branch] = commits.last || last_commit
+        @repos[repo_name][branch]["last_commit"] = commits.last || last_commit
         dump_repos_file
       end
     end
@@ -45,16 +47,20 @@ class CommitMonitor
     git.rev_list({:reverse => true}, "#{last_commit}..HEAD").chomp.split("\n")
   end
 
-  def process_commit(git, message_prefix, commit)
+  def process_commit(git, commit, message_prefix, commit_uri)
     message = git.log({:pretty => "fuller"}, "--stat", "-1", commit)
+
     message.each_line do |line|
       match = %r{^\s*https://bugzilla\.redhat\.com/show_bug\.cgi\?id=(?<bug_id>\d+)$}.match(line)
 
-      write_to_bugzilla(match[:bug_id], "#{message_prefix}\n#{message}") if match
+      if match
+        comment = "#{message_prefix}\n#{commit_uri}#{commit}\n\n#{message}"
+        write_to_bugzilla(match[:bug_id], comment)
+      end
     end
   end
 
-  def write_to_bugzilla(bug_id, message)
+  def write_to_bugzilla(bug_id, comment)
     logger.info("Updating bug id #{bug_id} in Bugzilla.")
     bz = RubyBugzilla.new(*@bz_creds.values_at("bugzilla_uri", "username", "password"))
     bz.login
@@ -63,7 +69,7 @@ class CommitMonitor
       logger.error "Unable to write for bug id #{bug_id}: Not a '#{@options["product"]}' bug."
     else
       logger.info "Writing to bugzilla"
-      bz.modify(bug_id, :comment => message)
+      bz.modify(bug_id, :comment => comment)
     end
   rescue => err
     logger.error "Unable to write for bug id #{bug_id}: #{err}"
