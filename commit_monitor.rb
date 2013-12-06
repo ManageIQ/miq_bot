@@ -95,6 +95,6 @@ if $0 == __FILE__
   bot = CommitMonitor.new
   loop do
     bot.process_new_commits
-    sleep(5)
+    sleep(60)
   end
 end
