@@ -43,3 +43,7 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+gem 'sidekiq'
+gem 'sinatra', require: false
+gem 'slim'
