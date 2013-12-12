@@ -13,21 +13,23 @@ class CommitMonitorWorker
     load_configuration
 
     @repos.each do |repo, branches|
-      git = MiniGit::Capturing.new(File.join(@repo_base, repo))
+      MiniGitMutex.synchronize do
+        git = MiniGit::Capturing.new(File.join(@repo_base, repo))
 
-      branches.each do |branch, options|
-        last_commit = options["last_commit"]
+        branches.each do |branch, options|
+          last_commit = options["last_commit"]
 
-        git.checkout branch
-        git.pull
+          git.checkout branch
+          git.pull
 
-        commits = find_new_commits(git, last_commit)
-        commits.each do |commit|
-          process_commit(repo, branch, commit)
+          commits = find_new_commits(git, last_commit)
+          commits.each do |commit|
+            process_commit(repo, branch, commit)
+          end
+
+          @repos[repo][branch]["last_commit"] = commits.last || last_commit
+          dump_configuration
         end
-
-        @repos[repo][branch]["last_commit"] = commits.last || last_commit
-        dump_configuration
       end
     end
   end
