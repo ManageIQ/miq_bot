@@ -1,6 +1,6 @@
 require 'minigit'
 
-class CommitMonitorBugzillaCommentor
+class CommitMonitorHandlers::BugzillaCommentor
   include Sidekiq::Worker
 
   def perform(repo, branch, commit)

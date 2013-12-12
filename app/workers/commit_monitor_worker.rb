@@ -1,7 +1,7 @@
 require 'yaml'
 require 'minigit'
 
-class CommitMonitorPollingWorker
+class CommitMonitorWorker
   include Sidekiq::Worker
 
   def perform
@@ -37,7 +37,16 @@ class CommitMonitorPollingWorker
   end
 
   def process_commit(repo, branch, commit)
-    CommitMonitorBugzillaCommentor.perform_async(repo, branch, commit)
+    handlers.each do |h|
+      h.perform_async(repo, branch, commit)
+    end
+  end
+
+  def handlers
+    Dir.glob(Rails.root.join("app/workers/commit_monitor_handlers/*.rb")).collect do |f|
+      klass = File.basename(f, ".rb").classify
+      CommitMonitorHandlers.const_get(klass)
+    end
   end
 
   def load_configuration
