@@ -47,3 +47,7 @@ end
 gem 'sidekiq'
 gem 'sinatra', require: false
 gem 'slim'
+
+# Commit monitor specific gems
+gem 'minigit',       '~> 0.0.4'
+gem 'ruby_bugzilla', '~> 0.4.2'
