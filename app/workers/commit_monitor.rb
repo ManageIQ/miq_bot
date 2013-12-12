@@ -1,7 +1,7 @@
 require 'yaml'
 require 'minigit'
 
-class CommitMonitorWorker
+class CommitMonitor
   include Sidekiq::Worker
 
   def initialize(*args)
