@@ -4,6 +4,11 @@ require 'minigit'
 class CommitMonitorWorker
   include Sidekiq::Worker
 
+  def initialize(*args)
+    MiniGit.debug = true
+    super
+  end
+
   def perform
     load_configuration
 

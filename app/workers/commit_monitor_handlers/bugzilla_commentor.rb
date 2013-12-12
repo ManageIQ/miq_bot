@@ -3,6 +3,11 @@ require 'minigit'
 class CommitMonitorHandlers::BugzillaCommentor
   include Sidekiq::Worker
 
+  def initialize(*args)
+    MiniGit.debug = true
+    super
+  end
+
   def perform(repo, branch, commit)
     load_configuration
     process_commit(repo, branch, commit)
