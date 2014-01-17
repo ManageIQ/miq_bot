@@ -2,6 +2,7 @@ namespace :commit_monitor do
   desc "Run polling loop for the commit monitor"
   task :poll => :environment do
     loop do
+      print "."
       CommitMonitor.perform_async
       sleep(60)
     end

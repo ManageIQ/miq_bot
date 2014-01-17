@@ -1,69 +1,62 @@
 require 'yaml'
-require 'minigit'
 
 class CommitMonitor
   include Sidekiq::Worker
 
-  def initialize(*args)
-    MiniGit.debug = true
-    super
+  def self.options
+    @options ||= YAML.load_file(Rails.root.join('config/commit_monitor.yml'))
   end
 
-  def perform
-    load_configuration
+  def self.product
+    @product ||= options["product"]
+  end
 
-    @repos.each do |repo, branches|
-      MiniGitMutex.synchronize do
-        git = MiniGit::Capturing.new(File.join(@repo_base, repo))
-
-        branches.each do |branch, options|
-          last_commit = options["last_commit"]
-
-          git.checkout branch
-          git.pull
-
-          commits = find_new_commits(git, last_commit)
-          commits.each do |commit|
-            process_commit(repo, branch, commit)
-          end
-
-          @repos[repo][branch]["last_commit"] = commits.last || last_commit
-          dump_configuration
-        end
+  def self.handlers
+    @handlers ||=
+      Dir.glob(Rails.root.join("app/workers/commit_monitor_handlers/*.rb")).collect do |f|
+        klass = File.basename(f, ".rb").classify
+        CommitMonitorHandlers.const_get(klass)
       end
-    end
+  end
+
+  delegate :handlers, :to => :class
+
+  def perform
+    process_branches
   end
 
   private
 
-  COMMIT_MONITOR_REPOS_YAML = Rails.root.join('config/commit_monitor_repos.yml')
-  COMMIT_MONITOR_YAML       = Rails.root.join('config/commit_monitor.yml')
+  def process_branches
+    CommitMonitorRepo.includes(:branches).each do |repo|
+      repo.with_git_service(:debug => true) do |git|
+        repo.branches.each { |branch| process_branch(git, branch) }
+      end
+    end
+  end
+
+  def process_branch(git, branch)
+    git.checkout branch.name
+    git.pull
+
+    commits = find_new_commits(git, branch.last_commit)
+    commits.each do |commit|
+      message = get_commit_message(git, commit)
+      process_commit(branch, commit, message)
+    end
+
+    branch.update_attributes(:last_commit => commits.last)
+  end
 
   def find_new_commits(git, last_commit)
     git.rev_list({:reverse => true}, "#{last_commit}..HEAD").chomp.split("\n")
   end
 
-  def process_commit(repo, branch, commit)
-    handlers.each do |h|
-      h.perform_async(repo, branch, commit)
-    end
+  def get_commit_message(git, commit)
+    git.log({:pretty => "fuller"}, "--stat", "-1", commit)
   end
 
-  def handlers
-    Dir.glob(Rails.root.join("app/workers/commit_monitor_handlers/*.rb")).collect do |f|
-      klass = File.basename(f, ".rb").classify
-      CommitMonitorHandlers.const_get(klass)
-    end
-  end
-
-  def load_configuration
-    @repos   = YAML.load_file(COMMIT_MONITOR_REPOS_YAML)
-    @options = YAML.load_file(COMMIT_MONITOR_YAML)
-
-    @repo_base = File.expand_path(@options["repository_base"])
-  end
-
-  def dump_configuration
-    File.write(COMMIT_MONITOR_REPOS_YAML, YAML.dump(@repos))
+  def process_commit(branch, commit, message)
+    handlers.each { |h| h.perform_async(branch.id, commit, message) }
   end
 end

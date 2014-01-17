@@ -1,0 +1,22 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Repository</th>
+			<th>Branch</th>
+			<th>Last Commit</th>
+			<th>Last Updated</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @repos.each do |repo| %>
+			<% repo.branches.each do |branch| %>
+				<tr>
+					<td><%= repo.name %></td>
+					<td><%= branch.name %></td>
+					<td><%= link_to(branch.last_commit, branch.last_commit_uri, :target => "_blank") %></td>
+					<td><%= time_ago_in_words(branch.updated_at) %></td>
+				</tr>
+			<% end %>
+		<% end %>
+	</tbody>
+</table>
