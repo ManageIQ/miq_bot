@@ -11,3 +11,9 @@
  *= require_self
  *= require_tree .
  */
+
+.page-footer {
+  padding-top: 9px;
+  margin: 20px 0 40px;
+  border-top: 1px solid #eeeeee;
+}
