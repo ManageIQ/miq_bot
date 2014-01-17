@@ -10,6 +10,14 @@ module GitService
     end
   end
 
+  def self.new_commits(git, since_commit)
+    git.rev_list({:reverse => true}, "#{since_commit}..HEAD").chomp.split("\n")
+  end
+
+  def self.commit_message(git, commit)
+    git.log({:pretty => "fuller"}, "--stat", "-1", commit)
+  end
+
   private
 
   def self.mutex

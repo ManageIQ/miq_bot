@@ -39,21 +39,13 @@ class CommitMonitor
     git.checkout branch.name
     git.pull
 
-    commits = find_new_commits(git, branch.last_commit)
+    commits = GitService.new_commits(git, branch.last_commit)
     commits.each do |commit|
-      message = get_commit_message(git, commit)
+      message = GitService.commit_message(git, commit)
       process_commit(branch, commit, message)
     end
 
     branch.update_attributes(:last_commit => commits.last)
-  end
-
-  def find_new_commits(git, last_commit)
-    git.rev_list({:reverse => true}, "#{last_commit}..HEAD").chomp.split("\n")
-  end
-
-  def get_commit_message(git, commit)
-    git.log({:pretty => "fuller"}, "--stat", "-1", commit)
   end
 
   def process_commit(branch, commit, message)
