@@ -4,7 +4,7 @@ namespace :commit_monitor do
     loop do
       print "."
       CommitMonitor.perform_async
-      sleep(60)
+      sleep(CommitMonitor.options["poll"])
     end
   end
 
