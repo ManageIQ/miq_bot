@@ -1,21 +1,41 @@
 require 'thread'
 require 'minigit'
 
-module GitService
-  def self.call(path_to_repo)
+class GitService
+  def self.call(*args)
     raise "no block given" unless block_given?
-    synchronize do
+    synchronize { yield new(*args) }
+    nil
+  end
+
+  attr_reader :path_to_repo
+
+  def initialize(path_to_repo)
+    @path_to_repo = path_to_repo
+    service # initialize the service
+  end
+
+  def service
+    @service ||= begin
       MiniGit.debug = true
-      yield MiniGit::Capturing.new(path_to_repo)
+      MiniGit::Capturing.new(File.expand_path(path_to_repo))
     end
   end
 
-  def self.new_commits(git, since_commit)
-    git.rev_list({:reverse => true}, "#{since_commit}..HEAD").chomp.split("\n")
+  def method_missing(method_name, *args)
+    service.send(method_name, *args)
   end
 
-  def self.commit_message(git, commit)
-    git.log({:pretty => "fuller"}, "--stat", "-1", commit)
+  def respond_to_missing?(*args)
+    service.respond_to?(*args)
+  end
+
+  def new_commits(since_commit)
+    rev_list({:reverse => true}, "#{since_commit}..HEAD").chomp.split("\n")
+  end
+
+  def commit_message(commit)
+    log({:pretty => "fuller"}, "--stat", "-1", commit)
   end
 
   private
@@ -29,4 +49,7 @@ module GitService
   end
 
   private_class_method :mutex, :synchronize
+
+  # Hide new in favor of using .call with block to force synchronization
+  private_class_method :new
 end

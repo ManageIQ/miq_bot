@@ -36,12 +36,12 @@ class CommitMonitor
   end
 
   def process_branch(git, branch)
-    git.checkout branch.name
+    git.checkout(branch.name)
     git.pull
 
-    commits = GitService.new_commits(git, branch.last_commit)
+    commits = git.new_commits(branch.last_commit)
     commits.each do |commit|
-      message = GitService.commit_message(git, commit)
+      message = git.commit_message(commit)
       process_commit(branch, commit, message)
     end
 
