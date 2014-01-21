@@ -2,10 +2,10 @@ require 'thread'
 require 'minigit'
 
 module GitService
-  def self.call(path_to_repo, options = {})
+  def self.call(path_to_repo)
     raise "no block given" unless block_given?
     synchronize do
-      MiniGit.debug = !!options[:debug]
+      MiniGit.debug = true
       yield MiniGit::Capturing.new(path_to_repo)
     end
   end

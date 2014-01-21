@@ -29,7 +29,7 @@ class CommitMonitor
 
   def process_branches
     CommitMonitorRepo.includes(:branches).each do |repo|
-      repo.with_git_service(:debug => true) do |git|
+      repo.with_git_service do |git|
         repo.branches.each { |branch| process_branch(git, branch) }
       end
     end

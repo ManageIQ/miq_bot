@@ -8,8 +8,8 @@ class CommitMonitorRepo < ActiveRecord::Base
     super(File.expand_path(val))
   end
 
-  def with_git_service(options = {})
+  def with_git_service
     raise "no block given" unless block_given?
-    GitService.call(path, options) { |git| yield git }
+    GitService.call(path) { |git| yield git }
   end
 end
