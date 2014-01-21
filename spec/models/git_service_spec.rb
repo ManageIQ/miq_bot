@@ -4,36 +4,14 @@ describe GitService do
   let(:service) { double("git service") }
 
   before do
-    GitService.any_instance.stub(:service => service)
+    described_class.any_instance.stub(:service => service)
   end
 
   def with_service
-    GitService.call("/path/to/repo") { |git| yield git }
+    described_class.call("/path/to/repo") { |git| yield git }
   end
 
-  context ".new" do
-    it "is private" do
-      expect { GitService.new }.to raise_error(NoMethodError)
-    end
-  end
-
-  context ".call" do
-    it "will synchronize multiple callers" do
-      t = Thread.new do
-        GitService.call("/path/to/repo") do |git|
-          Thread.current[:locked] = true
-          sleep 0.01 until Thread.current[:release]
-        end
-      end
-      t.abort_on_exception = true
-      sleep 0.01 until t[:locked]
-
-      expect(GitService.send(:mutex)).to be_locked
-
-      t[:release] = true
-      t.join
-    end
-  end
+  it_should_behave_like "ServiceMixin service"
 
   context "native git method" do
     it "#checkout" do
