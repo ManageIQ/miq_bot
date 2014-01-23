@@ -1,6 +1,6 @@
 namespace :foreman do
   desc "Export upstart tasks"
   task :export do
-    puts `foreman export upstart /etc/init -l #{Dir.pwd}/log/foreman -a cfme_bot -u root -p 3002 -e .production_env`
+    puts `source ./.production_env && foreman export upstart /etc/init -l #{Dir.pwd}/log/foreman -a #{File.basename(Dir.pwd)} -u root -p $START_PORT -e .production_env`
   end
 end
