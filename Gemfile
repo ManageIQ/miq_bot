@@ -56,6 +56,7 @@ gem 'ruby_bugzilla', '~> 0.4.2'
 group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
+  gem 'timecop'
 end
 
 gem 'foreman'

@@ -11,15 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140116232751) do
+ActiveRecord::Schema.define(version: 20140128174930) do
 
   create_table "commit_monitor_branches", force: true do |t|
     t.string   "name"
     t.string   "commit_uri"
     t.string   "last_commit"
     t.integer  "commit_monitor_repo_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "last_checked_on"
+    t.datetime "last_changed_on"
   end
 
   create_table "commit_monitor_repos", force: true do |t|

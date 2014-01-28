@@ -45,7 +45,9 @@ class CommitMonitor
       process_commit(branch, commit, message)
     end
 
-    branch.update_attributes(:last_commit => commits.last)
+    branch.last_checked_on = Time.now.utc
+    branch.last_commit     = commits.last if commits.any?
+    branch.save!
   end
 
   def process_commit(branch, commit, message)

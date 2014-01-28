@@ -5,7 +5,8 @@
 				<th>Repository</th>
 				<th>Branch</th>
 				<th>Last Commit</th>
-				<th>Last Updated</th>
+				<th>Last Checked</th>
+				<th>Last Changed</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -15,7 +16,8 @@
 						<td><%= repo.name %></td>
 						<td><%= branch.name %></td>
 						<td><%= link_to(branch.last_commit[0, 8], branch.last_commit_uri, :target => "_blank") %></td>
-						<td><%= time_ago_in_words(branch.updated_at) %> ago</td>
+						<td><%= time_ago_in_words_with_nil_check(branch.last_checked_on) %></td>
+						<td><%= time_ago_in_words_with_nil_check(branch.last_changed_on) %></td>
 					</tr>
 				<% end %>
 			<% end %>

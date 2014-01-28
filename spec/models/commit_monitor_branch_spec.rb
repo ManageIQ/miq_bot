@@ -1,7 +1,24 @@
 require 'spec_helper'
 
 describe CommitMonitorBranch do
-  let(:branch) { CommitMonitorBranch.new(:last_commit => "123abc", :commit_uri => "https://uri.to/commit/$commit") }
+  let(:last_commit)  { "123abc" }
+  let(:other_commit) { "234def" }
+
+  let(:repo) do
+    CommitMonitorRepo.create!(
+      :name => "test-repo",
+      :path => "/path/to/repo"
+    )
+  end
+
+  let(:branch) do
+    CommitMonitorBranch.create!(
+      :name        => "test-branch",
+      :repo        => repo,
+      :last_commit => last_commit,
+      :commit_uri  => "https://uri.to/commit/$commit"
+    )
+  end
 
   context ".github_commit_uri" do
     it "(user, repo)" do
@@ -15,11 +32,29 @@ describe CommitMonitorBranch do
     end
   end
 
+  context "#last_commit=" do
+    it "will not modify last_changed_on if commit does not change" do
+      branch # Create the branch before time freezing
+      Timecop.freeze(10.minutes.from_now) do
+        branch.last_commit = last_commit
+        expect(branch.last_changed_on).to_not eq Time.now
+      end
+    end
+
+    it "will modify last_changed_on if commit changes" do
+      branch # Create the branch before time freezing
+      Timecop.freeze(10.minutes.from_now) do
+        branch.last_commit = other_commit
+        expect(branch.last_changed_on).to eq Time.now
+      end
+    end
+  end
+
   it "#commit_uri_to" do
-    expect(branch.commit_uri_to("234def")).to eq "https://uri.to/commit/234def"
+    expect(branch.commit_uri_to(other_commit)).to eq "https://uri.to/commit/#{other_commit}"
   end
 
   it "#last_commit_uri" do
-    expect(branch.last_commit_uri).to eq "https://uri.to/commit/123abc"
+    expect(branch.last_commit_uri).to eq "https://uri.to/commit/#{last_commit}"
   end
 end

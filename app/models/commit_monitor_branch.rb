@@ -10,6 +10,11 @@ class CommitMonitorBranch < ActiveRecord::Base
     "https://github.com/#{user}/#{repo}/commit/#{sha}"
   end
 
+  def last_commit=(val)
+    super
+    self.last_changed_on = Time.now.utc if last_commit_changed?
+  end
+
   def commit_uri_to(commit)
     commit_uri.gsub("$commit", commit)
   end
