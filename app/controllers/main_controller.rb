@@ -1,5 +1,5 @@
 class MainController < ApplicationController
   def index
-    @repos = CommitMonitorRepo.includes(:branches)
+    @branches = CommitMonitorBranch.includes(:repo).sort_by { |b| [b.repo.name, b.name] }
   end
 end
