@@ -31,4 +31,24 @@ class GitService
   def commit_message(commit)
     log({:pretty => "fuller"}, "--stat", "-1", commit)
   end
+
+  def branches
+    branch.split("\n").collect do |b|
+      b = b[1..-1] if b.start_with?("*")
+      b.strip
+    end
+  end
+
+  def pr_branch_name(pr_number)
+    "pr/#{pr_number}"
+  end
+
+  def pr_number(branch_name)
+    branch_name.split("/").last.to_i
+  end
+
+  def pull_pr_branch(branch_name, remote = "upstream")
+    fetch("-fu", remote, "refs/pull/#{pr_number(branch_name)}/head:#{branch_name}")
+  end
+  alias_method :create_pr_branch, :pull_pr_branch
 end

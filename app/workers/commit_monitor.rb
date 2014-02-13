@@ -43,6 +43,9 @@ class CommitMonitor
   end
 
   def process_branch
+    # TODO: Handle PR branch commits.
+    return if branch.pull_request?
+
     git.checkout(branch.name)
     git.pull
 
