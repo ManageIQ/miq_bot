@@ -4,6 +4,12 @@ require 'minigit'
 class GitService
   include ServiceMixin
 
+  # All MiniGit methods return stdout which always has a trailing newline
+  # that is never wanted, so remove it always.
+  def method_missing(*args)
+    super.chomp
+  end
+
   attr_reader :path_to_repo
 
   def initialize(path_to_repo)
@@ -19,7 +25,7 @@ class GitService
   end
 
   def new_commits(since_commit)
-    rev_list({:reverse => true}, "#{since_commit}..HEAD").chomp.split("\n")
+    rev_list({:reverse => true}, "#{since_commit}..HEAD").split("\n")
   end
 
   def commit_message(commit)
