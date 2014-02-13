@@ -10,7 +10,6 @@ module ServiceMixin
     def call(*args)
       raise "no block given" unless block_given?
       synchronize { yield new(*args) }
-      nil
     end
 
     private
