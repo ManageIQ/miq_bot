@@ -1,4 +1,4 @@
-class CommitMonitorHandlers::BugzillaCommentor
+class CommitMonitorHandlers::Commit::BugzillaCommentor
   include Sidekiq::Worker
 
   delegate :product, :to => :CommitMonitor
