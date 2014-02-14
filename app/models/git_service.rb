@@ -6,7 +6,7 @@ class GitService
 
   # All MiniGit methods return stdout which always has a trailing newline
   # that is never wanted, so remove it always.
-  def method_missing(*args)
+  def delegate_to_service(method_name, *args)
     super.chomp
   end
 

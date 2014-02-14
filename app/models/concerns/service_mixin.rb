@@ -23,8 +23,12 @@ module ServiceMixin
     end
   end
 
-  def method_missing(method_name, *args)
+  def delegate_to_service(method_name, *args)
     service.send(method_name, *args)
+  end
+
+  def method_missing(method_name, *args)
+    delegate_to_service(method_name, *args)
   end
 
   def respond_to_missing?(*args)
