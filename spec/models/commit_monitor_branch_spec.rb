@@ -57,4 +57,17 @@ describe CommitMonitorBranch do
   it "#last_commit_uri" do
     expect(branch.last_commit_uri).to eq "https://uri.to/commit/#{last_commit}"
   end
+
+  context "#pr_number" do
+    it "on pr branch" do
+      branch.name = "pr/133"
+      branch.pull_request = true
+
+      expect(branch.pr_number).to eq 133
+    end
+
+    it "on regular branch" do
+      expect(branch.pr_number).to be_nil
+    end
+  end
 end

@@ -70,6 +70,13 @@ class GitService
     self.class.pr_branch?(branch)
   end
 
+  def mergeable?(branch = nil, into_branch = "master")
+    branch ||= current_branch
+    base_commit = merge_base(branch, into_branch)
+    output = merge_tree(base_commit, branch, into_branch)
+    !output.include?("changed in both")
+  end
+
   def update_pr_branch(branch = nil, remote = "upstream")
     create_or_update_pr_branch(branch || current_branch, remote)
   end
