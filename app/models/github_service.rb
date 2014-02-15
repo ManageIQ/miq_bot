@@ -17,7 +17,13 @@ class GithubService
   end
 
   def initialize(options)
-    @options = options
+    @options = options.dup
+
+    if @options[:repo].kind_of?(CommitMonitorRepo)
+      @options[:user] = @options[:repo].upstream_user
+      @options[:repo] = @options[:repo].name
+    end
+
     service # initialize the service
   end
 

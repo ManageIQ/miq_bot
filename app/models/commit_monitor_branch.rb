@@ -6,6 +6,9 @@ class CommitMonitorBranch < ActiveRecord::Base
   validates :last_commit, :presence => true
   validates :repo,        :presence => true
 
+  serialize :commits_list, Array
+  default_value_for(:commits_list) { [] }
+
   def self.github_commit_uri(user, repo, sha = "$commit")
     "https://github.com/#{user}/#{repo}/commit/#{sha}"
   end

@@ -39,16 +39,49 @@ class GitService
     end
   end
 
-  def pr_branch_name(pr_number)
+  def current_branch
+    rev_parse("--abbrev-ref", "HEAD")
+  end
+
+  def destroy_branch(branch_name)
+    branch("-D", branch_name)
+  end
+
+  #
+  # Pull Request specific methods
+  #
+
+  def self.pr_branch(pr_number)
     "pr/#{pr_number}"
   end
+  delegate :pr_branch, :to => :class
 
-  def pr_number(branch_name)
-    branch_name.split("/").last.to_i
+  def self.pr_number(branch)
+    branch.split("/").last.to_i
+  end
+  delegate :pr_number, :to => :class
+
+  def self.pr_branch?(branch)
+    branch =~ %r{^pr/\d+$}
   end
 
-  def pull_pr_branch(branch_name, remote = "upstream")
-    fetch("-fu", remote, "refs/pull/#{pr_number(branch_name)}/head:#{branch_name}")
+  def pr_branch?(branch = nil)
+    branch ||= current_branch
+    self.class.pr_branch?(branch)
   end
-  alias_method :create_pr_branch, :pull_pr_branch
+
+  def update_pr_branch(branch = nil, remote = "upstream")
+    create_or_update_pr_branch(branch || current_branch, remote)
+  end
+
+  def create_pr_branch(branch, remote = "upstream")
+    create_or_update_pr_branch(branch, remote)
+  end
+
+  private
+
+  def create_or_update_pr_branch(branch, remote)
+    fetch("-fu", remote, "refs/pull/#{pr_number(branch)}/head:#{branch}")
+    reset("--hard")
+  end
 end

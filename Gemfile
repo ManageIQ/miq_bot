@@ -44,6 +44,9 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+gem 'default_value_for'
+gem 'more_core_extensions'
+
 gem 'thin'
 gem 'sidekiq'
 gem 'sinatra', require: false

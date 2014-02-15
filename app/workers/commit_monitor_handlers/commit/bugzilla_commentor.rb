@@ -1,11 +1,16 @@
 class CommitMonitorHandlers::Commit::BugzillaCommentor
   include Sidekiq::Worker
 
+  def self.handled_branch_modes
+    [:regular]
+  end
+
   delegate :product, :to => :CommitMonitor
 
-  def perform(branch_id, commit, message)
+  def perform(branch_id, commit, commit_details)
     branch = CommitMonitorBranch.find(branch_id)
-    process_commit(branch, commit, message)
+    return if branch.pull_request?
+    process_commit(branch, commit, commit_details[:message])
   end
 
   private
