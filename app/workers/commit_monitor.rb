@@ -146,7 +146,7 @@ class CommitMonitor
     commits.each do |commit|
       message = git.commit_message(commit)
       commit_handlers.each do |h|
-        h.perform_async(branch.id, commit, :message => message)
+        h.perform_async(branch.id, commit, "message" => message)
       end
     end
   end

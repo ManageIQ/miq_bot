@@ -10,7 +10,7 @@ class CommitMonitorHandlers::Commit::BugzillaCommentor
   def perform(branch_id, commit, commit_details)
     branch = CommitMonitorBranch.find(branch_id)
     return if branch.pull_request?
-    process_commit(branch, commit, commit_details[:message])
+    process_commit(branch, commit, commit_details["message"])
   end
 
   private
