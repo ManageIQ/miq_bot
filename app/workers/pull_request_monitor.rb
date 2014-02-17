@@ -1,5 +1,6 @@
 class PullRequestMonitor
   include Sidekiq::Worker
+  sidekiq_options :retry => false
 
   def perform
     process_repos
