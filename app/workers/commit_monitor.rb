@@ -143,23 +143,35 @@ class CommitMonitor
   end
 
   def process_commit_handlers(commits)
+    return if commit_handlers.empty? || commits.empty?
+    log_prefix = "#{self.class.name}##{__method__}"
+
     commits.each do |commit|
       message = git.commit_message(commit)
       commit_handlers.each do |h|
+        logger.info("#{log_prefix} Queueing #{h.name} for commit #{commit} on branch #{branch.name}")
         h.perform_async(branch.id, commit, "message" => message)
       end
     end
   end
 
   def process_commit_range_handlers(commits)
-    return if commits.empty?
+    return if commit_range_handlers.empty? || commits.empty?
+    log_prefix = "#{self.class.name}##{__method__}"
+    commit_range = [commits.first, commits.last].uniq.join("..")
+
     commit_range_handlers.each do |h|
+      logger.info("#{log_prefix} Queueing #{h.name} for commit range #{commit_range} on branch #{branch.name}")
       h.perform_async(branch.id, commits)
     end
   end
 
   def process_branch_handlers
+    return if branch_handlers.empty?
+    log_prefix = "#{self.class.name}##{__method__}"
+
     branch_handlers.each do |h|
+      logger.info("#{log_prefix} Queueing #{h.name} for branch #{branch.name}")
       h.perform_async(branch.id)
     end
   end
