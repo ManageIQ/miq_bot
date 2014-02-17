@@ -64,6 +64,39 @@ describe GitService do
     end
   end
 
+  it "#diff_details" do
+    expect(service).to receive(:diff).with("-U0", "--no-color", "6c4a4487~..6c4a4487").and_return(<<-EOGIT)
+diff --git a/new_file.rb b/new_file.rb
+new file mode 100644
+index 0000000..b4c1281
+--- /dev/null
++++ b/new_file.rb
+@@ -0,0 +1,39 @@
++class SomeClass
++end
++
+diff --git a/changed_file.rb b/changed_file.rb
+index 4f807bb..57e5993 100644
+--- a/changed_file.rb
++++ b/changed_file.rb
+@@ -29,0 +30 @@ def method1
++    x = 1
+@@ -30,0 +32 @@ def method2
++    x = 2
+@@ -68,3 +69,0 @@ def method 3
+-    if x == 1
+-      x = 3
+-    end
+    EOGIT
+
+    with_service do |git|
+      expect(git.diff_details("6c4a4487")).to eq(
+        "new_file.rb"     => [1, 2, 3],
+        "changed_file.rb" => [30, 32]
+      )
+    end
+  end
+
   it ".pr_branch" do
     expect(described_class.pr_branch(133)).to eq "pr/133"
   end

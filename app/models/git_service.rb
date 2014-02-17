@@ -47,6 +47,31 @@ class GitService
     branch("-D", branch_name)
   end
 
+  def diff_details(commit1, commit2 = nil)
+    commit2 ||= commit1
+    commit1   = "#{commit1}~"
+
+    output = diff("-U0", "--no-color", "#{commit1}..#{commit2}")
+
+    ret = Hash.new { |h, k| h[k] = [] }
+    path = line_number = nil
+    output.lines.each_with_object(ret) do |line, h|
+      case line
+      when /^--- (?:a\/)?/
+        next
+      when /^\+\+\+ (?:b\/)?(.+)/
+        path = $1.chomp
+      when /^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@/
+        line_number = $1.to_i
+      when /^([ +-])/
+        if $1 != "-"
+          h[path] << line_number
+          line_number += 1
+        end
+      end
+    end
+  end
+
   #
   # Pull Request specific methods
   #
