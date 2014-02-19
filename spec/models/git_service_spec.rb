@@ -65,7 +65,7 @@ describe GitService do
   end
 
   it "#diff_details" do
-    expect(service).to receive(:diff).with("-U0", "--no-color", "6c4a4487~..6c4a4487").and_return(<<-EOGIT)
+    expect(service).to receive(:diff).with("--patience", "-U0", "--no-color", "6c4a4487~..6c4a4487").and_return(<<-EOGIT)
 diff --git a/new_file.rb b/new_file.rb
 new file mode 100644
 index 0000000..b4c1281

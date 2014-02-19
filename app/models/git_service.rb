@@ -51,7 +51,7 @@ class GitService
     commit2 ||= commit1
     commit1   = "#{commit1}~"
 
-    output = diff("-U0", "--no-color", "#{commit1}..#{commit2}")
+    output = diff("--patience", "-U0", "--no-color", "#{commit1}..#{commit2}")
 
     ret = Hash.new { |h, k| h[k] = [] }
     path = line_number = nil
