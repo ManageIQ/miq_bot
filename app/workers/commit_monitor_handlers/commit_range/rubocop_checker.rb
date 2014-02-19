@@ -98,9 +98,8 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
       message.puts
       message.puts("**#{f["path"]}**")
-      message.puts("```")
-      f["offences"].each do |o|
-        message.printf("%5s:%3d:%3d: %s: %s\n",
+      sort_offences(f["offences"]).each do |o|
+        message.printf("- [ ] %s - Line %d, Col %d - %s - %s\n",
           format_severity(o["severity"]),
           o["location"]["line"],
           o["location"]["column"],
@@ -108,19 +107,36 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
           o["message"]
         )
       end
-      message.puts("```")
     end
 
     message.string
   end
 
-  def format_severity(sev)
-    case sev
-    when "convention" then "CONV"
-    when "refactor"   then "REFAC"
-    when "warning"    then "WARN"
-    else sev.upcase
+  def sort_offences(offences)
+    offences.sort_by do |o|
+      [
+        order_severity(o["severity"]),
+        o["location"]["line"],
+        o["location"]["column"],
+        o["cop_name"]
+      ]
     end
+  end
+
+  SEVERITY_LOOKUP = {
+    "fatal"      => "Fatal",
+    "error"      => "Error",
+    "warning"    => "Warn",
+    "convention" => "Style",
+    "refactor"   => "Refac",
+  }.freeze
+
+  def order_severity(sev)
+    SEVERITY_LOOKUP.keys.index(sev) || Float::INFINITY
+  end
+
+  def format_severity(sev)
+    SEVERITY_LOOKUP[sev] || sev.capitalize[0, 5]
   end
 
   def format_cop_name(cop_name)
