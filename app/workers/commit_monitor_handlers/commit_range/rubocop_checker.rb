@@ -107,10 +107,10 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
       message.puts
       message.puts("**#{f["path"]}**")
       sort_offences(f["offences"]).each do |o|
-        message.printf("- [ ] %s - Line %d, Col %d - %s - %s\n",
+        message.printf("- [ ] %s - %s, %s - %s - %s\n",
           format_severity(o["severity"]),
-          o["location"]["line"],
-          o["location"]["column"],
+          format_line(o["location"]["line"], f["path"]),
+          format_column(o["location"]["column"]),
           format_cop_name(o["cop_name"]),
           o["message"]
         )
@@ -145,6 +145,17 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
   def format_severity(sev)
     SEVERITY_LOOKUP[sev] || sev.capitalize[0, 5]
+  end
+
+  def format_line(line, path)
+    # TODO: Don't reuse the commit_uri.  This should probably be it's own URI
+    uri = branch.commit_uri.chomp("commit/$commit")
+    uri = File.join(uri, "blob", commits.last, path)
+    "[Line #{line}](#{uri}#L#{line})"
+  end
+
+  def format_column(column)
+    "Col #{column}"
   end
 
   def format_cop_name(cop_name)
