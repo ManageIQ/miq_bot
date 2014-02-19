@@ -24,6 +24,15 @@ class GitService
     end
   end
 
+  def temporarily_checkout(ref)
+    ref      = ref_name(ref)
+    orig_ref = current_branch
+    checkout(ref) unless ref == orig_ref
+    yield
+  ensure
+    checkout(orig_ref) unless ref == orig_ref
+  end
+
   def new_commits(since_commit, ref = "HEAD")
     rev_list({:reverse => true}, "#{since_commit}..#{ref}").split("\n")
   end
@@ -106,20 +115,17 @@ class GitService
   end
 
   def mergeable?(branch = nil, into_branch = "master")
-    orig_branch = current_branch
-    branch ||= orig_branch
+    branch ||= current_branch
 
-    begin
-      checkout(into_branch) unless orig_branch == into_branch
+    temporarily_checkout(into_branch) do
       begin
         merge("--no-commit", "--no-ff", branch)
+        return true
       rescue MiniGit::GitError
         return false
+      ensure
+        merge("--abort")
       end
-      return true
-    ensure
-      merge("--abort")
-      checkout(orig_branch) unless orig_branch == into_branch
     end
   end
 
