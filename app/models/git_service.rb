@@ -24,8 +24,8 @@ class GitService
     end
   end
 
-  def new_commits(since_commit)
-    rev_list({:reverse => true}, "#{since_commit}..HEAD").split("\n")
+  def new_commits(since_commit, ref = "HEAD")
+    rev_list({:reverse => true}, "#{since_commit}..#{ref}").split("\n")
   end
 
   def commit_message(commit)
