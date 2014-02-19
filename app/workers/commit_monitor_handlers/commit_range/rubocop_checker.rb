@@ -101,7 +101,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
           format_severity(o["severity"]),
           o["location"]["line"],
           o["location"]["column"],
-          o["cop_name"],
+          format_cop_name(o["cop_name"]),
           o["message"]
         )
       end
@@ -117,6 +117,18 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     when "refactor"   then "REFAC"
     when "warning"    then "WARN"
     else sev.upcase
+    end
+  end
+
+  def format_cop_name(cop_name)
+    require 'rubocop'
+
+    cop = Rubocop::Cop::Cop.subclasses.detect { |c| c.name.split("::").last == cop_name }
+    if cop.nil?
+      cop_name
+    else
+      cop_path = cop.name.gsub("::", "/")
+      "[#{cop_name}](http://rubydoc.info/gems/rubocop/frames/#{cop_path})"
     end
   end
 
