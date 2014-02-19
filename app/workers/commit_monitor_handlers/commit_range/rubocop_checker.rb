@@ -20,6 +20,12 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
       return
     end
 
+    process_commits
+  end
+
+  private
+
+  def process_commits
     diff_details = filter_ruby_files(diff_details_for_commits)
     files        = diff_details.keys
     return if files.length == 0
@@ -28,11 +34,9 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     results = filter_rubocop_results(results, diff_details)
     return if results["summary"]["offence_count"] == 0
 
-    message = message_from_results(results)
-    write_to_github(message)
+    messages = MessageBuilder.new(results, branch, commits).messages
+    write_to_github(messages)
   end
-
-  private
 
   def diff_details_for_commits
     GitService.call(branch.repo.path) do |git|
@@ -87,97 +91,18 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     results
   end
 
-  def message_from_results(results)
-    message = StringIO.new
-
-    commit_range = [
-      branch.commit_uri_to(commits.first),
-      branch.commit_uri_to(commits.last),
-    ].uniq.join(" .. ")
-    message.puts("Checked #{"commit".pluralize(commits.length)} #{commit_range}")
-
-    file_count    = results["summary"]["target_file_count"]
-    offence_count = results["summary"]["offence_count"]
-    message.puts("#{file_count} #{"file".pluralize(file_count)} checked, #{offence_count} #{"offense".pluralize(offence_count)} detected")
-
-    files = results["files"].sort_by { |f| f["path"] }
-    files.each do |f|
-      next if f["offences"].empty?
-
-      message.puts
-      message.puts("**#{f["path"]}**")
-      sort_offences(f["offences"]).each do |o|
-        message.printf("- [ ] %s - %s, %s - %s - %s\n",
-          format_severity(o["severity"]),
-          format_line(o["location"]["line"], f["path"]),
-          format_column(o["location"]["column"]),
-          format_cop_name(o["cop_name"]),
-          o["message"]
-        )
-      end
-    end
-
-    message.string
-  end
-
-  def sort_offences(offences)
-    offences.sort_by do |o|
-      [
-        order_severity(o["severity"]),
-        o["location"]["line"],
-        o["location"]["column"],
-        o["cop_name"]
-      ]
-    end
-  end
-
-  SEVERITY_LOOKUP = {
-    "fatal"      => "Fatal",
-    "error"      => "Error",
-    "warning"    => "Warn",
-    "convention" => "Style",
-    "refactor"   => "Refac",
-  }.freeze
-
-  def order_severity(sev)
-    SEVERITY_LOOKUP.keys.index(sev) || Float::INFINITY
-  end
-
-  def format_severity(sev)
-    SEVERITY_LOOKUP[sev] || sev.capitalize[0, 5]
-  end
-
-  def format_line(line, path)
-    # TODO: Don't reuse the commit_uri.  This should probably be it's own URI
-    uri = branch.commit_uri.chomp("commit/$commit")
-    uri = File.join(uri, "blob", commits.last, path)
-    "[Line #{line}](#{uri}#L#{line})"
-  end
-
-  def format_column(column)
-    "Col #{column}"
-  end
-
-  def format_cop_name(cop_name)
-    require 'rubocop'
-
-    cop = Rubocop::Cop::Cop.subclasses.detect { |c| c.name.split("::").last == cop_name }
-    if cop.nil?
-      cop_name
-    else
-      cop_path = cop.name.gsub("::", "/")
-      "[#{cop_name}](http://rubydoc.info/gems/rubocop/frames/#{cop_path})"
-    end
-  end
-
-  def write_to_github(message)
+  def write_to_github(messages)
     logger.info("#{self.class.name}##{__method__} Updating pull request #{branch.pr_number} with rubocop issues.")
 
     GithubService.call(:repo => branch.repo) do |github|
-      github.issues.comments.create(
-        :issue_id => branch.pr_number,
-        :body     => message
-      )
+      Array(messages).each do |message|
+        github.issues.comments.create(
+          :issue_id => branch.pr_number,
+          :body     => message
+        )
+      end
     end
   end
 end
+
+require_relative 'rubocop_checker/message_builder'
