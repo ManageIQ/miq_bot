@@ -57,9 +57,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     #   Instead of relying on just exit_status, we check if there is anything
     #   on stderr.
     result = AwesomeSpawn.run(cmd, :params => params, :chdir => branch.repo.path)
-    if result.exit_status == 1 && result.error.present?
-      raise AwesomeSpawn::CommandResultError.new("#{cmd} exit code: #{result.exit_status}", result)
-    end
+    raise result.error if result.exit_status == 1 && result.error.present?
 
     JSON.parse(result.output.chomp)
   end
