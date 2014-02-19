@@ -96,10 +96,21 @@ class GitService
   end
 
   def mergeable?(branch = nil, into_branch = "master")
-    branch ||= current_branch
-    base_commit = merge_base(branch, into_branch)
-    output = merge_tree(base_commit, branch, into_branch)
-    !output.include?("changed in both")
+    orig_branch = current_branch
+    branch ||= orig_branch
+
+    begin
+      checkout(into_branch) unless orig_branch == into_branch
+      begin
+        merge("--no-commit", "--no-ff", branch)
+      rescue MiniGit::GitError
+        return false
+      end
+      return true
+    ensure
+      merge("--abort")
+      checkout(orig_branch) unless orig_branch == into_branch
+    end
   end
 
   def update_pr_branch(branch = nil, remote = "upstream")
