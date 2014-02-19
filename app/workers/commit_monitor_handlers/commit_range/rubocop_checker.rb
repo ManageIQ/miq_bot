@@ -8,7 +8,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   attr_reader :branch, :commits
 
   def perform(branch_id, commits)
-    @branch = CommitMonitorBranch.find(branch_id)
+    @branch  = CommitMonitorBranch.where(:id => branch_id).first
     @commits = commits
 
     if @branch.nil?

@@ -8,7 +8,7 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   attr_reader :branch
 
   def perform(branch_id)
-    @branch = CommitMonitorBranch.find(branch_id)
+    @branch = CommitMonitorBranch.where(:id => branch_id).first
 
     if @branch.nil?
       logger.info("Branch #{branch_id} no longer exists.  Skipping.")

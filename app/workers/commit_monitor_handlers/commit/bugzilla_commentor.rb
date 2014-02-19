@@ -8,7 +8,7 @@ class CommitMonitorHandlers::Commit::BugzillaCommentor
   delegate :product, :to => :CommitMonitor
 
   def perform(branch_id, commit, commit_details)
-    branch = CommitMonitorBranch.find(branch_id)
+    branch = CommitMonitorBranch.where(:id => branch_id).first
 
     if branch.nil?
       logger.info("Branch #{branch_id} no longer exists.  Skipping.")
