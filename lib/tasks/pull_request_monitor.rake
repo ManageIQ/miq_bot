@@ -4,7 +4,7 @@ namespace :pull_request_monitor do
     loop do
       print "."
       PullRequestMonitor.perform_async
-      sleep(60)
+      sleep(PullRequestMonitor.options["poll"])
     end
   end
 

@@ -2,6 +2,10 @@ class PullRequestMonitor
   include Sidekiq::Worker
   sidekiq_options :retry => false
 
+  def self.options
+    @options ||= YAML.load_file(Rails.root.join('config/pull_request_monitor.yml'))
+  end
+
   def perform
     process_repos
   end
