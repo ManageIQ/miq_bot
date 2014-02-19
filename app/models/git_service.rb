@@ -32,15 +32,25 @@ class GitService
     log({:pretty => "fuller"}, "--stat", "-1", commit)
   end
 
+  def ref_name(ref)
+    name = rev_parse("--abbrev-ref", ref)
+    name.empty? ? ref : name
+  end
+
+  def current_branch
+    ref = ref_name("HEAD")
+    ref == "HEAD" ? current_ref : ref
+  end
+
+  def current_ref
+    rev_parse("HEAD")
+  end
+
   def branches
     branch.split("\n").collect do |b|
       b = b[1..-1] if b.start_with?("*")
       b.strip
     end
-  end
-
-  def current_branch
-    rev_parse("--abbrev-ref", "HEAD")
   end
 
   def destroy_branch(branch_name)
