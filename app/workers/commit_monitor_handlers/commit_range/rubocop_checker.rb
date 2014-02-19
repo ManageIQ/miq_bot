@@ -9,8 +9,16 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
   def perform(branch_id, commits)
     @branch = CommitMonitorBranch.find(branch_id)
-    return unless @branch.pull_request?
     @commits = commits
+
+    if @branch.nil?
+      logger.info("Branch #{branch_id} no longer exists.  Skipping.")
+      return
+    end
+    unless @branch.pull_request?
+      logger.info("Branch #{@branch.name} is not a pull request.  Skipping.")
+      return
+    end
 
     diff_details = filter_ruby_files(diff_details_for_commits)
     files        = diff_details.keys

@@ -9,7 +9,16 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
 
   def perform(branch_id)
     @branch = CommitMonitorBranch.find(branch_id)
-    return unless branch.pull_request?
+
+    if @branch.nil?
+      logger.info("Branch #{branch_id} no longer exists.  Skipping.")
+      return
+    end
+    unless @branch.pull_request?
+      logger.info("Branch #{@branch.name} is not a pull request.  Skipping.")
+      return
+    end
+
     process_mergeability
   end
 

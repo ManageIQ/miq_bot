@@ -9,7 +9,16 @@ class CommitMonitorHandlers::Commit::BugzillaCommentor
 
   def perform(branch_id, commit, commit_details)
     branch = CommitMonitorBranch.find(branch_id)
-    return if branch.pull_request?
+
+    if branch.nil?
+      logger.info("Branch #{branch_id} no longer exists.  Skipping.")
+      return
+    end
+    if branch.pull_request?
+      logger.info("Branch #{branch.name} is a pull request.  Skipping.")
+      return
+    end
+
     process_commit(branch, commit, commit_details["message"])
   end
 
