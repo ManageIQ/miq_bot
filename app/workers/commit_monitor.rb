@@ -66,7 +66,8 @@ class CommitMonitor
 
     branch.last_checked_on = Time.now.utc
     branch.last_commit     = commits.last if commits.any?
-    branch.save!
+    # Update columns directly to avoid collisions wrt the serialized column issue
+    branch.update_columns(branch.changed_attributes)
   end
 
   def update_branch

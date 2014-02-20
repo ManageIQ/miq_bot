@@ -32,7 +32,8 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
 
     write_to_github if was_mergeable && !currently_mergeable
 
-    branch.update_attributes!(:mergeable => currently_mergeable)
+    # Update columns directly to avoid collisions wrt the serialized column issue
+    branch.update_columns(:mergeable => currently_mergeable)
   end
 
   def write_to_github
