@@ -7,24 +7,28 @@ class CommitMonitorHandlers::Commit::BugzillaCommentor
 
   delegate :product, :to => :CommitMonitor
 
+  attr_reader :branch, :commit, :message
+
   def perform(branch_id, commit, commit_details)
-    branch = CommitMonitorBranch.where(:id => branch_id).first
+    @branch  = CommitMonitorBranch.where(:id => branch_id).first
+    @commit  = commit
+    @message = commit_details["message"]
 
-    if branch.nil?
-      logger.info("Branch #{branch_id} no longer exists.  Skipping.")
+    if @branch.nil?
+      logger.info("Branch #{@branch_id} no longer exists.  Skipping.")
       return
     end
-    if branch.pull_request?
-      logger.info("Branch #{branch.name} is a pull request.  Skipping.")
+    if @branch.pull_request?
+      logger.info("Branch #{@branch.name} is a pull request.  Skipping.")
       return
     end
 
-    process_commit(branch, commit, commit_details["message"])
+    process_commit
   end
 
   private
 
-  def process_commit(branch, commit, message)
+  def process_commit
     prefix     = "New commit detected on #{branch.repo.name}/#{branch.name}:"
     commit_uri = branch.commit_uri_to(commit)
     comment    = "#{prefix}\n#{commit_uri}\n\n#{message}"
