@@ -42,7 +42,7 @@ class CommitMonitor
 
   private
 
-  attr_reader :repo, :git, :branch, :commits
+  attr_reader :repo, :git, :branch, :new_commits, :all_commits
 
   def process_branches
     CommitMonitorRepo.includes(:branches).each do |repo|
@@ -60,14 +60,8 @@ class CommitMonitor
   def process_branch
     git.checkout(branch.name)
     update_branch
-
-    @commits = new_commits
-
-    branch.last_checked_on = Time.now.utc
-    branch.last_commit     = commits.last if commits.any?
-    # Update columns directly to avoid collisions wrt the serialized column issue
-    branch.update_columns(branch.changed_attributes)
-
+    @new_commits, @all_commits = detect_commits
+    save_branch_record
     process_handlers
   end
 
@@ -79,22 +73,18 @@ class CommitMonitor
     branch.pull_request? ? :pr : :regular
   end
 
-  def new_commits
-    send("new_commits_on_#{branch_mode}_branch")
+  def detect_commits
+    send("detect_commits_on_#{branch_mode}_branch")
   end
 
-  def new_commits_on_regular_branch
-    git.new_commits(branch.last_commit)
+  def detect_commits_on_regular_branch
+    return git.new_commits(branch.last_commit), nil
   end
 
-  def new_commits_on_pr_branch
-    all_commits = git.new_commits(git.merge_base(branch.name, "master"))
-    comparison  = compare_commits_list(branch.commits_list, all_commits)
-
-    # Adjust the commits_list to deal with any rebasing or force pushing
-    branch.commits_list = all_commits
-
-    comparison[:right_only]
+  def detect_commits_on_pr_branch
+    all        = git.new_commits(git.merge_base(branch.name, "master"))
+    comparison = compare_commits_list(branch.commits_list, all)
+    return comparison[:right_only], all
   end
 
   def compare_commits_list(left, right)
@@ -107,6 +97,14 @@ class CommitMonitor
     left_only, right_only = combined[pivot..-1].transpose.collect(&:compact)
 
     {:same => same, :left_only => left_only, :right_only => right_only}
+  end
+
+  def save_branch_record
+    branch.last_checked_on = Time.now.utc
+    branch.commits_list    = all_commits
+    branch.last_commit     = new_commits.last if new_commits.any?
+    # Update columns directly to avoid collisions wrt the serialized column issue
+    branch.update_columns(branch.changed_attributes)
   end
 
   #
@@ -139,7 +137,7 @@ class CommitMonitor
   end
 
   def process_handlers
-    return if commits.empty?
+    return if new_commits.empty?
     process_commit_handlers
     process_commit_range_handlers
     process_branch_handlers
@@ -149,7 +147,7 @@ class CommitMonitor
     return if commit_handlers.empty?
     log_prefix = "#{self.class.name}##{__method__}"
 
-    commits.each do |commit|
+    new_commits.each do |commit|
       message = git.commit_message(commit)
       commit_handlers.each do |h|
         logger.info("#{log_prefix} Queueing #{h.name} for commit #{commit} on branch #{branch.name}")
@@ -161,11 +159,12 @@ class CommitMonitor
   def process_commit_range_handlers
     return if commit_range_handlers.empty?
     log_prefix = "#{self.class.name}##{__method__}"
-    commit_range = [commits.first, commits.last].uniq.join("..")
+
+    commit_range = [new_commits.first, new_commits.last].uniq.join("..")
 
     commit_range_handlers.each do |h|
       logger.info("#{log_prefix} Queueing #{h.name} for commit range #{commit_range} on branch #{branch.name}")
-      h.perform_async(branch.id, commits)
+      h.perform_async(branch.id, new_commits)
     end
   end
 
