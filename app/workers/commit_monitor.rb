@@ -100,11 +100,15 @@ class CommitMonitor
   end
 
   def save_branch_record
-    branch.last_checked_on = Time.now.utc
-    branch.commits_list    = all_commits
-    branch.last_commit     = new_commits.last if new_commits.any?
+    attrs = {:last_checked_on => Time.now.utc}
+    attrs[:last_commit] = new_commits.last if new_commits.any?
+
+    if all_commits != branch.commits_list
+      attrs[:commits_list] = all_commits && all_commits.to_yaml # Rails, Y U NO serialize with update_columns?!
+    end
+
     # Update columns directly to avoid collisions wrt the serialized column issue
-    branch.update_columns(branch.changed_attributes)
+    branch.update_columns(attrs)
   end
 
   #
