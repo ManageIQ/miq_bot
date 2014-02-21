@@ -104,5 +104,3 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     end
   end
 end
-
-require_relative 'rubocop_checker/message_builder'
