@@ -62,12 +62,13 @@ class CommitMonitor
     update_branch
 
     @commits = new_commits
-    process_handlers
 
     branch.last_checked_on = Time.now.utc
     branch.last_commit     = commits.last if commits.any?
     # Update columns directly to avoid collisions wrt the serialized column issue
     branch.update_columns(branch.changed_attributes)
+
+    process_handlers
   end
 
   def update_branch
