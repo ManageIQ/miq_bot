@@ -42,7 +42,7 @@ class CommitMonitor
 
   private
 
-  attr_reader :repo, :git, :branch
+  attr_reader :repo, :git, :branch, :commits
 
   def process_branches
     CommitMonitorRepo.includes(:branches).each do |repo|
@@ -61,8 +61,8 @@ class CommitMonitor
     git.checkout(branch.name)
     update_branch
 
-    commits = new_commits
-    process_handlers(commits)
+    @commits = new_commits
+    process_handlers
 
     branch.last_checked_on = Time.now.utc
     branch.last_commit     = commits.last if commits.any?
@@ -121,12 +121,6 @@ class CommitMonitor
   end
   private_class_method(:handlers_for)
 
-  def process_handlers(commits)
-    process_commit_handlers(commits)
-    process_commit_range_handlers(commits)
-    process_branch_handlers
-  end
-
   def filter_handlers(handlers)
     handlers.select { |h| h.handled_branch_modes.include?(branch_mode) }
   end
@@ -143,8 +137,15 @@ class CommitMonitor
     filter_handlers(self.class.branch_handlers)
   end
 
-  def process_commit_handlers(commits)
-    return if commit_handlers.empty? || commits.empty?
+  def process_handlers
+    return if commits.empty?
+    process_commit_handlers
+    process_commit_range_handlers
+    process_branch_handlers
+  end
+
+  def process_commit_handlers
+    return if commit_handlers.empty?
     log_prefix = "#{self.class.name}##{__method__}"
 
     commits.each do |commit|
@@ -156,8 +157,8 @@ class CommitMonitor
     end
   end
 
-  def process_commit_range_handlers(commits)
-    return if commit_range_handlers.empty? || commits.empty?
+  def process_commit_range_handlers
+    return if commit_range_handlers.empty?
     log_prefix = "#{self.class.name}##{__method__}"
     commit_range = [commits.first, commits.last].uniq.join("..")
 
