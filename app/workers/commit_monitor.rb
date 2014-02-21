@@ -42,14 +42,20 @@ class CommitMonitor
 
   private
 
-  attr_reader :repo, :git, :branch, :new_commits, :all_commits
+  attr_reader :repo, :git, :branch, :new_commits, :all_commits, :statistics
 
   def process_branches
     CommitMonitorRepo.includes(:branches).each do |repo|
+      @statistics = {}
+
       @repo = repo
       repo.with_git_service do |git|
         @git = git
-        repo.branches.each do |branch|
+
+        # Sort PR branches after regular branches
+        sorted_branches = repo.branches.sort_by { |b| b.pull_request? ? 1 : -1 }
+
+        sorted_branches.each do |branch|
           @branch = branch
           process_branch
         end
@@ -62,6 +68,10 @@ class CommitMonitor
     update_branch
 
     @new_commits, @all_commits = detect_commits
+    statistics[branch.name] = {
+      :new_commits => new_commits,
+      :all_commits => all_commits
+    }
     logger.info "Detected new commits #{new_commits}" if new_commits.any?
 
     save_branch_record
@@ -90,7 +100,7 @@ class CommitMonitor
   end
 
   def detect_commits_on_pr_branch
-    all        = git.new_commits(git.merge_base(branch.name, "master"))
+    all        = git.new_commits(git.merge_base(branch.name, "master"), branch.name)
     comparison = compare_commits_list(branch.commits_list, all)
     return comparison[:right_only], all
   end
@@ -149,43 +159,54 @@ class CommitMonitor
   end
 
   def process_handlers
-    return if new_commits.empty?
-    process_commit_handlers
-    process_commit_range_handlers
-    process_branch_handlers
+    process_commit_handlers       if process_commit_handlers?
+    process_commit_range_handlers if process_commit_range_handlers?
+    process_branch_handlers       if process_branch_handlers?
+  end
+
+  def process_commit_handlers?
+    commit_handlers.any? && new_commits.any?
+  end
+
+  def process_commit_range_handlers?
+    commit_range_handlers.any? && new_commits.any?
+  end
+
+  def process_branch_handlers?
+    branch_handlers.any? && send("process_#{branch_mode}_branch_handlers?")
+  end
+
+  def process_pr_branch_handlers?
+    parent_branch_new_commits = statistics.fetch_path("master", :new_commits)
+    new_commits.any? || parent_branch_new_commits.any?
+  end
+
+  def process_regular_branch_handlers?
+    new_commits.any?
   end
 
   def process_commit_handlers
-    return if commit_handlers.empty?
-    log_prefix = "#{self.class.name}##{__method__}"
-
     new_commits.each do |commit|
       message = git.commit_message(commit)
       commit_handlers.each do |h|
-        logger.info("#{log_prefix} Queueing #{h.name} for commit #{commit} on branch #{branch.name}")
+        logger.info("Queueing #{h.name} for commit #{commit} on branch #{branch.name}")
         h.perform_async(branch.id, commit, "message" => message)
       end
     end
   end
 
   def process_commit_range_handlers
-    return if commit_range_handlers.empty?
-    log_prefix = "#{self.class.name}##{__method__}"
-
     commit_range = [new_commits.first, new_commits.last].uniq.join("..")
 
     commit_range_handlers.each do |h|
-      logger.info("#{log_prefix} Queueing #{h.name} for commit range #{commit_range} on branch #{branch.name}")
+      logger.info("Queueing #{h.name} for commit range #{commit_range} on branch #{branch.name}")
       h.perform_async(branch.id, new_commits)
     end
   end
 
   def process_branch_handlers
-    return if branch_handlers.empty?
-    log_prefix = "#{self.class.name}##{__method__}"
-
     branch_handlers.each do |h|
-      logger.info("#{log_prefix} Queueing #{h.name} for branch #{branch.name}")
+      logger.info("Queueing #{h.name} for branch #{branch.name}")
       h.perform_async(branch.id)
     end
   end
