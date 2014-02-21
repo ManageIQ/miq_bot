@@ -58,15 +58,23 @@ class CommitMonitor
   end
 
   def process_branch
-    git.checkout(branch.name)
+    logger.info "Processing #{repo.name}/#{branch.name}"
     update_branch
+
     @new_commits, @all_commits = detect_commits
+    logger.info "Detected new commits #{new_commits}" if new_commits.any?
+
     save_branch_record
     process_handlers
   end
 
   def update_branch
-    branch.pull_request? ? git.update_pr_branch(branch.name) : git.pull
+    if branch.pull_request?
+      git.update_pr_branch(branch.name)
+    else
+      git.checkout(branch.name)
+      git.pull
+    end
   end
 
   def branch_mode
