@@ -3,10 +3,10 @@ require 'stringio'
 class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   attr_reader :messages
 
-  def initialize(results, branch, commits)
+  def initialize(results, branch)
     @results  = results
     @branch   = branch
-    @commits  = commits
+    @commits  = branch.commits_list
 
     @message  = StringIO.new
     @messages = [@message]
@@ -36,17 +36,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     @messages.collect! { |m| m.string }
   end
 
-  def write_offences
-    files.each do |f|
-      write("\n**#{f["path"]}**")
-      offence_messages(f).each { |line| write(line) }
-    end
-  end
-
-  def write_success
-    write("\nEverything looks good. :+1:")
-  end
-
   def write(line)
     if message.length + line.length + 1 >= GITHUB_COMMENT_BODY_MAX_SIZE
       @message = StringIO.new
@@ -64,13 +53,24 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     ].uniq.join(" .. ")
     write("Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop")
 
-    file_count    = results["summary"]["target_file_count"]
-    offence_count = results["summary"]["offence_count"]
+    file_count    = results.fetch_path("summary", "target_file_count").to_i
+    offence_count = results.fetch_path("summary", "offence_count").to_i
     write("#{file_count} #{"file".pluralize(file_count)} checked, #{offence_count} #{"offense".pluralize(offence_count)} detected")
   end
 
   def write_header_continued
     write("**...continued**\n")
+  end
+
+  def write_success
+    write("\nEverything looks good. :+1:")
+  end
+
+  def write_offences
+    files.each do |f|
+      write("\n**#{f["path"]}**")
+      offence_messages(f).each { |line| write(line) }
+    end
   end
 
   def files
