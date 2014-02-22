@@ -15,7 +15,7 @@ class CommitMonitorHandlers::Commit::BugzillaCommentor
     @message = commit_details["message"]
 
     if @branch.nil?
-      logger.info("Branch #{@branch_id} no longer exists.  Skipping.")
+      logger.info("Branch #{branch_id} no longer exists.  Skipping.")
       return
     end
     if @branch.pull_request?
