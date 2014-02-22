@@ -34,6 +34,33 @@ class GithubService
     end
   end
 
+  def select_issue_comments(issue_id)
+    raise "no block given" unless block_given?
+    issues.comments.all(:issue_id => issue_id).select { |c| yield c }
+  end
+
+  def create_issue_comments(issue_id, comments)
+    Array(comments).each do |comment|
+      issues.comments.create(
+        :issue_id => issue_id,
+        :body     => comment
+      )
+    end
+  end
+
+  def edit_issue_comment(comment_id, comment)
+    issues.comments.edit(
+      :comment_id => comment_id,
+      :body       => comment
+    )
+  end
+
+  def delete_issue_comments(comment_ids)
+    Array(comment_ids).each do |comment_id|
+      issues.comments.delete(:comment_id => comment_id)
+    end
+  end
+
   private
 
   def self.credentials

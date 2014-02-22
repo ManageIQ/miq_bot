@@ -32,12 +32,19 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
 
   def build_messages
     write_header
+    files.empty? ? write_success : write_offences
+    @messages.collect! { |m| m.string }
+  end
+
+  def write_offences
     files.each do |f|
       write("\n**#{f["path"]}**")
       offence_messages(f).each { |line| write(line) }
     end
+  end
 
-    @messages.collect! { |m| m.string }
+  def write_success
+    write("\nEverything looks good. :+1:")
   end
 
   def write(line)
@@ -55,7 +62,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
       branch.commit_uri_to(commits.first),
       branch.commit_uri_to(commits.last),
     ].uniq.join(" .. ")
-    write("Checked #{"commit".pluralize(commits.length)} #{commit_range}")
+    write("Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop")
 
     file_count    = results["summary"]["target_file_count"]
     offence_count = results["summary"]["offence_count"]

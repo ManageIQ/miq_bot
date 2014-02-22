@@ -5,7 +5,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     [:pr]
   end
 
-  attr_reader :branch, :commits
+  attr_reader :branch, :commits, :results, :github
 
   def perform(branch_id, commits)
     @branch  = CommitMonitorBranch.where(:id => branch_id).first
@@ -28,14 +28,15 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   def process_commits
     diff_details = filter_ruby_files(diff_details_for_commits)
     files        = diff_details.keys
-    return if files.length == 0
 
-    results = rubocop_results(files)
-    results = filter_rubocop_results(results, diff_details)
-    return if results["summary"]["offence_count"] == 0
+    if files.length == 0
+      @results = {"files" => []}
+    else
+      @results = rubocop_results(files)
+      @results = filter_rubocop_results(@results, diff_details)
+    end
 
-    messages = MessageBuilder.new(results, branch, commits).messages
-    write_to_github(messages)
+    write_to_github
   end
 
   def diff_details_for_commits
@@ -91,16 +92,43 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     results
   end
 
-  def write_to_github(messages)
-    logger.info("#{self.class.name}##{__method__} Updating pull request #{branch.pr_number} with rubocop issues.")
+  def write_to_github
+    logger.info("#{self.class.name}##{__method__} Updating pull request #{branch.pr_number} with rubocop comment.")
+
+    comments = MessageBuilder.new(results, branch, commits).messages
 
     GithubService.call(:repo => branch.repo) do |github|
-      Array(messages).each do |message|
-        github.issues.comments.create(
-          :issue_id => branch.pr_number,
-          :body     => message
-        )
-      end
+      @github = github
+      clean_old_github_comments
+      github.create_issue_comments(branch.pr_number, comments)
     end
+  end
+
+  def clean_old_github_comments
+    old_comments = github.select_issue_comments(branch.pr_number) do |comment|
+      first_line = comment.body.split("\n").first
+      (first_line.start_with?("Checked commit") || first_line.include?("...continued")) &&
+        !comment.body.include?("outdated")
+    end
+
+    to_edit, to_delete = old_comments.partition do |comment|
+      comment.body.split("\n").first.start_with?("Checked commit")
+    end
+
+    edit_old_github_comments(to_edit)
+    delete_old_github_comments(to_delete)
+  end
+
+  def edit_old_github_comments(comments)
+    comments.each do |comment|
+      new_comment = comment.body.split("\n")[0, 2]
+      new_comment << "" << "*This comment is on an outdated set of commits.*"
+      new_comment = new_comment.join("\n")
+      github.edit_issue_comment(comment.id, new_comment)
+    end
+  end
+
+  def delete_old_github_comments(comments)
+    github.delete_issue_comments(comments.collect(&:id))
   end
 end
