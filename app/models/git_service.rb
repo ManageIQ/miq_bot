@@ -38,7 +38,7 @@ class GitService
   end
 
   def commit_message(commit)
-    log({:pretty => "fuller"}, "--stat", "-1", commit)
+    log({:pretty => "fuller"}, "--stat", "--summary", "-1", commit)
   end
 
   def ref_name(ref)
