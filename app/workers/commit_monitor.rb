@@ -2,7 +2,7 @@ require 'yaml'
 
 class CommitMonitor
   include Sidekiq::Worker
-  sidekiq_options :retry => false
+  sidekiq_options :queue => :cfme_bot, :retry => false
 
   def self.options
     @options ||= YAML.load_file(Rails.root.join('config/commit_monitor.yml'))

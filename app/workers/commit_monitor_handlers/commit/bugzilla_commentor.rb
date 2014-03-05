@@ -1,5 +1,6 @@
 class CommitMonitorHandlers::Commit::BugzillaCommentor
   include Sidekiq::Worker
+  sidekiq_options :queue => :cfme_bot
 
   def self.handled_branch_modes
     [:regular]

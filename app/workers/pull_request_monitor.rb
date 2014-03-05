@@ -1,6 +1,6 @@
 class PullRequestMonitor
   include Sidekiq::Worker
-  sidekiq_options :retry => false
+  sidekiq_options :queue => :cfme_bot, :retry => false
 
   def self.options
     @options ||= YAML.load_file(Rails.root.join('config/pull_request_monitor.yml'))
