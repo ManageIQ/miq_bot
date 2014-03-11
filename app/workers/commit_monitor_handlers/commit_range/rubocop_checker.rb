@@ -60,9 +60,9 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
     cmd = "rubocop"
     params = {
-      :config   => Rails.root.join("config/rubocop_checker.yml").to_s,
-      :format   => "json",
-      nil       => files
+      :config => Rails.root.join("config/rubocop_checker.yml").to_s,
+      :format => "json",
+      nil     => files
     }
 
     # rubocop exits 1 both when there are errors and when there are style issues.
@@ -106,31 +106,30 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   end
 
   def clean_old_github_comments
-    to_edit, to_delete = find_old_github_comments.partition do |comment|
-      comment.body.split("\n").first.start_with?("Checked commit")
-    end
-
+    to_edit, to_delete = find_old_github_comments
     edit_old_github_comments(to_edit)
     delete_old_github_comments(to_delete)
   end
 
   def find_old_github_comments
-    github.select_issue_comments(branch.pr_number) do |comment|
-      body       = comment.body
-      first_line = body.split("\n").first
+    to_edit   = []
+    to_delete = []
 
-      (first_line.start_with?("Checked commit") || first_line.include?("...continued")) &&
-        !body.include?("outdated")
+    github.select_issue_comments(branch.pr_number) do |comment|
+      first_line = comment.body.split("\n").first
+      next unless first_line
+      to_edit   << comment if first_line.start_with?("Checked commit")
+      to_delete << comment if first_line.include?("...continued")
     end
+
+    return to_edit, to_delete
   end
 
   def edit_old_github_comments(comments)
     comments.each do |comment|
-      new_comment = comment.body.split("\n")[0, 2]
-      new_comment << ""
-      new_comment << "*This comment is on an outdated set of commits.*"
-
-      github.edit_issue_comment(comment.id, new_comment.join("\n"))
+      new_comment = comment.body.split("\n")[0, 2].join("\n")
+      new_comment = "~~#{new_comment}~~"
+      github.edit_issue_comment(comment.id, new_comment)
     end
   end
 
