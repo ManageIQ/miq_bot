@@ -32,12 +32,11 @@ gem 'sidekiq'
 gem 'sinatra', require: false
 gem 'slim'
 
+gem 'cfme_tools_services', :path => "../cfme_tools_services"
+
 gem 'awesome_spawn'
 gem 'default_value_for'
-gem 'github_api',    '~> 0.11.1'
-gem 'minigit',       '~> 0.0.4'
-gem 'more_core_extensions'
-gem 'ruby_bugzilla', '~> 0.4.2'
+gem 'more_core_extensions', :require => 'more_core_extensions/all'
 gem 'rubocop'
 
 group :development, :test do

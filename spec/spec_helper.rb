@@ -39,13 +39,4 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
-
-  config.before do
-    service_models = [BugzillaService, GitService, GithubService]
-    service_models.each do |service_model|
-      service_model.any_instance.stub(:service).and_raise(
-        "Live execution is not allowed in specs.  Use stubs/expectations on service instead."
-      )
-    end
-  end
 end
