@@ -10,7 +10,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
   def perform(branch_id, new_commits)
     @branch  = CommitMonitorBranch.where(:id => branch_id).first
-    @commits = @branch.commits_list
 
     if @branch.nil?
       logger.info("Branch #{branch_id} no longer exists.  Skipping.")
@@ -21,6 +20,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
       return
     end
 
+    @commits = @branch.commits_list
     process_branch
   end
 
