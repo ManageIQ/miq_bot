@@ -188,9 +188,10 @@ class CommitMonitor
   def process_commit_handlers
     new_commits.each do |commit|
       message = git.commit_message(commit)
+      files   = git.diff_details(commit).keys
       commit_handlers.each do |h|
         logger.info("Queueing #{h.name} for commit #{commit} on branch #{branch.name}")
-        h.perform_async(branch.id, commit, "message" => message)
+        h.perform_async(branch.id, commit, "message" => message, "files" => files)
       end
     end
   end
