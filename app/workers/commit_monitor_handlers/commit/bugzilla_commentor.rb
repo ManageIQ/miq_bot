@@ -34,9 +34,8 @@ class CommitMonitorHandlers::Commit::BugzillaCommentor
     commit_uri = branch.commit_uri_to(commit)
     comment    = "#{prefix}\n#{commit_uri}\n\n#{message}"
 
-    message.each_line do |line|
-      match = %r{^\s*https://bugzilla\.redhat\.com/show_bug\.cgi\?id=(?<bug_id>\d+)$}.match(line)
-      write_to_bugzilla(match[:bug_id], comment) if match
+    CFMEToolsServices::Bugzilla.ids_in_git_commit_message(message).each do |bug_id|
+      write_to_bugzilla(bug_id, comment)
     end
   end
 
