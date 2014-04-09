@@ -13,6 +13,37 @@ describe CFMEToolsServices::Bugzilla do
 
   it_should_behave_like "ServiceMixin service"
 
+  context ".ids_in_git_commit_message" do
+    it "with no bugs" do
+      message = <<-EOF
+This is a commit message
+      EOF
+
+      expect(described_class.ids_in_git_commit_message(message)).to eq([])
+    end
+
+    it "with one bug" do
+      message = <<-EOF
+This is a commit message
+
+https://bugzilla.redhat.com/show_bug.cgi?id=123456
+      EOF
+
+      expect(described_class.ids_in_git_commit_message(message)).to eq([123456])
+    end
+
+    it "with multiple bugs" do
+      message = <<-EOF
+This is a commit message
+
+https://bugzilla.redhat.com/show_bug.cgi?id=123456
+https://bugzilla.redhat.com/show_bug.cgi?id=345678
+      EOF
+
+      expect(described_class.ids_in_git_commit_message(message)).to eq([123456, 345678])
+    end
+  end
+
   context "native bz methods" do
     it "#query" do
       expect(service).to receive(:query).with(:bug_id => 123456)

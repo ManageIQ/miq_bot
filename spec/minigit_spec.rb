@@ -13,6 +13,49 @@ describe CFMEToolsServices::MiniGit do
 
   it_should_behave_like "ServiceMixin service"
 
+  context ".bugzilla_ids" do
+    it "with no bugs" do
+      message = <<-EOF
+This is a commit message
+      EOF
+
+      expect(service).to receive(:show).and_return("#{message}\n")
+
+      with_service do |git|
+        expect(git.bugzilla_ids("HEAD")).to eq([])
+      end
+    end
+
+    it "with one bug" do
+      message = <<-EOF
+This is a commit message
+
+https://bugzilla.redhat.com/show_bug.cgi?id=123456
+      EOF
+
+      expect(service).to receive(:show).and_return("#{message}\n")
+
+      with_service do |git|
+        expect(git.bugzilla_ids("HEAD")).to eq([123456])
+      end
+    end
+
+    it "with multiple bugs" do
+      message = <<-EOF
+This is a commit message
+
+https://bugzilla.redhat.com/show_bug.cgi?id=123456
+https://bugzilla.redhat.com/show_bug.cgi?id=345678
+      EOF
+
+      expect(service).to receive(:show).and_return("#{message}\n")
+
+      with_service do |git|
+        expect(git.bugzilla_ids("HEAD")).to eq([123456, 345678])
+      end
+    end
+  end
+
   context "native git method" do
     it "#checkout" do
       expect(service).to receive(:checkout).with("master").and_return("Switched to branch 'master'\n")
