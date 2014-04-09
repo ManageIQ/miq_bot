@@ -29,6 +29,6 @@ class CommitMonitorBranch < ActiveRecord::Base
   end
 
   def pr_number
-    GitService.pr_number(name) if pull_request?
+    CFMEToolsServices::MiniGit.pr_number(name) if pull_request?
   end
 end

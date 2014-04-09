@@ -41,7 +41,7 @@ class CommitMonitorHandlers::Commit::GemfileChecker
   def process_pr_branch
     logger.info("#{self.class.name}##{__method__} Updating pull request #{branch.pr_number} with Gemfile comment.")
 
-    GithubService.call(:repo => branch.repo) do |github|
+    branch.repo.with_github_service do |github|
       github.issues.comments.create(
         :issue_id => branch.pr_number,
         :body     => "#{pr_contacts.join(" ")} Gemfile changes dectected in commit #{branch.commit_uri_to(commit)}.  Please review."

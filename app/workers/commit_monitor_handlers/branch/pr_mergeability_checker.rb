@@ -40,7 +40,7 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   def write_to_github
     logger.info("#{self.class.name}##{__method__} Updating pull request #{branch.pr_number} with merge issue.")
 
-    GithubService.call(:repo => branch.repo) do |github|
+    branch.repo.with_github_service do |github|
       github.issues.comments.create(
         :issue_id => branch.pr_number,
         :body     => "This pull request is not mergeable.  Please rebase and repush."

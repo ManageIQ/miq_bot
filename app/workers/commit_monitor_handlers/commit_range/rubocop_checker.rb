@@ -41,7 +41,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   end
 
   def diff_details_for_branch
-    GitService.call(branch.repo.path) do |git|
+    CFMEToolsServices::MiniGit.call(branch.repo.path) do |git|
       git.diff_details(commits.first, commits.last)
     end
   end
@@ -68,7 +68,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     # rubocop exits 1 both when there are errors and when there are style issues.
     #   Instead of relying on just exit_status, we check if there is anything
     #   on stderr.
-    result = GitService.call(branch.repo.path) do |git|
+    result = CFMEToolsServices::MiniGit.call(branch.repo.path) do |git|
       git.temporarily_checkout(commits.last) do
         logger.info("#{self.class.name}##{__method__} Executing: #{AwesomeSpawn.build_command_line(cmd, params)}")
         AwesomeSpawn.run(cmd, :params => params, :chdir => branch.repo.path)
@@ -98,7 +98,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
     comments = MessageBuilder.new(results, branch).messages
 
-    GithubService.call(:repo => branch.repo) do |github|
+    branch.repo.with_github_service do |github|
       @github = github
       clean_old_github_comments
       write_new_github_comments(comments)

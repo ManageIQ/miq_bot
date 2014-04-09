@@ -5,7 +5,7 @@ class CommitMonitorRepo < ActiveRecord::Base
   validates :path, :presence => true, :uniqueness => true
 
   def self.create_from_github!(upstream_user, name, path)
-    GitService.call(path) do |git|
+    CFMEToolsServices::MiniGit.call(path) do |git|
       git.checkout("master")
       git.pull
 
@@ -31,6 +31,11 @@ class CommitMonitorRepo < ActiveRecord::Base
 
   def with_git_service
     raise "no block given" unless block_given?
-    GitService.call(path) { |git| yield git }
+    CFMEToolsServices::MiniGit.call(path) { |git| yield git }
+  end
+
+  def with_github_service
+    raise "no block given" unless block_given?
+    CFMEToolsServices::Github.call(:repo => name, :user => upstream_user) { |github| yield github }
   end
 end

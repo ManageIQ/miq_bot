@@ -36,7 +36,7 @@ class PullRequestMonitor
   end
 
   def process_prs
-    GithubService.call(:repo => repo) do |github|
+    repo.with_github_service do |github|
       @github = github
       github.pull_requests.all.collect do |pr|
         @pr = pr
