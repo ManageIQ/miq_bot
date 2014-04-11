@@ -51,7 +51,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
       k.end_with?(".rb") ||
       k.end_with?(".ru") ||
       k.end_with?(".rake") ||
-      k.in?(%w{Gemfile Rakefile})
+      File.basename(k).in?(%w{Gemfile Rakefile})
     end
   end
 
