@@ -1,0 +1,23 @@
+---
+base: &base
+  adapter: postgresql
+  encoding: utf8
+  host: localhost
+  username:
+  password:
+  pool: 25
+  wait_timeout: 5
+
+development:
+  <<: *base
+  database: cfme_bot_development
+
+production:
+  <<: *base
+  database: cfme_bot_production
+
+test: &test
+  <<: *base
+  database: cfme_bot_test
+  # Silence these: 'NOTICE:  CREATE TABLE will create...'
+  min_messages: warning
