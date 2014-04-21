@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20140215060546) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "commit_monitor_branches", force: true do |t|
     t.string   "name"
     t.string   "commit_uri"
