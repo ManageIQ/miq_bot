@@ -20,6 +20,7 @@
 
 # Ignore configuration files
 /config/*.yml
+/config/data_backup
 
 # Ignore production artifacts
 /public/assets
