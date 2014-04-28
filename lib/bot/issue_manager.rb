@@ -13,17 +13,18 @@ class IssueManager
   GITHUB_CREDENTIALS_YAML_FILE  = File.join(File.dirname(__FILE__), 'config/issue_manager_credentials.yml')
   ORGANIZATION = "ManageIQ"
 
-  COMMANDS = {
+  COMMANDS = Hash.new do |h, k|
+    normalized = k.to_s.gsub("-", "_")            # Support - or _ in command
+    normalized.chop! if normalized.end_with?("s") # Support singular or plural
+    h[normalized]    if h.key?(normalized)
+  end.merge(
     "add_label"     => :add_labels,
-    "add_labels"    => :add_labels,
-    "rm_label"      => :remove_labels,
-    "rm_labels"     => :remove_labels,
     "remove_label"  => :remove_labels,
-    "remove_labels" => :remove_labels,
+    "rm_label"      => :remove_labels,
     "assign"        => :assign,
     "set_milestone" => :set_milestone,
     "state"         => :state
-  }
+  ).freeze
 
   def initialize(repo_name)
     get_credentials
@@ -88,7 +89,11 @@ class IssueManager
     method_name   = COMMANDS[command].to_s
 
     if method_name.empty?
-      message = "@#{author} unrecognized command '#{command}', ignoring..."
+      message = <<-EOMSG
+@#{author} unrecognized command '#{command}', ignoring...
+
+Accepted commands are: #{COMMANDS.keys.join(", ")}
+EOMSG
       issue.add_comment(message)
       return
     else
