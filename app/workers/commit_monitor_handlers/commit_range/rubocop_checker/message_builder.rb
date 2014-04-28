@@ -20,6 +20,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
 
   GITHUB_COMMENT_BODY_MAX_SIZE = 65535
   COP_DOCUMENTATION_URI = "http://rubydoc.info/gems/rubocop/frames"
+  SUCCESS_EMOJI = %w{:+1: :cookie: :star: :cake:}
 
   SEVERITY = {
     "fatal"      => "Fatal",
@@ -28,7 +29,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     "convention" => "Style",
     "refactor"   => "Refac",
   }.freeze
-
 
   def build_messages
     write_header
@@ -63,7 +63,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def write_success
-    write("\nEverything looks good. :+1:")
+    write("Everything looks good. #{SUCCESS_EMOJI.sample}")
   end
 
   def write_offences
