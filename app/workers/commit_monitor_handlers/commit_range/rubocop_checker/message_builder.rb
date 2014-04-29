@@ -32,7 +32,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
 
   def build_messages
     write_header
-    files.empty? ? write_success : write_offences
+    files.empty? ? write_success : write_offenses
     @messages.collect! { |m| m.string }
   end
 
@@ -54,8 +54,8 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     write("Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop")
 
     file_count    = results.fetch_path("summary", "target_file_count").to_i
-    offence_count = results.fetch_path("summary", "offence_count").to_i
-    write("#{file_count} #{"file".pluralize(file_count)} checked, #{offence_count} #{"offense".pluralize(offence_count)} detected")
+    offense_count = results.fetch_path("summary", "offense_count").to_i
+    write("#{file_count} #{"file".pluralize(file_count)} checked, #{offense_count} #{"offense".pluralize(offense_count)} detected")
   end
 
   def write_header_continued
@@ -66,19 +66,19 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     write("Everything looks good. #{SUCCESS_EMOJI.sample}")
   end
 
-  def write_offences
+  def write_offenses
     files.each do |f|
       write("\n**#{f["path"]}**")
-      offence_messages(f).each { |line| write(line) }
+      offense_messages(f).each { |line| write(line) }
     end
   end
 
   def files
-    results["files"].select { |f| f["offences"].any? }.sort_by { |f| f["path"] }
+    results["files"].select { |f| f["offenses"].any? }.sort_by { |f| f["path"] }
   end
 
-  def offence_messages(file)
-    sorted_offences(file).collect do |o|
+  def offense_messages(file)
+    sorted_offenses(file).collect do |o|
       "- [ ] %s - %s, %s - %s - %s" % [
         format_severity(o["severity"]),
         format_line(o["location"]["line"], file["path"]),
@@ -89,8 +89,8 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     end
   end
 
-  def sorted_offences(file)
-    file["offences"].sort_by do |o|
+  def sorted_offenses(file)
+    file["offenses"].sort_by do |o|
       [
         order_severity(o["severity"]),
         o["location"]["line"],
