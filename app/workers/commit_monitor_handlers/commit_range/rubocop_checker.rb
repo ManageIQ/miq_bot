@@ -96,48 +96,31 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   def write_to_github
     logger.info("#{self.class.name}##{__method__} Updating pull request #{branch.pr_number} with rubocop comment.")
 
-    comments = MessageBuilder.new(results, branch).messages
+    new_comments = MessageBuilder.new(results, branch).messages
 
     branch.repo.with_github_service do |github|
       @github = github
-      clean_old_github_comments
-      write_new_github_comments(comments)
+      delete_github_comments(find_old_github_comments)
+      write_github_comments(new_comments)
     end
   end
 
-  def clean_old_github_comments
-    to_edit, to_delete = find_old_github_comments
-    edit_old_github_comments(to_edit)
-    delete_old_github_comments(to_delete)
+  def delete_github_comments(comments)
+    github.delete_issue_comments(comments.collect(&:id))
   end
 
-  def find_old_github_comments
-    to_edit   = []
-    to_delete = []
-
-    github.select_issue_comments(branch.pr_number) do |comment|
-      first_line = comment.body.split("\n").first
-      next unless first_line
-      to_edit   << comment if first_line.start_with?("Checked commit")
-      to_delete << comment if first_line.include?("...continued")
-    end
-
-    return to_edit, to_delete
-  end
-
-  def edit_old_github_comments(comments)
-    comments.each do |comment|
-      new_comment = comment.body.split("\n")[0, 2].join("\n")
-      new_comment = "~~#{new_comment}~~"
-      github.edit_issue_comment(comment.id, new_comment)
-    end
-  end
-
-  def write_new_github_comments(comments)
+  def write_github_comments(comments)
     github.create_issue_comments(branch.pr_number, comments)
   end
 
-  def delete_old_github_comments(comments)
-    github.delete_issue_comments(comments.collect(&:id))
+  def find_old_github_comments
+    github.select_issue_comments(branch.pr_number) do |comment|
+      rubocop_comment?(comment)
+    end
+  end
+
+  def rubocop_comment?(comment)
+    first_line = comment.body.split("\n").first.to_s
+    first_line =~ /^Checked commit.+rubocop$/ || first_line.include?("...continued")
   end
 end
