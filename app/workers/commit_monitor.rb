@@ -3,6 +3,7 @@ require 'yaml'
 class CommitMonitor
   include Sidekiq::Worker
   include Sidetiq::Schedulable
+  include CFMEToolsServices::SidekiqWorkerMixin
   sidekiq_options :queue => :cfme_bot, :retry => false
 
   recurrence { hourly.minute_of_hour(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55) }
@@ -40,7 +41,11 @@ class CommitMonitor
   end
 
   def perform
-    process_branches
+    if !first_unique_worker?
+      logger.info "#{self.class} is already running, skipping"
+    else
+      process_branches
+    end
   end
 
   private
