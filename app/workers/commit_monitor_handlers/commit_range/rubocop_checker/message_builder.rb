@@ -20,7 +20,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   attr_reader :results, :branch, :commits, :message
 
   GITHUB_COMMENT_BODY_MAX_SIZE = 65535
-  COP_DOCUMENTATION_URI = "http://rubydoc.info/gems/rubocop/frames"
   SUCCESS_EMOJI = %w{:+1: :cookie: :star: :cake:}
 
   SEVERITY = {
@@ -30,6 +29,14 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     "convention" => "Style",
     "refactor"   => "Refac",
   }.freeze
+
+  COP_DOCUMENTATION_URI = "http://rubydoc.info/gems/rubocop/frames"
+  COP_URIS =
+    Rubocop::Cop::Cop.subclasses.each_with_object({}) do |cop, h|
+      cop_name = cop.name.split("::").last
+      cop_uri  = File.join(COP_DOCUMENTATION_URI, cop.name.gsub("::", "/"))
+      h[cop_name] = "[#{cop_name}](#{cop_uri})"
+    end.freeze
 
   def build_messages
     write_header
@@ -124,13 +131,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def format_cop_name(cop_name)
-    cop = Rubocop::Cop::Cop.subclasses.detect { |c| c.name.split("::").last == cop_name }
-    if cop.nil?
-      cop_name
-    else
-      cop_uri = File.join(COP_DOCUMENTATION_URI, cop.name.gsub("::", "/"))
-      "[#{cop_name}](#{cop_uri})"
-    end
+    COP_URIS[cop_name] || cop_name
   end
 
   def rubocop_version
