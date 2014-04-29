@@ -1,4 +1,5 @@
 require 'sidekiq/web'
+require 'sidetiq/web'
 
 CfmeBot::Application.routes.draw do
   mount Sidekiq::Web, at: "/sidekiq"

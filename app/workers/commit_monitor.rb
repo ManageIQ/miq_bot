@@ -2,7 +2,10 @@ require 'yaml'
 
 class CommitMonitor
   include Sidekiq::Worker
+  include Sidetiq::Schedulable
   sidekiq_options :queue => :cfme_bot, :retry => false
+
+  recurrence { hourly.minute_of_hour(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55) }
 
   def self.options
     @options ||= YAML.load_file(Rails.root.join('config/commit_monitor.yml'))

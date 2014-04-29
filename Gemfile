@@ -28,7 +28,8 @@ gem 'thin'
 gem 'foreman'
 
 # Sidekiq specific gems
-gem 'sidekiq'
+gem 'sidekiq', '~> 2.17'
+gem 'sidetiq'
 gem 'sinatra', require: false
 gem 'slim'
 
