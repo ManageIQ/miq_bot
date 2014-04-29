@@ -1,0 +1,3 @@
+class RubySyntaxError
+end
+end
