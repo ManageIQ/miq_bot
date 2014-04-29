@@ -46,13 +46,13 @@ https://bugzilla.redhat.com/show_bug.cgi?id=345678
 
   context "native bz methods" do
     it "#query" do
-      expect(service).to receive(:query).with(:bug_id => 123456)
-      with_service { |bz| bz.query(:bug_id => 123456) }
+      expect(service).to receive(:search).with(:id => 123456)
+      with_service { |bz| bz.search(:id => 123456) }
     end
 
     it "#modify" do
-      expect(service).to receive(:modify).with(123456, "Fixed")
-      with_service { |bz| bz.modify(123456, "Fixed") }
+      expect(service).to receive(:add_comment).with(123456, "Fixed")
+      with_service { |bz| bz.add_comment(123456, "Fixed") }
     end
   end
 end
