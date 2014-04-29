@@ -44,12 +44,14 @@ class CommitMonitorHandlers::Commit::BugzillaCommentor
     logger.info("#{log_prefix} Updating bug id #{bug_id} in Bugzilla.")
 
     CFMEToolsServices::Bugzilla.call do |bz|
-      output = bz.query(:product => product, :bug_id => bug_id).chomp
+      output = ActiveBugzilla::Bug.find(:product => product, :id => bug_id)
       if output.empty?
         logger.error "#{log_prefix} Unable to write for bug id #{bug_id}: Not a '#{product}' bug."
       else
         logger.info "#{log_prefix} Writing to bugzilla for bug id #{bug_id}"
-        bz.modify(bug_id, :comment => comment)
+        bug = output.first
+        bug.add_comment(comment)
+        bug.save
       end
     end
   rescue => err
