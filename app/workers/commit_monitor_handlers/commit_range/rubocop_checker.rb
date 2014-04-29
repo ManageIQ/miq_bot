@@ -81,14 +81,14 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
   def filter_rubocop_results(results, diff_details)
     results["files"].each do |f|
-      f["offences"].select! do |o|
+      f["offenses"].select! do |o|
         o["severity"].in?(["error", "fatal"]) ||
         diff_details[f["path"]].include?(o["location"]["line"])
       end
     end
 
-    results["summary"]["offence_count"] =
-      results["files"].inject(0) { |sum, f| sum + f["offences"].length }
+    results["summary"]["offense_count"] =
+      results["files"].inject(0) { |sum, f| sum + f["offenses"].length }
 
     results
   end
@@ -121,6 +121,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
   def rubocop_comment?(comment)
     first_line = comment.body.split("\n").first.to_s
-    first_line =~ /^Checked commit.+rubocop$/ || first_line.include?("...continued")
+    first_line =~ /^Checked commit.+with rubocop [0-9\.]+$/ || first_line.include?("...continued")
   end
 end

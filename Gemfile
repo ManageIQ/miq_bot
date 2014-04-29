@@ -38,7 +38,7 @@ gem 'cfme_tools_services', :path => "../cfme_tools_services"
 gem 'awesome_spawn'
 gem 'default_value_for'
 gem 'more_core_extensions', :require => 'more_core_extensions/all'
-gem 'rubocop'
+gem 'rubocop', '>= 0.21.0'
 
 group :development, :test do
   gem 'rspec'

@@ -272,7 +272,7 @@ DEPENDENCIES
   rails (= 4.0.2)
   rspec
   rspec-rails
-  rubocop
+  rubocop (>= 0.21.0)
   sass-rails (~> 4.0.0)
   sidekiq (~> 2.17)
   sidetiq

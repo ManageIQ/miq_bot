@@ -1,4 +1,5 @@
 require 'stringio'
+require 'rubocop'
 
 class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   attr_reader :messages
@@ -19,7 +20,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   attr_reader :results, :branch, :commits, :message
 
   GITHUB_COMMENT_BODY_MAX_SIZE = 65535
-  COP_DOCUMENTATION_URI = "http://rubydoc.info/gems/rubocop/frames"
   SUCCESS_EMOJI = %w{:+1: :cookie: :star: :cake:}
 
   SEVERITY = {
@@ -30,9 +30,17 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     "refactor"   => "Refac",
   }.freeze
 
+  COP_DOCUMENTATION_URI = "http://rubydoc.info/gems/rubocop/frames"
+  COP_URIS =
+    Rubocop::Cop::Cop.subclasses.each_with_object({}) do |cop, h|
+      cop_name = cop.name.split("::").last
+      cop_uri  = File.join(COP_DOCUMENTATION_URI, cop.name.gsub("::", "/"))
+      h[cop_name] = "[#{cop_name}](#{cop_uri})"
+    end.freeze
+
   def build_messages
     write_header
-    files.empty? ? write_success : write_offences
+    files.empty? ? write_success : write_offenses
     @messages.collect! { |m| m.string }
   end
 
@@ -51,11 +59,11 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
       branch.commit_uri_to(commits.first),
       branch.commit_uri_to(commits.last),
     ].uniq.join(" .. ")
-    write("Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop")
+    write("Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop #{rubocop_version}")
 
     file_count    = results.fetch_path("summary", "target_file_count").to_i
-    offence_count = results.fetch_path("summary", "offence_count").to_i
-    write("#{file_count} #{"file".pluralize(file_count)} checked, #{offence_count} #{"offense".pluralize(offence_count)} detected")
+    offense_count = results.fetch_path("summary", "offense_count").to_i
+    write("#{file_count} #{"file".pluralize(file_count)} checked, #{offense_count} #{"offense".pluralize(offense_count)} detected")
   end
 
   def write_header_continued
@@ -66,19 +74,19 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     write("Everything looks good. #{SUCCESS_EMOJI.sample}")
   end
 
-  def write_offences
+  def write_offenses
     files.each do |f|
       write("\n**#{f["path"]}**")
-      offence_messages(f).each { |line| write(line) }
+      offense_messages(f).each { |line| write(line) }
     end
   end
 
   def files
-    results["files"].select { |f| f["offences"].any? }.sort_by { |f| f["path"] }
+    results["files"].select { |f| f["offenses"].any? }.sort_by { |f| f["path"] }
   end
 
-  def offence_messages(file)
-    sorted_offences(file).collect do |o|
+  def offense_messages(file)
+    sorted_offenses(file).collect do |o|
       "- [ ] %s - %s, %s - %s - %s" % [
         format_severity(o["severity"]),
         format_line(o["location"]["line"], file["path"]),
@@ -89,8 +97,8 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     end
   end
 
-  def sorted_offences(file)
-    file["offences"].sort_by do |o|
+  def sorted_offenses(file)
+    file["offenses"].sort_by do |o|
       [
         order_severity(o["severity"]),
         o["location"]["line"],
@@ -123,14 +131,10 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def format_cop_name(cop_name)
-    require 'rubocop'
+    COP_URIS[cop_name] || cop_name
+  end
 
-    cop = Rubocop::Cop::Cop.subclasses.detect { |c| c.name.split("::").last == cop_name }
-    if cop.nil?
-      cop_name
-    else
-      cop_uri = File.join(COP_DOCUMENTATION_URI, cop.name.gsub("::", "/"))
-      "[#{cop_name}](#{cop_uri})"
-    end
+  def rubocop_version
+    Rubocop::Version.version
   end
 end
