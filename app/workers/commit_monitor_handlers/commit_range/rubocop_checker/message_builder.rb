@@ -1,4 +1,5 @@
 require 'stringio'
+require 'rubocop'
 
 class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   attr_reader :messages
@@ -51,7 +52,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
       branch.commit_uri_to(commits.first),
       branch.commit_uri_to(commits.last),
     ].uniq.join(" .. ")
-    write("Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop")
+    write("Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop #{rubocop_version}")
 
     file_count    = results.fetch_path("summary", "target_file_count").to_i
     offense_count = results.fetch_path("summary", "offense_count").to_i
@@ -123,8 +124,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def format_cop_name(cop_name)
-    require 'rubocop'
-
     cop = Rubocop::Cop::Cop.subclasses.detect { |c| c.name.split("::").last == cop_name }
     if cop.nil?
       cop_name
@@ -132,5 +131,9 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
       cop_uri = File.join(COP_DOCUMENTATION_URI, cop.name.gsub("::", "/"))
       "[#{cop_name}](#{cop_uri})"
     end
+  end
+
+  def rubocop_version
+    Rubocop::Version.version
   end
 end
