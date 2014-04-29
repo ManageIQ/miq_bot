@@ -45,3 +45,11 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'timecop'
 end
+
+group :issue_manager do
+  gem 'octokit',       '~> 1.25.0'
+  gem 'minigit',       '~> 0.0.4'
+
+  # Lock down dependency
+  gem 'faraday', '~> 0.8.8'
+end
