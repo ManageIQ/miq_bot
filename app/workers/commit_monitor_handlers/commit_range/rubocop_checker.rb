@@ -60,7 +60,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
     cmd = "rubocop"
     params = {
-      :config => Rails.root.join("config/rubocop_checker.yml").to_s,
       :format => "json",
       nil     => files
     }
