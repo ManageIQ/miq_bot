@@ -1,8 +1,18 @@
 require 'spec_helper'
 
 describe CommitMonitorRepo do
+  let(:repo) do
+    CommitMonitorRepo.new(
+      :upstream_user => "some_user",
+      :name          => "some_repo"
+    )
+  end
+
+  it "#fq_name" do
+    expect(repo.fq_name).to eq "some_user/some_repo"
+  end
+
   context ".path=" do
-    let(:repo) { CommitMonitorRepo.new }
     let(:home) { File.expand_path("~") }
 
     it "with expanded path" do

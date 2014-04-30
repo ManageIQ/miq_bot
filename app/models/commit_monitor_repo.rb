@@ -25,6 +25,10 @@ class CommitMonitorRepo < ActiveRecord::Base
     end
   end
 
+  def fq_name
+    "#{upstream_user}/#{name}"
+  end
+
   def path=(val)
     super(File.expand_path(val))
   end
