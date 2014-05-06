@@ -48,7 +48,7 @@ class CommitMonitorHandlers::Commit::GemfileChecker
     branch.repo.with_github_service do |github|
       github.issues.comments.create(
         :issue_id => branch.pr_number,
-        :body     => "#{pr_contacts.join(" ")} Gemfile changes dectected in commit #{branch.commit_uri_to(commit)}.  Please review."
+        :body     => "#{pr_contacts.join(" ")} Gemfile changes detected in commit #{branch.commit_uri_to(commit)}.  Please review."
       )
     end
   end
