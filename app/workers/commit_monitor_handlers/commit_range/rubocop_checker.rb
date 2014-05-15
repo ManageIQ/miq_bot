@@ -47,11 +47,14 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   end
 
   def filter_ruby_files(diff_details)
-    diff_details.select do |k, _|
+    filtered = diff_details.select do |k, _|
       k.end_with?(".rb") ||
       k.end_with?(".ru") ||
       k.end_with?(".rake") ||
       File.basename(k).in?(%w{Gemfile Rakefile})
+    end
+    filtered.reject do |k, _|
+      k.end_with?("db/schema.rb")
     end
   end
 
