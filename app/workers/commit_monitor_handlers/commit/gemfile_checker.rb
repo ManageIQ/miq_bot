@@ -25,8 +25,8 @@ class CommitMonitorHandlers::Commit::GemfileChecker
       logger.info("Branch #{branch_id} no longer exists.  Skipping.")
       return
     end
-    if @branch.repo.fq_name != "ManageIQ/cfme"
-      logger.info("#{self.class} only runs on ManageIQ/cfme, not #{@branch.name}.  Skipping.")
+    if @branch.repo.fq_name != "ManageIQ/manageiq"
+      logger.info("#{self.class} only runs on ManageIQ/manageiq, not #{@branch.repo.fq_name}.  Skipping.")
       return
     end
 
