@@ -42,6 +42,16 @@ https://bugzilla.redhat.com/show_bug.cgi?id=345678
 
       expect(described_class.ids_in_git_commit_message(message)).to eq([123456, 345678])
     end
+
+    it "with oddly formed URL" do
+      message = <<-EOF
+This is a commit message
+
+https://bugzilla.redhat.com//show_bug.cgi?id=123456
+      EOF
+
+      expect(described_class.ids_in_git_commit_message(message)).to eq([123456])
+    end
   end
 
   context "native bz methods" do
