@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CFMEToolsServices::Bugzilla do
+describe MiqToolsServices::Bugzilla do
   let(:service) { double("bugzilla service") }
 
   before do
