@@ -33,7 +33,7 @@ gem 'sidetiq'
 gem 'sinatra', require: false
 gem 'slim'
 
-gem 'cfme_tools_services', :path => "../cfme_tools_services"
+gem 'miq_tools_services', :git => "git://github.com/ManageIQ/miq_tools_services.git"
 
 gem 'awesome_spawn'
 gem 'default_value_for'

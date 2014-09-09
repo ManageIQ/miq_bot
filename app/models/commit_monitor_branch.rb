@@ -29,6 +29,6 @@ class CommitMonitorBranch < ActiveRecord::Base
   end
 
   def pr_number
-    CFMEToolsServices::MiniGit.pr_number(name) if pull_request?
+    MiqToolsServices::MiniGit.pr_number(name) if pull_request?
   end
 end

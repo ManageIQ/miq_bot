@@ -34,7 +34,7 @@ class CommitMonitorHandlers::Commit::BugzillaCommentor
     commit_uri = branch.commit_uri_to(commit)
     comment    = "#{prefix}\n#{commit_uri}\n\n#{message}"
 
-    CFMEToolsServices::Bugzilla.ids_in_git_commit_message(message).each do |bug_id|
+    MiqToolsServices::Bugzilla.ids_in_git_commit_message(message).each do |bug_id|
       write_to_bugzilla(bug_id, comment)
     end
   end
@@ -43,7 +43,7 @@ class CommitMonitorHandlers::Commit::BugzillaCommentor
     log_prefix = "#{self.class.name}##{__method__}"
     logger.info("#{log_prefix} Updating bug id #{bug_id} in Bugzilla.")
 
-    CFMEToolsServices::Bugzilla.call do |bz|
+    MiqToolsServices::Bugzilla.call do |bz|
       output = ActiveBugzilla::Bug.find(:product => product, :id => bug_id)
       if output.empty?
         logger.error "#{log_prefix} Unable to write for bug id #{bug_id}: Not a '#{product}' bug."
