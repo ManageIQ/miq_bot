@@ -38,7 +38,7 @@ describe IssueManager do
           :login => RSPEC_ORGANIZATION
         )
          
-        octokit_org_members = [{"login" => "bronaghs"}, {"login" => "cfme-bot"}]
+        octokit_org_members = [{"login" => "bronaghs"}, {"login" => "miq-bot"}]
 
         octokit_repo        = double("octokit_repo")
 
@@ -64,7 +64,7 @@ describe IssueManager do
         octokit_notifications   = [octokit_notification]
 
         @octokit_user   = double("octokit_user",
-          :login => "cfme-bot"
+          :login => "miq-bot"
         )
 
         @octokit_issue  = double("octokit_issue",
@@ -94,7 +94,7 @@ describe IssueManager do
       end
 
       it "assigns to a user" do
-        @octokit_comment.stub(:body => "@cfme-bot assign bronaghs")
+        @octokit_comment.stub(:body => "@miq-bot assign bronaghs")
         GitHubApi.stub(:execute).with(@client, :user, "bronaghs").and_return(true)
         GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
         
@@ -106,7 +106,7 @@ describe IssueManager do
       end
 
       it "does not assign to an invalid user" do
-        @octokit_comment.stub(:body => "@cfme-bot assign Idontexist")
+        @octokit_comment.stub(:body => "@miq-bot assign Idontexist")
         GitHubApi.stub(:execute).with(@client, :user, "Idontexist").and_raise(Octokit::NotFound)
         GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
         
@@ -118,7 +118,7 @@ describe IssueManager do
       end
 
       it "adds valid labels" do
-        @octokit_comment.stub(:body => "@cfme-bot add_label question, wontfix")
+        @octokit_comment.stub(:body => "@miq-bot add_label question, wontfix")
         GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
 
         GitHubApi.should_receive(:execute).with(@client, :add_labels_to_an_issue, RSPEC_REPO,  @octokit_issue.number, ["question", "wontfix"])
@@ -129,7 +129,7 @@ describe IssueManager do
       end
 
       it "add invalid labels" do
-        @octokit_comment.stub(:body => "@cfme-bot add_label invalidlabel")
+        @octokit_comment.stub(:body => "@miq-bot add_label invalidlabel")
         GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
 
         GitHubApi.should_not_receive(:execute).with(@client, :add_labels_to_an_issue, RSPEC_REPO,  @octokit_issue.number, "invalidlabel")
@@ -140,7 +140,7 @@ describe IssueManager do
       end
 
       it "remove applied label" do
-        @octokit_comment.stub(:body => "@cfme-bot remove_label question")
+        @octokit_comment.stub(:body => "@miq-bot remove_label question")
         GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
 
         GitHubApi.should_receive(:execute).with(@client, :remove_label, RSPEC_REPO,  @octokit_issue.number, "question")
@@ -151,7 +151,7 @@ describe IssueManager do
       end
 
       it "remove unapplied label" do
-        @octokit_comment.stub(:body => "@cfme-bot remove_label invalidlabel")
+        @octokit_comment.stub(:body => "@miq-bot remove_label invalidlabel")
         GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
 
         GitHubApi.should_not_receive(:execute).with(@client, :remove_label, RSPEC_REPO,  @octokit_issue.number, "invalidlabel")
@@ -162,7 +162,7 @@ describe IssueManager do
       end
 
       it "extra space in command" do
-        @octokit_comment.stub(:body => "@cfme-bot add label question, wontfix")
+        @octokit_comment.stub(:body => "@miq-bot add label question, wontfix")
         GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
 
         GitHubApi.should_not_receive(:execute).with(@client, :add_labels_to_an_issue, RSPEC_REPO,  @octokit_issue.number, "question, wontfix")
@@ -173,7 +173,7 @@ describe IssueManager do
       end
 
       it "extra comma in command values" do
-        @octokit_comment.stub(:body => "@cfme-bot add_label question, wontfix,")
+        @octokit_comment.stub(:body => "@miq-bot add_label question, wontfix,")
         GitHubApi.stub(:execute).with(@client, :issue_comments, RSPEC_REPO, @octokit_issue.number).and_return(@octokit_comments)
 
         GitHubApi.should_receive(:execute).with(@client, :add_labels_to_an_issue, RSPEC_REPO,  @octokit_issue.number, ["question", "wontfix"])

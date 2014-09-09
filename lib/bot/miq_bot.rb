@@ -1,9 +1,9 @@
 require_relative 'issue_manager'
 
-CFME_BOT_YAML_FILE  = File.join(File.dirname(__FILE__), 'config/cfme_bot.yml')
+MIQ_BOT_YAML_FILE  = File.join(File.dirname(__FILE__), 'config/miq_bot.yml')
 SLEEPTIME = 15
 
-class CfmeBot
+class MiqBot
   include Logging
 
   def initialize
@@ -12,9 +12,9 @@ class CfmeBot
 
   def load_yaml_file
     begin
-      @repo_names = YAML.load_file(CFME_BOT_YAML_FILE)
+      @repo_names = YAML.load_file(MIQ_BOT_YAML_FILE)
     rescue Errno::ENOENT
-      logger.error ("#{Time.now} #{CFME_BOT_YAML_FILE} is missing, exiting...")
+      logger.error ("#{Time.now} #{MIQ_BOT_YAML_FILE} is missing, exiting...")
       exit 1
     end
   end
@@ -43,4 +43,4 @@ class CfmeBot
   end
 end
 
-CfmeBot.new.run
+MiqBot.new.run

@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-CfmeBot::Application.load_tasks
+MiqBot::Application.load_tasks

@@ -1,7 +1,7 @@
 require 'sidekiq/web'
 require 'sidetiq/web'
 
-CfmeBot::Application.routes.draw do
+MiqBot::Application.routes.draw do
   mount Sidekiq::Web, at: "/sidekiq"
 
   # The priority is based upon order of creation: first created -> highest priority.
