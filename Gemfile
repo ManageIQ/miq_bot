@@ -35,7 +35,7 @@ gem 'sidetiq'
 gem 'sinatra', require: false
 gem 'slim'
 
-gem 'miq_tools_services', :git => "git://github.com/ManageIQ/miq_tools_services.git"
+gem 'miq_tools_services', :git => "git://github.com/ManageIQ/miq_tools_services.git", :branch => "master"
 
 gem 'awesome_spawn'
 gem 'default_value_for'
