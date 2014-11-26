@@ -23,9 +23,9 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   SUCCESS_EMOJI = %w{:+1: :cookie: :star: :cake:}
 
   SEVERITY = {
-    "fatal"      => "Fatal",
-    "error"      => "Error",
-    "warning"    => "Warn",
+    "fatal"      => "**Fatal**",
+    "error"      => "**Error**",
+    "warning"    => "**Warn**",
     "convention" => "Style",
     "refactor"   => "Refac",
   }.freeze

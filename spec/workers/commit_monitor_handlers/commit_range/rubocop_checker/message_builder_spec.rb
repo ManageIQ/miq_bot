@@ -37,10 +37,10 @@ Checked commits https://github.com/some_user/some_repo/commit/1ec36efd33279f79f8
 - [ ] Style - [Line 4](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/coding_convention.rb#L4), Col 5 - [AlignHash](http://rubydoc.info/gems/rubocop/#{rubocop_version}/Rubocop/Cop/Style/AlignHash) - Align the elements of a hash literal if they span more than one line.
 
 **spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_syntax_error.rb**
-- [ ] Error - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_syntax_error.rb#L3), Col 1 - Syntax - unexpected token kEND
+- [ ] **Error** - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_syntax_error.rb#L3), Col 1 - Syntax - unexpected token kEND
 
 **spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_warning.rb**
-- [ ] Warn - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_warning.rb#L3), Col 5 - [UselessAssignment](http://rubydoc.info/gems/rubocop/#{rubocop_version}/Rubocop/Cop/Lint/UselessAssignment) - Useless assignment to variable - `unused_variable`.
+- [ ] **Warn** - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_warning.rb#L3), Col 5 - [UselessAssignment](http://rubydoc.info/gems/rubocop/#{rubocop_version}/Rubocop/Cop/Lint/UselessAssignment) - Useless assignment to variable - `unused_variable`.
       EOMSG
     end
 
