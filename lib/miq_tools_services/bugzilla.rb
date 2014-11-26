@@ -14,7 +14,11 @@ module MiqToolsServices
     def service
       @service ||= begin
         require 'active_bugzilla'
-        bz = ActiveBugzilla::Service.new(*credentials.values_at("bugzilla_uri", "username", "password"))
+        bz = ActiveBugzilla::Service.new(
+          credentials["bugzilla_uri"],
+          credentials["username"],
+          credentials["password"]
+        )
         ActiveBugzilla::Base.service = bz
       end
     end
