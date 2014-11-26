@@ -1,4 +1,5 @@
 bugzilla_credentials:
+  bugzilla_uri:
   username:
   password:
 github_credentials:
