@@ -1,4 +1,4 @@
 unless Rails.env.test?
-  MiqToolsServices::Bugzilla.credentials = YAML.load_file(Rails.root.join('config/bugzilla_credentials.yml'))
-  MiqToolsServices::Github.credentials   = YAML.load_file(Rails.root.join('config/github_credentials.yml'))
+  MiqToolsServices::Bugzilla.credentials = Settings.bugzilla_credentials
+  MiqToolsServices::Github.credentials   = Settings.github_credentials
 end
