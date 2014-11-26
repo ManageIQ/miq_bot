@@ -1,0 +1,12 @@
+bugzilla_credentials:
+  username:
+  password:
+github_credentials:
+  username:
+  password:
+commit_monitor:
+  bugzilla_product:
+gemfile_checker:
+  pr_contacts: []
+issue_manager:
+  repo_names: []

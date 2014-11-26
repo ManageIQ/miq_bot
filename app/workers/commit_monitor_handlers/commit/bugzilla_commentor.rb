@@ -6,8 +6,6 @@ class CommitMonitorHandlers::Commit::BugzillaCommentor
     [:regular]
   end
 
-  delegate :product, :to => :CommitMonitor
-
   attr_reader :branch, :commit, :message
 
   def perform(branch_id, commit, commit_details)
@@ -28,6 +26,10 @@ class CommitMonitorHandlers::Commit::BugzillaCommentor
   end
 
   private
+
+  def product
+    Settings.commit_monitor.bugzilla_product
+  end
 
   def process_commit
     prefix     = "New commit detected on #{branch.repo.name}/#{branch.name}:"

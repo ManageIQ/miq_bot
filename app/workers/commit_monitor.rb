@@ -8,14 +8,6 @@ class CommitMonitor
 
   recurrence { hourly.minute_of_hour(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55) }
 
-  def self.options
-    @options ||= YAML.load_file(Rails.root.join('config/commit_monitor.yml'))
-  end
-
-  def self.product
-    @product ||= options["product"]
-  end
-
   # commit handlers expect to handle a specific commit at a time.
   #
   # Example: A commit message checker that will check for URLs and act upon them.

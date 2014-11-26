@@ -6,16 +6,6 @@ class CommitMonitorHandlers::Commit::GemfileChecker
     [:pr]
   end
 
-  def self.options
-    @options ||= YAML.load_file(Rails.root.join('config/gemfile_checker.yml'))
-  end
-
-  def self.pr_contacts
-    options["pr_contacts"]
-  end
-
-  delegate :options, :pr_contacts, :to => :class
-
   attr_reader :branch, :commit
 
   def perform(branch_id, commit, commit_details)
@@ -48,7 +38,7 @@ class CommitMonitorHandlers::Commit::GemfileChecker
     branch.repo.with_github_service do |github|
       github.issues.comments.create(
         :issue_id => branch.pr_number,
-        :body     => "#{pr_contacts.join(" ")} Gemfile changes detected in commit #{branch.commit_uri_to(commit)}.  Please review."
+        :body     => "#{Settings.gemfile_checker.pr_contacts.join(" ")} Gemfile changes detected in commit #{branch.commit_uri_to(commit)}.  Please review."
       )
     end
   end

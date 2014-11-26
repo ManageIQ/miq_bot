@@ -1,22 +1,13 @@
 require_relative 'issue_manager'
 
-MIQ_BOT_YAML_FILE  = File.join(File.dirname(__FILE__), 'config/miq_bot.yml')
-SLEEPTIME = 15
-
 class MiqBot
   include Logging
 
-  def initialize
-    @repo_names = load_yaml_file
-  end
+  SLEEPTIME = 15
 
-  def load_yaml_file
-    begin
-      @repo_names = YAML.load_file(MIQ_BOT_YAML_FILE)
-    rescue Errno::ENOENT
-      logger.error ("#{Time.now} #{MIQ_BOT_YAML_FILE} is missing, exiting...")
-      exit 1
-    end
+  def initialize
+    @repo_names = Settings.issue_manager.repo_names
+    raise "No repos defined" if @repo_names.nil? || @repo_names.empty?
   end
 
   def run

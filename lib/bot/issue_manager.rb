@@ -1,6 +1,7 @@
 require 'octokit'
 require 'yaml'
 require 'fileutils'
+require_relative 'rails_config_settings'
 require_relative 'githubapi/git_hub_api'
 require_relative 'huboard'
 require_relative 'logging'
@@ -9,8 +10,7 @@ class IssueManager
   include Logging
   include GitHubApi
 
-  ISSUE_MANAGER_YAML_FILE       = File.join(File.dirname(__FILE__), 'config/issue_manager.yml')
-  GITHUB_CREDENTIALS_YAML_FILE  = File.join(File.dirname(__FILE__), 'config/issue_manager_credentials.yml')
+  ISSUE_MANAGER_YAML_FILE = File.join(File.dirname(__FILE__), 'config/issue_manager.yml')
   ORGANIZATION = "ManageIQ"
 
   COMMANDS = Hash.new do |h, k|
@@ -226,15 +226,8 @@ EOMSG
   end
 
   def get_credentials
-    begin
-      credentials = YAML.load_file(GITHUB_CREDENTIALS_YAML_FILE)
-    rescue Errno::ENOENT
-      logger.error("Missing file #{GITHUB_CREDENTIALS_YAML_FILE}. Exiting...")
-      exit 1
-    end
-
-    @username      = credentials["username"]
-    @password      = credentials["password"]
+    @username = Settings.github_credentials.username
+    @password = Settings.github_credentials.password
 
     if @username.nil? || @password.nil?
       logger.error("Credentials are not configured. Exiting..")
