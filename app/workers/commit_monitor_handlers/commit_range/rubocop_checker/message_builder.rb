@@ -2,24 +2,22 @@ require 'stringio'
 require 'rubocop'
 
 class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
-  attr_reader :messages
-
   def initialize(results, branch)
     @results  = results
     @branch   = branch
     @commits  = branch.commits_list
 
-    @message  = StringIO.new
-    @messages = [@message]
-
     build_messages
+  end
+
+  def messages
+    message_builder.messages
   end
 
   private
 
-  attr_reader :results, :branch, :commits, :message
+  attr_reader :results, :branch, :commits, :message_builder
 
-  GITHUB_COMMENT_BODY_MAX_SIZE = 65535
   SUCCESS_EMOJI = %w{:+1: :cookie: :star: :cake:}
 
   SEVERITY = {
@@ -43,47 +41,37 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     "<rubocop />"
   end
 
-  def build_messages
-    write_header
-    files.empty? ? write_success : write_offenses
-    @messages.collect!(&:string)
-  end
-
-  def write(line)
-    if message.length + line.length + 1 >= GITHUB_COMMENT_BODY_MAX_SIZE
-      @message = StringIO.new
-      @messages << message
-      write_header_continued
-    end
-
-    message.puts(line)
-  end
-
-  def write_header
+  def header
     commit_range = [
       branch.commit_uri_to(commits.first),
       branch.commit_uri_to(commits.last),
     ].uniq.join(" .. ")
-    write("#{tag}Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop #{rubocop_version}")
+    header1 = "Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop #{rubocop_version}"
 
     file_count    = results.fetch_path("summary", "target_file_count").to_i
     offense_count = results.fetch_path("summary", "offense_count").to_i
-    write("#{file_count} #{"file".pluralize(file_count)} checked, #{offense_count} #{"offense".pluralize(offense_count)} detected")
+    header2 = "#{file_count} #{"file".pluralize(file_count)} checked, #{offense_count} #{"offense".pluralize(offense_count)} detected"
+
+    "#{tag}#{header1}\n#{header2}"
   end
 
-  def write_header_continued
-    write("#{tag}**...continued**\n")
+  def continuation_header
+    "#{tag}**...continued**\n"
+  end
+
+  def build_messages
+    @message_builder = MiqToolsServices::Github::MessageBuilder.new(header, continuation_header)
+    files.empty? ? write_success : write_offenses
   end
 
   def write_success
-    write("Everything looks good. #{SUCCESS_EMOJI.sample}")
+    message_builder.write("Everything looks good. #{SUCCESS_EMOJI.sample}")
   end
 
   def write_offenses
     files.each do |f|
-      next if f["offenses"].empty?
-      write("\n**#{f["path"]}**")
-      offense_messages(f).each { |line| write(line) }
+      message_builder.write("\n**#{f["path"]}**")
+      message_builder.write_lines(offense_messages(f))
     end
   end
 
