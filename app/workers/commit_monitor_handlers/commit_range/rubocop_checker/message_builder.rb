@@ -30,11 +30,11 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     "refactor"   => "Refac",
   }.freeze
 
-  COP_DOCUMENTATION_URI = "http://rubydoc.info/gems/rubocop/frames"
+  COP_DOCUMENTATION_URI = File.join("http://rubydoc.info/gems/rubocop", Rubocop::Version.version)
   COP_URIS =
     Rubocop::Cop::Cop.subclasses.each_with_object({}) do |cop, h|
       cop_name = cop.name.split("::").last
-      cop_uri  = File.join(COP_DOCUMENTATION_URI, cop.name.gsub("::", "/"))
+      cop_uri  = File.join(COP_DOCUMENTATION_URI, cop.name.split("::"))
       h[cop_name] = "[#{cop_name}](#{cop_uri})"
     end.freeze
 
