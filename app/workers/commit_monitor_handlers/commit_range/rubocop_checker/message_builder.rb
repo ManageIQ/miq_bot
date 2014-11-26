@@ -30,11 +30,12 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     "refactor"   => "Refac",
   }.freeze
 
-  COP_DOCUMENTATION_URI = File.join("http://rubydoc.info/gems/rubocop", Rubocop::Version.version)
+  COP_DOCUMENTATION_URI = File.join("http://rubydoc.info/gems/rubocop", RuboCop::Version.version)
   COP_URIS =
-    Rubocop::Cop::Cop.subclasses.each_with_object({}) do |cop, h|
-      cop_name = cop.name.split("::").last
-      cop_uri  = File.join(COP_DOCUMENTATION_URI, cop.name.split("::"))
+    RuboCop::Cop::Cop.subclasses.each_with_object({}) do |cop, h|
+      cop_name_parts = cop.name.split("::")
+      cop_name = cop_name_parts[2..-1].join("/")
+      cop_uri  = File.join(COP_DOCUMENTATION_URI, cop_name_parts)
       h[cop_name] = "[#{cop_name}](#{cop_uri})"
     end.freeze
 
@@ -135,6 +136,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def rubocop_version
-    Rubocop::Version.version
+    RuboCop::Version.version
   end
 end
