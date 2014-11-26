@@ -40,7 +40,7 @@ gem 'miq_tools_services', :git => "git://github.com/ManageIQ/miq_tools_services.
 gem 'awesome_spawn'
 gem 'default_value_for'
 gem 'more_core_extensions', :require => 'more_core_extensions/all'
-gem 'rubocop', '>= 0.21.0'
+gem 'rubocop', '>= 0.27.1'
 
 group :development, :test do
   gem 'rspec'
