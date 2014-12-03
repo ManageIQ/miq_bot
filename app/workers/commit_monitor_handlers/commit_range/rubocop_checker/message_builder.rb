@@ -77,6 +77,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
 
   def write_offenses
     files.each do |f|
+      next if f["offenses"].empty?
       write("\n**#{f["path"]}**")
       offense_messages(f).each { |line| write(line) }
     end
