@@ -10,17 +10,6 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
     )
   end
 
-  let(:rubocop_version) { RuboCop::Version.version }
-  let(:rubocop_check_directory) { example.description.gsub(" ", "_") }
-  let(:rubocop_check_path) { File.join(File.dirname(__FILE__), "data", rubocop_check_directory) }
-  let(:json_file) { File.join(rubocop_check_path, "results.json") }
-
-  let(:rubocop_results) do
-    # To regenerate the results.json files, just delete them
-    File.write(json_file, `rubocop --format=json #{rubocop_check_path}`) unless File.exists?(json_file)
-    JSON.parse(File.read(json_file))
-  end
-
   context "#messages" do
     subject do
       described_class.new(rubocop_results, branch).messages
