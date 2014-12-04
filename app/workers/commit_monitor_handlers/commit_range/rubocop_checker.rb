@@ -34,7 +34,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
       @results = {"files" => []}
     else
       @results = rubocop_results(files)
-      @results = filter_rubocop_results(@results, diff_details)
+      @results = RubocopResultsFilter.new(@results, diff_details).filtered
     end
 
     write_to_github
@@ -79,20 +79,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     raise result.error if result.exit_status == 1 && result.error.present?
 
     JSON.parse(result.output.chomp)
-  end
-
-  def filter_rubocop_results(results, diff_details)
-    results["files"].each do |f|
-      f["offenses"].select! do |o|
-        o["severity"].in?(["error", "fatal"]) ||
-        diff_details[f["path"]].include?(o["location"]["line"])
-      end
-    end
-
-    results["summary"]["offense_count"] =
-      results["files"].inject(0) { |sum, f| sum + f["offenses"].length }
-
-    results
   end
 
   def write_to_github
