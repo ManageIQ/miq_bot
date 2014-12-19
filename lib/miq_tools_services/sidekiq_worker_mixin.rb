@@ -6,7 +6,7 @@ module MiqToolsServices
     extend ActiveSupport::Concern
 
     included do
-      delegate :sidekiq_queue, :workers, :running, :to => self
+      delegate :sidekiq_queue, :workers, :running?, :to => self
     end
 
     module ClassMethods
@@ -34,7 +34,7 @@ module MiqToolsServices
 
     def first_unique_worker?(workers = nil)
       _name, work, _started_at = (workers || self.workers).first
-      work.fetch_path("payload", "jid") == jid
+      work.nil? || work.fetch_path("payload", "jid") == jid
     end
   end
 end
