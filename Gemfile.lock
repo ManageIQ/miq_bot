@@ -98,6 +98,12 @@ GEM
       multi_json (>= 1.7.5, < 2.0)
       nokogiri (~> 1.6.0)
       oauth2
+    haml (4.0.6)
+      tilt
+    haml-lint (0.12.0)
+      haml (~> 4.0)
+      rubocop (>= 0.25.0)
+      sysexits (~> 1.1)
     hashie (2.1.1)
     highline (1.7.1)
     hike (1.2.3)
@@ -240,6 +246,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    sysexits (1.2.0)
     temple (0.6.7)
     therubyracer (0.12.1)
       libv8 (~> 3.16.14.0)
@@ -286,6 +293,7 @@ DEPENDENCIES
   default_value_for
   faraday (~> 0.8.8)
   foreman (~> 0.64.0)
+  haml-lint (~> 0.12.0)
   jquery-rails
   minigit (~> 0.0.4)
   miq_tools_services!

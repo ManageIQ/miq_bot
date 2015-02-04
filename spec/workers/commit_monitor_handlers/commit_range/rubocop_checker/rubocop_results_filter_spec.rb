@@ -35,5 +35,19 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::RubocopResultsFilte
       end
       expect(spec_file["offenses"]).to be_empty
     end
+
+    it "with haml file using haml-lint" do
+      @diff_details = {
+        rubocop_check_path_file("example.haml").to_s => [4]
+      }
+
+      filtered = subject.filtered
+
+      expect(filtered["files"].length).to eq(1)
+      expect(filtered["files"][0]["offenses"].length).to eq(1)
+      expect(filtered["files"][0]["offenses"][0]["location"]["line"]).to eq(3)
+
+      expect(filtered["summary"]["offense_count"]).to eq(1)
+    end
   end
 end

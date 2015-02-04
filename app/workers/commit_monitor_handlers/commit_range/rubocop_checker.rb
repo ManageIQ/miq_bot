@@ -33,7 +33,16 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     if files.length == 0
       @results = {"files" => []}
     else
-      @results = rubocop_results(files)
+
+      @results = linter_results('rubocop', :files => files, :format => 'json')
+      haml = linter_results('haml-lint', :files => files, :reporter => 'json')
+
+      # Merge RuboCop and haml-lint results
+      %w(offense_count target_file_count inspected_file_count).each do |m|
+        @results['summary'][m] += haml['summary'][m]
+      end
+      @results['files'] += haml['files']
+
       @results = RubocopResultsFilter.new(@results, diff_details).filtered
     end
 
@@ -58,22 +67,16 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     end
   end
 
-  def rubocop_results(files)
+  def linter_results(cmd, options = {})
     require 'awesome_spawn'
-
-    cmd = "rubocop"
-    params = {
-      :format => "json",
-      nil     => files
-    }
 
     # rubocop exits 1 both when there are errors and when there are style issues.
     #   Instead of relying on just exit_status, we check if there is anything
     #   on stderr.
     result = MiqToolsServices::MiniGit.call(branch.repo.path) do |git|
       git.temporarily_checkout(commits.last) do
-        logger.info("#{self.class.name}##{__method__} Executing: #{AwesomeSpawn.build_command_line(cmd, params)}")
-        AwesomeSpawn.run(cmd, :params => params, :chdir => branch.repo.path)
+        logger.info("#{self.class.name}##{__method__} Executing: #{AwesomeSpawn.build_command_line(cmd, options)}")
+        AwesomeSpawn.run(cmd, :params => options, :chdir => branch.repo.path)
       end
     end
     raise result.error if result.exit_status == 1 && result.error.present?
