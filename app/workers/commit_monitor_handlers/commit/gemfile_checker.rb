@@ -28,6 +28,10 @@ class CommitMonitorHandlers::Commit::GemfileChecker
 
   private
 
+  def tag
+    "<gemfile_checker />"
+  end
+
   def process_branch
     send("process_#{branch.pull_request? ? "pr" : "regular"}_branch")
   end
@@ -38,7 +42,7 @@ class CommitMonitorHandlers::Commit::GemfileChecker
     branch.repo.with_github_service do |github|
       github.issues.comments.create(
         :issue_id => branch.pr_number,
-        :body     => "#{Settings.gemfile_checker.pr_contacts.join(" ")} Gemfile changes detected in commit #{branch.commit_uri_to(commit)}.  Please review."
+        :body     => "#{tag}#{Settings.gemfile_checker.pr_contacts.join(" ")} Gemfile changes detected in commit #{branch.commit_uri_to(commit)}.  Please review."
       )
     end
   end

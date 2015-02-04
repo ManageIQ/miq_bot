@@ -39,6 +39,10 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
       h[cop_name] = "[#{cop_name}](#{cop_uri})"
     end.freeze
 
+  def tag
+    "<rubocop />"
+  end
+
   def build_messages
     write_header
     files.empty? ? write_success : write_offenses
@@ -60,7 +64,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
       branch.commit_uri_to(commits.first),
       branch.commit_uri_to(commits.last),
     ].uniq.join(" .. ")
-    write("Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop #{rubocop_version}")
+    write("#{tag}Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop #{rubocop_version}")
 
     file_count    = results.fetch_path("summary", "target_file_count").to_i
     offense_count = results.fetch_path("summary", "offense_count").to_i
@@ -68,7 +72,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def write_header_continued
-    write("**...continued**\n")
+    write("#{tag}**...continued**\n")
   end
 
   def write_success
