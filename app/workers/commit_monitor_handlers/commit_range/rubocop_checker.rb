@@ -108,7 +108,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   end
 
   def rubocop_comment?(comment)
-    first_line = comment.body.split("\n").first.to_s
-    first_line =~ /^Checked commit.+with rubocop/ || first_line.include?("...continued")
+    comment.body.start_with?("<rubocop />")
   end
 end
