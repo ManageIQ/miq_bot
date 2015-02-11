@@ -23,11 +23,11 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   SUCCESS_EMOJI = %w{:+1: :cookie: :star: :cake:}
 
   SEVERITY = {
-    "fatal"      => "**Fatal**",
-    "error"      => "**Error**",
-    "warning"    => "**Warn**",
-    "convention" => "Style",
-    "refactor"   => "Refac",
+    "fatal"      => ":red_circle: **Fatal**",
+    "error"      => ":red_circle: **Error**",
+    "warning"    => ":red_circle: **Warn**",
+    "convention" => ":large_orange_diamond:",
+    "refactor"   => ":small_blue_diamond:",
   }.freeze
 
   COP_DOCUMENTATION_URI = File.join("http://rubydoc.info/gems/rubocop", RuboCop::Version.version)
@@ -46,7 +46,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   def build_messages
     write_header
     files.empty? ? write_success : write_offenses
-    @messages.collect! { |m| m.string }
+    @messages.collect!(&:string)
   end
 
   def write(line)
