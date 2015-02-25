@@ -42,4 +42,12 @@ class CommitMonitorRepo < ActiveRecord::Base
     raise "no block given" unless block_given?
     MiqToolsServices::Github.call(:repo => name, :user => upstream_user) { |github| yield github }
   end
+
+  def with_travis_service
+    raise "no block given" unless block_given?
+    client = Travis::Client.new
+    client.github_auth(Settings.github_credentials.password) # Assumes password is holding a token
+    repo = client.repo(fq_name)
+    yield repo
+  end
 end
