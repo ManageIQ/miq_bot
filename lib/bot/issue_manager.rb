@@ -80,7 +80,7 @@ class IssueManager
   end
 
   def process_command(line, author, issue)
-    match = line.match(/^@#{@username}\s+([-@a-z0-9_]+)\s+/i)
+    match = line.strip.match(/^@#{@username}\s+([-@a-z0-9_]+)\s+/i)
 
     return if !match
 
@@ -97,6 +97,7 @@ EOMSG
       issue.add_comment(message)
       return
     else
+      logger.info("Running command #{method_name}(#{command_value.inspect}, #{author.inspect}, #{issue.number})")
       self.send(method_name, command_value, author, issue)
     end
   end
