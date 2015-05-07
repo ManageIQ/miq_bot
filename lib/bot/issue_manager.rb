@@ -11,6 +11,7 @@ class IssueManager
   include GitHubApi
 
   ISSUE_MANAGER_YAML_FILE = File.join(File.dirname(__FILE__), 'config/issue_manager.yml')
+  LABELS_YAML_FILE = File.join(File.dirname(__FILE__), 'config/labels.yml')
   ORGANIZATION = "ManageIQ"
 
   COMMANDS = Hash.new do |h, k|
@@ -31,8 +32,10 @@ class IssueManager
     @user         = GitHubApi.connect(@username, @password)
     @org          = @user.find_organization(ORGANIZATION)
     @repo         = @org.get_repository(repo_name)
-    @timestamps   = load_yaml_file
+    @timestamps   = load_yaml_file(ISSUE_MANAGER_YAML_FILE)
     @timestamps ||= Hash.new(0)
+    @notify       = load_yaml_file(LABELS_YAML_FILE)
+    @labels     ||= Hash.new(0)
   end
 
   def get_notifications
@@ -132,6 +135,7 @@ EOMSG
       if @repo.valid_label?(new_label)
         label         = GitHubApi::Label.new(@repo, new_label, issue)
         valid_labels << label
+        send_notification(label)
       else
         invalid_labels << new_label
       end
@@ -236,12 +240,26 @@ EOMSG
     end
   end
 
-  def load_yaml_file
+  def send_notification(label)
     begin
-      @timestamps = YAML.load_file(ISSUE_MANAGER_YAML_FILE)
+      if @notify.has_key?(label)
+        if @notify[label].has_key?('mailto')
+          @notify[label]['mailto'].each do |address|
+            UserNotifier.send_notification_email(address, issue.number, label).deliver
+          end
+        end
+      end
+    rescue Exception => msg
+      logger.error("Couldn't send email notification. Exception: #{msg}")
+    end
+  end
+
+  def load_yaml_file(file)
+    begin
+      YAML.load_file(file)
     rescue Errno::ENOENT
-      logger.warn("#{Time.now} #{ISSUE_MANAGER_YAML_FILE} was missing, recreating it...")
-      FileUtils.touch(ISSUE_MANAGER_YAML_FILE)
+      logger.warn("#{Time.now} #{file} was missing, recreating it...")
+      FileUtils.touch(file)
       retry
     end
   end
