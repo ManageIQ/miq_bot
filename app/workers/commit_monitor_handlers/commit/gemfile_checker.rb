@@ -15,8 +15,10 @@ class CommitMonitorHandlers::Commit::GemfileChecker
       logger.info("Branch #{branch_id} no longer exists.  Skipping.")
       return
     end
-    if @branch.repo.fq_name != "ManageIQ/manageiq"
-      logger.info("#{self.class} only runs on ManageIQ/manageiq, not #{@branch.repo.fq_name}.  Skipping.")
+
+    enabled_repos = Settings.gemfile_checker.enabled_repos
+    unless @branch.repo.fq_name.in?(enabled_repos)
+      logger.info("#{self.class} only runs in #{enabled_repos}, not #{@branch.repo.fq_name}.  Skipping.")
       return
     end
 
