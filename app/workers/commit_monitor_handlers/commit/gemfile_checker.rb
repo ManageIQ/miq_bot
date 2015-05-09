@@ -2,6 +2,8 @@ class CommitMonitorHandlers::Commit::GemfileChecker
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot
 
+  LABEL_NAME = "gem changes".freeze
+
   def self.handled_branch_modes
     [:pr]
   end
@@ -34,6 +36,10 @@ class CommitMonitorHandlers::Commit::GemfileChecker
     "<gemfile_checker />"
   end
 
+  def label_name
+    LABEL_NAME
+  end
+
   def process_branch
     send("process_#{branch.pull_request? ? "pr" : "regular"}_branch")
   end
@@ -46,12 +52,23 @@ class CommitMonitorHandlers::Commit::GemfileChecker
       @github = github
       delete_pr_comments(pr_gemfile_comments)
       add_pr_gemfile_comment
+      add_pr_label
     end
   end
 
   def github_org_repo
     [branch.repo.upstream_user, branch.repo.name]
   end
+
+  def add_pr_label
+    issue_labels = github.issues.labels.list(*github_org_repo, "issue_id" => pr)
+    logger.debug("#{self.class.name}##{__method__} PR: #{pr}, Prior labels: #{issue_labels.collect(&:name)}")
+    return if issue_labels.any? { |l| l.name == label_name }
+
+    logger.info("#{self.class.name}##{__method__} PR: #{pr}, Adding label: #{label_name.inspect}")
+    github.issues.labels.add(*github_org_repo, pr, label_name)
+  end
+
   def delete_pr_comments(comments)
     ids = comments.collect(&:id)
     return if ids.empty?
