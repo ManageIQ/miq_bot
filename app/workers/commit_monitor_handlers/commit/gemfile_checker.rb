@@ -6,7 +6,7 @@ class CommitMonitorHandlers::Commit::GemfileChecker
     [:pr]
   end
 
-  attr_reader :branch, :commit
+  attr_reader :branch, :commit, :github, :pr
 
   def perform(branch_id, commit, commit_details)
     @branch = CommitMonitorBranch.find(branch_id)
@@ -39,14 +39,43 @@ class CommitMonitorHandlers::Commit::GemfileChecker
   end
 
   def process_pr_branch
-    logger.info("#{self.class.name}##{__method__} Updating pull request #{branch.pr_number} with Gemfile comment.")
+    @pr = branch.pr_number
+    logger.info("#{self.class.name}##{__method__} Updating pull request #{pr} with Gemfile comment.")
 
     branch.repo.with_github_service do |github|
-      github.issues.comments.create(
-        :issue_id => branch.pr_number,
-        :body     => "#{tag}#{Settings.gemfile_checker.pr_contacts.join(" ")} Gemfile changes detected in commit #{branch.commit_uri_to(commit)}.  Please review."
-      )
+      @github = github
+      delete_pr_comments(pr_gemfile_comments)
+      add_pr_gemfile_comment
     end
+  end
+
+  def github_org_repo
+    [branch.repo.upstream_user, branch.repo.name]
+  end
+  def delete_pr_comments(comments)
+    ids = comments.collect(&:id)
+    return if ids.empty?
+
+    logger.info("#{self.class.name}##{__method__} PR: #{pr}, Deleting comments: #{ids.inspect}")
+    github.delete_issue_comments(ids)
+  end
+
+  def add_pr_gemfile_comment
+    logger.info("#{self.class.name}##{__method__} PR: #{pr} Adding Gemfile comment")
+    github.issues.comments.create(
+      :issue_id => pr,
+      :body     => "#{tag}#{Settings.gemfile_checker.pr_contacts.join(" ")} Gemfile changes detected in commit #{branch.commit_uri_to(commit)}.  Please review."
+    )
+  end
+
+  def pr_gemfile_comments
+    github.select_issue_comments(pr) do |comment|
+      gemfile_comment?(comment)
+    end
+  end
+
+  def gemfile_comment?(comment)
+    comment.body.start_with?(tag)
   end
 
   def process_regular_branch
