@@ -144,6 +144,20 @@ EOMSG
     end
     if !valid_labels.empty?
       issue.add_labels(valid_labels)
+      notify_on_label(issue, valid_labels)
+    end
+  end
+
+  def notify_on_label(issue, labels)
+    labels.each do |label|
+      if Settings.label_notifier.contacts[label] &&
+         Settings.label_notifier.contacts[label] > 0
+        message = 'cc '
+        Settings.label_notifier.contacts[label].each do |contact|
+          message += "@#{contact}"
+        end
+        issue.add_comment(message)
+      end
     end
   end
 

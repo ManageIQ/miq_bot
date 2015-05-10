@@ -11,3 +11,5 @@ gemfile_checker:
   pr_contacts: []
 issue_manager:
   repo_names: []
+label_notifier:
+  contacts: { label1: [] }
