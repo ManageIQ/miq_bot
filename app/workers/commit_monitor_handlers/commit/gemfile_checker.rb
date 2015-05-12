@@ -36,10 +36,6 @@ class CommitMonitorHandlers::Commit::GemfileChecker
     "<gemfile_checker />"
   end
 
-  def label_name
-    LABEL_NAME
-  end
-
   def process_branch
     send("process_#{branch.pull_request? ? "pr" : "regular"}_branch")
   end
@@ -61,12 +57,7 @@ class CommitMonitorHandlers::Commit::GemfileChecker
   end
 
   def add_pr_label
-    issue_labels = github.issues.labels.list(*github_org_repo, "issue_id" => pr)
-    logger.debug("#{self.class.name}##{__method__} PR: #{pr}, Prior labels: #{issue_labels.collect(&:name)}")
-    return if issue_labels.any? { |l| l.name == label_name }
-
-    logger.info("#{self.class.name}##{__method__} PR: #{pr}, Adding label: #{label_name.inspect}")
-    github.issues.labels.add(*github_org_repo, pr, label_name)
+    add_issue_label(pr, LABEL_NAME)
   end
 
   def delete_pr_comments(comments)
@@ -97,5 +88,27 @@ class CommitMonitorHandlers::Commit::GemfileChecker
 
   def process_regular_branch
     # TODO: Support regular branches with EmailService once we can send email.
+  end
+
+  #TODO: this should be extracted as a bot interface to the github_api
+  def get_issue(number)
+    github.issues.get(*github_org_repo, number)
+  end
+
+  def get_issue_labels(number)
+    get_issue(number).labels.collect(&:name)
+  end
+
+  def issue_has_label?(number, label)
+    issue_labels = get_issue_labels(number)
+    logger.debug("#{self.class.name}##{__method__} PR: #{number}, Prior labels: #{issue_labels}")
+    issue_labels.include?(label)
+  end
+
+  def add_issue_label(number, label)
+    return if issue_has_label?(number, label)
+
+    logger.info("#{self.class.name}##{__method__} Issue #{number}, Adding label: #{label.inspect}")
+    github.issues.labels.add(*github_org_repo, number, label)
   end
 end
