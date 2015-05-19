@@ -31,4 +31,11 @@ class CommitMonitorBranch < ActiveRecord::Base
   def pr_number
     MiqToolsServices::MiniGit.pr_number(name) if pull_request?
   end
+
+  def write_github_comment(message)
+    return unless pull_request?
+
+    logger.info("#{self.class.name}##{__method__} [#{job.inspect_info}] would write comment for PR: #{pr}")
+    # TODO: Write the comment
+  end
 end
