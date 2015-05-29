@@ -9,5 +9,6 @@ commit_monitor:
   bugzilla_product:
 gemfile_checker:
   pr_contacts: []
+  enabled_repos: []
 issue_manager:
   repo_names: []
