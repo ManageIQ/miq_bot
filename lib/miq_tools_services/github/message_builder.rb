@@ -5,7 +5,7 @@ module MiqToolsServices
     class MessageBuilder
       attr_accessor :header, :continuation_header
 
-      GITHUB_COMMENT_BODY_MAX_SIZE = 65_535
+      COMMENT_BODY_MAX_SIZE = 65_535
 
       def initialize(header = nil, continuation_header = nil)
         @header = header
@@ -14,8 +14,8 @@ module MiqToolsServices
       end
 
       def write(line)
-        if line.length >= GITHUB_COMMENT_BODY_MAX_SIZE
-          raise ArgumentError, "line length must be less than #{GITHUB_COMMENT_BODY_MAX_SIZE}"
+        if line.length >= COMMENT_BODY_MAX_SIZE
+          raise ArgumentError, "line length must be less than #{COMMENT_BODY_MAX_SIZE}"
         end
         @lines << line
       end
@@ -24,32 +24,32 @@ module MiqToolsServices
         lines.each { |l| write(l) }
       end
 
-      def messages
-        build_messages
-        @messages.collect(&:string)
+      def comments
+        build_comments
+        @comments.collect(&:string)
       end
 
       private
 
-      def build_messages
-        @messages = []
-        start_new_message(header)
-        @lines.each { |line| add_to_message(line) }
+      def build_comments
+        @comments = []
+        start_new_comment(header)
+        @lines.each { |line| add_to_comment(line) }
       end
 
-      def start_new_message(message_header)
-        @message = StringIO.new
-        @messages << @message
-        add_to_message(message_header) if message_header
+      def start_new_comment(comment_header)
+        @comment = StringIO.new
+        @comments << @comment
+        add_to_comment(comment_header) if comment_header
       end
 
-      def add_to_message(line)
-        start_new_message(continuation_header) if will_exceed_message_max_size?(line)
-        @message.puts(line)
+      def add_to_comment(line)
+        start_new_comment(continuation_header) if will_exceed_comment_max_size?(line)
+        @comment.puts(line)
       end
 
-      def will_exceed_message_max_size?(line)
-        @message.length + line.length + 1 >= GITHUB_COMMENT_BODY_MAX_SIZE
+      def will_exceed_comment_max_size?(line)
+        @comment.length + line.length + 1 >= COMMENT_BODY_MAX_SIZE
       end
     end
   end
