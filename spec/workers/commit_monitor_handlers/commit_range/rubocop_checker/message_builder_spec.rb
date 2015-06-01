@@ -10,9 +10,9 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
     )
   end
 
-  context "#messages" do
+  context "#comments" do
     subject do
-      described_class.new(rubocop_results, branch).messages
+      described_class.new(rubocop_results, branch).comments
     end
 
     it "with results with offenses" do
@@ -43,7 +43,7 @@ Everything looks good.
       expect(subject.first.split(" ").last).to match /:[\w\d\+]+:/ # Ends with an emoji ;)
     end
 
-    it "with multiple messages" do
+    it "with results generating multiple comments" do
       expect(subject.length).to eq 2
       expect(subject.first).to  start_with <<-EOMSG.chomp
 <rubocop />Checked commits https://github.com/some_user/some_repo/commit/1ec36efd33279f79f8ddcf12984bb2aa48f3fbd6 .. https://github.com/some_user/some_repo/commit/8942a195a0bfa69ceb82c020c60565408cb46d3e with rubocop #{rubocop_version}

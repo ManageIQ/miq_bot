@@ -6,12 +6,11 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     @results  = results
     @branch   = branch
     @commits  = branch.commits_list
-
-    build_messages
   end
 
-  def messages
-    message_builder.messages
+  def comments
+    build_comments
+    message_builder.comments
   end
 
   private
@@ -59,7 +58,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     "#{tag}**...continued**\n"
   end
 
-  def build_messages
+  def build_comments
     @message_builder = MiqToolsServices::Github::MessageBuilder.new(header, continuation_header)
     files.empty? ? write_success : write_offenses
   end
@@ -71,7 +70,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   def write_offenses
     files.each do |f|
       message_builder.write("\n**#{f["path"]}**")
-      message_builder.write_lines(offense_messages(f))
+      message_builder.write_lines(offense_lines(f))
     end
   end
 
@@ -79,8 +78,8 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     results["files"].select { |f| f["offenses"].any? }.sort_by { |f| f["path"] }
   end
 
-  def offense_messages(file)
-    sorted_offenses(file).collect do |o|
+  def offense_lines(file)
+    sorted_offense_records(file).collect do |o|
       "- [ ] %s - %s, %s - %s - %s" % [
         format_severity(o["severity"]),
         format_line(o["location"]["line"], file["path"]),
@@ -91,7 +90,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     end
   end
 
-  def sorted_offenses(file)
+  def sorted_offense_records(file)
     file["offenses"].sort_by do |o|
       [
         order_severity(o["severity"]),
