@@ -51,7 +51,7 @@ group :development, :test do
 end
 
 group :issue_manager do
-  gem 'octokit',       '~> 1.25.0'
+  gem 'octokit',       '~> 3.8.0'
   gem 'minigit',       '~> 0.0.4'
 
   # Lock down dependency
