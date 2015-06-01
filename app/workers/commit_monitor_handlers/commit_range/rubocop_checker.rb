@@ -87,7 +87,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   def write_to_github
     logger.info("#{self.class.name}##{__method__} Updating pull request #{branch.pr_number} with rubocop comment.")
 
-    new_comments = MessageBuilder.new(results, branch).messages
+    new_comments = MessageBuilder.new(results, branch).comments
 
     branch.repo.with_github_service do |github|
       @github = github
