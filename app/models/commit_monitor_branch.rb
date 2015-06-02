@@ -32,10 +32,19 @@ class CommitMonitorBranch < ActiveRecord::Base
     MiqToolsServices::MiniGit.pr_number(name) if pull_request?
   end
 
-  def write_github_comment(message)
-    return unless pull_request?
+  def write_github_comment(header, continuation_header = nil, message = nil)
+    unless pull_request?
+      raise ArgumentError, "Cannot comment on non-pull request branches such as #{name}."
+    end
 
-    logger.info("#{self.class.name}##{__method__} [#{job.inspect_info}] would write comment for PR: #{pr}")
-    # TODO: Write the comment
+    message_builder = MiqToolsServices::Github::MessageBuilder.new(header, continuation_header)
+    message_builder.write(message) if message
+
+    logger.info("#{self.class.name}##{__method__} Writing comment with header: #{header} on PR: #{name}")
+    repo.with_github_service do |github|
+      # TODO: Refactor the common "delete prior tagged issues" into miq_tools_services
+      # github.delete_issue_comments(pr_number, header)
+      github.create_issue_comments(pr_number, message_builder.comments)
+    end
   end
 end

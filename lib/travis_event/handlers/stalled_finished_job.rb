@@ -9,6 +9,7 @@ module TravisEvent
       STALLED_BUILD_TEXT = "\n\nNo output has been received in the last 10 minutes, this potentially indicates a stalled build or something wrong with the build itself.\n\nThe build has been terminated\n\n"
       HANDLED_EVENTS  = ['job:finished'].freeze
       ERROR = "errored".freeze
+      COMMENT_TAG = "<stalled_finished_job />".freeze
 
       attr_reader :repo, :repo_name, :number, :event_type, :state
 
@@ -29,9 +30,12 @@ module TravisEvent
         job = find_job(travis_repo, number) or return
         return unless job_stalled?(job)
 
-        message = "Restarting stalled job: [#{repo_name}##{number}]"
-        branch.write_github_comment(message)
+        message = "Detected and restarted stalled travis job."
+        branch.write_github_comment(COMMENT_TAG + message)
         logger.info("#{self.class.name}##{__method__} #{message}")
+
+        # Must have github token in password field
+        Travis.github_auth(Settings.github_credentials.password)
         job.restart
       end
 
