@@ -6,7 +6,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     [:pr]
   end
 
-  attr_reader :branch, :commits, :results, :github
+  attr_reader :branch, :pr, :commits, :results, :github
 
   def perform(branch_id, new_commits)
     @branch  = CommitMonitorBranch.where(:id => branch_id).first
@@ -20,6 +20,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
       return
     end
 
+    @pr      = @branch.pr_number
     @commits = @branch.commits_list
     process_branch
   end
@@ -84,29 +85,22 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     JSON.parse(result.output.chomp)
   end
 
-  def write_to_github
-    logger.info("#{self.class.name}##{__method__} Updating pull request #{branch.pr_number} with rubocop comment.")
+  def rubocop_comments
+    MessageBuilder.new(results, branch).comments
+  end
 
-    new_comments = MessageBuilder.new(results, branch).comments
+  def write_to_github
+    logger.info("#{self.class.name}##{__method__} Updating pull request #{pr} with rubocop comment.")
 
     branch.repo.with_github_service do |github|
       @github = github
-      delete_github_comments(find_old_github_comments)
-      write_github_comments(new_comments)
+      replace_rubocop_comments
     end
   end
 
-  def delete_github_comments(comments)
-    github.delete_issue_comments(comments.collect(&:id))
-  end
-
-  def write_github_comments(comments)
-    github.create_issue_comments(branch.pr_number, comments)
-  end
-
-  def find_old_github_comments
-    github.select_issue_comments(branch.pr_number) do |comment|
-      rubocop_comment?(comment)
+  def replace_rubocop_comments
+    github.replace_issue_comments(pr, rubocop_comments) do |old_comment|
+      rubocop_comment?(old_comment)
     end
   end
 
