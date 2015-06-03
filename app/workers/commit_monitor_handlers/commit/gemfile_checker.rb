@@ -62,7 +62,8 @@ class CommitMonitorHandlers::Commit::GemfileChecker
   end
 
   def add_pr_label
-    add_issue_label(pr, LABEL_NAME)
+    logger.info("#{self.class.name}##{__method__} PR: #{pr}, Adding label: #{LABEL_NAME.inspect}")
+    github.add_issue_labels(pr, LABEL_NAME)
   end
 
   def gemfile_comment?(comment)
@@ -71,31 +72,5 @@ class CommitMonitorHandlers::Commit::GemfileChecker
 
   def process_regular_branch
     # TODO: Support regular branches with EmailService once we can send email.
-  end
-
-  def github_org_repo
-    [branch.repo.upstream_user, branch.repo.name]
-  end
-
-  #TODO: this should be extracted as a bot interface to the github_api
-  def get_issue(number)
-    github.issues.get(*github_org_repo, number)
-  end
-
-  def get_issue_labels(number)
-    get_issue(number).labels.collect(&:name)
-  end
-
-  def issue_has_label?(number, label)
-    issue_labels = get_issue_labels(number)
-    logger.debug("#{self.class.name}##{__method__} PR: #{number}, Prior labels: #{issue_labels}")
-    issue_labels.include?(label)
-  end
-
-  def add_issue_label(number, label)
-    return if issue_has_label?(number, label)
-
-    logger.info("#{self.class.name}##{__method__} Issue #{number}, Adding label: #{label.inspect}")
-    github.issues.labels.add(*github_org_repo, number, label)
   end
 end
