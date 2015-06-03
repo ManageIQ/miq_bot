@@ -58,5 +58,15 @@ module MiqToolsServices
         issues.comments.delete(:comment_id => comment_id)
       end
     end
+
+    # Deletes the issue comments found by the provided block, then creates new
+    # issue comments from those provided.
+    def replace_issue_comments(issue_id, new_comments)
+      raise "no block given" unless block_given?
+
+      to_delete = select_issue_comments(issue_id) { |c| yield c }
+      delete_issue_comments(to_delete.collect(&:id))
+      create_issue_comments(issue_id, new_comments)
+    end
   end
 end
