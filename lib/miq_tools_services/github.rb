@@ -68,5 +68,23 @@ module MiqToolsServices
       delete_issue_comments(to_delete.collect(&:id))
       create_issue_comments(issue_id, new_comments)
     end
+
+    def issue_labels(issue_id)
+      issues.labels.all(:issue_id => issue_id)
+    end
+
+    def issue_label_names(issue_id)
+      issue_labels(issue_id).collect(&:name)
+    end
+
+    # Adds the labels specified, but only if they are not already on the issue.
+    def add_issue_labels(issue_id, labels)
+      old_labels = issue_label_names(issue_id)
+
+      Array(labels).each do |label|
+        next if old_labels.include?(label)
+        issues.labels.add(user, repo, issue_id, label)
+      end
+    end
   end
 end
