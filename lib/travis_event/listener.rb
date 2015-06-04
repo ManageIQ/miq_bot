@@ -1,14 +1,16 @@
 module TravisEvent
+  def self.handlers
+    @handlers ||= begin
+      workers_path = Rails.root.join("app/workers")
+      Dir.glob(workers_path.join("travis_event_handlers/*.rb")).collect do |f|
+        path = Pathname.new(f).relative_path_from(workers_path).to_s
+        path.chomp(".rb").classify.constantize
+      end
+    end
+  end
+
   class Listener
     ALL_EVENTS = %w(build:created build:started build:finished job:created job:started job:finished)
-
-    def self.handlers
-      @handlers ||=
-        Dir.glob("lib/travis_event/handlers/*.rb").collect do |f|
-          path = Pathname.new(f).relative_path_from(Pathname.new("lib")).to_s
-          path.chomp(".rb").classify.constantize
-        end
-    end
 
     # repos: [Travis::Repository.find("rails/rails")]
     def self.monitor(*repos)
@@ -16,7 +18,7 @@ module TravisEvent
         stream.on(*ALL_EVENTS) do |event|
           args = extract_args(event)
           if args
-            handlers.each do |handler|
+            TravisEvent.handlers.each do |handler|
               handler.perform_async(*args)
             end
           end
