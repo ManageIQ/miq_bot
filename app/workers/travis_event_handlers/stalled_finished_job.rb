@@ -12,7 +12,7 @@ module TravisEventHandlers
 
     attr_reader :repo, :slug, :number, :event_type, :state
 
-    def perform(slug, number, event_type, state, branch_or_pr_number, pull_request)
+    def perform(slug, number, event_type, state, branch_or_pr_number)
       @slug       = slug
       @number     = number
       @event_type = event_type
