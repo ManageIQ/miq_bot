@@ -33,16 +33,23 @@ module TravisEventHandlers
       end
 
       # Remote checks: Skip missing travis repo or job and non-stalled builds
-      travis_repo = Travis::Repository.find(slug) or return
-      job = find_job(travis_repo, number) or return
-      return unless job_stalled?(job)
+      repo.with_travis_service do |travis_repo|
+        job = find_job(travis_repo, number)
+        if job.nil?
+          logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] Can't find Travis::Job.")
+          return
+        end
+
+        unless job_stalled?(job)
+          logger.info("#{self.class.name}##{__method__} [#{job.inspect_info}] Skipping non-stalled job")
+          return
+        end
+      end
 
       message = "Detected and restarted stalled travis job."
       branch.write_github_comment(COMMENT_TAG + message)
       logger.info("#{self.class.name}##{__method__} #{message}")
 
-      # Must have github token in password field
-      Travis.github_auth(Settings.github_credentials.password)
       job.restart
     end
 
@@ -66,25 +73,14 @@ module TravisEventHandlers
     end
 
     ### Travis checks
-    def find_job(repo, number)
-      job =
-        begin
-          repo.job(number)
-        rescue => err
-          logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] can't find job #{number}, #{err}")
-          nil
-        end
-
-      raise "Job cannot be found, will retry later" if job.nil?
-      job
+    def find_job(travis_repo, number)
+      travis_repo.job(number)
+    rescue
+      nil
     end
 
     def job_stalled?(job)
-      job.log.clean_body.end_with?(STALLED_BUILD_TEXT).tap do |stalled|
-        unless stalled
-          logger.debug("#{self.class.name}##{__method__} [#{job.inspect_info}] Skipping non-stalled job")
-        end
-      end
+      job.log.clean_body.end_with?(STALLED_BUILD_TEXT)
     end
   end
 end
