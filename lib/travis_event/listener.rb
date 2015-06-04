@@ -38,8 +38,8 @@ module TravisEvent
           return nil
         end
 
-      branch_name = build.pull_request? ? build.pull_request_number : build.commit.branch
-      [event.repository.slug, number, event.type, state, branch_name, build.pull_request?]
+      branch_or_pr_number = build.pull_request? ? build.pull_request_number : build.commit.branch
+      [event.repository.slug, number, event.type, state, branch_or_pr_number, build.pull_request?]
     end
   end
 end
