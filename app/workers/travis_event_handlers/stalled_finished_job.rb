@@ -7,7 +7,6 @@ module TravisEventHandlers
 
     STALLED_BUILD_TEXT = "\n\nNo output has been received in the last 10 minutes, this potentially indicates a stalled build or something wrong with the build itself.\n\nThe build has been terminated\n\n"
     HANDLED_EVENTS  = ['job:finished'].freeze
-    ERROR = "errored".freeze
     COMMENT_TAG = "<stalled_finished_job />".freeze
 
     attr_reader :repo, :slug, :number, :event_type, :state
@@ -18,7 +17,15 @@ module TravisEventHandlers
       @event_type = event_type
       @state      = state
 
-      return if skip_event? || skip_state?
+      if skip_event?
+        logger.info("#{self.class.name}##{__method__} [#{slug}##{number}] Skipping #{event_type}")
+        return
+      end
+
+      if skip_state?
+        logger.info("#{self.class.name}##{__method__} [#{slug}##{number}] Skipping state: #{state}")
+        return
+      end
 
       repo = CommitMonitorRepo.with_slug(slug).first
       if repo.nil?
@@ -57,19 +64,11 @@ module TravisEventHandlers
 
     #### Incoming argument checks
     def skip_event?
-      !HANDLED_EVENTS.include?(event_type).tap do |skipped|
-        if skipped
-          logger.debug("#{self.class.name}##{__method__} [#{slug}##{number}] Skipping #{event_type}")
-        end
-      end
+      !HANDLED_EVENTS.include?(event_type)
     end
 
     def skip_state?
-      state != ERROR.tap do |skipped|
-        if skipped
-          logger.debug("#{self.class.name}##{__method__} [#{slug}##{number}] Skipping state: #{state}")
-        end
-      end
+      state != "errored"
     end
 
     ### Travis checks
