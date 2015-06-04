@@ -53,11 +53,7 @@ module TravisEventHandlers
         end
       end
 
-      message = "Detected and restarted stalled travis job."
-      branch.write_github_comment(COMMENT_TAG + message)
-      logger.info("#{self.class.name}##{__method__} #{message}")
-
-      job.restart
+      restart_job(job)
     end
 
     protected
@@ -80,6 +76,19 @@ module TravisEventHandlers
 
     def job_stalled?(job)
       job.log.clean_body.end_with?(STALLED_BUILD_TEXT)
+    end
+
+    def restart_job(job)
+      logger.info("#{self.class.name}##{__method__} [#{job.inspect_info}] Attempting to restart job...")
+
+      begin
+        job.restart
+      rescue => err
+        logger.error("#{self.class.name}##{__method__} [#{job.inspect_info}] Failed to restart job with error: #{err}")
+        branch.write_github_comment("#{COMMENT_TAG}Detected stalled travis job, but failed to restart due to error:\n\n```#{err}```")
+      else
+        branch.write_github_comment("#{COMMENT_TAG}Detected and restarted stalled travis job.")
+      end
     end
   end
 end
