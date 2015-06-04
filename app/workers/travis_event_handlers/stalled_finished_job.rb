@@ -17,12 +17,11 @@ module TravisEventHandlers
       @number       = number
       @event_type   = event_type
       @state        = state
-      @pull_request = pull_request
 
       return if skip_event? || skip_state?
 
       # Local checks: skip unknown repos or non-current branches
-      branch = commit_monitor_branch(branch_or_pr_number) or return
+      branch = commit_monitor_branch(branch_or_pr_number, pull_request) or return
 
       # Remote checks: Skip missing travis repo or job and non-stalled builds
       travis_repo = Travis::Repository.find(repo_name) or return
@@ -58,10 +57,6 @@ module TravisEventHandlers
     end
 
     ### CommitMonitorRepo and CommitMonitorBranch lookups
-    def pull_request?
-      @pull_request
-    end
-
     def commit_monitor_repo
       user, name = repo_name.split("/")
       CommitMonitorRepo.where(:upstream_user => user, :name => name).first.tap do |repo|
@@ -71,15 +66,15 @@ module TravisEventHandlers
       end
     end
 
-    def build_branch_name(branch_or_pr_number)
-      pull_request? ? "pr/#{branch_or_pr_number}" : branch_or_pr_number
+    def build_branch_name(branch_or_pr_number, pull_request)
+      pull_request ? "pr/#{branch_or_pr_number}" : branch_or_pr_number
     end
 
-    def commit_monitor_branch(branch_or_pr_number)
+    def commit_monitor_branch(branch_or_pr_number, pull_request)
       repo = commit_monitor_repo
       return unless repo
 
-      branch_name = build_branch_name(branch_or_pr_number)
+      branch_name = build_branch_name(branch_or_pr_number, pull_request)
       repo.branches.where(:name => branch_name).first.tap do |branch|
         unless branch
           logger.warn("#{self.class.name}##{__method__} [#{repo_name}##{number}] Can't find CommitMonitorBranch with name: #{branch_name}")
