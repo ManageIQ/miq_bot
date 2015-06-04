@@ -9,7 +9,7 @@ module TravisEventHandlers
     HANDLED_EVENTS  = ['job:finished'].freeze
     COMMENT_TAG = "<stalled_finished_job />".freeze
 
-    attr_reader :repo, :slug, :number, :event_type, :state
+    attr_reader :repo, :branch, :job, :slug, :number, :event_type, :state
 
     def perform(slug, number, event_type, state, branch_or_pr_number)
       @slug       = slug
@@ -27,33 +27,33 @@ module TravisEventHandlers
         return
       end
 
-      repo = CommitMonitorRepo.with_slug(slug).first
-      if repo.nil?
+      @repo = CommitMonitorRepo.with_slug(slug).first
+      if @repo.nil?
         logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] Can't find CommitMonitorRepo with user: #{user}, name: #{name}")
         return
       end
 
-      branch = repo.branches.with_branch_or_pr_number(branch_or_pr_number).first
-      if branch.nil?
-        logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] Can't find CommitMonitorBranch with name: #{branch_name}")
+      @branch = @repo.branches.with_branch_or_pr_number(branch_or_pr_number).first
+      if @branch.nil?
+        logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] Can't find CommitMonitorBranch with name: #{branch_or_pr_number}")
         return
       end
 
       # Remote checks: Skip missing travis repo or job and non-stalled builds
-      repo.with_travis_service do |travis_repo|
-        job = find_job(travis_repo, number)
-        if job.nil?
+      @repo.with_travis_service do |travis_repo|
+        @job = find_job(travis_repo, number)
+        if @job.nil?
           logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] Can't find Travis::Job.")
           return
         end
 
-        unless job_stalled?(job)
-          logger.info("#{self.class.name}##{__method__} [#{job.inspect_info}] Skipping non-stalled job")
+        unless job_stalled?
+          logger.info("#{self.class.name}##{__method__} [#{@job.inspect_info}] Skipping non-stalled job")
           return
         end
-      end
 
-      restart_job(job)
+        restart_job
+      end
     end
 
     protected
@@ -74,11 +74,11 @@ module TravisEventHandlers
       nil
     end
 
-    def job_stalled?(job)
+    def job_stalled?
       job.log.clean_body.end_with?(STALLED_BUILD_TEXT)
     end
 
-    def restart_job(job)
+    def restart_job
       logger.info("#{self.class.name}##{__method__} [#{job.inspect_info}] Attempting to restart job...")
 
       begin
