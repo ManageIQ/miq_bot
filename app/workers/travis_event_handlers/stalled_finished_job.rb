@@ -10,21 +10,30 @@ module TravisEventHandlers
     ERROR = "errored".freeze
     COMMENT_TAG = "<stalled_finished_job />".freeze
 
-    attr_reader :repo, :repo_name, :number, :event_type, :state
+    attr_reader :repo, :slug, :number, :event_type, :state
 
-    def perform(repo_name, number, event_type, state, branch_or_pr_number, pull_request)
-      @repo_name    = repo_name
-      @number       = number
-      @event_type   = event_type
-      @state        = state
+    def perform(slug, number, event_type, state, branch_or_pr_number, pull_request)
+      @slug       = slug
+      @number     = number
+      @event_type = event_type
+      @state      = state
 
       return if skip_event? || skip_state?
 
-      # Local checks: skip unknown repos or non-current branches
-      branch = commit_monitor_branch(branch_or_pr_number, pull_request) or return
+      repo = CommitMonitorRepo.with_slug(slug).first
+      if repo.nil?
+        logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] Can't find CommitMonitorRepo with user: #{user}, name: #{name}")
+        return
+      end
+
+      branch = repo.branches.with_branch_or_pr_number(branch_or_pr_number).first
+      if branch.nil?
+        logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] Can't find CommitMonitorBranch with name: #{branch_name}")
+        return
+      end
 
       # Remote checks: Skip missing travis repo or job and non-stalled builds
-      travis_repo = Travis::Repository.find(repo_name) or return
+      travis_repo = Travis::Repository.find(slug) or return
       job = find_job(travis_repo, number) or return
       return unless job_stalled?(job)
 
@@ -43,7 +52,7 @@ module TravisEventHandlers
     def skip_event?
       !HANDLED_EVENTS.include?(event_type).tap do |skipped|
         if skipped
-          logger.debug("#{self.class.name}##{__method__} [#{repo_name}##{number}] Skipping #{event_type}")
+          logger.debug("#{self.class.name}##{__method__} [#{slug}##{number}] Skipping #{event_type}")
         end
       end
     end
@@ -51,33 +60,7 @@ module TravisEventHandlers
     def skip_state?
       state != ERROR.tap do |skipped|
         if skipped
-          logger.debug("#{self.class.name}##{__method__} [#{repo_name}##{number}] Skipping state: #{state}")
-        end
-      end
-    end
-
-    ### CommitMonitorRepo and CommitMonitorBranch lookups
-    def commit_monitor_repo
-      user, name = repo_name.split("/")
-      CommitMonitorRepo.where(:upstream_user => user, :name => name).first.tap do |repo|
-        unless repo
-          logger.warn("#{self.class.name}##{__method__} [#{repo_name}##{number}] Can't find CommitMonitorRepo with user: #{user}, name: #{name}")
-        end
-      end
-    end
-
-    def build_branch_name(branch_or_pr_number, pull_request)
-      pull_request ? "pr/#{branch_or_pr_number}" : branch_or_pr_number
-    end
-
-    def commit_monitor_branch(branch_or_pr_number, pull_request)
-      repo = commit_monitor_repo
-      return unless repo
-
-      branch_name = build_branch_name(branch_or_pr_number, pull_request)
-      repo.branches.where(:name => branch_name).first.tap do |branch|
-        unless branch
-          logger.warn("#{self.class.name}##{__method__} [#{repo_name}##{number}] Can't find CommitMonitorBranch with name: #{branch_name}")
+          logger.debug("#{self.class.name}##{__method__} [#{slug}##{number}] Skipping state: #{state}")
         end
       end
     end
@@ -88,7 +71,7 @@ module TravisEventHandlers
         begin
           repo.job(number)
         rescue
-          logger.warn("#{self.class.name}##{__method__} [#{repo_name}##{number}] can't find job #{number}, #{$!}")
+          logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] can't find job #{number}, #{$!}")
           nil
         end
 

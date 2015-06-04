@@ -28,6 +28,16 @@ class CommitMonitorRepo < ActiveRecord::Base
   def fq_name
     "#{upstream_user}/#{name}"
   end
+  alias_method :slug, :fq_name
+
+  # fq_name: "ManageIQ/miq_bot"
+  def self.with_fq_name(fq_name)
+    user, repo = fq_name.split("/")
+    CommitMonitorRepo.where(:upstream_user => user, :name => repo)
+  end
+  class << self
+    alias_method :with_slug, :with_fq_name
+  end
 
   def path=(val)
     super(File.expand_path(val))
