@@ -70,8 +70,8 @@ module TravisEventHandlers
       job =
         begin
           repo.job(number)
-        rescue
-          logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] can't find job #{number}, #{$!}")
+        rescue => err
+          logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] can't find job #{number}, #{err}")
           nil
         end
 
