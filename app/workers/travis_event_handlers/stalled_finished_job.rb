@@ -18,24 +18,24 @@ module TravisEventHandlers
       @state      = state
 
       if skip_event?
-        logger.info("#{self.class.name}##{__method__} [#{slug}##{number}] Skipping #{event_type}")
+        logger.info("#{__method__} [#{slug}##{number}] Skipping #{event_type}")
         return
       end
 
       if skip_state?
-        logger.info("#{self.class.name}##{__method__} [#{slug}##{number}] Skipping state: #{state}")
+        logger.info("#{__method__} [#{slug}##{number}] Skipping state: #{state}")
         return
       end
 
       @repo = CommitMonitorRepo.with_slug(slug).first
       if @repo.nil?
-        logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] Can't find CommitMonitorRepo with user: #{user}, name: #{name}")
+        logger.warn("#{__method__} [#{slug}##{number}] Can't find CommitMonitorRepo.")
         return
       end
 
       @branch = @repo.branches.with_branch_or_pr_number(branch_or_pr_number).first
       if @branch.nil?
-        logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] Can't find CommitMonitorBranch with name: #{branch_or_pr_number}")
+        logger.warn("#{__method__} [#{slug}##{number}] Can't find CommitMonitorBranch with name: #{branch_or_pr_number}")
         return
       end
 
@@ -43,12 +43,12 @@ module TravisEventHandlers
       @repo.with_travis_service do |travis_repo|
         @job = find_job(travis_repo, number)
         if @job.nil?
-          logger.warn("#{self.class.name}##{__method__} [#{slug}##{number}] Can't find Travis::Job.")
+          logger.warn("#{__method__} [#{slug}##{number}] Can't find Travis::Job.")
           return
         end
 
         unless job_stalled?
-          logger.info("#{self.class.name}##{__method__} [#{@job.inspect_info}] Skipping non-stalled job")
+          logger.info("#{__method__} [#{@job.inspect_info}] Skipping non-stalled job")
           return
         end
 
@@ -79,13 +79,13 @@ module TravisEventHandlers
     end
 
     def restart_job
-      logger.info("#{self.class.name}##{__method__} [#{job.inspect_info}] Attempting to restart job...")
+      logger.info("#{__method__} [#{job.inspect_info}] Attempting to restart job...")
 
       begin
         job.restart
       rescue => err
-        logger.error("#{self.class.name}##{__method__} [#{job.inspect_info}] Failed to restart job with error: #{err}")
-        branch.write_github_comment("#{COMMENT_TAG}Detected stalled travis job, but failed to restart due to error:\n\n```#{err}```")
+        logger.error("#{__method__} [#{job.inspect_info}] Failed to restart job with error: #{err}")
+        branch.write_github_comment("#{COMMENT_TAG}Detected stalled travis job, but failed to restart due to error:\n\n```\n#{err}\n```")
       else
         branch.write_github_comment("#{COMMENT_TAG}Detected and restarted stalled travis job.")
       end

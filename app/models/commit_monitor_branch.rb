@@ -45,7 +45,7 @@ class CommitMonitorBranch < ActiveRecord::Base
     message_builder = MiqToolsServices::Github::MessageBuilder.new(header, continuation_header)
     message_builder.write(message) if message
 
-    logger.info("#{self.class.name}##{__method__} Writing comment with header: #{header} on PR: #{name}")
+    logger.info("#{__method__} Writing comment with header: #{header}")
     repo.with_github_service do |github|
       # TODO: Refactor the common "delete prior tagged issues" into miq_tools_services
       # github.delete_issue_comments(pr_number, header)
