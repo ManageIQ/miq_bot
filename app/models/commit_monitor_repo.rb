@@ -55,9 +55,8 @@ class CommitMonitorRepo < ActiveRecord::Base
 
   def with_travis_service
     raise "no block given" unless block_given?
-    client = Travis::Client.new
-    client.github_auth(Settings.github_credentials.password) # Assumes password is holding a token
-    repo = client.repo(fq_name)
-    yield repo
+
+    Travis.github_auth(Settings.github_credentials.password)
+    yield Travis::Repository.find(fq_name)
   end
 end
