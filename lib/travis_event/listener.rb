@@ -16,10 +16,10 @@ module TravisEvent
     def self.monitor(*slugs)
       Travis.listen(*travis_repos(slugs)) do |stream|
         stream.on(*ALL_EVENTS) do |event|
-          args = extract_args(event)
-          if args
+          hash = event_hash(event)
+          if hash
             TravisEvent.handlers.each do |handler|
-              handler.perform_async(*args)
+              handler.perform_async(hash)
             end
           end
         end
@@ -31,22 +31,19 @@ module TravisEvent
       slugs.collect { |slug| Travis::Repository.find(slug) }
     end
 
-    def self.extract_args(event)
-      # Travis::Event is a:
-      # Struct.new(:type, :repository, :build, :job, :payload)
-      number, state, build =
-        case event.type.split(':').first
-        when 'build'
-          [event.build.number, event.build.state, event.build]
-        when 'job'
-          [event.job.number, event.job.state, event.job.build]
-        else
-          Sidekiq::Logging.logger.info("#{name}##{__method__} Discarding unsupported event source type: #{event.type}")
-          return nil
-        end
+    def self.event_hash(event)
+      unless %w(build job).include?(event.type.split(':').first)
+        Sidekiq::Logging.logger.info("#{name}##{__method__} Discarding unsupported event type: #{event.type}")
+        return nil
+      end
 
-      branch_or_pr_number = build.pull_request? ? build.pull_request_number : build.commit.branch
-      [event.repository.slug, number, event.type, state, branch_or_pr_number]
+      h = event.to_h
+      h.keys.each do |k|
+        v = h.delete(k)
+        v = v.attributes if v.respond_to?(:attributes)
+        h[k.to_s] = v
+      end
+      h
     end
   end
 end

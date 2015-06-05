@@ -11,11 +11,12 @@ module TravisEventHandlers
 
     attr_reader :repo, :branch, :job, :slug, :number, :event_type, :state
 
-    def perform(slug, number, event_type, state, branch_or_pr_number)
-      @slug       = slug
-      @number     = number
-      @event_type = event_type
-      @state      = state
+    def perform(event_hash)
+      @slug       = event_hash.fetch_path("payload", "repository_slug")
+      @number     = event_hash.fetch_path("payload", "number")
+      @event_type = event_hash.fetch_path("type")
+      @state      = event_hash.fetch_path("payload", "state")
+      pr_number   = event_hash.fetch_path("build", "pull_request_number")
 
       if skip_event?
         logger.info("#{__method__} [#{slug}##{number}] Skipping #{event_type}")
@@ -33,7 +34,7 @@ module TravisEventHandlers
         return
       end
 
-      @branch = @repo.branches.with_branch_or_pr_number(branch_or_pr_number).first
+      @branch = @repo.branches.with_branch_or_pr_number(pr_number).first
       if @branch.nil?
         logger.warn("#{__method__} [#{slug}##{number}] Can't find CommitMonitorBranch with name: #{branch_or_pr_number}")
         return
