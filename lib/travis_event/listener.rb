@@ -12,9 +12,9 @@ module TravisEvent
   class Listener
     ALL_EVENTS = %w(build:created build:started build:finished job:created job:started job:finished)
 
-    # repos: [Travis::Repository.find("rails/rails")]
-    def self.monitor(*repos)
-      Travis.listen(*repos) do |stream|
+    # repos: ["rails/rails", "manageiq/manageiq"]
+    def self.monitor(*slugs)
+      Travis.listen(*travis_repos(slugs)) do |stream|
         stream.on(*ALL_EVENTS) do |event|
           args = extract_args(event)
           if args
@@ -24,6 +24,11 @@ module TravisEvent
           end
         end
       end
+    end
+
+    def self.travis_repos(slugs)
+      slugs = slugs.first if slugs.first.kind_of?(Array)
+      slugs.collect { |slug| Travis::Repository.find(slug) }
     end
 
     def self.extract_args(event)
@@ -47,8 +52,4 @@ module TravisEvent
 end
 
 require 'travis'
-repos = Settings.travis_event.enabled_repos.collect do|repo|
-  Travis::Repository.find(repo)
-end
-
-TravisEvent::Listener.monitor(*repos)
+TravisEvent::Listener.monitor(Settings.travis_event.enabled_repos)
