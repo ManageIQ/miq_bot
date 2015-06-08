@@ -36,7 +36,7 @@ gem 'sinatra', require: false
 gem 'slim'
 
 gem 'miq_tools_services', :git => "git://github.com/ManageIQ/miq_tools_services.git", :branch => "master"
-gem 'travis'
+gem 'travis', '~>1.7.6'
 
 gem 'awesome_spawn'
 gem 'default_value_for'
@@ -51,9 +51,9 @@ group :development, :test do
 end
 
 group :issue_manager do
-  gem 'octokit',       '~> 1.25.0'
+  gem 'octokit',       '~> 3.8.0'
   gem 'minigit',       '~> 0.0.4'
 
   # Lock down dependency
-  gem 'faraday', '~> 0.8.8'
+  gem 'faraday', '~> 0.9.1'
 end

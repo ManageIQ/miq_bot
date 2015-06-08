@@ -70,4 +70,9 @@ describe CommitMonitorBranch do
       expect(branch.pr_number).to be_nil
     end
   end
+
+  it "#write_github_comment raises on non-pr branches" do
+    branch.pull_request = false
+    expect { branch.write_github_comment("<test /> blah") }.to raise_error(ArgumentError)
+  end
 end

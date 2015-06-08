@@ -28,6 +28,16 @@ class CommitMonitorRepo < ActiveRecord::Base
   def fq_name
     "#{upstream_user}/#{name}"
   end
+  alias_method :slug, :fq_name
+
+  # fq_name: "ManageIQ/miq_bot"
+  def self.with_fq_name(fq_name)
+    user, repo = fq_name.split("/")
+    CommitMonitorRepo.where(:upstream_user => user, :name => repo)
+  end
+  class << self
+    alias_method :with_slug, :with_fq_name
+  end
 
   def path=(val)
     super(File.expand_path(val))
@@ -45,9 +55,8 @@ class CommitMonitorRepo < ActiveRecord::Base
 
   def with_travis_service
     raise "no block given" unless block_given?
-    client = Travis::Client.new
-    client.github_auth(Settings.github_credentials.password) # Assumes password is holding a token
-    repo = client.repo(fq_name)
-    yield repo
+
+    Travis.github_auth(Settings.github_credentials.password)
+    yield Travis::Repository.find(fq_name)
   end
 end

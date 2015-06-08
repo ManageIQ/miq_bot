@@ -12,3 +12,5 @@ gemfile_checker:
   enabled_repos: []
 issue_manager:
   repo_names: []
+travis_event:
+  enabled_repos: []
