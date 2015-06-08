@@ -26,6 +26,7 @@ class CommitMonitorHandlers::Commit::GemfileChecker
 
     return unless commit_details["files"].any? { |f| File.basename(f) == "Gemfile" }
 
+    @pr     = @branch.pr_number
     @commit = commit
     process_branch
   end
@@ -36,50 +37,32 @@ class CommitMonitorHandlers::Commit::GemfileChecker
     "<gemfile_checker />"
   end
 
+  def gemfile_comment
+    "#{tag}#{Settings.gemfile_checker.pr_contacts.join(" ")} Gemfile changes detected in commit #{branch.commit_uri_to(commit)}.  Please review."
+  end
+
   def process_branch
     send("process_#{branch.pull_request? ? "pr" : "regular"}_branch")
   end
 
   def process_pr_branch
-    @pr = branch.pr_number
     logger.info("#{self.class.name}##{__method__} Updating pull request #{pr} with Gemfile comment.")
 
     branch.repo.with_github_service do |github|
       @github = github
-      delete_pr_comments(pr_gemfile_comments)
-      add_pr_gemfile_comment
+      replace_gemfile_comments
       add_pr_label
     end
   end
 
-  def github_org_repo
-    [branch.repo.upstream_user, branch.repo.name]
+  def replace_gemfile_comments
+    github.replace_issue_comments(pr, gemfile_comment) do |old_comment|
+      gemfile_comment?(old_comment)
+    end
   end
 
   def add_pr_label
     add_issue_label(pr, LABEL_NAME)
-  end
-
-  def delete_pr_comments(comments)
-    ids = comments.collect(&:id)
-    return if ids.empty?
-
-    logger.info("#{self.class.name}##{__method__} PR: #{pr}, Deleting comments: #{ids.inspect}")
-    github.delete_issue_comments(ids)
-  end
-
-  def add_pr_gemfile_comment
-    logger.info("#{self.class.name}##{__method__} PR: #{pr} Adding Gemfile comment")
-    github.issues.comments.create(
-      :issue_id => pr,
-      :body     => "#{tag}#{Settings.gemfile_checker.pr_contacts.join(" ")} Gemfile changes detected in commit #{branch.commit_uri_to(commit)}.  Please review."
-    )
-  end
-
-  def pr_gemfile_comments
-    github.select_issue_comments(pr) do |comment|
-      gemfile_comment?(comment)
-    end
   end
 
   def gemfile_comment?(comment)
@@ -88,6 +71,10 @@ class CommitMonitorHandlers::Commit::GemfileChecker
 
   def process_regular_branch
     # TODO: Support regular branches with EmailService once we can send email.
+  end
+
+  def github_org_repo
+    [branch.repo.upstream_user, branch.repo.name]
   end
 
   #TODO: this should be extracted as a bot interface to the github_api
