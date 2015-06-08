@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/ManageIQ/miq_tools_services.git
-  revision: e8780b2a4251b22f9c4bc78c3e4c58794387d81b
+  revision: 69e44076628d4daa4cfabefd729d57e5796b9a04
   branch: master
   specs:
     miq_tools_services (0.0.1)
