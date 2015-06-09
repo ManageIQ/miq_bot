@@ -35,8 +35,8 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
       @results = {"files" => []}
     else
 
-      @results = linter_results('rubocop', :files => files, :format => 'json')
-      haml = linter_results('haml-lint', :files => files, :reporter => 'json')
+      @results = linter_results('rubocop', :format => 'json', nil => files)
+      haml = linter_results('haml-lint', :reporter => 'json', nil => files)
 
       # Merge RuboCop and haml-lint results
       %w(offense_count target_file_count inspected_file_count).each do |m|
