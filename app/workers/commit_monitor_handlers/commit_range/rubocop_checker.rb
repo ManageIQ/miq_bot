@@ -28,23 +28,26 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   private
 
   def process_branch
-    diff_details = filter_ruby_files(diff_details_for_branch)
-    files        = diff_details.keys
+    diff_details = diff_details_for_branch
 
-    if files.length == 0
+    unmerged_results = []
+
+    files = filter_ruby_files(diff_details)
+    if files.any?
+      unmerged_results << linter_results('rubocop', :format => 'json', nil => files)
+    end
+
+    files = filter_haml_files(diff_details)
+    if files.any?
+      unmerged_results << linter_results('haml-lint', :reporter => 'json', nil => files)
+    end
+
+    unmerged_results.compact!
+    if unmerged_results.empty?
       @results = {"files" => []}
     else
-
-      @results = linter_results('rubocop', :format => 'json', nil => files)
-      haml = linter_results('haml-lint', :reporter => 'json', nil => files)
-
-      # Merge RuboCop and haml-lint results
-      %w(offense_count target_file_count inspected_file_count).each do |m|
-        @results['summary'][m] += haml['summary'][m]
-      end
-      @results['files'] += haml['files']
-
-      @results = RubocopResultsFilter.new(@results, diff_details).filtered
+      results = merge_linter_results(*unmerged_results)
+      @results = RubocopResultsFilter.new(results, diff_details).filtered
     end
 
     write_to_github
@@ -57,14 +60,20 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   end
 
   def filter_ruby_files(diff_details)
-    filtered = diff_details.select do |k, _|
+    filtered = diff_details.keys.select do |k|
       k.end_with?(".rb") ||
       k.end_with?(".ru") ||
       k.end_with?(".rake") ||
       File.basename(k).in?(%w{Gemfile Rakefile})
     end
-    filtered.reject do |k, _|
+    filtered.reject do |k|
       k.end_with?("db/schema.rb")
+    end
+  end
+
+  def filter_haml_files(diff_details)
+    diff_details.keys.select do |k|
+      k.end_with?(".haml")
     end
   end
 
@@ -83,6 +92,21 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     raise result.error if result.exit_status == 1 && result.error.present?
 
     JSON.parse(result.output.chomp)
+  end
+
+  def merge_linter_results(*results)
+    return if results.empty?
+
+    new_results = results[0].dup
+
+    results[1..-1].each do |result|
+      %w(offense_count target_file_count inspected_file_count).each do |m|
+        new_results['summary'][m] += result['summary'][m]
+      end
+      new_results['files'] += result['files']
+    end
+
+    new_results
   end
 
   def rubocop_comments
