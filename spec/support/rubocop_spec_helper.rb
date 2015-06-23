@@ -32,3 +32,7 @@ end
 def rubocop_version
   RuboCop::Version.version
 end
+
+def hamllint_version
+  HamlLint::VERSION
+end

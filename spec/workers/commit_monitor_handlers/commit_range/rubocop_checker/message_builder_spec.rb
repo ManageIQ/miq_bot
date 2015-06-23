@@ -18,7 +18,7 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
     it "with results with offenses" do
       expect(subject.length).to eq 1
       expect(subject.first).to  eq <<-EOMSG
-<rubocop />Checked commits https://github.com/some_user/some_repo/commit/1ec36efd33279f79f8ddcf12984bb2aa48f3fbd6 .. https://github.com/some_user/some_repo/commit/8942a195a0bfa69ceb82c020c60565408cb46d3e with rubocop #{rubocop_version}
+<rubocop />Checked commits https://github.com/some_user/some_repo/commit/1ec36efd33279f79f8ddcf12984bb2aa48f3fbd6 .. https://github.com/some_user/some_repo/commit/8942a195a0bfa69ceb82c020c60565408cb46d3e with rubocop #{rubocop_version} and haml-lint #{hamllint_version}
 4 files checked, 4 offenses detected
 
 **spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/coding_convention.rb**
@@ -36,7 +36,7 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
     it "with results with no offenses" do
       expect(subject.length).to eq 1
       expect(subject.first).to  start_with <<-EOMSG.chomp
-<rubocop />Checked commits https://github.com/some_user/some_repo/commit/1ec36efd33279f79f8ddcf12984bb2aa48f3fbd6 .. https://github.com/some_user/some_repo/commit/8942a195a0bfa69ceb82c020c60565408cb46d3e with rubocop #{rubocop_version}
+<rubocop />Checked commits https://github.com/some_user/some_repo/commit/1ec36efd33279f79f8ddcf12984bb2aa48f3fbd6 .. https://github.com/some_user/some_repo/commit/8942a195a0bfa69ceb82c020c60565408cb46d3e with rubocop #{rubocop_version} and haml-lint #{hamllint_version}
 1 file checked, 0 offenses detected
 Everything looks good.
       EOMSG
@@ -46,7 +46,7 @@ Everything looks good.
     it "with results generating multiple comments" do
       expect(subject.length).to eq 2
       expect(subject.first).to  start_with <<-EOMSG.chomp
-<rubocop />Checked commits https://github.com/some_user/some_repo/commit/1ec36efd33279f79f8ddcf12984bb2aa48f3fbd6 .. https://github.com/some_user/some_repo/commit/8942a195a0bfa69ceb82c020c60565408cb46d3e with rubocop #{rubocop_version}
+<rubocop />Checked commits https://github.com/some_user/some_repo/commit/1ec36efd33279f79f8ddcf12984bb2aa48f3fbd6 .. https://github.com/some_user/some_repo/commit/8942a195a0bfa69ceb82c020c60565408cb46d3e with rubocop #{rubocop_version} and haml-lint #{hamllint_version}
 1 file checked, 194 offenses detected
       EOMSG
       expect(subject.last).to   start_with "<rubocop />**...continued**\n"
