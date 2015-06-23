@@ -48,7 +48,6 @@ problems.  Some of the things it does are:
 
 4. Add the sandbox app to the `repos` directory so it can be monitored:
    ```
-   mkdir repos
    git clone -o upstream git@github.com:miq-test/sandbox.git repos/sandbox
    ```
 
