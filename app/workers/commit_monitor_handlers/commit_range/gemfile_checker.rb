@@ -1,4 +1,4 @@
-class CommitMonitorHandlers::Commit::GemfileChecker
+class CommitMonitorHandlers::CommitRange::GemfileChecker
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot
 
@@ -8,10 +8,10 @@ class CommitMonitorHandlers::Commit::GemfileChecker
     [:pr]
   end
 
-  attr_reader :branch, :commit, :github, :pr
+  attr_reader :branch, :commits, :github, :pr
 
-  def perform(branch_id, commit, commit_details)
-    @branch = CommitMonitorBranch.find(branch_id)
+  def perform(branch_id, new_commits)
+    @branch  = CommitMonitorBranch.where(:id => branch_id).first
 
     if @branch.nil?
       logger.info("Branch #{branch_id} no longer exists.  Skipping.")
@@ -24,21 +24,33 @@ class CommitMonitorHandlers::Commit::GemfileChecker
       return
     end
 
-    return unless commit_details["files"].any? { |f| File.basename(f) == "Gemfile" }
-
     @pr     = @branch.pr_number
-    @commit = commit
+    @commits = @branch.commits_list
+
+    files = diff_details_for_branch.keys
+    return unless files.any? { |f| File.basename(f) == "Gemfile" }
+
     process_branch
   end
 
   private
+
+  def diff_details_for_branch
+    MiqToolsServices::MiniGit.call(branch.repo.path) do |git|
+      git.diff_details(commits.first, commits.last)
+    end
+  end
 
   def tag
     "<gemfile_checker />"
   end
 
   def gemfile_comment
-    "#{tag}#{Settings.gemfile_checker.pr_contacts.join(" ")} Gemfile changes detected in commit #{branch.commit_uri_to(commit)}.  Please review."
+    commit_range = [
+      branch.commit_uri_to(commits.first),
+      branch.commit_uri_to(commits.last),
+    ].uniq.join(" .. ")
+    "#{tag}#{Settings.gemfile_checker.pr_contacts.join(" ")} Gemfile changes detected in #{"commit".pluralize(commits.length)} #{commit_range}.  Please review."
   end
 
   def process_branch
