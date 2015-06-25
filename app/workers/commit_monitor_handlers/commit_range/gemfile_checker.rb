@@ -14,7 +14,7 @@ module CommitMonitorHandlers
 
       def perform(branch_id, _new_commits)
         @branch = CommitMonitorBranch.where(:id => branch_id).first
-        
+
         if @branch.nil?
           logger.info("(##{__method__}) Branch #{branch_id} no longer exists.  Skipping.")
           return
@@ -53,7 +53,7 @@ module CommitMonitorHandlers
         "#{commit_range}.  Please review."
       end
 
-      def commit_range 
+      def commit_range
         [
           branch.commit_uri_to(commits.first),
           branch.commit_uri_to(commits.last),
