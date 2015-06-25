@@ -20,7 +20,7 @@ module CommitMonitorHandlers
           return
         end
 
-        unless repo_enabled?
+        unless @branch.enabled_for?(:gemfile_checker)
           logger.info("(##{__method__}) #{self.class.name} only runs in " \
                       "#{enabled_repos}, not #{@branch.repo.fq_name}.  Skipping.")
           return
@@ -36,11 +36,6 @@ module CommitMonitorHandlers
       end
 
       private
-
-      def repo_enabled?
-        enabled_repos = Settings.gemfile_checker.enabled_repos
-        @branch.repo.fq_name.in?(enabled_repos)
-      end
 
       def diff_details_for_branch
         MiqToolsServices::MiniGit.call(branch.repo.path) do |git|

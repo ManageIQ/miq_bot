@@ -20,6 +20,11 @@ class CommitMonitorBranch < ActiveRecord::Base
     "https://github.com/#{user}/#{repo}/commit/#{sha}"
   end
 
+  def enabled_for?(checker)
+    repos = Settings.public_send(checker).enabled_repos
+    repo.fq_name.in?(repos)
+  end
+
   def last_commit=(val)
     super
     self.last_changed_on = Time.now.utc if last_commit_changed?
