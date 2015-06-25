@@ -16,12 +16,13 @@ module CommitMonitorHandlers
         @branch = CommitMonitorBranch.where(:id => branch_id).first
         
         if @branch.nil?
-          logger.info("Branch #{branch_id} no longer exists.  Skipping.")
+          logger.info("(##{__method__}) Branch #{branch_id} no longer exists.  Skipping.")
           return
         end
 
         unless repo_enabled?
-          logger.info("#{self.class} only runs in #{enabled_repos}, not #{@branch.repo.fq_name}.  Skipping.")
+          logger.info("(##{__method__}) #{self.class.name} only runs in " \
+                      "#{enabled_repos}, not #{@branch.repo.fq_name}.  Skipping.")
           return
         end
 
@@ -69,7 +70,7 @@ module CommitMonitorHandlers
       end
 
       def process_pr_branch
-        logger.info("#{self.class.name}##{__method__} Updating pull request #{pr} with Gemfile comment.")
+        logger.info("(##{__method__}) Updating pull request #{pr} with Gemfile comment.")
 
         branch.repo.with_github_service do |github|
           @github = github
@@ -85,7 +86,7 @@ module CommitMonitorHandlers
       end
 
       def add_pr_label
-        logger.info("#{self.class.name}##{__method__} PR: #{pr}, Adding label: #{LABEL_NAME.inspect}")
+        logger.info("(##{__method__}) PR: #{pr}, Adding label: #{LABEL_NAME.inspect}")
         github.add_issue_labels(pr, LABEL_NAME)
       end
 
