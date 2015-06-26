@@ -91,7 +91,7 @@ problems.  Some of the things it does are:
 
 10. Configure the bot settings. First copy the template:
     ```
-    cp config/settings.yml config/settings.local.yml
+    cp config/settings.yml config/settings/development.local.yml
     ```
 
     Then set to the following values:
