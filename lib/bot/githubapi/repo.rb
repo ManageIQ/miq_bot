@@ -2,12 +2,11 @@ require_relative 'git_hub_api'
 
 module GitHubApi
   class Repo
-    attr_accessor :fq_repo_name, :milestones, :client
+    attr_accessor :fq_repo_name, :client
 
     def initialize(octokit_repo, organization)
       @fq_repo_name   = organization.fq_repo_name
       @client = organization.client
-      load_milestones
     end
 
     def notifications
@@ -34,19 +33,19 @@ module GitHubApi
       @labels = nil
     end
 
+    def milestones
+      @milestones ||= begin
+        repo_milestones = GitHubApi.execute(@client, :list_milestones, @fq_repo_name)
+        Hash[repo_milestones.collect { |m| [m.title, m.number] }]
+      end
+    end
+
     def valid_milestone?(milestone)
       milestones.include?(milestone)
     end
 
-    private
-
-    def load_milestones
-      @milestones = Hash.new
-      octokit_milestones = GitHubApi.execute(@client, :list_milestones, @fq_repo_name)
-      octokit_milestones.each do |octokit_milestone|
-        milestone = Milestone.new(octokit_milestone, self)
-        @milestones[milestone.title] = milestone.number
-      end
+    def refresh_milestones
+      @milestones = nil
     end
   end
 end

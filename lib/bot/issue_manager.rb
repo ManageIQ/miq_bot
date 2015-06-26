@@ -105,12 +105,20 @@ EOMSG
   def set_milestone(milestone, author, issue)
     milestone = milestone.strip
 
-    if @repo.valid_milestone?(milestone)
+    if valid_milestone?(milestone)
       issue.set_milestone(milestone)
     else
       message = "@#{author} Milestone #{milestone} is not recognized, ignoring..."
       issue.add_comment(message)
     end
+  end
+
+  def valid_milestone?(milestone)
+    # First reload the label cache if it's an invalid milestone
+    @repo.refresh_milestones unless @repo.valid_milestone?(milestone)
+
+    # Then see if it's *still* invalid
+    @repo.valid_milestone?(milestone)
   end
 
   def assign(assign_to_user_arg, author, issue)
