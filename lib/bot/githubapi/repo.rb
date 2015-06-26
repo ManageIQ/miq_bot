@@ -2,13 +2,12 @@ require_relative 'git_hub_api'
 
 module GitHubApi
   class Repo
-    attr_accessor :fq_repo_name, :milestones, :labels, :client
+    attr_accessor :fq_repo_name, :milestones, :client
 
     def initialize(octokit_repo, organization)
       @fq_repo_name   = organization.fq_repo_name
       @client = organization.client
       load_milestones
-      load_valid_labels
     end
 
     def notifications
@@ -20,8 +19,19 @@ module GitHubApi
       end
     end
 
+    def labels
+      @labels ||= begin
+        repo_labels = GitHubApi.execute(@client, :labels, @fq_repo_name)
+        Set.new.tap { |set| repo_labels.each { |l| set.add(l.name) } }
+      end
+    end
+
     def valid_label?(label_text)
-      @labels.include?(label_text)
+      labels.include?(label_text)
+    end
+
+    def refresh_labels
+      @labels = nil
     end
 
     def valid_milestone?(milestone)
@@ -29,14 +39,6 @@ module GitHubApi
     end
 
     private
-
-    def load_valid_labels
-      @labels     = Set.new
-      repo_labels = GitHubApi.execute(@client, :labels, @fq_repo_name)
-      repo_labels.each do |label|
-        @labels.add(label.name)
-      end
-    end
 
     def load_milestones
       @milestones = Hash.new
