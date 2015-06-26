@@ -11,6 +11,8 @@ class CommitMonitorBranch < ActiveRecord::Base
   default_value_for(:commits_list) { [] }
   default_value_for :mergeable, true
 
+  delegate :enabled_for?, :to => :repo
+
   def self.with_branch_or_pr_number(n)
     n = MiqToolsServices::MiniGit.pr_branch(n) if n.kind_of?(Fixnum)
     where(:name => n)

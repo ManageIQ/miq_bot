@@ -59,4 +59,9 @@ class CommitMonitorRepo < ActiveRecord::Base
     Travis.github_auth(Settings.github_credentials.password)
     yield Travis::Repository.find(fq_name)
   end
+
+  def enabled_for?(checker)
+    repos = Settings.public_send(checker).enabled_repos
+    fq_name.in?(repos)
+  end
 end
