@@ -121,13 +121,23 @@ EOMSG
     @repo.valid_milestone?(milestone)
   end
 
-  def assign(assign_to_user_arg, author, issue)
-    assign_to_user = assign_to_user_arg.delete('@').rstrip
-    if @org.member?(assign_to_user)
-      issue.assign(assign_to_user)
+  def assign(user, author, issue)
+    user       = user.strip
+    clean_user = user.delete('@')
+
+    if valid_member?(clean_user)
+      issue.assign(clean_user)
     else
-      issue.add_comment("@#{author} #{assign_to_user_arg} is an invalid user, ignoring... ")
+      issue.add_comment("@#{author} #{user} is an invalid user, ignoring...")
     end
+  end
+
+  def valid_member?(user)
+    # First reload the member cache if it's an invalid member
+    @org.refresh_members unless @org.member?(user)
+
+    # Then see if it's *still* invalid
+    @org.member?(user)
   end
 
   def add_labels(command_value, author, issue)
