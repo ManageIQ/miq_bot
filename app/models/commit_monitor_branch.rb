@@ -11,6 +11,8 @@ class CommitMonitorBranch < ActiveRecord::Base
   default_value_for(:commits_list) { [] }
   default_value_for :mergeable, true
 
+  delegate :enabled_for?, :to => :repo
+
   def self.with_branch_or_pr_number(n)
     n = MiqToolsServices::MiniGit.pr_branch(n) if n.kind_of?(Fixnum)
     where(:name => n)
@@ -18,11 +20,6 @@ class CommitMonitorBranch < ActiveRecord::Base
 
   def self.github_commit_uri(user, repo, sha = "$commit")
     "https://github.com/#{user}/#{repo}/commit/#{sha}"
-  end
-
-  def enabled_for?(checker)
-    repos = Settings.public_send(checker).enabled_repos
-    repo.fq_name.in?(repos)
   end
 
   def last_commit=(val)
