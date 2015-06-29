@@ -101,6 +101,14 @@ RSpec.describe TravisEventHandlers::StalledFinishedJob do
     described_class.new.perform(event_hash)
   end
 
+  it "skips if the job cannot be found" do
+    #
+  end
+
+  it "skips if the job is not stalled" do
+    #
+  end
+
   def new_event_hash(pr, slug, number, state, type)
     {
       "build" => {
