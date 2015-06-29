@@ -38,7 +38,7 @@ module TravisEventHandlers
 
       @branch = @repo.branches.with_branch_or_pr_number(pr_number).first
       if @branch.nil?
-        logger.warn("#{__method__} [#{slug}##{number}] Can't find CommitMonitorBranch with name: #{branch_or_pr_number}")
+        logger.warn("#{__method__} [#{slug}##{number}] Can't find CommitMonitorBranch with PR number: #{pr_number}")
         return
       end
 
