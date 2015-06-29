@@ -8,15 +8,17 @@ module TravisEventHandlers
     STALLED_BUILD_TEXT = "\n\nNo output has been received in the last 10 minutes, this potentially indicates a stalled build or something wrong with the build itself.\n\nThe build has been terminated\n\n"
     HANDLED_EVENTS  = ['job:finished'].freeze
     COMMENT_TAG = "<stalled_finished_job />".freeze
+    MAX_TRIES = 3
 
-    attr_reader :repo, :branch, :job, :slug, :number, :event_type, :state
+    attr_reader :repo, :branch, :job, :slug, :number, :event_type, :state,
+                :github, :pr_number
 
     def perform(event_hash)
       @slug       = event_hash.fetch_path("payload", "repository_slug")
       @number     = event_hash.fetch_path("payload", "number")
       @event_type = event_hash.fetch_path("type")
       @state      = event_hash.fetch_path("payload", "state")
-      pr_number   = event_hash.fetch_path("build", "pull_request_number")
+      @pr_number  = event_hash.fetch_path("build", "pull_request_number")
 
       if skip_event?
         logger.info("#{__method__} [#{slug}##{number}] Skipping #{event_type}")
@@ -40,7 +42,14 @@ module TravisEventHandlers
         return
       end
 
-      # Remote checks: Skip missing travis repo or job and non-stalled builds
+      @repo.with_github_service { |github| @github = github }
+
+      if performed_max_tries?
+        logger.info("#{__method__} [#{slug}##{number}] Skipping after max tries")
+        return
+      end
+
+    # Remote checks: Skip missing travis repo or job and non-stalled builds
       @repo.with_travis_service do |travis_repo|
         @job = find_job(travis_repo, number)
         if @job.nil?
@@ -66,6 +75,12 @@ module TravisEventHandlers
 
     def skip_state?
       state != "errored"
+    end
+
+    def performed_max_tries?
+      github.select_issue_comments(pr_number) do |comment|
+        comment.body.start_with?(COMMENT_TAG)
+      end.size >= MAX_TRIES
     end
 
     ### Travis checks
