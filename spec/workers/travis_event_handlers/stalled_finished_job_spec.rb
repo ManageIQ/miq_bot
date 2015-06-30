@@ -148,7 +148,7 @@ RSpec.describe TravisEventHandlers::StalledFinishedJob do
     described_class.new.perform(event_hash)
   end
 
-  it "restarts a stalled job" do
+  it "restarts a stalled, finished job" do
     pr = 123
     slug = "foo/bar"
     number = 42
