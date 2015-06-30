@@ -64,8 +64,8 @@ RSpec.describe TravisEventHandlers::StalledFinishedJob do
     state = "errored"
     type = "job:finished"
     event_hash = new_event_hash(pr, slug, number, state, type)
-    branches = double("branches", with_branch_or_pr_number: [nil])
-    repo = double("repo", branches: branches)
+    branches = double("branches", :with_branch_or_pr_number => [nil])
+    repo = double("repo", :branches => branches)
     job = double("job").as_null_object
     travis_repo = double("travis repo")
     allow(CommitMonitorRepo).to receive(:with_slug).with(slug).and_return([repo])
@@ -87,10 +87,10 @@ RSpec.describe TravisEventHandlers::StalledFinishedJob do
     job = double("job").as_null_object
     travis_repo = double("travis repo")
     github = double("github")
-    comment = double("comment", body: described_class::COMMENT_TAG)
+    comment = double("comment", :body => described_class::COMMENT_TAG)
 
     allow(github).to receive(:select_issue_comments).with(pr)
-                      .and_return([comment, comment, comment])
+      .and_return([comment, comment, comment])
 
     allow(repo).to receive(:with_github_service).and_yield(github)
     allow(CommitMonitorRepo).to receive(:with_slug).with(slug).and_return([repo])
@@ -174,15 +174,15 @@ RSpec.describe TravisEventHandlers::StalledFinishedJob do
 
   def new_event_hash(pr, slug, number, state, type)
     {
-      "build" => {
+      "build"   => {
         "pull_request_number" => pr,
       },
       "payload" => {
-        "repository_slug" => slug,
-        "number" => number,
-        "state" => state,
+        "repository_slug"     => slug,
+        "number"              => number,
+        "state"               => state,
       },
-      "type" => type,
+      "type"    => type,
     }
   end
 end
