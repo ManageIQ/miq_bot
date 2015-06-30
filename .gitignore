@@ -27,3 +27,6 @@
 
 # Ignore production artifacts
 /public/assets
+
+# Ignore local repos folder
+/repos
