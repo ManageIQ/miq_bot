@@ -46,7 +46,6 @@ RSpec.describe TravisEventHandlers::StalledFinishedJob do
     state = "errored"
     type = "job:finished"
     event_hash = new_event_hash(pr, slug, number, state, type)
-    repo = double("repo")
     job = double("job").as_null_object
     travis_repo = double("travis repo")
     allow(CommitMonitorRepo).to receive(:with_slug).with(slug).and_return([nil])
