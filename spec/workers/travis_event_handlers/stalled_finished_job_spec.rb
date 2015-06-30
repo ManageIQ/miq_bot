@@ -177,9 +177,9 @@ RSpec.describe TravisEventHandlers::StalledFinishedJob do
         "pull_request_number" => pr,
       },
       "payload" => {
-        "repository_slug"     => slug,
-        "number"              => number,
-        "state"               => state,
+        "repository_slug" => slug,
+        "number"          => number,
+        "state"           => state,
       },
       "type"    => type,
     }
