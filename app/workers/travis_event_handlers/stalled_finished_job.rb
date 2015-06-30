@@ -49,7 +49,7 @@ module TravisEventHandlers
         return
       end
 
-    # Remote checks: Skip missing travis repo or job and non-stalled builds
+      # Remote checks: Skip missing travis repo or job and non-stalled builds
       @repo.with_travis_service do |travis_repo|
         @job = find_job(travis_repo, number)
         if @job.nil?
