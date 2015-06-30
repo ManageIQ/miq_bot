@@ -148,6 +148,30 @@ RSpec.describe TravisEventHandlers::StalledFinishedJob do
     described_class.new.perform(event_hash)
   end
 
+  it "restarts a stalled job" do
+    pr = 123
+    slug = "foo/bar"
+    number = 42
+    state = "errored"
+    type = "job:finished"
+    event_hash = new_event_hash(pr, slug, number, state, type)
+    repo = double("repo").as_null_object
+    job = double("job").as_null_object
+    travis_repo = double("travis repo")
+    github = double("github")
+
+    allow(github).to receive(:select_issue_comments).with(pr).and_return([])
+    allow(repo).to receive(:with_github_service).and_yield(github)
+    allow(repo).to receive(:with_travis_service).and_yield(travis_repo)
+    allow(CommitMonitorRepo).to receive(:with_slug).with(slug).and_return([repo])
+    allow(travis_repo).to receive(:job).with(number).and_return(job)
+    job.stub_chain(:log, :clean_body, :end_with?).and_return(true)
+
+    expect(job).to receive(:restart).once
+
+    described_class.new.perform(event_hash)
+  end
+
   def new_event_hash(pr, slug, number, state, type)
     {
       "build" => {
