@@ -6,8 +6,9 @@ describe CommitMonitorBranch do
 
   let(:repo) do
     CommitMonitorRepo.create!(
-      :name => "test-repo",
-      :path => "/path/to/repo"
+      :upstream_user => "test-user",
+      :name          => "test-repo",
+      :path          => "/path/to/repo"
     )
   end
 
@@ -75,13 +76,13 @@ describe CommitMonitorBranch do
     it "(user, repo)" do
       branch.name = "pr/123"
       branch.pull_request = true
-      actual = branch.github_pr_uri("ManageIQ", "sandbox")
-      expect(actual).to eq("https://github.com/ManageIQ/sandbox/pull/123")
+      actual = branch.github_pr_uri
+      expect(actual).to eq("https://github.com/test-user/test-repo/pull/123")
     end
 
     it "raises on non-pr branches" do
       branch.pull_request = false
-      expect { branch.github_pr_uri("ManageIQ", "sandbox") }.to raise_error(ArgumentError)
+      expect { branch.github_pr_uri }.to raise_error(ArgumentError)
     end
   end
 
