@@ -71,6 +71,20 @@ describe CommitMonitorBranch do
     end
   end
 
+  context ".github_pr_uri" do
+    it "(user, repo)" do
+      branch.name = "pr/123"
+      branch.pull_request = true
+      actual = branch.github_pr_uri("ManageIQ", "sandbox")
+      expect(actual).to eq("https://github.com/ManageIQ/sandbox/pull/123")
+    end
+
+    it "raises on non-pr branches" do
+      branch.pull_request = false
+      expect { branch.github_pr_uri("ManageIQ", "sandbox") }.to raise_error(ArgumentError)
+    end
+  end
+
   it "#write_github_comment raises on non-pr branches" do
     branch.pull_request = false
     expect { branch.write_github_comment("<test /> blah") }.to raise_error(ArgumentError)
