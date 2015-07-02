@@ -54,14 +54,22 @@ class CommitMonitorHandlers::Commit::BugzillaChecker
       if output.empty?
         logger.error "Unable to update status for bug id #{bug_id}: Not a '#{product}' bug."
       else
-        logger.info "Updating status for bug id #{bug_id}"
         bug = output.first
 
-        unless bug_has_pr_uri_comment?(bug)
+        if bug_has_pr_uri_comment?(bug)
+          logger.info "Not commenting on bug #{bug_id} due to duplicate comment."
+        else
+          logger.info "Adding PR comment to bug #{bug_id}."
           bug.add_comment(@branch.github_pr_uri)
         end
 
-        bug.status = "ON_DEV"
+        if bug.status == "NEW" || bug.status == "ASSIGNED"
+          logger.info "Changing status of bug #{bug_id} to ON_DEV."
+          bug.status = "ON_DEV"
+        else
+          logger.info "Not changing status of bug #{bug_id} from #{bug.status}."
+        end
+
         bug.save
       end
     end
