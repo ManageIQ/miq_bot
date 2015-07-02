@@ -67,7 +67,11 @@ class CommitMonitorHandlers::Commit::BugzillaChecker
           logger.info "Changing status of bug #{bug_id} to ON_DEV."
           bug.status = "ON_DEV"
         else
-          logger.info "Not changing status of bug #{bug_id} from #{bug.status}."
+          logger.warn "Not changing status of bug #{bug_id} from #{bug.status}."
+          if bug.status != "ON_DEV"
+            bug.add_comment("Detected commit referencing this ticket while ticket status is #{bug.status}.")
+            bug.flags["needinfo"] = "?"
+          end
         end
 
         bug.save
