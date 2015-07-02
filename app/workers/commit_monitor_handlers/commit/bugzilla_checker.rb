@@ -28,6 +28,12 @@ class CommitMonitorHandlers::Commit::BugzillaChecker
     Settings.commit_monitor.bugzilla_product
   end
 
+  def bug_has_pr_uri_comment?(bug)
+    bug.comments.any? do |c|
+      c.text.include?(@branch.github_pr_uri)
+    end
+  end
+
   def process_commit
     MiqToolsServices::Bugzilla.ids_in_git_commit_message(message).each do |bug_id|
       if @branch.pull_request?
@@ -50,7 +56,11 @@ class CommitMonitorHandlers::Commit::BugzillaChecker
       else
         logger.info "Updating status for bug id #{bug_id}"
         bug = output.first
-        bug.add_comment(@branch.github_pr_uri)
+
+        unless bug_has_pr_uri_comment?(bug)
+          bug.add_comment(@branch.github_pr_uri)
+        end
+
         bug.status = "ON_DEV"
         bug.save
       end
