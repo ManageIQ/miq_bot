@@ -72,8 +72,8 @@ describe CommitMonitorBranch do
     end
   end
 
-  context ".github_pr_uri" do
-    it "(user, repo)" do
+  describe "#github_pr_uri" do
+    it "creates correct pr uri" do
       branch.name = "pr/123"
       branch.pull_request = true
       actual = branch.github_pr_uri
