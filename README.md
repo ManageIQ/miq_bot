@@ -73,10 +73,20 @@ problems.  Some of the things it does are:
    bundle exec rails runner 'CommitMonitorRepo.create_from_github!("miq-test", "sandbox", Rails.root.join("repos", "sandbox"))'
    ```
 
-9. Either start redis as a daemon or have foreman start it for you by
-   adding this to the `Procfile`:
+9. Create a custom Procfile for development:
+   ```
+   cp Procfile Procfile.dev
+   ```
+   Any changes you make to this file won't be tracked. You can tell
+   foreman to use this Procfile by passing the `-f` flag:
+   ```
+   foreman start -f Procfile.dev
+   ```
+
+10. Either start redis as a daemon or have foreman start it for you by
+   adding this to the `Procfile.dev`:
    ```yaml
-   # Procfile
+   # Procfile.dev
    redis: redis-server /path/to/redis.conf  # change this to the redis.conf provided by your package manager.
    ```
 
@@ -88,7 +98,7 @@ problems.  Some of the things it does are:
    +#issue_manager:             bundle exec ruby lib/bot/miq_bot.rb
    ```
 
-10. Configure the bot settings. First copy the template:
+11. Configure the bot settings. First copy the template:
     ```
     cp config/settings.yml config/settings/development.local.yml
     ```
@@ -112,12 +122,12 @@ problems.  Some of the things it does are:
     enabled_repos: ["miq-test/sandbox"]
     ```
 
-11. You should now be able to run `foreman start` to start the
-    services listed in the `Procfile`
+12. You should now be able to run `foreman start -f Procfile.dev` to
+    start the services listed in the `Procfile.dev`
 
-12. See `log/development.log` and `log/sidekiq.log` to make sure
+13. See `log/development.log` and `log/sidekiq.log` to make sure
     things are starting
 
-13. You should be able to open new PR on the miq-test/sandbox
+14. You should be able to open new PR on the miq-test/sandbox
     repository with any rubocop problems such as `MixedCaseConstant =
     1`, wait a few minutes and see if it commented on your PR.
