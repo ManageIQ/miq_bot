@@ -60,7 +60,7 @@ This is a commit message
 Fixes https://bugzilla.redhat.com/show_bug.cgi?id=123456
 EOF
 
-      expect(described_class.ids_in_git_commit_message(message)).to eq([123456])
+      expect(described_class.ids_in_git_commit_message(message)).to eq([123_456])
     end
 
     it "detects an id when the URL is prefixed with 'Resolves'" do
@@ -70,7 +70,7 @@ This is a commit message
 Resolves https://bugzilla.redhat.com/show_bug.cgi?id=123456
 EOF
 
-      expect(described_class.ids_in_git_commit_message(message)).to eq([123456])
+      expect(described_class.ids_in_git_commit_message(message)).to eq([123_456])
     end
   end
 
