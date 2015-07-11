@@ -18,7 +18,7 @@ def rubocop_json_file
 end
 
 def rubocop_check_path
-  Pathname.new(example.file_path).expand_path.dirname.join("data", rubocop_check_directory)
+  Pathname.new(@example.file_path).expand_path.dirname.join("data", rubocop_check_directory)
 end
 
 def rubocop_check_path_file(file)
@@ -26,7 +26,7 @@ def rubocop_check_path_file(file)
 end
 
 def rubocop_check_directory
-  example.description.gsub(" ", "_")
+  @example.description.gsub(" ", "_")
 end
 
 def rubocop_version

@@ -15,6 +15,8 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
       described_class.new(rubocop_results, branch).comments
     end
 
+    before { |example| @example = example }
+
     it "with results with offenses" do
       expect(subject.length).to eq 1
       expect(subject.first).to  eq <<-EOMSG
