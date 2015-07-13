@@ -4,6 +4,8 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::RubocopResultsFilte
   describe "#filtered" do
     subject { described_class.new(rubocop_results, @diff_details) }
 
+    before { |example| @example = example }
+
     it "with lines not in the diff" do
       @diff_details = {
         rubocop_check_path_file("example.rb").to_s => [4]
