@@ -1,5 +1,6 @@
 require 'stringio'
 require 'rubocop'
+require 'haml_lint'
 
 class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   def initialize(results, branch)
@@ -45,7 +46,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
       branch.commit_uri_to(commits.first),
       branch.commit_uri_to(commits.last),
     ].uniq.join(" .. ")
-    header1 = "Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop #{rubocop_version}"
+    header1 = "Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop #{rubocop_version} and haml-lint #{hamllint_version}"
 
     file_count    = results.fetch_path("summary", "target_file_count").to_i
     offense_count = results.fetch_path("summary", "offense_count").to_i
@@ -129,5 +130,9 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
 
   def rubocop_version
     RuboCop::Version.version
+  end
+
+  def hamllint_version
+    HamlLint::VERSION
   end
 end
