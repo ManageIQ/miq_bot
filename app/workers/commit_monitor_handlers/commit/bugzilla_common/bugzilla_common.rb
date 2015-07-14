@@ -20,13 +20,16 @@ module CommitMonitorHandlers
         logger.error "Unable to write for bug id #{bug_id}: #{err}"
       end
 
+      def handled_mode?(mode)
+        self.class.handled_branch_modes.include?(mode)
+      end
+
       def branch_valid?
         if @branch.pull_request?
-          return true if self.class.handled_branch_modes.include?(:pr)
+          handled_mode?(:pr)
         else
-          return true if self.class.handled_branch_modes.include?(:regular)
+          handled_mode?(:regular)
         end
-        false
       end
     end
   end
