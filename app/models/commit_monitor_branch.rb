@@ -40,10 +40,7 @@ class CommitMonitorBranch < ActiveRecord::Base
   end
 
   def github_pr_uri
-    unless pull_request?
-      raise ArgumentError, "Cannot retrieve pull request URI for non-pull request " \
-                            "branches such as #{name}."
-    end
+    return nil unless pull_request?
     "https://github.com/#{repo.fq_name}/pull/#{pr_number}"
   end
 

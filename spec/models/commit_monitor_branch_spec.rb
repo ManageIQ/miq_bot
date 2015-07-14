@@ -80,9 +80,9 @@ describe CommitMonitorBranch do
       expect(actual).to eq("https://github.com/test-user/test-repo/pull/123")
     end
 
-    it "raises on non-pr branches" do
+    it "returns nil on non-pr branches" do
       branch.pull_request = false
-      expect { branch.github_pr_uri }.to raise_error(ArgumentError)
+      expect(branch.github_pr_uri).to be_nil
     end
   end
 
