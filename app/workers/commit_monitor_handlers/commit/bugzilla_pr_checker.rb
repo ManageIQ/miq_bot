@@ -33,6 +33,8 @@ module CommitMonitorHandlers
           update_bug_status(bug)
           bug.save
         end
+      rescue BugNotFoundError
+        logger.error "Unable to find bug with id #{bug_id}."
       end
 
       def add_pr_comment(bug)

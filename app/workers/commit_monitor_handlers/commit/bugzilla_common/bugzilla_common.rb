@@ -1,6 +1,8 @@
 module CommitMonitorHandlers
   module Commit
     module BugzillaCommon
+      BugNotFoundError = Class.new(StandardError)
+
       def product
         Settings.commit_monitor.bugzilla_product
       end
@@ -9,15 +11,10 @@ module CommitMonitorHandlers
         return unless block_given?
         MiqToolsServices::Bugzilla.call do
           output = ActiveBugzilla::Bug.find(:product => product, :id => bug_id)
-          if output.empty?
-            logger.error "Unable to write for bug id #{bug_id}: Not a '#{product}' bug."
-          else
-            bug = output.first
-            yield(bug)
-          end
+          raise BugNotFoundError if output.empty?
+          bug = output.first
+          yield(bug)
         end
-      rescue => err
-        logger.error "Unable to write for bug id #{bug_id}: #{err}"
       end
 
       def handled_mode?(mode)

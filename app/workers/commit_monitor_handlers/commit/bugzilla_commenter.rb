@@ -40,6 +40,8 @@ module CommitMonitorHandlers
           bug.add_comment(bugzilla_comment)
           bug.save
         end
+      rescue BugNotFoundError
+        logger.error "Unable to find bug with id #{bug_id}."
       end
     end
   end
