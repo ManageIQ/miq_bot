@@ -53,15 +53,16 @@ module CommitMonitorHandlers
       def update_bug_status(bug)
         bug_id = bug.id
         bug_stat = bug.status
-        if bug_stat == "NEW" || bug_stat == "ASSIGNED"
+        return if bug_stat == "ON_DEV"
+
+        case bug_stat
+        when "NEW", "ASSIGNED"
           logger.info "Changing status of bug #{bug_id} to ON_DEV."
           bug.status = "ON_DEV"
         else
           logger.warn "Not changing status of bug #{bug_id} from #{bug_stat}."
-          if bug_stat != "ON_DEV"
-            bug.add_comment("Detected commit referencing this ticket while ticket status is #{bug_stat}.")
-            bug.flags["needinfo"] = "?"
-          end
+          bug.add_comment("Detected commit referencing this ticket while ticket status is #{bug_stat}.")
+          bug.flags["needinfo"] = "?"
         end
       end
     end
