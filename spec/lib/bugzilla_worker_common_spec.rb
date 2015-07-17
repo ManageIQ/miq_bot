@@ -1,7 +1,7 @@
-require_relative "../../../../../app/workers/commit_monitor_handlers/commit/bugzilla_common/bugzilla_common"
+require 'bugzilla_worker_common'
 
 class DummyBugzillaWorker
-  include CommitMonitorHandlers::Commit::BugzillaCommon
+  include BugzillaWorkerCommon
 
   class << self
     attr_accessor :handled_branch_modes
@@ -12,7 +12,7 @@ class DummyBugzillaWorker
   end
 end
 
-RSpec.describe CommitMonitorHandlers::Commit::BugzillaCommon do
+RSpec.describe BugzillaWorkerCommon do
   after(:each) do
     DummyBugzillaWorker.handled_branch_modes = []
   end
