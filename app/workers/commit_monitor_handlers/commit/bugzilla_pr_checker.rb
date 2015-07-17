@@ -1,8 +1,10 @@
+require 'bugzilla_worker_common'
+
 module CommitMonitorHandlers
   module Commit
     class BugzillaPrChecker
       include Sidekiq::Worker
-      include BugzillaCommon
+      include BugzillaWorkerCommon
 
       sidekiq_options :queue => :miq_bot
 
