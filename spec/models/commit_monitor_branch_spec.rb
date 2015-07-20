@@ -6,8 +6,9 @@ describe CommitMonitorBranch do
 
   let(:repo) do
     CommitMonitorRepo.create!(
-      :name => "test-repo",
-      :path => "/path/to/repo"
+      :upstream_user => "test-user",
+      :name          => "test-repo",
+      :path          => "/path/to/repo"
     )
   end
 
@@ -68,6 +69,20 @@ describe CommitMonitorBranch do
 
     it "on regular branch" do
       expect(branch.pr_number).to be_nil
+    end
+  end
+
+  describe "#github_pr_uri" do
+    it "creates correct pr uri" do
+      branch.name = "pr/123"
+      branch.pull_request = true
+      actual = branch.github_pr_uri
+      expect(actual).to eq("https://github.com/test-user/test-repo/pull/123")
+    end
+
+    it "returns nil on non-pr branches" do
+      branch.pull_request = false
+      expect(branch.github_pr_uri).to be_nil
     end
   end
 

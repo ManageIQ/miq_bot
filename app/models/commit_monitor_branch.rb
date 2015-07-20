@@ -39,6 +39,11 @@ class CommitMonitorBranch < ActiveRecord::Base
     MiqToolsServices::MiniGit.pr_number(name) if pull_request?
   end
 
+  def github_pr_uri
+    return nil unless pull_request?
+    "https://github.com/#{repo.fq_name}/pull/#{pr_number}"
+  end
+
   def write_github_comment(header, continuation_header = nil, message = nil)
     unless pull_request?
       raise ArgumentError, "Cannot comment on non-pull request branches such as #{name}."
