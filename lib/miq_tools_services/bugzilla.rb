@@ -15,6 +15,7 @@ module MiqToolsServices
     )
 
     URL_REGEX = %r{https://bugzilla\.redhat\.com//?show_bug\.cgi\?id=(?<bug_id>\d+)}
+    MATCH_REGEX = /^((#{CLOSING_KEYWORDS.join("|")}):?)?\s*#{URL_REGEX}$/i
 
     class << self
       attr_accessor :credentials
@@ -40,7 +41,7 @@ module MiqToolsServices
     def self.ids_in_git_commit_message(message)
       ids = []
       message.each_line.collect do |line|
-        match = /^((#{CLOSING_KEYWORDS.join("|")}):?)?\s*#{URL_REGEX}$/i.match(line)
+        match = MATCH_REGEX.match(line)
         ids << match[:bug_id].to_i if match
       end
       ids
