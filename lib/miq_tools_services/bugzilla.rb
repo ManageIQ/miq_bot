@@ -40,7 +40,7 @@ module MiqToolsServices
     def self.ids_in_git_commit_message(message)
       ids = []
       message.each_line.collect do |line|
-        match = /^(#{CLOSING_KEYWORDS.join("|")})?\s*#{URL_REGEX}$/i.match(line)
+        match = /^((#{CLOSING_KEYWORDS.join("|")}):?)?\s*#{URL_REGEX}$/i.match(line)
         ids << match[:bug_id].to_i if match
       end
       ids

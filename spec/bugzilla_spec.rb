@@ -54,7 +54,7 @@ https://bugzilla.redhat.com//show_bug.cgi?id=123456
     end
 
     described_class::CLOSING_KEYWORDS
-      .flat_map { |keyword| [keyword, keyword.capitalize] }
+      .flat_map { |keyword| [keyword, keyword.capitalize, keyword + ":", keyword.capitalize + ":"] }
       .each do |keyword|
       it "detects an id when the URL is prefixed with closing keyword '#{keyword}'" do
         message = <<-EOF
