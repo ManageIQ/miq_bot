@@ -2,11 +2,12 @@ require_relative 'git_hub_api'
 
 module GitHubApi
   class Repo
-    attr_accessor :fq_repo_name, :client
+    attr_accessor :organization, :client, :fq_repo_name
 
-    def initialize(octokit_repo, organization)
-      @fq_repo_name   = organization.fq_repo_name
+    def initialize(octokit_repo, organization, fq_repo_name)
+      @organization = organization
       @client = organization.client
+      @fq_repo_name = fq_repo_name
     end
 
     def notifications
@@ -18,8 +19,12 @@ module GitHubApi
       end
     end
 
+    def self.labels_cache
+      @labels_cache ||= {}
+    end
+
     def labels
-      @labels ||= begin
+      self.class.labels_cache[fq_repo_name] ||= begin
         repo_labels = GitHubApi.execute(@client, :labels, @fq_repo_name)
         Set.new.tap { |set| repo_labels.each { |l| set.add(l.name) } }
       end
@@ -30,11 +35,15 @@ module GitHubApi
     end
 
     def refresh_labels
-      @labels = nil
+      self.class.labels_cache.delete(fq_repo_name)
+    end
+
+    def self.milestones_cache
+      @milestones_cache ||= {}
     end
 
     def milestones
-      @milestones ||= begin
+      self.class.milestones_cache[fq_repo_name] ||= begin
         repo_milestones = GitHubApi.execute(@client, :list_milestones, @fq_repo_name)
         Hash[repo_milestones.collect { |m| [m.title, m.number] }]
       end
@@ -45,7 +54,7 @@ module GitHubApi
     end
 
     def refresh_milestones
-      @milestones = nil
+      self.class.milestones_cache.delete(fq_repo_name)
     end
   end
 end
