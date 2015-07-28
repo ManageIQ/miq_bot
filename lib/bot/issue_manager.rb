@@ -143,7 +143,7 @@ EOMSG
     valid, invalid = extract_label_names(command_value)
 
     if invalid.any?
-      message = "@#{author} Cannot apply the following label(s) because they are not recognized: "
+      message = "@#{author} Cannot apply the following label#{"s" if invalid.length > 1} because they are not recognized: "
       message << invalid.join(", ")
       issue.add_comment(message)
     end
@@ -158,7 +158,7 @@ EOMSG
     valid, invalid = extract_label_names(command_value)
 
     if invalid.any?
-      message = "@#{author} Cannot remove the following label(s) because they are not recognized: "
+      message = "@#{author} Cannot remove the following label#{"s" if invalid.length > 1} because they are not recognized: "
       message << invalid.join(", ")
       issue.add_comment(message)
     end
