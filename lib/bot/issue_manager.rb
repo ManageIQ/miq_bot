@@ -149,6 +149,7 @@ EOMSG
     end
 
     if valid.any?
+      valid.reject!  { |l| issue.applied_label?(l) }
       valid.collect! { |l| GitHubApi::Label.new(@repo, l, issue) }
       issue.add_labels(valid)
     end
