@@ -11,7 +11,6 @@ class IssueManager
   include GitHubApi
 
   ISSUE_MANAGER_YAML_FILE = File.join(File.dirname(__FILE__), 'config/issue_manager.yml')
-  ORGANIZATION = "ManageIQ"
 
   COMMANDS = Hash.new do |h, k|
     normalized = k.to_s.gsub("-", "_")            # Support - or _ in command
@@ -26,10 +25,10 @@ class IssueManager
     "state"         => :state
   ).freeze
 
-  def initialize(repo_name)
+  def initialize(organization_name, repo_name)
     get_credentials
     @user         = GitHubApi.connect(@username, @password)
-    @org          = @user.find_organization(ORGANIZATION)
+    @org          = @user.find_organization(organization_name)
     @repo         = @org.get_repository(repo_name)
     @timestamps   = load_yaml_file
     @timestamps ||= Hash.new(0)
@@ -105,7 +104,7 @@ EOMSG
   def set_milestone(milestone, author, issue)
     milestone = milestone.strip
 
-    if @repo.valid_milestone?(milestone)
+    if valid_milestone?(milestone)
       issue.set_milestone(milestone)
     else
       message = "@#{author} Milestone #{milestone} is not recognized, ignoring..."
@@ -113,61 +112,74 @@ EOMSG
     end
   end
 
-  def assign(assign_to_user_arg, author, issue)
-    assign_to_user = assign_to_user_arg.delete('@').rstrip
-    if @org.member?(assign_to_user)
-      issue.assign(assign_to_user)
+  def valid_milestone?(milestone)
+    # First reload the label cache if it's an invalid milestone
+    @repo.refresh_milestones unless @repo.valid_milestone?(milestone)
+
+    # Then see if it's *still* invalid
+    @repo.valid_milestone?(milestone)
+  end
+
+  def assign(user, author, issue)
+    user       = user.strip
+    clean_user = user.delete('@')
+
+    if valid_member?(clean_user)
+      issue.assign(clean_user)
     else
-      issue.add_comment("@#{author} #{assign_to_user_arg} is an invalid user, ignoring... ")
+      issue.add_comment("@#{author} #{user} is an invalid user, ignoring...")
     end
   end
 
+  def valid_member?(user)
+    # First reload the member cache if it's an invalid member
+    @org.refresh_members unless @org.member?(user)
+
+    # Then see if it's *still* invalid
+    @org.member?(user)
+  end
+
   def add_labels(command_value, author, issue)
-    new_label_names   = split(command_value)
-    valid_labels      = []
-    invalid_labels    = []
+    valid, invalid = extract_label_names(command_value)
 
-    new_label_names.each do |new_label|
-      new_label       = new_label.strip
-      if @repo.valid_label?(new_label)
-        label         = GitHubApi::Label.new(@repo, new_label, issue)
-        valid_labels << label
-      else
-        invalid_labels << new_label
-      end
-    end
-
-    if !invalid_labels.empty?
-      message = "@#{author} Cannot apply the following label(s) because they are not recognized: "
-      message << invalid_labels.join(", ")
+    if invalid.any?
+      message = "@#{author} Cannot apply the following label#{"s" if invalid.length > 1} because they are not recognized: "
+      message << invalid.join(", ")
       issue.add_comment(message)
     end
-    if !valid_labels.empty?
-      issue.add_labels(valid_labels)
+
+    if valid.any?
+      valid.reject!  { |l| issue.applied_label?(l) }
+      valid.collect! { |l| GitHubApi::Label.new(@repo, l, issue) }
+      issue.add_labels(valid)
     end
   end
 
   def remove_labels(command_value, author, issue)
-    invalid_labels = []
-    labels_array   = split(command_value)
+    valid, invalid = extract_label_names(command_value)
 
-    labels_array.each do |label_text|
-      label_text.strip!
-      if issue.applied_label?(label_text)
-        issue.remove_label(label_text)
-      else
-        invalid_labels << label_text
-      end
-    end
-    unless invalid_labels.empty?
-      message = "@#{author} Cannot remove the following label(s) because they have not been applied: "
-      message << invalid_labels.join(", ")
+    if invalid.any?
+      message = "@#{author} Cannot remove the following label#{"s" if invalid.length > 1} because they are not recognized: "
+      message << invalid.join(", ")
       issue.add_comment(message)
+    end
+
+    valid.each do |l|
+      issue.remove_label(l) if issue.applied_label?(l)
     end
   end
 
-  def split(labels)
-    labels.split(",")
+  def extract_label_names(command_value)
+    label_names = command_value.split(",").collect(&:strip)
+    validate_labels(label_names)
+  end
+
+  def validate_labels(label_names)
+    # First reload the label cache if there are any invalid labels
+    @repo.refresh_labels unless label_names.all? { |l| @repo.valid_label?(l) }
+
+    # Then see if any are *still* invalid and split the list
+    label_names.partition { |l| @repo.valid_label?(l) }
   end
 
   def state(state, author, issue)

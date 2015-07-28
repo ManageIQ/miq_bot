@@ -1,56 +1,57 @@
 require "spec_helper"
 
 RSpec.describe IssueManagerWorker do
-  describe "#repo_names" do
-    it "returns the list of repo names from the settings" do
-      repo_name = "foo/bar"
-      issue_manager = double("issue manager")
-      allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return([repo_name])
-      allow(IssueManager).to receive(:new).with(repo_name).and_return(issue_manager)
+  before  { stub_sidekiq_logger(described_class) }
+  subject { described_class.new }
 
-      expect(described_class.new.repo_names).to eq([repo_name])
-    end
-  end
+  def stub_issue_managers(*org_repo_pairs)
+    allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return(org_repo_pairs.collect(&:last))
+    org_repo_pairs.collect.with_index do |(org_name, repo_name), i|
+      CommitMonitorRepo.create!(:name => repo_name, :upstream_user => org_name, :path => Rails.root.join("repos/#{repo_name}"))
 
-  describe ".new" do
-    it "raises an error if the list of repo names is not provided" do
-      allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return(nil)
-
-      expect { described_class.new }.to raise_error(/No repos defined/)
-    end
-
-    it "raises an error if the list of repo names is empty" do
-      allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return([])
-
-      expect { described_class.new }.to raise_error(/No repos defined/)
+      double("issue manager #{i}").tap do |issue_manager|
+        allow(IssueManager).to receive(:new).with(org_name, repo_name).and_return(issue_manager)
+      end
     end
   end
 
   describe "#perform" do
-    it "gets notifications from each issue manager" do
-      repo_name = "foo/bar"
-      issue_manager = double("issue manager")
-      allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return([repo_name])
-      allow(IssueManager).to receive(:new).with(repo_name).and_return(issue_manager)
+    it "skips if the list of repo names is not provided" do
+      allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return(nil)
 
-      expect(issue_manager).to receive(:get_notifications).once
+      expect(IssueManager).to_not receive(:new)
+      subject.perform
+    end
 
-      described_class.new.perform
+    it "skips if the list of repo names is empty" do
+      allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return([])
+
+      expect(IssueManager).to_not receive(:new)
+      subject.perform
+    end
+
+    it "gets notifications from an issue manager" do
+      im = stub_issue_managers(["SomeOrg", "some_repo"]).first
+
+      expect(im).to receive(:get_notifications).once
+      subject.perform
+    end
+
+    it "gets notifications from multiple issue managers" do
+      im1, im2 = stub_issue_managers(["SomeOrg", "some_repo1"], ["SomeOrg", "some_repo2"])
+
+      expect(im1).to receive(:get_notifications).once
+      expect(im2).to receive(:get_notifications).once
+      subject.perform
     end
 
     it "recovers from errors raised by an issue manager" do
-      repo_1 = "foo/bar"
-      repo_2 = "baz/qux"
-      issue_manager_1 = double("foo/bar")
-      issue_manager_2 = double("baz/qux")
-      allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return([repo_1, repo_2])
-      allow(IssueManager).to receive(:new).with(repo_1).and_return(issue_manager_1)
-      allow(IssueManager).to receive(:new).with(repo_2).and_return(issue_manager_2)
+      im1, im2 = stub_issue_managers(["SomeOrg", "some_repo1"], ["SomeOrg", "some_repo2"])
 
-      allow(issue_manager_1).to receive(:get_notifications).and_raise("boom")
-      expect(issue_manager_2).to receive(:get_notifications)
+      expect(im1).to receive(:get_notifications).once.and_raise("boom")
+      expect(im2).to receive(:get_notifications).once
 
-      expect { described_class.new.perform }.not_to raise_error
+      expect { subject.perform }.not_to raise_error
     end
   end
 end

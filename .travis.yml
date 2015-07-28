@@ -1,5 +1,7 @@
 language: ruby
 rvm: 1.9.3
-before_script: bundle exec rake db:setup
 sudo: false
 cache: bundler
+services:
+- redis-server
+before_script: bundle exec rake db:setup

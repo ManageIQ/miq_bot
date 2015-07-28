@@ -2,7 +2,7 @@ require_relative 'git_hub_api'
 
 module GitHubApi
   class Issue
-    attr_accessor :comments, :number, :body, :author, :created_at, :applied_labels
+    attr_accessor :comments, :number, :body, :author, :created_at
 
     def initialize(octokit_issue, repo)
       @repo       = repo
@@ -13,7 +13,6 @@ module GitHubApi
       @author     = octokit_issue.user.login
       @created_at = octokit_issue.created_at
       @client     = repo.client
-      load_applied_labels
     end
 
     def comments
@@ -39,7 +38,7 @@ module GitHubApi
     end
 
     def applied_label?(label_text)
-      @applied_labels.include?(label_text)
+      applied_labels.include?(label_text)
     end
 
     def add_labels(labels_input)
@@ -47,26 +46,25 @@ module GitHubApi
       GitHubApi.execute(@client, :add_labels_to_an_issue, @repo_name, @number, labels)
 
       labels.each do |l|
-        label = Label.new(@repo, l, self)
-        @applied_labels[l] = label
+        applied_labels[l] = Label.new(@repo, l, self)
       end
     end
 
     def remove_label(label_name)
-      @applied_labels.delete(label_name)
+      applied_labels.delete(label_name)
       GitHubApi.execute(@client, :remove_label, @repo_name, @number, label_name)
     end
 
-    private
-
-    def load_applied_labels
-      @applied_labels = Hash.new
-      results = GitHubApi.execute(@client, :labels_for_issue, @repo_name, @number)
-      results.each do |result|
-        label = Label.new(@repo, result.name, self)
-        @applied_labels[result.name] = label
+    def applied_labels
+      @applied_labels ||= begin
+        results = GitHubApi.execute(@client, :labels_for_issue, @repo_name, @number)
+        results.each_with_object({}) do |result, h|
+          h[result.name] = Label.new(@repo, result.name, self)
+        end
       end
     end
+
+    private
 
     def update(options)
       GitHubApi.execute(@client, :update_issue, @repo_name, @number, @title, @body, options)

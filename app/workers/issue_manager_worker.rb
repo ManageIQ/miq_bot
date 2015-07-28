@@ -3,27 +3,31 @@ require "bot/issue_manager"
 class IssueManagerWorker
   include Sidekiq::Worker
   include Sidetiq::Schedulable
+  sidekiq_options :queue => :miq_bot, :retry => false
 
-  recurrence { hourly.minute_of_hour(0, 15, 30, 45) }
+  recurrence { minutely }
 
-  attr_reader :repo_names, :issue_managers
-
-  def initialize
-    @repo_names = Settings.issue_manager.repo_names
-    fail "No repos defined" if repo_names.nil? || repo_names.empty?
-    @issue_managers = repo_names.collect { |repo_name| IssueManager.new(repo_name) }
-    super
-  end
+  attr_reader :repo_names
 
   def perform
+    @repo_names = Settings.issue_manager.repo_names
+
+    if repo_names.blank?
+      logger.info "No repos enabled.  Skipping."
+      return
+    end
+
+    repos = CommitMonitorRepo.where(:name => repo_names)
+    issue_managers = repos.collect { |r| IssueManager.new(r.upstream_user, r.name) }
     issue_managers.each do |issue_manager|
       with_error_handling { issue_manager.get_notifications }
     end
   end
 
-  def with_error_handling(&block)
-    block.call
+  def with_error_handling
+    yield
   rescue => e
-    logger.error "ERROR: #{e.message}\n#{e.backtrace}\n"
+    logger.error e.message
+    logger.error e.backtrace.join("\n")
   end
 end
