@@ -48,9 +48,12 @@ module CommitMonitorHandlers
       end
 
       def gemfile_comment
-        "#{tag}#{Settings.gemfile_checker.pr_contacts.join(" ")} Gemfile " \
-        "changes detected in #{"commit".pluralize(commits.length)} " \
-        "#{commit_range}.  Please review."
+        contacts = Settings.gemfile_checker.pr_contacts.join(" ")
+        where    = "#{'commit'.pluralize(commits.length)} #{commit_range}"
+
+        message  = "#{tag}Gemfile changes detected in #{where}."
+        message << " /cc #{contacts}" unless contacts.blank?
+        message
       end
 
       def commit_range
