@@ -11,7 +11,6 @@ class IssueManager
   include GitHubApi
 
   ISSUE_MANAGER_YAML_FILE = File.join(File.dirname(__FILE__), 'config/issue_manager.yml')
-  ORGANIZATION = "ManageIQ"
 
   COMMANDS = Hash.new do |h, k|
     normalized = k.to_s.gsub("-", "_")            # Support - or _ in command
@@ -26,10 +25,10 @@ class IssueManager
     "state"         => :state
   ).freeze
 
-  def initialize(repo_name)
+  def initialize(organization_name, repo_name)
     get_credentials
     @user         = GitHubApi.connect(@username, @password)
-    @org          = @user.find_organization(ORGANIZATION)
+    @org          = @user.find_organization(organization_name)
     @repo         = @org.get_repository(repo_name)
     @timestamps   = load_yaml_file
     @timestamps ||= Hash.new(0)
