@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe CommitMonitorHandlers::Batch::GithubPrCommenter::GemfileChecker do
   let(:commits_list)   { ["123abc", "234def"] }

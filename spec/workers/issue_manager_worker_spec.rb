@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 RSpec.describe IssueManagerWorker do
   before  { stub_sidekiq_logger(described_class) }
