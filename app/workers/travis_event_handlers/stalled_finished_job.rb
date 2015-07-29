@@ -8,15 +8,17 @@ module TravisEventHandlers
     STALLED_BUILD_TEXT = "\n\nNo output has been received in the last 10 minutes, this potentially indicates a stalled build or something wrong with the build itself.\n\nThe build has been terminated\n\n"
     HANDLED_EVENTS  = ['job:finished'].freeze
     COMMENT_TAG = "<stalled_finished_job />".freeze
+    MAX_TRIES = 3
 
-    attr_reader :repo, :branch, :job, :slug, :number, :event_type, :state
+    attr_reader :repo, :branch, :job, :slug, :number, :event_type, :state,
+                :github, :pr_number
 
     def perform(event_hash)
       @slug       = event_hash.fetch_path("payload", "repository_slug")
       @number     = event_hash.fetch_path("payload", "number")
       @event_type = event_hash.fetch_path("type")
       @state      = event_hash.fetch_path("payload", "state")
-      pr_number   = event_hash.fetch_path("build", "pull_request_number")
+      @pr_number  = event_hash.fetch_path("build", "pull_request_number")
 
       if skip_event?
         logger.info("#{__method__} [#{slug}##{number}] Skipping #{event_type}")
@@ -36,7 +38,14 @@ module TravisEventHandlers
 
       @branch = @repo.branches.with_branch_or_pr_number(pr_number).first
       if @branch.nil?
-        logger.warn("#{__method__} [#{slug}##{number}] Can't find CommitMonitorBranch with name: #{branch_or_pr_number}")
+        logger.warn("#{__method__} [#{slug}##{number}] Can't find CommitMonitorBranch with PR number: #{pr_number}")
+        return
+      end
+
+      @repo.with_github_service { |github| @github = github }
+
+      if performed_max_tries?
+        logger.info("#{__method__} [#{slug}##{number}] Skipping after max tries")
         return
       end
 
@@ -66,6 +75,12 @@ module TravisEventHandlers
 
     def skip_state?
       state != "errored"
+    end
+
+    def performed_max_tries?
+      github.select_issue_comments(pr_number) do |comment|
+        comment.body.start_with?(COMMENT_TAG)
+      end.size >= MAX_TRIES
     end
 
     ### Travis checks
