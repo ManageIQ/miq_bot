@@ -14,7 +14,7 @@ include Logging
 module GitHubApi
   def self.connect(username, password)
     @user = GitHubApi::User.new
-    @user.client ||= Octokit::Client.new(:login => username, :password => password, :auto_traversal => true)
+    @user.client ||= Octokit::Client.new(:login => username, :password => password, :auto_paginate => true)
 
     return @user
   end
