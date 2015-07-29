@@ -10,14 +10,25 @@ class TravisBuildKiller
     if !first_unique_worker?
       logger.info "#{self.class} is already running, skipping"
     else
-      kill_builds
+      process_repo
     end
   end
 
   private
 
+  attr_accessor :repo
+
+  def process_repo
+    @repo = CommitMonitorRepo.where(:upstream_user => "ManageIQ", :name => "manageiq").first
+    if @repo.nil?
+      logger.info "The ManageIQ/manageiq repo has not been defined.  Skipping."
+      return
+    end
+
+    kill_builds
+  end
+
   def kill_builds
-    repo = CommitMonitorRepo.where(:upstream_user => "ManageIQ", :name => "manageiq").first
     repo.with_travis_service do |travis|
       builds_to_cancel = travis.builds
         .take_while { |b| b.pending? || b.canceled? }
