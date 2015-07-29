@@ -49,7 +49,7 @@ RSpec.describe IssueManagerWorker do
       subject.perform
     end
 
-    it "recovers from errors raised by an issue manager" do
+    it "handles errors raised by an issue manager" do
       im1, im2 = stub_issue_managers(["SomeOrg", "some_repo1"], ["SomeOrg", "some_repo2"])
 
       expect(im1).to receive(:process_notifications).once.and_raise("boom")

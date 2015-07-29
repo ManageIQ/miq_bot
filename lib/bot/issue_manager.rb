@@ -24,7 +24,10 @@ class IssueManager
   ).freeze
 
   def initialize(organization_name, repo_name)
-    get_credentials
+    @username     = Settings.github_credentials.username
+    @password     = Settings.github_credentials.password
+    raise "no GitHub credentials defined" if @username.nil? || @password.nil?
+
     @fq_repo_name = "#{organization_name}/#{repo_name}"
     @user         = GitHubApi.connect(@username, @password)
     @org          = @user.find_organization(organization_name)
@@ -171,16 +174,6 @@ EOMSG
 
     # Then see if any are *still* invalid and split the list
     label_names.partition { |l| @repo.valid_label?(l) }
-  end
-
-  def get_credentials
-    @username = Settings.github_credentials.username
-    @password = Settings.github_credentials.password
-
-    if @username.nil? || @password.nil?
-      logger.error("Credentials are not configured. Exiting..")
-      exit 1
-    end
   end
 
   def timestamps

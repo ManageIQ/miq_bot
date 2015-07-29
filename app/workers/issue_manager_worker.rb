@@ -17,17 +17,17 @@ class IssueManagerWorker
       return
     end
 
-    repos = CommitMonitorRepo.where(:name => repo_names)
-    issue_managers = repos.collect { |r| IssueManager.new(r.upstream_user, r.name) }
-    issue_managers.each do |issue_manager|
-      with_error_handling { issue_manager.process_notifications }
+    CommitMonitorRepo.where(:name => repo_names).each do |repo|
+      process_notifications(repo)
     end
   end
 
-  def with_error_handling
-    yield
-  rescue => e
-    logger.error e.message
-    logger.error e.backtrace.join("\n")
+  private
+
+  def process_notifications(repo)
+    IssueManager.new(repo.upstream_user, repo.name).process_notifications
+  rescue => err
+    logger.error err.message
+    logger.error err.backtrace.join("\n")
   end
 end
