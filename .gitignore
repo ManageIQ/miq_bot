@@ -26,7 +26,7 @@
 /config/environments/*.local.yml
 
 # Ignore development Procfile
-/Procfile.dev
+/Procfile
 
 # Ignore production artifacts
 /public/assets
