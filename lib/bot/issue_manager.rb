@@ -25,51 +25,44 @@ class IssueManager
 
   def initialize(organization_name, repo_name)
     get_credentials
+    @fq_repo_name = "#{organization_name}/#{repo_name}"
     @user         = GitHubApi.connect(@username, @password)
     @org          = @user.find_organization(organization_name)
     @repo         = @org.get_repository(repo_name)
-    @timestamps   = load_yaml_file
-    @timestamps ||= Hash.new(0)
   end
 
-  def get_notifications
+  def process_notifications
     notifications = @repo.notifications
     notifications.each do |notification|
       process_notification(notification)
     end
   end
 
+  # A notification only notifies about a change to an issue thread, but
+  # not which specific comments were added.  Thus, we keep track of the
+  # last_processed_timestamp, and check every comment in the issue thread
+  # skipping them until we are at the last processed comment.
   def process_notification(notification)
-    issue = notification.issue
-    process(issue)
+    process_issue_thread(notification.issue)
     notification.mark_thread_as_read
   end
 
-  def process(issue)
-    process_input(issue, issue.author, issue.created_at, issue.body)
+  def process_issue_thread(issue)
+    process_issue_comment(issue, issue.author, issue.created_at, issue.body)
     issue.comments.each do |comment|
-      process_input(comment.issue, comment.author, comment.updated_at, comment.body)
+      process_issue_comment(comment.issue, comment.author, comment.updated_at, comment.body)
     end
   end
 
-  # comment: The goal is to find the comments that have not been processed by the BOT.
-  # As each comment is processed it overwrites the entry in the hash @timestamps for this
-  # issue ID. Then the hash @timestamps is written to a yaml file.
-  # When a new comment is made it will be processed if its timestamp is more recent
-  # than the one in the hash/yaml for this issue
+  def process_issue_comment(issue, author, timestamp, body)
+    last_processed_timestamp = timestamps[issue.number] || Time.at(0)
+    return if timestamp <= last_processed_timestamp
 
-  def process_input(issue, author, timestamp, body)
-    last_comment_timestamp = @timestamps[issue.number] || 0
-    return if last_comment_timestamp != 0 && last_comment_timestamp >= timestamp
-
-    # bot command or not, we need to update the yaml file so next time we
-    # pull in the comments we can skip this one.
-
-    add_and_yaml_timestamps(timestamp, issue.number)
-    process_message(body, author, issue)
+    update_timestamp(timestamp, issue.number)
+    process_issue_comment_body(body, author, issue)
   end
 
-  def process_message(body, author, issue)
+  def process_issue_comment_body(body, author, issue)
     lines = body.split("\n")
     lines.each do |line|
       process_command(line, author, issue)
@@ -190,20 +183,30 @@ EOMSG
     end
   end
 
-  def load_yaml_file
-    begin
-      @timestamps = YAML.load_file(ISSUE_MANAGER_YAML_FILE)
-    rescue Errno::ENOENT
-      logger.warn("#{Time.now} #{ISSUE_MANAGER_YAML_FILE} was missing, recreating it...")
-      FileUtils.touch(ISSUE_MANAGER_YAML_FILE)
-      retry
-    end
+  def timestamps
+    timestamps_full_hash["timestamps"][@fq_repo_name]
   end
 
-  def add_and_yaml_timestamps(updated_at, issue_number)
-    @timestamps[issue_number]=updated_at
-    File.open(ISSUE_MANAGER_YAML_FILE, 'w+') do |f|
-      YAML.dump(@timestamps, f)
-    end
+  def update_timestamp(updated_at, issue_number)
+    timestamps[issue_number] = updated_at
+    save_timestamps
+  end
+
+  private
+
+  def timestamps_full_hash
+    @timestamps_full_hash ||=
+      (YAML.load_file(ISSUE_MANAGER_YAML_FILE) || {}).tap do |h|
+        h["timestamps"] ||= {}
+        h["timestamps"][@fq_repo_name] ||= {}
+      end
+  rescue Errno::ENOENT
+    logger.warn("#{Time.now} #{ISSUE_MANAGER_YAML_FILE} was missing, recreating it...")
+    FileUtils.touch(ISSUE_MANAGER_YAML_FILE)
+    retry
+  end
+
+  def save_timestamps
+    File.write(ISSUE_MANAGER_YAML_FILE, timestamps_full_hash.to_yaml)
   end
 end
