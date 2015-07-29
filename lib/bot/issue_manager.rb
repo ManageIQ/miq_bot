@@ -3,7 +3,6 @@ require 'yaml'
 require 'fileutils'
 require_relative 'rails_config_settings'
 require_relative 'githubapi/git_hub_api'
-require_relative 'huboard'
 require_relative 'logging'
 
 class IssueManager
@@ -21,8 +20,7 @@ class IssueManager
     "remove_label"  => :remove_labels,
     "rm_label"      => :remove_labels,
     "assign"        => :assign,
-    "set_milestone" => :set_milestone,
-    "state"         => :state
+    "set_milestone" => :set_milestone
   ).freeze
 
   def initialize(organization_name, repo_name)
@@ -180,62 +178,6 @@ EOMSG
 
     # Then see if any are *still* invalid and split the list
     label_names.partition { |l| @repo.valid_label?(l) }
-  end
-
-  def state(state, author, issue)
-    state                     = state.strip
-    huboard_labels            = get_huboard_labels
-    existing_huboard_lbl      = (huboard_labels & issue.applied_labels.keys).last
-    existing_huboard_lbl_idx  = huboard_labels.index(existing_huboard_lbl)
-    index = get_new_huboard_label_idx(existing_huboard_lbl_idx, state, issue, author)
-
-    return unless valid_state?(index, author, issue)
-
-    if existing_huboard_lbl
-      issue.remove_label(existing_huboard_lbl)
-    end
-    add_new_huboard_label(index, author, issue)
-  end
-
-  def get_new_huboard_label_idx(index, state, issue, author)
-
-    if state.downcase == "prev"
-      index -= 1
-    elsif state.downcase == "next"
-      index += 1
-    elsif state.match(/\d+/)
-      index = state.to_i
-    else
-      issue.add_comment("@#{author} - the command value '#{state}' is not recognized. Ignoring...")
-    end
-
-    return index
-  end
-
-  def valid_state?(state_id, author, issue)
-    if !Huboard.valid_state?(state_id)
-      issue.add_comment("@#{author} state #{state_id} is invalid. Ignoring...")
-      return false
-    else
-      return true
-    end
-  end
-
-  def add_new_huboard_label(state_id, author, issue)
-    text = get_huboard_label_text(state_id)
-    add_labels(text, author, issue)
-  end
-
-  def get_huboard_label_text(state_id)
-    Huboard.get_label_text(state_id)
-  end
-
-  def get_existing_huboard_label_idx(huboard_label)
-    Huboard.get_labels.index(huboard_label)
-  end
-
-  def get_huboard_labels
-    Huboard.get_labels(@repo)
   end
 
   def get_credentials
