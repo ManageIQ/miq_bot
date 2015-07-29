@@ -21,8 +21,7 @@ module CommitMonitorHandlers
         end
 
         unless @branch.enabled_for?(:gemfile_checker)
-          logger.info("(##{__method__}) #{self.class.name} only runs in " \
-                      "#{enabled_repos}, not #{@branch.repo.fq_name}.  Skipping.")
+          logger.info("(##{__method__}) #{@branch.repo.fq_name} has not been enabled.  Skipping.")
           return
         end
 
