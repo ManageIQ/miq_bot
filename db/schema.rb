@@ -16,6 +16,20 @@ ActiveRecord::Schema.define(version: 20150827194533) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "batch_entries", force: true do |t|
+    t.integer "batch_job_id"
+    t.string  "state"
+    t.text    "result"
+  end
+
+  add_index "batch_entries", ["batch_job_id"], name: "index_batch_entries_on_batch_job_id", using: :btree
+
+  create_table "batch_jobs", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "expires_at"
+  end
+
   create_table "branches", force: true do |t|
     t.string   "name"
     t.string   "commit_uri"
