@@ -14,3 +14,32 @@ issue_manager:
   repo_names: []
 travis_event:
   enabled_repos: []
+trello:
+  # https://github.com/jeremytregunna/ruby-trello#configuration
+  oauth:
+    consumer_key:
+    consumer_secret:
+    oauth_token:
+    oauth_token_secret:
+  basic_auth:
+    developer_key:
+    member_token:
+  organization_id:
+  teams:
+    team1:
+      owner: email_addr
+      bugzilla_components: []
+        # - list of BZ components for the team
+      board: Trello Board Name
+    team2:
+      owner: email_addr
+      bugzilla_components: []
+        # - list of BZ components for the team
+      board: Trello Board Name
+  rollups:
+    rollup_name1:
+      board: Rollup Board 1
+      type: rollup_type # e.g., epic_tag_rollup
+      teams: []
+        # - list of team names from above
+        # - e.g., team1
