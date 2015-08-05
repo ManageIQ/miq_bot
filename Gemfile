@@ -61,3 +61,7 @@ group :issue_manager do
   # Lock down dependency
   gem 'faraday', '~> 0.9.1'
 end
+
+group :trello do
+  gem 'ruby-trello',   '~> 1.1.1'
+end
