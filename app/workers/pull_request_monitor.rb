@@ -25,32 +25,25 @@ class PullRequestMonitor
       @repo = repo
       repo.with_git_service do |git|
         @git = git
-        process_repo
+        RepoProcessor.process(repo, git)
       end
     end
   end
 
-  def process_repo
-    git.checkout("master")
-    git.pull
+  class RepoProcessor
+    def self.process(repo, git)
+      git.checkout("master")
+      git.pull
 
-    process_prs
+      repo.pull_requests.each do |pr|
+        branch_name = git.pr_branch(pr.number)
+        next if repo.pr_branches.collect(&:name).include?(branch_name)
+        PrBranchRecord.create(repo, pr, branch_name)
+      end
 
-    PrBranchRecord.prune(repo)
-  end
-
-  def process_prs
-    repo.pull_requests.each do |pr|
-      process_pr(pr)
+      PrBranchRecord.prune(repo)
     end
   end
-
-  def process_pr(pr)
-    branch_name = git.pr_branch(pr.number)
-    return if repo.pr_branches.collect(&:name).include?(branch_name)
-    PrBranchRecord.create(repo, pr, branch_name)
-  end
-
 
   class PrBranchRecord
     def self.create(repo, pr, branch_name)
