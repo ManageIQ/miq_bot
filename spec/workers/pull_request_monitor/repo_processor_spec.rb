@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe PullRequestMonitor::RepoProcessor do
   describe ".process" do
     it "pulls from upstream master" do
-      repo = instance_spy("CommitMonitorRepo")
+      repo = spy("CommitMonitorRepo")
       git = spy("git")
       allow(repo).to receive(:with_git_service).and_yield(git)
       class_spy("PrBranchRecord").as_stubbed_const
@@ -15,10 +15,10 @@ RSpec.describe PullRequestMonitor::RepoProcessor do
     end
 
     it "creates a pr branch record" do
-      repo = instance_spy("CommitMonitorRepo")
+      repo = spy("CommitMonitorRepo")
       git = spy("git")
       allow(repo).to receive(:with_git_service).and_yield(git)
-      pr_branch_record = class_spy("PrBranchRecord").as_stubbed_const
+      pr_branch_record = class_spy("PullRequestMonitor::PrBranchRecord").as_stubbed_const
       pull_request = double("pull request", :number => 123)
       branch_name = "foo/bar"
       allow(repo).to receive(:pull_requests).and_return([pull_request])
@@ -31,10 +31,10 @@ RSpec.describe PullRequestMonitor::RepoProcessor do
     end
 
     it "skips pr branch record creation if it exists" do
-      repo = instance_spy("CommitMonitorRepo")
+      repo = spy("CommitMonitorRepo")
       git = spy("git")
       allow(repo).to receive(:with_git_service).and_yield(git)
-      pr_branch_record = class_spy("PrBranchRecord").as_stubbed_const
+      pr_branch_record = class_spy("PullRequestMonitor::PrBranchRecord").as_stubbed_const
       pull_request = double("pull request", :number => 123)
       branch_name = "foo/bar"
       allow(repo).to receive(:pull_requests).and_return([pull_request])
@@ -47,10 +47,10 @@ RSpec.describe PullRequestMonitor::RepoProcessor do
     end
 
     it "prunes any stale pr branch records" do
-      repo = instance_spy("CommitMonitorRepo")
+      repo = spy("CommitMonitorRepo")
       git = spy("git")
       allow(repo).to receive(:with_git_service).and_yield(git)
-      pr_branch_record = class_spy("PrBranchRecord").as_stubbed_const
+      pr_branch_record = class_spy("PullRequestMonitor::PrBranchRecord").as_stubbed_const
 
       expect(pr_branch_record).to receive(:prune).with(repo)
 

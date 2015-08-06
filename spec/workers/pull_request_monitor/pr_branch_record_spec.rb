@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe PullRequestMonitor::PrBranchRecord do
   describe ".create" do
     it "has git create a local pr branch" do
-      repo = instance_spy("CommitMonitorRepo")
+      repo = spy("CommitMonitorRepo")
       pr = spy("pr")
       branch_name = "foo/bar"
       git = spy("git")
@@ -39,7 +39,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
 
   describe ".delete" do
     it "does nothing if given no branch names" do
-      repo = instance_spy("CommitMonitorRepo")
+      repo = spy("CommitMonitorRepo")
       git = spy("git")
       allow(repo).to receive(:with_git_service).and_yield(git)
 
@@ -75,7 +75,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
     end
 
     it "has git delete the local branches" do
-      repo = instance_spy("CommitMonitorRepo")
+      repo = spy("CommitMonitorRepo")
       git = spy("git")
       allow(repo).to receive(:with_git_service).and_yield(git)
       branch_name = "foo/bar"
