@@ -23,7 +23,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
       allow(repo).to receive(:with_git_service).and_yield(git)
       allow(git).to receive(:merge_base).with(branch_name, "master").and_return(last_commit)
       allow(pr).to receive_message_chain(:head, :repo, :html_url)
-                    .and_return("https://github.com/foo/bar")
+        .and_return("https://github.com/foo/bar")
 
       expected = {
         :name         => branch_name,
