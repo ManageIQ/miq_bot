@@ -16,7 +16,7 @@ class PullRequestMonitor
 
   private
 
-  attr_reader :repo, :git, :pr
+  attr_reader :repo, :git
 
   def process_repos
     CommitMonitorRepo.includes(:branches).each do |repo|
@@ -41,12 +41,11 @@ class PullRequestMonitor
 
   def process_prs
     repo.pull_requests.each do |pr|
-      @pr = pr
-      process_pr
+      process_pr(pr)
     end
   end
 
-  def process_pr
+  def process_pr(pr)
     branch_name = git.pr_branch(pr.number)
     return if repo.pr_branches.collect(&:name).include?(branch_name)
     PrBranchRecord.create(repo, pr, branch_name)
