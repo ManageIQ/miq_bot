@@ -16,7 +16,7 @@ class PullRequestMonitor
 
   private
 
-  attr_reader :repo, :git, :github, :pr
+  attr_reader :repo, :git, :pr
 
   def process_repos
     CommitMonitorRepo.includes(:branches).each do |repo|
@@ -34,25 +34,22 @@ class PullRequestMonitor
     git.checkout("master")
     git.pull
 
-    original_pr_branches = pr_branches
+    original_pr_branches = repo.pr_branches.collect(&:name)
     current_pr_branches  = process_prs
     delete_pr_branches(original_pr_branches - current_pr_branches)
   end
 
   def process_prs
-    repo.with_github_service do |github|
-      @github = github
-      github.pull_requests.all.collect do |pr|
-        @pr = pr
-        process_pr
-      end
+    repo.pull_requests.collect do |pr|
+      @pr = pr
+      process_pr
     end
   end
 
   def process_pr
     branch_name = git.pr_branch(pr.number)
 
-    unless pr_branches.include?(branch_name)
+    unless repo.pr_branches.collect(&:name).include?(branch_name)
       git.create_pr_branch(branch_name)
       create_pr_branch_record(branch_name)
     end
@@ -70,10 +67,6 @@ class PullRequestMonitor
       :commit_uri   => commit_uri,
       :pull_request => true
     )
-  end
-
-  def pr_branches
-    repo.branches.select(&:pull_request?).collect(&:name)
   end
 
   def delete_pr_branches(branch_names)
