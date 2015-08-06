@@ -36,7 +36,7 @@ class PullRequestMonitor
 
     process_prs
 
-    PrBranchRecord.delete(repo, repo.stale_pr_branches)
+    PrBranchRecord.prune(repo)
   end
 
   def process_prs
@@ -79,8 +79,8 @@ class PullRequestMonitor
       end
     end
 
-    def self.pull_master
-      # ?
+    def self.prune(repo)
+      delete(repo, repo.stale_pr_branches)
     end
   end
 end
