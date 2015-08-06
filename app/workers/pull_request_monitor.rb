@@ -16,32 +16,27 @@ class PullRequestMonitor
 
   private
 
-  attr_reader :repo, :git
-
   def process_repos
     CommitMonitorRepo.includes(:branches).each do |repo|
       next unless repo.upstream_user
-
-      @repo = repo
-      repo.with_git_service do |git|
-        @git = git
-        RepoProcessor.process(repo, git)
-      end
+      RepoProcessor.process(repo)
     end
   end
 
   class RepoProcessor
-    def self.process(repo, git)
-      git.checkout("master")
-      git.pull
+    def self.process(repo)
+      repo.with_git_service do |git|
+        git.checkout("master")
+        git.pull
 
-      repo.pull_requests.each do |pr|
-        branch_name = git.pr_branch(pr.number)
-        next if repo.pr_branches.collect(&:name).include?(branch_name)
-        PrBranchRecord.create(repo, pr, branch_name)
+        repo.pull_requests.each do |pr|
+          branch_name = git.pr_branch(pr.number)
+          next if repo.pr_branches.collect(&:name).include?(branch_name)
+          PrBranchRecord.create(repo, pr, branch_name)
+        end
+
+        PrBranchRecord.prune(repo)
       end
-
-      PrBranchRecord.prune(repo)
     end
   end
 
