@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :repo, :class => CommitMonitorRepo do
-    sequence(:name) { |n| "Repo #{n}"}
-    sequence(:path) { |n| "foo #{n}" }
+    sequence(:name) { |n| "repo_#{n}"}
+    sequence(:path) { |n| "/path/to/repos/#{name}" }
   end
 end

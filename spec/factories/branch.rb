@@ -1,8 +1,8 @@
 FactoryGirl.define do
   factory :branch, :class => CommitMonitorBranch do
-    sequence(:name)  { |n| "feature/foo#{n}" }
-    commit_uri { "https://example.com/foo/bar/commit/#{Digest::SHA1.hexdigest 'foo'}" }
-    last_commit "123456"
+    sequence(:name)  { |n| "fix/issue/#{n}" }
+    commit_uri "https://example.com/foo/bar/commit/$commit"
+    last_commit Digest::SHA1.hexdigest "contents of last commit"
     repo
   end
 end
