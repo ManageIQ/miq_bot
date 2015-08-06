@@ -35,7 +35,8 @@ class PullRequestMonitor
     git.pull
 
     process_prs
-    delete_pr_branches(repo.stale_pr_branches)
+
+    PrBranchRecord.delete(repo, repo.stale_pr_branches)
   end
 
   def process_prs
@@ -48,28 +49,39 @@ class PullRequestMonitor
   def process_pr
     branch_name = git.pr_branch(pr.number)
     return if repo.pr_branches.collect(&:name).include?(branch_name)
-    git.create_pr_branch(branch_name)
-    create_pr_branch_record(branch_name)
+    PrBranchRecord.create(repo, pr, branch_name)
   end
 
-  def create_pr_branch_record(branch_name)
-    commit_uri  = File.join(pr.head.repo.html_url, "commit", "$commit")
-    last_commit = git.merge_base(branch_name, "master")
-    repo.branches.create!(
-      :name         => branch_name,
-      :last_commit  => last_commit,
-      :commits_list => [],
-      :commit_uri   => commit_uri,
-      :pull_request => true
-    )
-  end
 
-  def delete_pr_branches(branch_names)
-    return if branch_names.empty?
+  class PrBranchRecord
+    def self.create(repo, pr, branch_name)
+      repo.with_git_service do |git|
+        git.create_pr_branch(branch_name)
+        commit_uri  = File.join(pr.head.repo.html_url, "commit", "$commit")
+        last_commit = git.merge_base(branch_name, "master")
+        repo.branches.create!(
+          :name         => branch_name,
+          :last_commit  => last_commit,
+          :commits_list => [],
+          :commit_uri   => commit_uri,
+          :pull_request => true
+        )
+      end
+    end
 
-    repo.branches.where(:name => branch_names).destroy_all
+    def self.delete(repo, *branch_names)
+      return if branch_names.empty?
 
-    git.checkout("master")
-    branch_names.each { |branch_name| git.destroy_branch(branch_name) }
+      repo.branches.where(:name => branch_names).destroy_all
+
+      repo.with_git_service do |git|
+        git.checkout("master")
+        branch_names.each { |branch_name| git.destroy_branch(branch_name) }
+      end
+    end
+
+    def self.pull_master
+      # ?
+    end
   end
 end
