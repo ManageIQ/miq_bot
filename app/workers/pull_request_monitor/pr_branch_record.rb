@@ -27,7 +27,7 @@ class PullRequestMonitor
     end
 
     def self.prune(repo)
-      delete(repo, repo.stale_pr_branches)
+      delete(repo, *repo.stale_pr_branches)
     end
   end
 end
