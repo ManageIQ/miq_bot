@@ -50,6 +50,10 @@ group :development, :test do
   gem 'timecop'
 end
 
+group :test do
+  gem "factory_girl_rails"
+end
+
 group :issue_manager do
   gem 'octokit',       '~> 3.8.0'
   gem 'minigit',       '~> 0.0.4'
