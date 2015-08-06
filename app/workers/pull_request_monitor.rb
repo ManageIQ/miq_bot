@@ -34,17 +34,8 @@ class PullRequestMonitor
     git.checkout("master")
     git.pull
 
-    original_pr_branches = repo.pr_branches.collect(&:name)
-    current_pr_branches  = fetch_current_pr_branches
     process_prs
-    delete_pr_branches(original_pr_branches - current_pr_branches)
-  end
-
-  def fetch_current_pr_branches
-    repo.pull_requests.collect do |pr|
-      branch_name = git.pr_branch(pr.number)
-      branch_name
-    end
+    delete_pr_branches(repo.stale_pr_branches)
   end
 
   def process_prs
