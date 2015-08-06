@@ -35,12 +35,20 @@ class PullRequestMonitor
     git.pull
 
     original_pr_branches = repo.pr_branches.collect(&:name)
-    current_pr_branches  = process_prs
+    current_pr_branches  = fetch_current_pr_branches
+    process_prs
     delete_pr_branches(original_pr_branches - current_pr_branches)
   end
 
-  def process_prs
+  def fetch_current_pr_branches
     repo.pull_requests.collect do |pr|
+      branch_name = git.pr_branch(pr.number)
+      branch_name
+    end
+  end
+
+  def process_prs
+    repo.pull_requests.each do |pr|
       @pr = pr
       process_pr
     end
@@ -48,13 +56,9 @@ class PullRequestMonitor
 
   def process_pr
     branch_name = git.pr_branch(pr.number)
-
-    unless repo.pr_branches.collect(&:name).include?(branch_name)
-      git.create_pr_branch(branch_name)
-      create_pr_branch_record(branch_name)
-    end
-
-    branch_name
+    return if repo.pr_branches.collect(&:name).include?(branch_name)
+    git.create_pr_branch(branch_name)
+    create_pr_branch_record(branch_name)
   end
 
   def create_pr_branch_record(branch_name)
