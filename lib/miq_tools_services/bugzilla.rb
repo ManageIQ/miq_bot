@@ -38,6 +38,12 @@ module MiqToolsServices
       end
     end
 
+    # See https://www.bugzilla.org/docs/4.4/en/html/api/Bugzilla/WebService/Bug.html#search
+    # for a list of find_options
+    def find_bugs(find_options)
+      ActiveBugzilla::Bug.find(find_options)
+    end
+
     def self.ids_in_git_commit_message(message)
       ids = []
       message.each_line.collect do |line|
