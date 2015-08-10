@@ -71,13 +71,13 @@ class CommitMonitorRepo < ActiveRecord::Base
 
   def current_pr_branch_names
     with_git_service do |git|
-      break pull_requests.collect { |pr| git.pr_branch(pr.number) }
+      pull_requests.collect { |pr| git.pr_branch(pr.number) }
     end
   end
 
   def pull_requests
     with_github_service do |github|
-      break github.pull_requests.all
+      github.pull_requests.all
     end
   end
 
