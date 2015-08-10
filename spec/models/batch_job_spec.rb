@@ -1,6 +1,23 @@
 require 'spec_helper'
 
 describe BatchJob do
+  describe "#on_complete_class / #on_complete_class=" do
+    it "with a String" do
+      job = described_class.new(:on_complete_class => "RSpec::Core")
+      expect(job.on_complete_class).to eq(RSpec::Core)
+    end
+
+    it "with a Class" do
+      job = described_class.new(:on_complete_class => RSpec::Core)
+      expect(job.on_complete_class).to eq(RSpec::Core)
+    end
+
+    it "with nil" do
+      job = described_class.new
+      expect(job.on_complete_class).to be_nil
+    end
+  end
+
   describe "#expired?" do
     it "without an expiration" do
       job = described_class.new
