@@ -40,4 +40,6 @@ RSpec.configure do |config|
   config.order = "random"
 
   config.expect_with(:rspec) { |c| c.syntax = [:should, :expect] }
+
+  config.include FactoryGirl::Syntax::Methods
 end

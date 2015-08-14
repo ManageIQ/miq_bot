@@ -64,4 +64,24 @@ class CommitMonitorRepo < ActiveRecord::Base
     repos = Settings.public_send(checker).enabled_repos
     fq_name.in?(repos)
   end
+
+  def pr_branches
+    branches.select(&:pull_request?)
+  end
+
+  def current_pr_branch_names
+    with_git_service do |git|
+      pull_requests.collect { |pr| git.pr_branch(pr.number) }
+    end
+  end
+
+  def pull_requests
+    with_github_service do |github|
+      github.pull_requests.all
+    end
+  end
+
+  def stale_pr_branches
+    pr_branches.collect(&:name) - current_pr_branch_names
+  end
 end
