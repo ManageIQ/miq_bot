@@ -1,5 +1,5 @@
 class Branch < ActiveRecord::Base
-  belongs_to :repo, :foreign_key => :commit_monitor_repo_id
+  belongs_to :repo
 
   validates :name,        :presence => true, :uniqueness => {:scope => :repo}
   validates :commit_uri,  :presence => true

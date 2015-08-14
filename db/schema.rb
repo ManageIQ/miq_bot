@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150814183834) do
+ActiveRecord::Schema.define(version: 20150814191457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20150814183834) do
     t.string   "name"
     t.string   "commit_uri"
     t.string   "last_commit"
-    t.integer  "commit_monitor_repo_id"
+    t.integer  "repo_id"
     t.boolean  "pull_request"
     t.datetime "last_checked_on"
     t.datetime "last_changed_on"

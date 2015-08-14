@@ -1,5 +1,5 @@
 class Repo < ActiveRecord::Base
-  has_many :branches, :dependent => :destroy, :foreign_key => "commit_monitor_repo_id"
+  has_many :branches, :dependent => :destroy
 
   validates :name, :presence => true, :uniqueness => true
   validates :path, :presence => true, :uniqueness => true
