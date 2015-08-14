@@ -16,7 +16,7 @@ module CommitMonitorHandlers
 
       def perform(branch_id, commit, commit_details)
         logger.info("Performing bugzilla PR check on branch #{branch_id}")
-        @branch  = CommitMonitorBranch.where(:id => branch_id).first
+        @branch  = Branch.where(:id => branch_id).first
         @commit  = commit
         @message = commit_details["message"]
 

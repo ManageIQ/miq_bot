@@ -10,7 +10,7 @@ class PullRequestMonitor
     if !first_unique_worker?
       logger.info "#{self.class} is already running, skipping"
     else
-      CommitMonitorRepo.includes(:branches).each do |repo|
+      Repo.includes(:branches).each do |repo|
         next unless repo.upstream_user
         RepoProcessor.process(repo)
       end

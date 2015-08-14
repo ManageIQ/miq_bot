@@ -45,7 +45,7 @@ class CommitMonitor
   attr_reader :repo, :git, :branch, :new_commits, :all_commits, :statistics
 
   def process_branches
-    CommitMonitorRepo.includes(:branches).each do |repo|
+    Repo.includes(:branches).each do |repo|
       @statistics = {}
 
       @repo = repo

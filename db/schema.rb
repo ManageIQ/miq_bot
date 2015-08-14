@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140215060546) do
+ActiveRecord::Schema.define(version: 20150814183834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "commit_monitor_branches", force: true do |t|
+  create_table "branches", force: true do |t|
     t.string   "name"
     t.string   "commit_uri"
     t.string   "last_commit"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20140215060546) do
     t.boolean  "mergeable"
   end
 
-  create_table "commit_monitor_repos", force: true do |t|
+  create_table "repos", force: true do |t|
     t.string   "name"
     t.string   "path"
     t.datetime "created_at"

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
   let(:branch) do
-    CommitMonitorBranch.new(
+    Branch.new(
       :name         => "pr/123",
       :commit_uri   => "https://github.com/some_user/some_repo/commit/$commit",
       :last_commit  => "8942a195a0bfa69ceb82c020c60565408cb46d3e",

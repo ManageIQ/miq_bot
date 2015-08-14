@@ -28,15 +28,15 @@ module TravisEventHandlers
         return
       end
 
-      @repo = CommitMonitorRepo.with_slug(slug).first
+      @repo = Repo.with_slug(slug).first
       if @repo.nil?
-        logger.warn("#{__method__} [#{slug}##{number}] Can't find CommitMonitorRepo.")
+        logger.warn("#{__method__} [#{slug}##{number}] Can't find Repo.")
         return
       end
 
       @branch = @repo.branches.with_branch_or_pr_number(pr_number).first
       if @branch.nil?
-        logger.warn("#{__method__} [#{slug}##{number}] Can't find CommitMonitorBranch with name: #{branch_or_pr_number}")
+        logger.warn("#{__method__} [#{slug}##{number}] Can't find Branch with name: #{branch_or_pr_number}")
         return
       end
 

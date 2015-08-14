@@ -1,5 +1,5 @@
-class CommitMonitorRepo < ActiveRecord::Base
-  has_many :branches, :class_name => :CommitMonitorBranch, :dependent => :destroy
+class Repo < ActiveRecord::Base
+  has_many :branches, :dependent => :destroy, :foreign_key => "commit_monitor_repo_id"
 
   validates :name, :presence => true, :uniqueness => true
   validates :path, :presence => true, :uniqueness => true
@@ -17,7 +17,7 @@ class CommitMonitorRepo < ActiveRecord::Base
 
       repo.branches.create!(
         :name        => "master",
-        :commit_uri  => CommitMonitorBranch.github_commit_uri(upstream_user, name),
+        :commit_uri  => Branch.github_commit_uri(upstream_user, name),
         :last_commit => git.current_ref
       )
 
@@ -33,7 +33,7 @@ class CommitMonitorRepo < ActiveRecord::Base
   # fq_name: "ManageIQ/miq_bot"
   def self.with_fq_name(fq_name)
     user, repo = fq_name.split("/")
-    CommitMonitorRepo.where(:upstream_user => user, :name => repo)
+    where(:upstream_user => user, :name => repo)
   end
   class << self
     alias_method :with_slug, :with_fq_name

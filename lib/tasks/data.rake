@@ -1,7 +1,7 @@
 namespace :data do
   desc "Backup the Repos and branches to a YAML file"
   task :backup => :environment do
-    data = CommitMonitorRepo.all.collect do |repo|
+    data = Repo.all.collect do |repo|
       branches = repo.branches.all.collect do |branch|
         {
           "name"            => branch.name,
@@ -32,14 +32,14 @@ namespace :data do
     data = YAML.load(File.read(path))
 
     data.each do |repo|
-      ar_repo = CommitMonitorRepo.create!(
+      ar_repo = Repo.create!(
         :name          => repo["name"],
         :path          => repo["path"],
         :upstream_user => repo["upstream_user"],
       )
 
       repo["branches"].each do |branch|
-        CommitMonitorBranch.create!(
+        Branch.create!(
           :name            => branch["name"],
           :commit_uri      => branch["commit_uri"],
           :last_commit     => branch["last_commit"],

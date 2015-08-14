@@ -17,7 +17,7 @@ class IssueManagerWorker
       return
     end
 
-    CommitMonitorRepo.where(:name => repo_names).each do |repo|
+    Repo.where(:name => repo_names).each do |repo|
       process_notifications(repo)
     end
   end
