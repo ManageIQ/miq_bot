@@ -62,15 +62,10 @@ describe BatchJob do
     end
   end
 
-  describe "#complete?" do
-    it "when expired" do
-      job = described_class.new(:expires_at => 10.minutes.ago)
-      expect(job).to be_complete
-    end
-
+  describe "#entries_complete?" do
     it "without entries" do
       job = described_class.new
-      expect(job).to be_complete
+      expect(job.entries_complete?).to be_falsey
     end
 
     it "with entries that are not complete" do
@@ -78,7 +73,7 @@ describe BatchJob do
         BatchEntry.new,
         BatchEntry.new(:state => "succeeded")
       ])
-      expect(job).to_not be_complete
+      expect(job.entries_complete?).to be_falsey
     end
 
     it "with entries that are complete" do
@@ -86,7 +81,88 @@ describe BatchJob do
         BatchEntry.new(:state => "failed"),
         BatchEntry.new(:state => "succeeded")
       ])
-      expect(job).to be_complete
+      expect(job.entries_complete?).to be_truthy
+    end
+  end
+
+  describe "#check_complete" do
+    it "when destroyed by another checker" do
+      job = described_class.create!.tap(&:destroy)
+
+      expect(job).to_not receive(:finalize!)
+
+      job.check_complete
+    end
+
+    it "when already finalizing by another checker" do
+      job = described_class.create!(:state => "finalizing")
+
+      expect(job).to_not receive(:finalize!)
+
+      job.check_complete
+    end
+
+    it "when entries are not complete" do
+      job = described_class.create!(:entries => [
+        BatchEntry.create!,
+        BatchEntry.create!(:state => "succeeded")
+      ])
+
+      expect(job).to_not receive(:finalize!)
+
+      job.check_complete
+    end
+
+    shared_examples "#finalize!" do
+      before { OnCompleteWorker = Class.new }
+      after  { Object.send(:remove_const, "OnCompleteWorker") }
+
+      it "and there is an on_complete_class" do
+        job.update_attributes!(
+          :on_complete_class => ::OnCompleteWorker,
+          :on_complete_args  => %w(arg1 arg2)
+        )
+
+        expect(OnCompleteWorker).to receive(:perform_async).with(job.id, "arg1", "arg2")
+
+        job.check_complete
+
+        expect(job.state).to eq("finalizing")
+      end
+
+      it "and there is no on_complete_class" do
+        job.check_complete
+
+        expect(job).to be_destroyed
+
+        expect(described_class.any?).to be false
+        expect(BatchEntry.any?).to      be false
+      end
+    end
+
+    context "when entries are complete" do
+      let(:job) do
+        described_class.create!(:entries => [
+          BatchEntry.create!(:state => "failed"),
+          BatchEntry.create!(:state => "succeeded")
+        ])
+      end
+
+      include_examples "#finalize!"
+    end
+
+    context "when expired" do
+      let(:job) do
+        described_class.create!(
+          :expires_at => 10.minutes.ago,
+          :entries    => [
+            BatchEntry.create!,
+            BatchEntry.create!(:state => "succeeded")
+          ]
+        )
+      end
+
+      include_examples "#finalize!"
     end
   end
 end
