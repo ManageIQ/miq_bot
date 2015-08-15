@@ -1,6 +1,29 @@
 require 'spec_helper'
 
 describe BatchJob do
+  it ".perform_async" do
+    workers    = (1..3).collect { |i| spy("WorkerClass#{i}") }
+    expires_at = 10.minutes.from_now
+
+    described_class.perform_async(
+      workers,
+      %w(arg1 arg2),
+      :on_complete_class => String,
+      :on_complete_args  => %w(arga argb),
+      :expires_at        => expires_at
+    )
+
+    job = described_class.first
+    expect(job.on_complete_class).to eq(String)
+    expect(job.on_complete_args).to  eq(%w(arga argb))
+    expect(job.expires_at).to        eq(expires_at)
+
+    entries = job.entries.order(:id)
+    workers.zip(entries).each do |w, e|
+      expect(w).to have_received(:perform_async).with(e.id, "arg1", "arg2")
+    end
+  end
+
   include_examples "state predicates", :finalizing?,
                    nil          => false,
                    "finalizing" => true

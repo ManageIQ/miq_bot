@@ -5,6 +5,15 @@ class BatchJob < ActiveRecord::Base
 
   validates :state, :inclusion => {:in => %w(finalizing), :allow_nil => true}
 
+  def self.perform_async(workers, worker_args, job_attributes)
+    new_entries = workers.size.times.collect { BatchEntry.new }
+    create!(job_attributes.merge(:entries => new_entries))
+
+    workers.zip(new_entries).each do |w, e|
+      w.perform_async(e.id, *worker_args)
+    end
+  end
+
   def on_complete_class
     super.try(:constantize)
   end
