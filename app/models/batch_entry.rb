@@ -14,4 +14,8 @@ class BatchEntry < ActiveRecord::Base
   def complete?
     failed? || succeeded?
   end
+
+  def check_job_complete
+    job.check_complete if complete?
+  end
 end
