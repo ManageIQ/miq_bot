@@ -35,6 +35,10 @@ class Branch < ActiveRecord::Base
     commit_uri_to(last_commit)
   end
 
+  def mode
+    pull_request? ? :pr : :regular
+  end
+
   def pr_number
     MiqToolsServices::MiniGit.pr_number(name) if pull_request?
   end

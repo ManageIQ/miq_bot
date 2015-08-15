@@ -59,6 +59,19 @@ describe Branch do
     expect(branch.last_commit_uri).to eq "https://uri.to/commit/#{last_commit}"
   end
 
+  context "#mode" do
+    it "on pr branch" do
+      branch.name = "pr/133"
+      branch.pull_request = true
+
+      expect(branch.mode).to eq :pr
+    end
+
+    it "on regular branch" do
+      expect(branch.mode).to eq :regular
+    end
+  end
+
   context "#pr_number" do
     it "on pr branch" do
       branch.name = "pr/133"
