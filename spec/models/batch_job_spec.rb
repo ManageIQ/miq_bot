@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe BatchJob do
+  include_examples "state predicates", :finalizing?,
+                   nil          => false,
+                   "finalizing" => true
+
   describe "#on_complete_class / #on_complete_class=" do
     it "with a String" do
       job = described_class.new(:on_complete_class => "RSpec::Core")

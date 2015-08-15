@@ -3,12 +3,18 @@ class BatchJob < ActiveRecord::Base
 
   serialize :on_complete_args, Array
 
+  validates :state, :inclusion => {:in => %w(finalizing), :allow_nil => true}
+
   def on_complete_class
     super.try(:constantize)
   end
 
   def on_complete_class=(klass)
     super(klass.to_s)
+  end
+
+  def finalizing?
+    state == "finalizing"
   end
 
   def expired?

@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20150827194533) do
     t.datetime "expires_at"
     t.string   "on_complete_class"
     t.text     "on_complete_args"
+    t.string   "state"
   end
 
   create_table "branches", force: true do |t|
