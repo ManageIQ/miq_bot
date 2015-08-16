@@ -27,6 +27,13 @@ module BranchWorkerMixin
     [commits.first, commits.last]
   end
 
+  def commit_range_text
+    case commit_range.uniq.length
+    when 1 then branch.commit_uri_to(commit_range.first)
+    when 2 then branch.compare_uri_for(*commit_range)
+    end
+  end
+
   def branch_enabled?
     setting = self.class.name.split("::").last.underscore.to_sym
     branch.enabled_for?(setting)

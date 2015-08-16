@@ -22,6 +22,10 @@ class Branch < ActiveRecord::Base
     "https://github.com/#{user}/#{repo}/commit/#{sha}"
   end
 
+  def self.github_compare_uri(user, repo, sha1 = "$commit1", sha2 ="$commit2")
+    "https://github.com/#{user}/#{repo}/compare/#{sha1}...#{sha2}"
+  end
+
   def last_commit=(val)
     super
     self.last_changed_on = Time.now.utc if last_commit_changed?
@@ -33,6 +37,13 @@ class Branch < ActiveRecord::Base
 
   def last_commit_uri
     commit_uri_to(last_commit)
+  end
+
+  def compare_uri_for(commit1, commit2)
+    # TODO: This needs use a different URI than the commit_uri
+    commit_uri
+      .gsub("/commit/", "/compare/")
+      .gsub("$commit", "#{commit1}...#{commit2}")
   end
 
   def mode

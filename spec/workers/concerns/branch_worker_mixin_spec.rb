@@ -15,8 +15,8 @@ describe BranchWorkerMixin do
     end.new
   end
   let(:repo)      { Repo.create!(:name => "some_repo", :upstream_user => "SomeUser", :path => "xxx") }
-  let(:branch)    { Branch.create!(:name => "master", :last_commit => "xxx", :commit_uri => "xxx", :repo => repo) }
-  let(:pr_branch) { Branch.create!(:name => "pr/1",   :last_commit => "xxx", :commit_uri => "xxx", :repo => repo, :pull_request => true) }
+  let(:branch)    { Branch.create!(:name => "master", :last_commit => "xxx", :commit_uri => "http://uri.to/commit/$commit", :repo => repo) }
+  let(:pr_branch) { Branch.create!(:name => "pr/1",   :last_commit => "xxx", :commit_uri => "http://uri.to/commit/$commit", :repo => repo, :pull_request => true) }
 
   describe "#find_branch" do
     context "without required_mode" do
@@ -75,6 +75,22 @@ describe BranchWorkerMixin do
     subject.find_branch(pr_branch.id)
 
     expect(subject.commit_range).to eq(%w(a c))
+  end
+
+  describe "#commit_range_text" do
+    it "with a range of commits" do
+      pr_branch.update_attributes(:commits_list => %w(a b c))
+      subject.find_branch(pr_branch.id)
+
+      expect(subject.commit_range_text).to eq("http://uri.to/compare/a...c")
+    end
+
+    it "with a single commit" do
+      pr_branch.update_attributes(:commits_list => %w(a))
+      subject.find_branch(pr_branch.id)
+
+      expect(subject.commit_range_text).to eq("http://uri.to/commit/a")
+    end
   end
 
   describe "#branch_enabled?" do
