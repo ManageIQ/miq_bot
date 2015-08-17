@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe CommitMonitorBranch do
+describe Branch do
   let(:last_commit)  { "123abc" }
   let(:other_commit) { "234def" }
 
   let(:repo) do
-    CommitMonitorRepo.create!(
+    Repo.create!(
       :upstream_user => "test-user",
       :name          => "test-repo",
       :path          => "/path/to/repo"
@@ -13,7 +13,7 @@ describe CommitMonitorBranch do
   end
 
   let(:branch) do
-    CommitMonitorBranch.create!(
+    Branch.create!(
       :name        => "test-branch",
       :repo        => repo,
       :last_commit => last_commit,
@@ -23,12 +23,12 @@ describe CommitMonitorBranch do
 
   context ".github_commit_uri" do
     it "(user, repo)" do
-      actual = CommitMonitorBranch.github_commit_uri("ManageIQ", "sandbox")
+      actual = Branch.github_commit_uri("ManageIQ", "sandbox")
       expect(actual).to eq("https://github.com/ManageIQ/sandbox/commit/$commit")
     end
 
     it "(user, repo, sha)" do
-      actual = CommitMonitorBranch.github_commit_uri("ManageIQ", "sandbox", "3616fc8ea9cfbcc2a7f70b8870f4a736ce6c91d5")
+      actual = Branch.github_commit_uri("ManageIQ", "sandbox", "3616fc8ea9cfbcc2a7f70b8870f4a736ce6c91d5")
       expect(actual).to eq("https://github.com/ManageIQ/sandbox/commit/3616fc8ea9cfbcc2a7f70b8870f4a736ce6c91d5")
     end
   end

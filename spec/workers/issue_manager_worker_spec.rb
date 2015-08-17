@@ -7,7 +7,7 @@ RSpec.describe IssueManagerWorker do
   def stub_issue_managers(*org_repo_pairs)
     allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return(org_repo_pairs.collect(&:last))
     org_repo_pairs.collect.with_index do |(org_name, repo_name), i|
-      CommitMonitorRepo.create!(
+      Repo.create!(
         :name          => repo_name,
         :upstream_user => org_name,
         :path          => Rails.root.join("repos/#{repo_name}")

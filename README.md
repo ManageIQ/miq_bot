@@ -85,7 +85,7 @@ underscores replaced with hyphens.
 
 7. Add the test repository to the database:
    ```
-   bundle exec rails runner 'CommitMonitorRepo.create_from_github!("miq-test", "sandbox", Rails.root.join("repos", "sandbox"))'
+   bundle exec rails runner 'Repo.create_from_github!("miq-test", "sandbox", Rails.root.join("repos", "sandbox"))'
    ```
 
 8. Create a custom Procfile for development. Any changes you make to this file

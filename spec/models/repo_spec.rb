@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe CommitMonitorRepo do
+describe Repo do
   let(:repo) do
-    CommitMonitorRepo.new(
+    Repo.new(
       :upstream_user => "some_user",
       :name          => "some_repo"
     )

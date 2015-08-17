@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe PullRequestMonitor::PrBranchRecord do
   describe ".create" do
     it "has git create a local pr branch" do
-      repo = spy("CommitMonitorRepo")
+      repo = spy("Repo")
       pr = spy("pr")
       branch_name = "foo/bar"
       git = spy("git")
@@ -15,7 +15,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
     end
 
     it "creates a PR branch on the repo" do
-      repo = instance_spy("CommitMonitorRepo")
+      repo = instance_spy("Repo")
       pr = spy("pr")
       branch_name = "foo/bar"
       last_commit = "123456"
@@ -39,7 +39,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
 
   describe ".delete" do
     it "does nothing if given no branch names" do
-      repo = spy("CommitMonitorRepo")
+      repo = spy("Repo")
       git = spy("git")
       allow(repo).to receive(:with_git_service).and_yield(git)
 
@@ -50,7 +50,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
     end
 
     it "destroys the repo's branch matching the name given" do
-      repo = instance_spy("CommitMonitorRepo")
+      repo = instance_spy("Repo")
       branch_name = "foo/bar"
       relation = spy("relation")
       allow(repo).to receive(:branches).and_return(relation)
@@ -62,7 +62,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
     end
 
     it "can destroy multiple branches" do
-      repo = instance_spy("CommitMonitorRepo")
+      repo = instance_spy("Repo")
       branch_1 = "foo/bar"
       branch_2 = "baz/qux"
       relation = spy("relation")
@@ -75,7 +75,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
     end
 
     it "has git delete the local branches" do
-      repo = spy("CommitMonitorRepo")
+      repo = spy("Repo")
       git = spy("git")
       allow(repo).to receive(:with_git_service).and_yield(git)
       branch_name = "foo/bar"
@@ -88,7 +88,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
 
   describe ".prune" do
     it "prunes the stale pr branches" do
-      repo = instance_spy("CommitMonitorRepo")
+      repo = instance_spy("Repo")
       git = spy("git")
       branch_name = "foo/bar"
       allow(repo).to receive(:with_git_service).and_yield(git)
