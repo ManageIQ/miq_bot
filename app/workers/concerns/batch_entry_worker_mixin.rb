@@ -17,8 +17,18 @@ module BatchEntryWorkerMixin
   end
 
   def complete_batch_entry(updates = {})
+    update_batch_entry(updates)
+    check_job_complete
+  end
+
+  private
+
+  def update_batch_entry(updates)
     updates = updates.reverse_merge(:state => "succeeded")
     batch_entry.update_attributes!(updates)
+  end
+
+  def check_job_complete
     batch_entry.check_job_complete
   end
 end
