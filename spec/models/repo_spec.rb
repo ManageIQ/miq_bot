@@ -30,7 +30,7 @@ describe Repo do
     it "returns the repo's branches that are pull requests" do
       repo = create(:repo)
       pr_branch = create(:branch, :repo => repo, :pull_request => true)
-      non_pr_branch = create(:branch, :repo => repo, :pull_request => false)
+      _non_pr_branch = create(:branch, :repo => repo, :pull_request => false)
       expect(repo.pr_branches).to contain_exactly(pr_branch)
     end
   end
@@ -38,9 +38,7 @@ describe Repo do
   describe "#current_pr_branch_names" do
     it "returns the repo's current pr branch names" do
       repo = create(:repo)
-      git = double("git")
-      allow(MiqToolsServices::MiniGit).to receive(:call).with(repo.path).and_yield(git)
-      allow(git).to receive(:pr_branch).with(123).and_return "feature/foo"
+      allow(MiqToolsServices::MiniGit).to receive(:pr_branch).with(123).and_return "feature/foo"
       pull_request = double("pull request", :number => 123)
       relation = double("relation", :all => [pull_request])
       github = double("github", :pull_requests => relation)
@@ -51,26 +49,11 @@ describe Repo do
     end
   end
 
-  describe "#pull_requests" do
-    it "returns the repo's pull requests" do
-      repo = create(:repo)
-      pull_requests = double("pull requests")
-      relation = double("relation", :all => pull_requests)
-      github = double("github", :pull_requests => relation)
-      allow(MiqToolsServices::Github)
-        .to receive(:call).with(:repo => repo.name, :user => repo.upstream_user).and_yield(github)
-
-      expect(repo.pull_requests).to eq pull_requests
-    end
-  end
-
   describe "#stale_pr_branches" do
     it "returns the repo's stale pr branches" do
       repo = create(:repo)
       stale_branch = create(:branch, :name => "stale branch", :repo => repo, :pull_request => true)
-      git = double("git")
-      allow(git).to receive(:pr_branch).with(123).and_return "current branch"
-      allow(MiqToolsServices::MiniGit).to receive(:call).with(repo.path).and_yield(git)
+      allow(MiqToolsServices::MiniGit).to receive(:pr_branch).with(123).and_return "current branch"
       pull_request = double("pull request", :number => 123)
       relation = double("relation", :all => [pull_request])
       github = double("github", :pull_requests => relation)

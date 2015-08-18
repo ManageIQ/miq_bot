@@ -70,14 +70,10 @@ class Repo < ActiveRecord::Base
   end
 
   def current_pr_branch_names
-    with_git_service do |git|
-      pull_requests.collect { |pr| git.pr_branch(pr.number) }
-    end
-  end
-
-  def pull_requests
     with_github_service do |github|
-      github.pull_requests.all
+      github.pull_requests.all.collect do |pr|
+        MiqToolsServices::MiniGit.pr_branch(pr.number)
+      end
     end
   end
 
