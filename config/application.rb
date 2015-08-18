@@ -1,4 +1,3 @@
-require File.expand_path('../preinitializer', __FILE__)
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
