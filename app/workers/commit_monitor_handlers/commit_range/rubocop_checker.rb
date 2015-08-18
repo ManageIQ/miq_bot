@@ -9,7 +9,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   attr_reader :branch, :pr, :commits, :results, :github
 
   def perform(branch_id, new_commits)
-    @branch  = Branch.where(:id => branch_id).first
+    @branch  = ::Branch.where(:id => branch_id).first
 
     if @branch.nil?
       logger.info("Branch #{branch_id} no longer exists.  Skipping.")
