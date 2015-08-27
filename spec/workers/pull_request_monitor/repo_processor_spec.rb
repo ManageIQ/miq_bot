@@ -2,53 +2,47 @@ require "spec_helper"
 
 RSpec.describe PullRequestMonitor::RepoProcessor do
   describe ".process" do
-    it "pulls from upstream master" do
-      repo = spy("CommitMonitorRepo")
-      git = spy("git")
-      class_spy("PrBranchRecord").as_stubbed_const
+    let(:github) { stub_github_service }
+    let(:git) do
+      stub_git_service.tap do |git|
+        expect(git).to receive(:checkout).with("master")
+        expect(git).to receive(:pull)
+      end
+    end
 
-      expect(git).to receive(:checkout).with("master").ordered
-      expect(git).to receive(:pull).ordered
+    def stub_github_prs(prs)
+      github_prs = double("Github collection", :all => prs)
+      expect(github).to receive(:pull_requests).and_return(github_prs).twice
+    end
+
+    it "creates a PR branch record" do
+      repo = create(:repo)
+      pr   = double("GitHub PR", :number => 1)
+      stub_github_prs([pr])
+
+      expect(PullRequestMonitor::PrBranchRecord).to receive(:create).with(git, repo, pr, "pr/1")
 
       described_class.process(git, repo)
     end
 
-    it "creates a pr branch record" do
-      repo = spy("CommitMonitorRepo")
-      git = spy("git")
-      pr_branch_record = class_spy("PullRequestMonitor::PrBranchRecord").as_stubbed_const
-      pull_request = double("pull request", :number => 123)
-      branch_name = "foo/bar"
-      allow(repo).to receive(:pull_requests).and_return([pull_request])
-      allow(repo).to receive(:pr_branches).and_return([])
-      allow(git).to receive(:pr_branch).with(pull_request.number).and_return(branch_name)
+    it "skips an existing PR branch record" do
+      repo      = create(:repo, :branches => [create(:pr_branch)])
+      pr_number = repo.pr_branches.first.pr_number
+      pr        = double("GitHub PR old", :number => pr_number)
+      stub_github_prs([pr])
 
-      expect(pr_branch_record).to receive(:create).with(git, repo, pull_request, branch_name)
+      expect(PullRequestMonitor::PrBranchRecord).to_not receive(:create)
 
       described_class.process(git, repo)
     end
 
-    it "skips pr branch record creation if it exists" do
-      repo = spy("CommitMonitorRepo")
-      git = spy("git")
-      pr_branch_record = class_spy("PullRequestMonitor::PrBranchRecord").as_stubbed_const
-      pull_request = double("pull request", :number => 123)
-      branch_name = "foo/bar"
-      allow(repo).to receive(:pull_requests).and_return([pull_request])
-      allow(repo).to receive(:pr_branches).and_return([double("branch", :name => branch_name)])
-      allow(git).to receive(:pr_branch).with(pull_request.number).and_return(branch_name)
+    it "prunes stale PR branch record" do
+      repo      = create(:repo, :branches => [create(:pr_branch)])
+      pr_number = repo.pr_branches.first.pr_number
+      stub_github_prs([])
 
-      expect(pr_branch_record).not_to receive(:create)
-
-      described_class.process(git, repo)
-    end
-
-    it "prunes any stale pr branch records" do
-      repo = spy("CommitMonitorRepo")
-      git = spy("git")
-      pr_branch_record = class_spy("PullRequestMonitor::PrBranchRecord").as_stubbed_const
-
-      expect(pr_branch_record).to receive(:prune).with(git, repo)
+      expect(git).to receive(:checkout).with("master") # again
+      expect(git).to receive(:destroy_branch).with("pr/#{pr_number}")
 
       described_class.process(git, repo)
     end

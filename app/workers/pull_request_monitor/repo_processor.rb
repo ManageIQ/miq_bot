@@ -4,10 +4,15 @@ class PullRequestMonitor
       git.checkout("master")
       git.pull
 
-      repo.pull_requests.each do |pr|
-        branch_name = git.pr_branch(pr.number)
-        next if repo.pr_branches.collect(&:name).include?(branch_name)
-        PrBranchRecord.create(git, repo, pr, branch_name)
+      known_pr_branches = repo.pr_branch_names
+
+      repo.with_github_service do |github|
+        github.pull_requests.all.each do |pr|
+          pr_branch_name = MiqToolsServices::MiniGit.pr_branch(pr.number)
+          next if known_pr_branches.include?(pr_branch_name)
+
+          PrBranchRecord.create(git, repo, pr, pr_branch_name)
+        end
       end
 
       PrBranchRecord.prune(git, repo)

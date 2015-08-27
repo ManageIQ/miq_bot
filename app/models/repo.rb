@@ -65,19 +65,29 @@ class Repo < ActiveRecord::Base
     fq_name.in?(repos)
   end
 
+  def branch_names
+    branches.collect(&:name)
+  end
+
   def pr_branches
     branches.select(&:pull_request?)
   end
 
-  def current_pr_branch_names
+  def pr_branch_names
+    pr_branches.collect(&:name)
+  end
+
+  def stale_pr_branches
+    pr_branch_names - github_branch_names
+  end
+
+  private
+
+  def github_branch_names
     with_github_service do |github|
       github.pull_requests.all.collect do |pr|
         MiqToolsServices::MiniGit.pr_branch(pr.number)
       end
     end
-  end
-
-  def stale_pr_branches
-    pr_branches.collect(&:name) - current_pr_branch_names
   end
 end
