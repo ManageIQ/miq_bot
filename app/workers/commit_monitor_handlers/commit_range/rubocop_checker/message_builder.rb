@@ -3,10 +3,11 @@ require 'rubocop'
 require 'haml_lint'
 
 class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
+  include BranchWorkerMixin
+
   def initialize(results, branch)
-    @results  = results
-    @branch   = branch
-    @commits  = branch.commits_list
+    @results = results
+    @branch  = branch
   end
 
   def comments
@@ -16,7 +17,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
 
   private
 
-  attr_reader :results, :branch, :commits, :message_builder
+  attr_reader :results, :message_builder
 
   SUCCESS_EMOJI = %w{:+1: :cookie: :star: :cake:}
 
@@ -42,11 +43,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def header
-    commit_range = [
-      branch.commit_uri_to(commits.first),
-      branch.commit_uri_to(commits.last),
-    ].uniq.join(" .. ")
-    header1 = "Checked #{"commit".pluralize(commits.length)} #{commit_range} with rubocop #{rubocop_version} and haml-lint #{hamllint_version}"
+    header1 = "Checked #{"commit".pluralize(commits.length)} #{commit_range_text} with rubocop #{rubocop_version} and haml-lint #{hamllint_version}"
 
     file_count    = results.fetch_path("summary", "target_file_count").to_i
     offense_count = results.fetch_path("summary", "offense_count").to_i

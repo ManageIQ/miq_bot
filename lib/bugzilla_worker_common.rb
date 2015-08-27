@@ -14,18 +14,4 @@ module BugzillaWorkerCommon
       yield(bug)
     end
   end
-
-  def handled_mode?(mode)
-    self.class.handled_branch_modes.include?(mode)
-  end
-
-  def branch_valid?
-    if @branch.nil?
-      false
-    elsif @branch.pull_request?
-      handled_mode?(:pr)
-    else
-      handled_mode?(:regular)
-    end
-  end
 end
