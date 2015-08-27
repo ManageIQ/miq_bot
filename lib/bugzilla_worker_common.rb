@@ -20,7 +20,9 @@ module BugzillaWorkerCommon
   end
 
   def branch_valid?
-    if @branch.pull_request?
+    if @branch.nil?
+      false
+    elsif @branch.pull_request?
       handled_mode?(:pr)
     else
       handled_mode?(:regular)

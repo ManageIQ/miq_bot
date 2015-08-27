@@ -13,7 +13,7 @@ module CommitMonitorHandlers
       attr_reader :branch, :commits, :github, :pr
 
       def perform(branch_id, _new_commits)
-        @branch = Branch.where(:id => branch_id).first
+        @branch = ::Branch.where(:id => branch_id).first
 
         if @branch.nil?
           logger.info("(##{__method__}) Branch #{branch_id} no longer exists.  Skipping.")

@@ -12,7 +12,10 @@ class PullRequestMonitor
     else
       Repo.includes(:branches).each do |repo|
         next unless repo.upstream_user
-        RepoProcessor.process(repo)
+
+        repo.with_git_service do |git|
+          RepoProcessor.process(git, repo)
+        end
       end
     end
   end

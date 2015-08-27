@@ -7,11 +7,10 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
       pr = spy("pr")
       branch_name = "foo/bar"
       git = spy("git")
-      allow(repo).to receive(:with_git_service).and_yield(git)
 
       expect(git).to receive(:create_pr_branch).with(branch_name).once
 
-      described_class.create(repo, pr, branch_name)
+      described_class.create(git, repo, pr, branch_name)
     end
 
     it "creates a PR branch on the repo" do
@@ -20,7 +19,6 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
       branch_name = "foo/bar"
       last_commit = "123456"
       git = spy("git")
-      allow(repo).to receive(:with_git_service).and_yield(git)
       allow(git).to receive(:merge_base).with(branch_name, "master").and_return(last_commit)
       allow(pr).to receive_message_chain(:head, :repo, :html_url)
         .and_return("https://github.com/foo/bar")
@@ -33,7 +31,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
         :pull_request => true
       }
       expect(repo).to receive_message_chain(:branches, :create!).with hash_including(expected)
-      described_class.create(repo, pr, branch_name)
+      described_class.create(git, repo, pr, branch_name)
     end
   end
 
@@ -41,16 +39,16 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
     it "does nothing if given no branch names" do
       repo = spy("Repo")
       git = spy("git")
-      allow(repo).to receive(:with_git_service).and_yield(git)
 
       expect(repo).not_to receive(:destroy_all)
       expect(git).not_to receive(:destroy_branch)
 
-      described_class.delete(repo)
+      described_class.delete(git, repo)
     end
 
     it "destroys the repo's branch matching the name given" do
       repo = instance_spy("Repo")
+      git = spy("git")
       branch_name = "foo/bar"
       relation = spy("relation")
       allow(repo).to receive(:branches).and_return(relation)
@@ -58,11 +56,12 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
 
       expect(relation).to receive(:destroy_all)
 
-      described_class.delete(repo, branch_name)
+      described_class.delete(git, repo, branch_name)
     end
 
     it "can destroy multiple branches" do
       repo = instance_spy("Repo")
+      git = spy("git")
       branch_1 = "foo/bar"
       branch_2 = "baz/qux"
       relation = spy("relation")
@@ -71,18 +70,17 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
 
       expect(relation).to receive(:destroy_all)
 
-      described_class.delete(repo, branch_1, branch_2)
+      described_class.delete(git, repo, branch_1, branch_2)
     end
 
     it "has git delete the local branches" do
       repo = spy("Repo")
       git = spy("git")
-      allow(repo).to receive(:with_git_service).and_yield(git)
       branch_name = "foo/bar"
 
       expect(git).to receive(:destroy_branch).with(branch_name)
 
-      described_class.delete(repo, branch_name)
+      described_class.delete(git, repo, branch_name)
     end
   end
 
@@ -91,7 +89,6 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
       repo = instance_spy("Repo")
       git = spy("git")
       branch_name = "foo/bar"
-      allow(repo).to receive(:with_git_service).and_yield(git)
       allow(repo).to receive(:stale_pr_branches).and_return([branch_name])
       relation = spy("relation")
       allow(repo).to receive(:branches).and_return(relation)
@@ -100,7 +97,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
       expect(relation).to receive(:destroy_all)
       expect(git).to receive(:destroy_branch).with(branch_name)
 
-      described_class.prune(repo)
+      described_class.prune(git, repo)
     end
   end
 end
