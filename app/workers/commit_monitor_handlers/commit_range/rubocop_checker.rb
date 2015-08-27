@@ -2,26 +2,17 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot
 
+  include BranchWorkerMixin
+
   def self.handled_branch_modes
     [:pr]
   end
 
-  attr_reader :branch, :pr, :commits, :results, :github
+  attr_reader :results, :github
 
-  def perform(branch_id, new_commits)
-    @branch  = ::Branch.where(:id => branch_id).first
+  def perform(branch_id, _new_commits)
+    return unless find_branch(branch_id, :pr)
 
-    if @branch.nil?
-      logger.info("Branch #{branch_id} no longer exists.  Skipping.")
-      return
-    end
-    unless @branch.pull_request?
-      logger.info("Branch #{@branch.name} is not a pull request.  Skipping.")
-      return
-    end
-
-    @pr      = @branch.pr_number
-    @commits = @branch.commits_list
     process_branch
   end
 
@@ -55,7 +46,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
   def diff_details_for_branch
     MiqToolsServices::MiniGit.call(branch.repo.path) do |git|
-      git.diff_details(commits.first, commits.last)
+      git.diff_details(*commit_range)
     end
   end
 
@@ -85,7 +76,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     #   on stderr.
     result = MiqToolsServices::MiniGit.call(branch.repo.path) do |git|
       git.temporarily_checkout(commits.last) do
-        logger.info("#{self.class.name}##{__method__} Executing: #{AwesomeSpawn.build_command_line(cmd, options)}")
+        logger.info("Executing: #{AwesomeSpawn.build_command_line(cmd, options)}")
         AwesomeSpawn.run(cmd, :params => options, :chdir => branch.repo.path)
       end
     end
@@ -114,7 +105,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   end
 
   def write_to_github
-    logger.info("#{self.class.name}##{__method__} Updating pull request #{pr} with rubocop comment.")
+    logger.info("Updating PR #{pr_number} with rubocop comment.")
 
     branch.repo.with_github_service do |github|
       @github = github
@@ -123,7 +114,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   end
 
   def replace_rubocop_comments
-    github.replace_issue_comments(pr, rubocop_comments) do |old_comment|
+    github.replace_issue_comments(pr_number, rubocop_comments) do |old_comment|
       rubocop_comment?(old_comment)
     end
   end

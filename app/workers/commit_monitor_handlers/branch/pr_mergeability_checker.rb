@@ -2,23 +2,14 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot
 
+  include BranchWorkerMixin
+
   def self.handled_branch_modes
     [:pr]
   end
 
-  attr_reader :branch
-
   def perform(branch_id)
-    @branch = ::Branch.where(:id => branch_id).first
-
-    if @branch.nil?
-      logger.info("Branch #{branch_id} no longer exists.  Skipping.")
-      return
-    end
-    unless @branch.pull_request?
-      logger.info("Branch #{@branch.name} is not a pull request.  Skipping.")
-      return
-    end
+    return unless find_branch(branch_id, :pr)
 
     process_mergeability
   end

@@ -4,23 +4,22 @@ module CommitMonitorHandlers
   module Commit
     class BugzillaCommenter
       include Sidekiq::Worker
-      include BugzillaWorkerCommon
-
       sidekiq_options :queue => :miq_bot
+
+      include BranchWorkerMixin
+      include BugzillaWorkerCommon
 
       def self.handled_branch_modes
         [:regular]
       end
 
-      attr_reader :branch, :commit, :message
+      attr_reader :commit, :message
 
       def perform(branch_id, commit, commit_details)
-        logger.info("Performing bugzilla check on branch #{branch_id}")
-        @branch  = ::Branch.where(:id => branch_id).first
+        return unless find_branch(branch_id, :regular)
+
         @commit  = commit
         @message = commit_details["message"]
-
-        return unless branch_valid?
 
         MiqToolsServices::Bugzilla.ids_in_git_commit_message(message).each do |bug_id|
           write_to_bugzilla(bug_id)

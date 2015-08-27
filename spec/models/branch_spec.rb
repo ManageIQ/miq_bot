@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 describe Branch do
-  let(:last_commit)  { "123abc" }
-  let(:other_commit) { "234def" }
+  let(:last_commit) { "123abc" }
+  let(:commit1)     { "234def" }
+  let(:commit2)     { "345cde" }
 
   let(:repo) do
     Repo.create!(
@@ -13,7 +14,7 @@ describe Branch do
   end
 
   let(:branch) do
-    Branch.create!(
+    described_class.create!(
       :name        => "test-branch",
       :repo        => repo,
       :last_commit => last_commit,
@@ -23,13 +24,25 @@ describe Branch do
 
   context ".github_commit_uri" do
     it "(user, repo)" do
-      actual = Branch.github_commit_uri("ManageIQ", "sandbox")
+      actual = described_class.github_commit_uri("ManageIQ", "sandbox")
       expect(actual).to eq("https://github.com/ManageIQ/sandbox/commit/$commit")
     end
 
     it "(user, repo, sha)" do
-      actual = Branch.github_commit_uri("ManageIQ", "sandbox", "3616fc8ea9cfbcc2a7f70b8870f4a736ce6c91d5")
-      expect(actual).to eq("https://github.com/ManageIQ/sandbox/commit/3616fc8ea9cfbcc2a7f70b8870f4a736ce6c91d5")
+      actual = described_class.github_commit_uri("ManageIQ", "sandbox", commit1)
+      expect(actual).to eq("https://github.com/ManageIQ/sandbox/commit/#{commit1}")
+    end
+  end
+
+  context ".github_compare_uri" do
+    it "(user, repo)" do
+      actual = described_class.github_compare_uri("ManageIQ", "sandbox")
+      expect(actual).to eq("https://github.com/ManageIQ/sandbox/compare/$commit1...$commit2")
+    end
+
+    it "(user, repo, sha1, sha2)" do
+      actual = described_class.github_compare_uri("ManageIQ", "sandbox", commit1, commit2)
+      expect(actual).to eq("https://github.com/ManageIQ/sandbox/compare/#{commit1}...#{commit2}")
     end
   end
 
@@ -45,18 +58,35 @@ describe Branch do
     it "will modify last_changed_on if commit changes" do
       branch # Create the branch before time freezing
       Timecop.freeze(10.minutes.from_now) do
-        branch.last_commit = other_commit
+        branch.last_commit = commit1
         expect(branch.last_changed_on).to eq Time.now
       end
     end
   end
 
   it "#commit_uri_to" do
-    expect(branch.commit_uri_to(other_commit)).to eq "https://uri.to/commit/#{other_commit}"
+    expect(branch.commit_uri_to(commit1)).to eq "https://uri.to/commit/#{commit1}"
   end
 
   it "#last_commit_uri" do
     expect(branch.last_commit_uri).to eq "https://uri.to/commit/#{last_commit}"
+  end
+
+  it "#compare_uri_for" do
+    expect(branch.compare_uri_for(commit1, commit2)).to eq "https://uri.to/compare/#{commit1}...#{commit2}"
+  end
+
+  context "#mode" do
+    it "on pr branch" do
+      branch.name = "pr/133"
+      branch.pull_request = true
+
+      expect(branch.mode).to eq :pr
+    end
+
+    it "on regular branch" do
+      expect(branch.mode).to eq :regular
+    end
   end
 
   context "#pr_number" do
