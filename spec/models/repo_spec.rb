@@ -3,8 +3,45 @@ require 'spec_helper'
 describe Repo do
   let(:repo) { build(:repo) }
 
-  it "#fq_name" do
-    expect(repo.fq_name).to eq "#{repo.upstream_user}/#{repo.name}"
+  describe "#name_parts" do
+    it "without an upstream user" do
+      repo.name = "foo"
+      expect(repo.name_parts).to eq([nil, "foo"])
+    end
+
+    it "with an upstream user" do
+      repo.name = "foo/bar"
+      expect(repo.name_parts).to eq(["foo", "bar"])
+    end
+
+    it "with extra parts" do
+      repo.name = "foo/bar/baz"
+      expect(repo.name_parts).to eq(["foo", "bar/baz"])
+    end
+  end
+
+  describe "#upstream_user" do
+    it "without an upstream user" do
+      repo.name = "foo"
+      expect(repo.upstream_user).to be_nil
+    end
+
+    it "with an upstream user" do
+      repo.name = "foo/bar"
+      expect(repo.upstream_user).to eq("foo")
+    end
+  end
+
+  describe "#project" do
+    it "without an upstream user" do
+      repo.name = "foo"
+      expect(repo.project).to eq("foo")
+    end
+
+    it "with an upstream user" do
+      repo.name = "foo/bar"
+      expect(repo.project).to eq("bar")
+    end
   end
 
   context "#path / #path=" do
@@ -49,14 +86,13 @@ describe Repo do
 
   it "#stale_pr_branches" do
     repo.save!
-    stale_branch = create(:branch, :name => "stale branch", :repo => repo, :pull_request => true)
-    allow(MiqToolsServices::MiniGit).to receive(:pr_branch).with(123).and_return "current branch"
-    pull_request = double("pull request", :number => 123)
-    relation = double("relation", :all => [pull_request])
-    github = double("github", :pull_requests => relation)
-    allow(MiqToolsServices::Github)
-      .to receive(:call).with(:repo => repo.name, :user => repo.upstream_user).and_yield(github)
+    stale_branch = create(:branch, :name => "pr/1", :repo => repo, :pull_request => true)
 
-    expect(repo.stale_pr_branches).to contain_exactly stale_branch.name
+    github = stub_github_service
+    stub_github_prs(github, [double("Github PR", :number => 2)])
+
+    allow(MiqToolsServices::MiniGit).to receive(:pr_branch).with(2)
+
+    expect(repo.stale_pr_branches).to eq([stale_branch.name])
   end
 end

@@ -14,9 +14,9 @@ describe BranchWorkerMixin do
       end
     end.new
   end
-  let(:repo)      { Repo.create!(:name => "some_repo", :upstream_user => "SomeUser", :path => "xxx") }
-  let(:branch)    { Branch.create!(:name => "master", :last_commit => "xxx", :commit_uri => "http://uri.to/commit/$commit", :repo => repo) }
-  let(:pr_branch) { Branch.create!(:name => "pr/1",   :last_commit => "xxx", :commit_uri => "http://uri.to/commit/$commit", :repo => repo, :pull_request => true) }
+  let(:repo)      { create(:repo, :name => "SomeUser/some_repo") }
+  let(:branch)    { create(:branch,    :name => "master", :repo => repo) }
+  let(:pr_branch) { create(:pr_branch, :name => "pr/1",   :repo => repo) }
 
   describe "#find_branch" do
     context "without required_mode" do
@@ -82,14 +82,14 @@ describe BranchWorkerMixin do
       pr_branch.update_attributes(:commits_list => %w(a b c))
       subject.find_branch(pr_branch.id)
 
-      expect(subject.commit_range_text).to eq("http://uri.to/compare/a...c")
+      expect(subject.commit_range_text).to eq("https://example.com/SomeUser/some_repo/compare/a...c")
     end
 
     it "with a single commit" do
       pr_branch.update_attributes(:commits_list => %w(a))
       subject.find_branch(pr_branch.id)
 
-      expect(subject.commit_range_text).to eq("http://uri.to/commit/a")
+      expect(subject.commit_range_text).to eq("https://example.com/SomeUser/some_repo/commit/a")
     end
   end
 

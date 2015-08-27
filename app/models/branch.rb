@@ -18,12 +18,16 @@ class Branch < ActiveRecord::Base
     where(:name => n)
   end
 
-  def self.github_commit_uri(user, repo, sha = "$commit")
-    "https://github.com/#{user}/#{repo}/commit/#{sha}"
+  def self.github_commit_uri(repo_name, sha = "$commit")
+    "https://github.com/#{repo_name}/commit/#{sha}"
   end
 
-  def self.github_compare_uri(user, repo, sha1 = "$commit1", sha2 ="$commit2")
-    "https://github.com/#{user}/#{repo}/compare/#{sha1}...#{sha2}"
+  def self.github_compare_uri(repo_name, sha1 = "$commit1", sha2 ="$commit2")
+    "https://github.com/#{repo_name}/compare/#{sha1}...#{sha2}"
+  end
+
+  def self.github_pr_uri(repo_name, pr_number = "$pr_number")
+    "https://github.com/#{repo_name}/pull/#{pr_number}"
   end
 
   def last_commit=(val)
@@ -55,19 +59,16 @@ class Branch < ActiveRecord::Base
   end
 
   def github_pr_uri
-    return nil unless pull_request?
-    "https://github.com/#{repo.fq_name}/pull/#{pr_number}"
+    self.class.github_pr_uri(repo.name, pr_number) if pull_request?
   end
 
   def write_github_comment(header, continuation_header = nil, message = nil)
-    unless pull_request?
-      raise ArgumentError, "Cannot comment on non-pull request branches such as #{name}."
-    end
+    raise ArgumentError, "Cannot comment on non-PR branch #{name}." unless pull_request?
 
     message_builder = MiqToolsServices::Github::MessageBuilder.new(header, continuation_header)
     message_builder.write(message) if message
 
-    logger.info("#{__method__} Writing comment with header: #{header}")
+    logger.info("Writing comment with header: #{header}")
     repo.with_github_service do |github|
       # TODO: Refactor the common "delete prior tagged issues" into miq_tools_services
       # github.delete_issue_comments(pr_number, header)

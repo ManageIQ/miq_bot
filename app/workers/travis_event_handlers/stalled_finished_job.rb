@@ -28,7 +28,7 @@ module TravisEventHandlers
         return
       end
 
-      @repo = Repo.with_slug(slug).first
+      @repo = Repo.where(:name => slug).first
       if @repo.nil?
         logger.warn("#{__method__} [#{slug}##{number}] Can't find Repo.")
         return

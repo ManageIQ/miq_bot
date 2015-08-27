@@ -33,7 +33,7 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   end
 
   def write_to_github
-    logger.info("#{self.class.name}##{__method__} Updating pull request #{branch.pr_number} with merge issue.")
+    logger.info("Updating PR #{branch.pr_number} with mergability comment.")
 
     branch.repo.with_github_service do |github|
       github.issues.comments.create(

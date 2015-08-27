@@ -41,7 +41,7 @@ module BranchWorkerMixin
 
   def verify_branch_enabled
     branch_enabled?.tap do |enabled|
-      logger.warn("#{branch.repo.fq_name} has not been enabled.  Skipping.") unless enabled
+      logger.warn("#{branch.repo.name} has not been enabled.  Skipping.") unless enabled
     end
   end
 end

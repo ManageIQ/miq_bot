@@ -11,6 +11,7 @@ class PullRequestMonitor
       logger.info "#{self.class} is already running, skipping"
     else
       Repo.includes(:branches).each do |repo|
+        # TODO: Need a better check for repos that *can* have PRs
         next unless repo.upstream_user
 
         repo.with_git_service do |git|

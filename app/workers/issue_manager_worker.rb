@@ -7,16 +7,8 @@ class IssueManagerWorker
 
   recurrence { minutely }
 
-  attr_reader :repo_names
-
   def perform
-    @repo_names = Settings.issue_manager.repo_names
-
-    if repo_names.blank?
-      logger.info "No repos enabled.  Skipping."
-      return
-    end
-
+    repo_names = Array(Settings.issue_manager.repo_names)
     Repo.where(:name => repo_names).each do |repo|
       process_notifications(repo)
     end
@@ -25,7 +17,7 @@ class IssueManagerWorker
   private
 
   def process_notifications(repo)
-    IssueManager.new(repo.upstream_user, repo.name).process_notifications
+    IssueManager.new(repo.upstream_user, repo.project).process_notifications
   rescue => err
     logger.error err.message
     logger.error err.backtrace.join("\n")

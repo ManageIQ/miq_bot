@@ -190,7 +190,7 @@ class CommitMonitor
       message = git.commit_message(commit)
       files   = git.diff_details(commit).keys
       commit_handlers.each do |h|
-        logger.info("Queueing #{h.name} for commit #{commit} on branch #{branch.name}")
+        logger.info("Queueing #{h.name.split("::").last} for commit #{commit} on branch #{branch.name}")
         h.perform_async(branch.id, commit, "message" => message, "files" => files)
       end
     end
@@ -200,14 +200,14 @@ class CommitMonitor
     commit_range = [new_commits.first, new_commits.last].uniq.join("..")
 
     commit_range_handlers.each do |h|
-      logger.info("Queueing #{h.name} for commit range #{commit_range} on branch #{branch.name}")
+      logger.info("Queueing #{h.name.split("::").last} for commit range #{commit_range} on branch #{branch.name}")
       h.perform_async(branch.id, new_commits)
     end
   end
 
   def process_branch_handlers
     branch_handlers.each do |h|
-      logger.info("Queueing #{h.name} for branch #{branch.name}")
+      logger.info("Queueing #{h.name.split("::").last} for branch #{branch.name}")
       h.perform_async(branch.id)
     end
   end
