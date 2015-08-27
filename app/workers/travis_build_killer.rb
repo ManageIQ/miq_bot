@@ -19,7 +19,7 @@ class TravisBuildKiller
   attr_accessor :repo
 
   def process_repo
-    @repo = Repo.where(:upstream_user => "ManageIQ", :name => "manageiq").first
+    @repo = Repo.where(:name => "ManageIQ/manageiq").first
     if @repo.nil?
       logger.info "The ManageIQ/manageiq repo has not been defined.  Skipping."
       return

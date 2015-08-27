@@ -45,7 +45,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   end
 
   def diff_details_for_branch
-    MiqToolsServices::MiniGit.call(branch.repo.path) do |git|
+    branch.repo.with_git_service do |git|
       git.diff_details(*commit_range)
     end
   end
@@ -74,7 +74,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     # rubocop exits 1 both when there are errors and when there are style issues.
     #   Instead of relying on just exit_status, we check if there is anything
     #   on stderr.
-    result = MiqToolsServices::MiniGit.call(branch.repo.path) do |git|
+    result = branch.repo.with_git_service do |git|
       git.temporarily_checkout(commits.last) do
         logger.info("Executing: #{AwesomeSpawn.build_command_line(cmd, options)}")
         AwesomeSpawn.run(cmd, :params => options, :chdir => branch.repo.path)

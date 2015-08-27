@@ -6,11 +6,7 @@ describe Branch do
   let(:commit2)     { "345cde" }
 
   let(:repo) do
-    Repo.create!(
-      :upstream_user => "test-user",
-      :name          => "test-repo",
-      :path          => "/path/to/repo"
-    )
+    create(:repo, :name => "test-user/test-repo")
   end
 
   let(:branch) do
@@ -23,26 +19,38 @@ describe Branch do
   end
 
   context ".github_commit_uri" do
-    it "(user, repo)" do
-      actual = described_class.github_commit_uri("ManageIQ", "sandbox")
+    it "(repo_name)" do
+      actual = described_class.github_commit_uri("ManageIQ/sandbox")
       expect(actual).to eq("https://github.com/ManageIQ/sandbox/commit/$commit")
     end
 
-    it "(user, repo, sha)" do
-      actual = described_class.github_commit_uri("ManageIQ", "sandbox", commit1)
+    it "(repo_name, sha)" do
+      actual = described_class.github_commit_uri("ManageIQ/sandbox", commit1)
       expect(actual).to eq("https://github.com/ManageIQ/sandbox/commit/#{commit1}")
     end
   end
 
   context ".github_compare_uri" do
-    it "(user, repo)" do
-      actual = described_class.github_compare_uri("ManageIQ", "sandbox")
+    it "(repo_name)" do
+      actual = described_class.github_compare_uri("ManageIQ/sandbox")
       expect(actual).to eq("https://github.com/ManageIQ/sandbox/compare/$commit1...$commit2")
     end
 
-    it "(user, repo, sha1, sha2)" do
-      actual = described_class.github_compare_uri("ManageIQ", "sandbox", commit1, commit2)
+    it "(repo_name, sha1, sha2)" do
+      actual = described_class.github_compare_uri("ManageIQ/sandbox", commit1, commit2)
       expect(actual).to eq("https://github.com/ManageIQ/sandbox/compare/#{commit1}...#{commit2}")
+    end
+  end
+
+  describe ".github_pr_uri" do
+    it "(repo_name)" do
+      actual = described_class.github_pr_uri("ManageIQ/sandbox")
+      expect(actual).to eq("https://github.com/ManageIQ/sandbox/pull/$pr_number")
+    end
+
+    it "(repo_name, pr_number)" do
+      actual = described_class.github_pr_uri("ManageIQ/sandbox", 123)
+      expect(actual).to eq("https://github.com/ManageIQ/sandbox/pull/123")
     end
   end
 
@@ -106,18 +114,16 @@ describe Branch do
     it "creates correct pr uri" do
       branch.name = "pr/123"
       branch.pull_request = true
-      actual = branch.github_pr_uri
-      expect(actual).to eq("https://github.com/test-user/test-repo/pull/123")
+
+      expect(branch.github_pr_uri).to eq("https://github.com/test-user/test-repo/pull/123")
     end
 
     it "returns nil on non-pr branches" do
-      branch.pull_request = false
       expect(branch.github_pr_uri).to be_nil
     end
   end
 
   it "#write_github_comment raises on non-pr branches" do
-    branch.pull_request = false
     expect { branch.write_github_comment("<test /> blah") }.to raise_error(ArgumentError)
   end
 end

@@ -4,20 +4,19 @@ class Repo < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
   validates :path, :presence => true, :uniqueness => true
 
-  def self.create_from_github!(upstream_user, name, path)
+  def self.create_from_github!(name, path)
     MiqToolsServices::MiniGit.call(path) do |git|
       git.checkout("master")
       git.pull
 
       repo = self.create!(
-        :upstream_user => upstream_user,
-        :name          => name,
-        :path          => File.expand_path(path)
+        :name => name,
+        :path => path
       )
 
       repo.branches.create!(
         :name        => "master",
-        :commit_uri  => Branch.github_commit_uri(upstream_user, name),
+        :commit_uri  => Branch.github_commit_uri(name),
         :last_commit => git.current_ref
       )
 
@@ -25,18 +24,16 @@ class Repo < ActiveRecord::Base
     end
   end
 
-  def fq_name
-    "#{upstream_user}/#{name}"
+  def name_parts
+    name.split("/", 2).unshift(nil).last(2)
   end
-  alias_method :slug, :fq_name
 
-  # fq_name: "ManageIQ/miq_bot"
-  def self.with_fq_name(fq_name)
-    user, repo = fq_name.split("/")
-    where(:upstream_user => user, :name => repo)
+  def upstream_user
+    name_parts.first
   end
-  class << self
-    alias_method :with_slug, :with_fq_name
+
+  def project
+    name_parts.last
   end
 
   def path=(val)
@@ -50,19 +47,18 @@ class Repo < ActiveRecord::Base
 
   def with_github_service
     raise "no block given" unless block_given?
-    MiqToolsServices::Github.call(:repo => name, :user => upstream_user) { |github| yield github }
+    MiqToolsServices::Github.call(:user => upstream_user, :repo => project) { |github| yield github }
   end
 
   def with_travis_service
     raise "no block given" unless block_given?
 
     Travis.github_auth(Settings.github_credentials.password)
-    yield Travis::Repository.find(fq_name)
+    yield Travis::Repository.find(name)
   end
 
   def enabled_for?(checker)
-    repos = Settings.public_send(checker).enabled_repos
-    fq_name.in?(repos)
+    Array(Settings.public_send(checker).enabled_repos).include?(name)
   end
 
   def branch_names

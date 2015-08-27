@@ -27,7 +27,7 @@ module CommitMonitorHandlers
       private
 
       def diff_details_for_branch
-        MiqToolsServices::MiniGit.call(branch.repo.path) do |git|
+        branch.repo.with_git_service do |git|
           git.diff_details(*commit_range)
         end
       end

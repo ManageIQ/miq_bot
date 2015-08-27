@@ -16,10 +16,9 @@ namespace :data do
       end
 
       {
-        "name"          => repo.name,
-        "path"          => repo.path,
-        "upstream_user" => repo.upstream_user,
-        "branches"      => branches
+        "name"     => repo.name,
+        "path"     => repo.path,
+        "branches" => branches
       }
     end
     path = Rails.root.join("config", "data_backup")
@@ -33,9 +32,8 @@ namespace :data do
 
     data.each do |repo|
       ar_repo = Repo.create!(
-        :name          => repo["name"],
-        :path          => repo["path"],
-        :upstream_user => repo["upstream_user"],
+        :name => repo["name"],
+        :path => repo["path"]
       )
 
       repo["branches"].each do |branch|

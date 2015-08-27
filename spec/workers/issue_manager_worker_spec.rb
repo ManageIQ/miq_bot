@@ -5,30 +5,28 @@ RSpec.describe IssueManagerWorker do
   subject { described_class.new }
 
   def stub_issue_managers(*org_repo_pairs)
-    allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return(org_repo_pairs.collect(&:last))
-    org_repo_pairs.collect.with_index do |(org_name, repo_name), i|
-      Repo.create!(
-        :name          => repo_name,
-        :upstream_user => org_name,
-        :path          => Rails.root.join("repos/#{repo_name}")
-      )
+    repo_names = org_repo_pairs.collect { |pair| pair.join("/") }
+    stub_settings(:issue_manager, :repo_names, repo_names)
+
+    org_repo_pairs.collect.with_index do |(org, repo), i|
+      create(:repo, :name => "#{org}/#{repo}")
 
       double("issue manager #{i}").tap do |issue_manager|
-        allow(IssueManager).to receive(:new).with(org_name, repo_name).and_return(issue_manager)
+        allow(IssueManager).to receive(:new).with(org, repo).and_return(issue_manager)
       end
     end
   end
 
   describe "#perform" do
     it "skips if the list of repo names is not provided" do
-      allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return(nil)
+      stub_settings(:issue_manager, :repo_names, nil)
 
       expect(IssueManager).to_not receive(:new)
       subject.perform
     end
 
     it "skips if the list of repo names is empty" do
-      allow(Settings).to receive_message_chain(:issue_manager, :repo_names).and_return([])
+      stub_settings(:issue_manager, :repo_names, [])
 
       expect(IssueManager).to_not receive(:new)
       subject.perform

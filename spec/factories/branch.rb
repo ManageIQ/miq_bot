@@ -4,7 +4,7 @@ FactoryGirl.define do
   factory :branch do
     sequence(:name) { |n| "branch_#{n}" }
 
-    commit_uri  "https://example.com/foo/bar/commit/$commit"
+    commit_uri  { "https://example.com/#{repo.name}/commit/$commit" }
     last_commit { SecureRandom.hex(40) }
 
     repo

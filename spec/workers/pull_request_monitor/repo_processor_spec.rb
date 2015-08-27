@@ -10,15 +10,10 @@ RSpec.describe PullRequestMonitor::RepoProcessor do
       end
     end
 
-    def stub_github_prs(prs)
-      github_prs = double("Github collection", :all => prs)
-      expect(github).to receive(:pull_requests).and_return(github_prs).twice
-    end
-
     it "creates a PR branch record" do
       repo = create(:repo)
       pr   = double("GitHub PR", :number => 1)
-      stub_github_prs([pr])
+      stub_github_prs(github, [pr]).twice
 
       expect(PullRequestMonitor::PrBranchRecord).to receive(:create).with(git, repo, pr, "pr/1")
 
@@ -29,7 +24,7 @@ RSpec.describe PullRequestMonitor::RepoProcessor do
       repo      = create(:repo, :branches => [create(:pr_branch)])
       pr_number = repo.pr_branches.first.pr_number
       pr        = double("GitHub PR old", :number => pr_number)
-      stub_github_prs([pr])
+      stub_github_prs(github, [pr]).twice
 
       expect(PullRequestMonitor::PrBranchRecord).to_not receive(:create)
 
@@ -39,7 +34,7 @@ RSpec.describe PullRequestMonitor::RepoProcessor do
     it "prunes stale PR branch record" do
       repo      = create(:repo, :branches => [create(:pr_branch)])
       pr_number = repo.pr_branches.first.pr_number
-      stub_github_prs([])
+      stub_github_prs(github, []).twice
 
       expect(git).to receive(:checkout).with("master") # again
       expect(git).to receive(:destroy_branch).with("pr/#{pr_number}")
