@@ -35,7 +35,7 @@ gem 'sidetiq'
 gem 'sinatra', require: false
 gem 'slim'
 
-gem 'miq_tools_services', :git => "git://github.com/ManageIQ/miq_tools_services.git", :branch => "master"
+gem 'miq_tools_services', :path => "/home/gblomqui/code/cfme/miq_tools_services/"
 gem 'travis', '~>1.7.6'
 
 gem 'awesome_spawn'
@@ -60,8 +60,4 @@ group :issue_manager do
 
   # Lock down dependency
   gem 'faraday', '~> 0.9.1'
-end
-
-group :trello do
-  gem 'ruby-trello',   '~> 1.1.1'
 end

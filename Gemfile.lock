@@ -1,7 +1,5 @@
-GIT
-  remote: git://github.com/ManageIQ/miq_tools_services.git
-  revision: 578e974854c19754309bf20e448ef9af5ebac0e8
-  branch: master
+PATH
+  remote: /home/gblomqui/code/cfme/miq_tools_services
   specs:
     miq_tools_services (0.0.1)
       active_bugzilla
@@ -9,6 +7,7 @@ GIT
       github_api (~> 0.11.1)
       minigit (~> 0.0.4)
       polisher (~> 0.10.2)
+      ruby-trello (~> 1.1.1)
 
 GEM
   remote: https://rubygems.org/
@@ -318,7 +317,6 @@ DEPENDENCIES
   rspec
   rspec-rails
   rubocop (>= 0.27.1)
-  ruby-trello (~> 1.1.1)
   sass-rails (~> 4.0.0)
   sidekiq (~> 2.17)
   sidetiq
