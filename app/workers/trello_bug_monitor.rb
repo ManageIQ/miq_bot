@@ -20,7 +20,7 @@ class TrelloBugMonitor
     with_trello_service do |trello|
       @trello = trello
       process_checked_bugs
-      update_bug_checklist
+      update_bug_checklists
     end
   end
 
@@ -50,7 +50,7 @@ class TrelloBugMonitor
     checked_bugs_by_status = Hash.new { |h, k| h[k] = [] }
 
     # find all the "checked" bugs for each status across all the teams
-    trello_team_names.each do |team|
+    team_names.each do |team|
       %w(ASSIGNED ON_DEV).each do |bz_status|
         bug_ids = bug_card_for(team, bz_status).checklists.flat_map do |checklist|
           checklist.checked_items.collect(&:bugzilla_id)
@@ -63,11 +63,14 @@ class TrelloBugMonitor
   end
 
   def update_checked_bugs(checked_bugs_by_status)
-    MiqToolsServices::Bugzilla.call do |bugzilla|
-      checked_bugs_by_status.each do |status, bug_ids|
-        bugzilla.update(bug_ids, :status => next_bz_status(status))
+    t = Benchmark.realtime do 
+      MiqToolsServices::Bugzilla.call do |bugzilla|
+        checked_bugs_by_status.each do |status, bug_ids|
+          bugzilla.update(bug_ids, :status => next_bz_status(status))
+        end
       end
     end
+    logger.debug("Bugzilla Update Time #{t}s")
   end
 
   def next_bz_status(status)
@@ -84,13 +87,16 @@ class TrelloBugMonitor
   def update_bug_checklists
     team_names.each do |team|
       bugs_for(team).each do |bz_status, bugs_by_assigned|
-        card = bug_card_for(team, bz_status)
-        card.remove_all_checklists
+        t = Benchmark.realtime do 
+          card = bug_card_for(team, bz_status)
+          card.remove_all_checklists
 
-        bugs_by_assigned.each do |assigned, assigned_bugs|
-          items = assigned_bugs.collect { |bug| format_checklist_item_from(bug) }
-          card.create_checklist(assigned, items)
+          bugs_by_assigned.each do |assigned, assigned_bugs|
+            items = assigned_bugs.collect { |bug| format_checklist_item_from(bug) }
+            card.create_checklist(assigned, items)
+          end
         end
+        logger.debug("Updated Trello Team #{team}/#{bz_status} #{t}s")
       end
     end
   end
@@ -104,9 +110,9 @@ class TrelloBugMonitor
 
   def format_bug_priority(bug)
     case bug.priority
-    when %w(urgent high) then ":red_circle: **#{bug.priority}**"
-    when "medium"        then ":large_orange_diamond: #{bug.priority}"
-    else                      ":small_blue_diamond: #{bug.priority}"
+    when "urgent", "high" then ":red_circle: **#{bug.priority}**"
+    when "medium"         then ":large_orange_diamond: #{bug.priority}"
+    else                       ":small_blue_diamond: #{bug.priority}"
     end
   end
 
@@ -114,9 +120,10 @@ class TrelloBugMonitor
   # bug
   def format_checklist_item_from(bug)
     priority = format_bug_priority(bug)
-    title    = "[#{bug.id}] (#{priority}) #{bug.summary} (#{time_ago_in_words(bug.created_on)} old)"
+    title    = bug.id
+    text     = "#{priority} (#{time_ago_in_words(bug.created_on)} old) #{bug.summary}" 
     url      = MiqToolsServices::Bugzilla.url_for(bug.id)
-    "[#{title}](#{url})"
+    "[[#{title}](#{url})] #{text}"
   end
 
   #
@@ -132,12 +139,16 @@ class TrelloBugMonitor
   def bugs_for(team)
     bugzilla_components = team_settings(team).bugzilla_components
 
-    bugs = MiqToolsServices::Bugzilla.call do
-      ActiveBugzilla::Bug.find(:product        => BUGZILLA_PRODUCT,
-                               :component      => bugzilla_components,
-                               :status         => BUGZILLA_STATES,
-                               :include_fields => BUGZILLA_FIELDS)
+    bugs = nil
+    t = Benchmark.realtime do
+      bugs = MiqToolsServices::Bugzilla.call do
+        ActiveBugzilla::Bug.find(:product        => BUGZILLA_PRODUCT,
+                                 :component      => bugzilla_components,
+                                 :status         => BUGZILLA_STATES,
+                                 :include_fields => BUGZILLA_FIELDS)
+      end
     end
+    logger.debug("Bugzilla Query Time: #{t}s")
 
     # group bugs by their status and by assigned_to
     bugs_by_status = Hash.new do |h_status, status|
