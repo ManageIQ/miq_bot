@@ -23,7 +23,7 @@ class Branch < ActiveRecord::Base
   end
 
   def self.github_compare_uri(repo_name, sha1 = "$commit1", sha2 ="$commit2")
-    "https://github.com/#{repo_name}/compare/#{sha1}...#{sha2}"
+    "https://github.com/#{repo_name}/compare/#{sha1}~...#{sha2}"
   end
 
   def self.github_pr_uri(repo_name, pr_number = "$pr_number")
@@ -47,7 +47,7 @@ class Branch < ActiveRecord::Base
     # TODO: This needs use a different URI than the commit_uri
     commit_uri
       .gsub("/commit/", "/compare/")
-      .gsub("$commit", "#{commit1}...#{commit2}")
+      .gsub("$commit", "#{commit1}~...#{commit2}")
   end
 
   def mode
