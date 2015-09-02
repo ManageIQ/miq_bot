@@ -37,9 +37,15 @@ class TravisBuildKiller
         .flat_map { |_pr_number, builds| builds[1..-1] }
 
       builds_to_cancel.each do |b|
-        for_what = b.pull_request? ? "PR ##{b.pull_request_number}" : "merge commit"
-        logger.info "Canceling Travis build ##{b.number} for #{for_what}"
-        b.cancel
+        if b.pull_request?
+          logger.info "Canceling Travis build ##{b.number} for PR ##{b.pull_request_number}"
+          b.cancel
+        elsif b.running?
+          logger.info "Skipping currently running Travis build ##{b.number} for merge commit"
+        else
+          logger.info "Canceling Travis build ##{b.number} for merge commit"
+          b.cancel
+        end
       end
     end
   end
