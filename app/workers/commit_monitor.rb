@@ -32,6 +32,14 @@ class CommitMonitor
     @branch_handlers ||= handlers_for(:branch)
   end
 
+  # batch handlers expect to handle a batch of workers at once and will need
+  #   a wider range of information
+  #
+  # Example: A general commenter to GitHub for a number of issues
+  def self.batch_handlers
+    @batch_handlers ||= handlers_for(:batch)
+  end
+
   def perform
     if !first_unique_worker?
       logger.info "#{self.class} is already running, skipping"
@@ -87,12 +95,8 @@ class CommitMonitor
     end
   end
 
-  def branch_mode
-    branch.pull_request? ? :pr : :regular
-  end
-
   def detect_commits
-    send("detect_commits_on_#{branch_mode}_branch")
+    send("detect_commits_on_#{branch.mode}_branch")
   end
 
   def detect_commits_on_regular_branch
@@ -115,6 +119,16 @@ class CommitMonitor
     left_only, right_only = combined[pivot..-1].transpose.collect(&:compact)
 
     {:same => same, :left_only => left_only, :right_only => right_only}
+  end
+
+  def new_commits_details
+    @new_commits_details ||=
+      new_commits.each_with_object({}) do |commit, h|
+        h[commit] = {
+          "message" => git.commit_message(commit),
+          "files"   => git.diff_details(commit).keys
+        }
+      end
   end
 
   def save_branch_record
@@ -143,7 +157,7 @@ class CommitMonitor
   private_class_method(:handlers_for)
 
   def filter_handlers(handlers)
-    handlers.select { |h| h.handled_branch_modes.include?(branch_mode) }
+    handlers.select { |h| h.handled_branch_modes.include?(branch.mode) }
   end
 
   def commit_handlers
@@ -158,10 +172,15 @@ class CommitMonitor
     filter_handlers(self.class.branch_handlers)
   end
 
+  def batch_handlers
+    filter_handlers(self.class.batch_handlers)
+  end
+
   def process_handlers
     process_commit_handlers       if process_commit_handlers?
     process_commit_range_handlers if process_commit_range_handlers?
     process_branch_handlers       if process_branch_handlers?
+    process_batch_handlers        if process_batch_handlers?
   end
 
   def process_commit_handlers?
@@ -173,7 +192,11 @@ class CommitMonitor
   end
 
   def process_branch_handlers?
-    branch_handlers.any? && send("process_#{branch_mode}_branch_handlers?")
+    branch_handlers.any? && send("process_#{branch.mode}_branch_handlers?")
+  end
+
+  def process_batch_handlers?
+    batch_handlers.any? && new_commits.any?
   end
 
   def process_pr_branch_handlers?
@@ -186,12 +209,10 @@ class CommitMonitor
   end
 
   def process_commit_handlers
-    new_commits.each do |commit|
-      message = git.commit_message(commit)
-      files   = git.diff_details(commit).keys
+    new_commits_details.each do |commit, details|
       commit_handlers.each do |h|
         logger.info("Queueing #{h.name.split("::").last} for commit #{commit} on branch #{branch.name}")
-        h.perform_async(branch.id, commit, "message" => message, "files" => files)
+        h.perform_async(branch.id, commit, details)
       end
     end
   end
@@ -209,6 +230,13 @@ class CommitMonitor
     branch_handlers.each do |h|
       logger.info("Queueing #{h.name.split("::").last} for branch #{branch.name}")
       h.perform_async(branch.id)
+    end
+  end
+
+  def process_batch_handlers
+    batch_handlers.each do |h|
+      logger.info("Queueing #{h.name} for branch #{branch.name}")
+      h.perform_batch_async(branch.id, new_commits_details)
     end
   end
 end

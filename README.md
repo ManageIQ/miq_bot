@@ -68,9 +68,12 @@ underscores replaced with hyphens.
    bundle install
    ```
 
-4. Open up the `config/database.yml` file in your editor. Add the
-   `username` and `password` for your PostgreSQL database (If you set
-   up the ManageIQ app locally just use the same credentials).
+4. Create the `database.yml` file.
+   ```
+   cp config/database.tmpl.yml config/database.yml
+   ```
+   Edit the `database.yml` file, and change `username` and `password` for your
+   PostgreSQL database.
 
 5. Set up the databases:
    ```
