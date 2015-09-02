@@ -35,7 +35,7 @@ module CommitMonitorHandlers::Batch
     end
 
     def header
-      "#{tag}Detected potential issues with the commits in #{commit_range_text}\n"
+      "#{tag}Some comments on #{"commit".pluralize(commits.length)} #{commit_range_text}\n"
     end
 
     def continuation_header
