@@ -14,9 +14,9 @@ describe BatchJob do
     )
 
     job = described_class.first
-    expect(job.on_complete_class).to eq(String)
-    expect(job.on_complete_args).to  eq(%w(arga argb))
-    expect(job.expires_at).to        eq(expires_at)
+    expect(job.on_complete_class).to   eq(String)
+    expect(job.on_complete_args).to    eq(%w(arga argb))
+    expect(job.expires_at.round(5)).to eq(expires_at.round(5))
 
     entries = job.entries.order(:id)
     workers.zip(entries).each do |w, e|
