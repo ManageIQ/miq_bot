@@ -33,12 +33,12 @@ describe Branch do
   context ".github_compare_uri" do
     it "(repo_name)" do
       actual = described_class.github_compare_uri("ManageIQ/sandbox")
-      expect(actual).to eq("https://github.com/ManageIQ/sandbox/compare/$commit1...$commit2")
+      expect(actual).to eq("https://github.com/ManageIQ/sandbox/compare/$commit1~...$commit2")
     end
 
     it "(repo_name, sha1, sha2)" do
       actual = described_class.github_compare_uri("ManageIQ/sandbox", commit1, commit2)
-      expect(actual).to eq("https://github.com/ManageIQ/sandbox/compare/#{commit1}...#{commit2}")
+      expect(actual).to eq("https://github.com/ManageIQ/sandbox/compare/#{commit1}~...#{commit2}")
     end
   end
 
@@ -81,7 +81,7 @@ describe Branch do
   end
 
   it "#compare_uri_for" do
-    expect(branch.compare_uri_for(commit1, commit2)).to eq "https://uri.to/compare/#{commit1}...#{commit2}"
+    expect(branch.compare_uri_for(commit1, commit2)).to eq "https://uri.to/compare/#{commit1}~...#{commit2}"
   end
 
   context "#mode" do

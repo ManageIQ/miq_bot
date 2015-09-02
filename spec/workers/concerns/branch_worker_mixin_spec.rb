@@ -82,7 +82,7 @@ describe BranchWorkerMixin do
       pr_branch.update_attributes(:commits_list => %w(a b c))
       subject.find_branch(pr_branch.id)
 
-      expect(subject.commit_range_text).to eq("https://example.com/SomeUser/some_repo/compare/a...c")
+      expect(subject.commit_range_text).to eq("https://example.com/SomeUser/some_repo/compare/a~...c")
     end
 
     it "with a single commit" do
