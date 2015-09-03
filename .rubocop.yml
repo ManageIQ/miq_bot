@@ -1,0 +1,2 @@
+require:
+  - /home/tim/src/miq_bot/lib/rubocop/cop/manageiq/preferred_methods
