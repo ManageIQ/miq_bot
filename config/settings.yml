@@ -32,10 +32,3 @@ trello:
 #      bugzilla_components: []
 #        # - list of BZ components for the team
 #      board: Trello Board Name
-  rollups: {}
-#    rollup_name1:
-#      board: Rollup Board 1
-#      type: rollup_type # e.g., epic_tag_rollup
-#      teams: []
-#        # - list of team names from above
-#        # - e.g., team1
