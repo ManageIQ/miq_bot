@@ -34,8 +34,8 @@ class TrelloBugMonitor
   }
 
   BUGZILLA_PRODUCT = Settings.commit_monitor.bugzilla_product
-  BUGZILLA_STATES  = %w(NEW ASSIGNED ON_DEV POST) 
-  BUGZILLA_FIELDS  = [:status, :assigned_to, :priority, :summary, :created_on] 
+  BUGZILLA_STATES  = %w(NEW ASSIGNED ON_DEV POST)
+  BUGZILLA_FIELDS  = [:status, :assigned_to, :priority, :summary, :created_on]
   BUG_PRIORITIES   = %w(urgent high medium low unspecified)
 
   attr_reader :trello
@@ -59,11 +59,11 @@ class TrelloBugMonitor
       end
     end
 
-    update_checked_bugs(checked_bugs_by_status) 
+    update_checked_bugs(checked_bugs_by_status)
   end
 
   def update_checked_bugs(checked_bugs_by_status)
-    t = Benchmark.realtime do 
+    t = Benchmark.realtime do
       MiqToolsServices::Bugzilla.call do |bugzilla|
         checked_bugs_by_status.each do |status, bug_ids|
           bugzilla.update(bug_ids, :status => next_bz_status(status))
@@ -80,24 +80,24 @@ class TrelloBugMonitor
     end
   end
 
-
   # Looks up the bugs that should be on each bug card and entirely replaces
   # the checklists on those cards with the found bugs.
   #
   def update_bug_checklists
     team_names.each do |team|
       bugs_for(team).each do |bz_status, bugs_by_assigned|
-        t = Benchmark.realtime do 
+        t = Benchmark.realtime do
           card = bug_card_for(team, bz_status)
-          card.remove_all_checklists
-
-          bugs_by_assigned.each do |assigned, assigned_bugs|
-            items = assigned_bugs.collect { |bug| format_checklist_item_from(bug) }
-            card.create_checklist(assigned, items)
-          end
+          card.update_checklists(desired_card_items(bugs_by_assigned))
         end
         logger.debug("Updated Trello Team #{team}/#{bz_status} #{t}s")
       end
+    end
+  end
+
+  def desired_card_items(bugs_by_assigned)
+    bugs_by_assigned.each_with_object({}) do |(assigned, assigned_bugs), h|
+      h[assigned] = assigned_bugs.collect { |bug| format_checklist_item_from(bug) }
     end
   end
 
@@ -106,6 +106,10 @@ class TrelloBugMonitor
     list_name  = BUG_STATUS_TO_TRELLO_LIST[bz_status]
 
     trello.board(board_name).list(list_name).card("Bugs")
+  end
+
+  def find_or_create_card(list, card_name)
+    #list.card(card_name) || list.create_card(card_name)
   end
 
   def format_bug_priority(bug)
@@ -121,7 +125,7 @@ class TrelloBugMonitor
   def format_checklist_item_from(bug)
     priority = format_bug_priority(bug)
     title    = bug.id
-    text     = "#{priority} (#{time_ago_in_words(bug.created_on)} old) #{bug.summary}" 
+    text     = "#{priority}: #{bug.summary}"
     url      = MiqToolsServices::Bugzilla.url_for(bug.id)
     "[[#{title}](#{url})] #{text}"
   end
