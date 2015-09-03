@@ -7,7 +7,7 @@ module CommitMonitorHandlers::Batch
     include BranchWorkerMixin
 
     def self.batch_workers
-      [GemfileChecker]
+      [GemfileChecker, MigrationDateChecker]
     end
 
     def self.handled_branch_modes
