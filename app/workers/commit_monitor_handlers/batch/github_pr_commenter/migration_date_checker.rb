@@ -23,9 +23,9 @@ module CommitMonitorHandlers::Batch
 
     def bad_migrations
       @bad_migrations ||=
-        diff_files_for_commit_range.select do |f|
-          next unless f.include?("db/migrate/")
-          valid_timestamp?(File.basename(f).split("_").first)
+        migration_files.reject do |f|
+          ts = File.basename(f).split("_").first
+          valid_timestamp?(ts)
         end
     end
 
@@ -33,6 +33,12 @@ module CommitMonitorHandlers::Batch
       Time.parse(ts)
     rescue ArgumentError
       false
+    end
+
+    def migration_files
+      diff_files_for_commit_range.select do |f|
+        f.include?("db/migrate/")
+      end
     end
 
     def diff_files_for_commit_range
