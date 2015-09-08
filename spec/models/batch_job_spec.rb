@@ -114,7 +114,7 @@ describe BatchJob do
     end
 
     shared_examples "#finalize!" do
-      before { OnCompleteWorker = Class.new }
+      before { OnCompleteWorker = Class.new { def self.perform_async(*); end } }
       after  { Object.send(:remove_const, "OnCompleteWorker") }
 
       it "and there is an on_complete_class" do
