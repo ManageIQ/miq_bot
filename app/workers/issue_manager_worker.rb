@@ -1,5 +1,3 @@
-require "bot/issue_manager"
-
 class IssueManagerWorker
   include Sidekiq::Worker
   include Sidetiq::Schedulable

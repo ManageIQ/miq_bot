@@ -21,6 +21,7 @@
 # Ignore configuration files
 /config/data_backup
 /config/database.yml
+/config/issue_manager.yml
 /config/settings.local.yml
 /config/settings/*.local.yml
 /config/environments/*.local.yml

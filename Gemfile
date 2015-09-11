@@ -44,6 +44,10 @@ gem 'more_core_extensions', :require => 'more_core_extensions/all'
 gem 'rubocop', '>= 0.27.1'
 gem 'haml-lint', '~> 0.13.0'
 
+gem 'octokit',       '~> 3.8.0'
+gem 'minigit',       '~> 0.0.4'
+gem 'faraday', '~> 0.9.1'
+
 group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
@@ -52,12 +56,4 @@ end
 
 group :test do
   gem "factory_girl_rails"
-end
-
-group :issue_manager do
-  gem 'octokit',       '~> 3.8.0'
-  gem 'minigit',       '~> 0.0.4'
-
-  # Lock down dependency
-  gem 'faraday', '~> 0.9.1'
 end

@@ -1,10 +1,5 @@
-require_relative 'git_hub_api'
-require_relative '../logging'
-
 module GitHubApi
   class Notification
-    include Logging
-
     def initialize(octokit_notification, repo)
       @repo           = repo
       @repo_name      = repo.fq_repo_name

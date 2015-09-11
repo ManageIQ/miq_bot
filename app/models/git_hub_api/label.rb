@@ -1,5 +1,3 @@
-require_relative 'git_hub_api'
-
 module GitHubApi
   class Label
     attr_reader :text

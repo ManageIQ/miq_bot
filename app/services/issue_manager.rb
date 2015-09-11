@@ -1,15 +1,5 @@
-require 'octokit'
-require 'yaml'
-require 'fileutils'
-require_relative 'rails_config_settings'
-require_relative 'githubapi/git_hub_api'
-require_relative 'logging'
-
 class IssueManager
-  include Logging
-  include GitHubApi
-
-  ISSUE_MANAGER_YAML_FILE = File.join(File.dirname(__FILE__), 'config/issue_manager.yml')
+  ISSUE_MANAGER_YAML_FILE = Rails.root.join("config", "issue_manager.yml")
 
   COMMANDS = Hash.new do |h, k|
     normalized = k.to_s.gsub("-", "_")            # Support - or _ in command
@@ -32,6 +22,10 @@ class IssueManager
     @user         = GitHubApi.connect(@username, @password)
     @org          = @user.find_organization(organization_name)
     @repo         = @org.get_repository(repo_name)
+  end
+
+  def logger
+    Rails.logger
   end
 
   def process_notifications
