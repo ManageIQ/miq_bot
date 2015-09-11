@@ -15,7 +15,7 @@ class IssueManagerWorker
   private
 
   def process_notifications(repo)
-    IssueManager.new(repo.upstream_user, repo.project).process_notifications
+    IssueManager.build(repo.upstream_user, repo.project).process_notifications
   rescue => err
     logger.error err.message
     logger.error err.backtrace.join("\n")

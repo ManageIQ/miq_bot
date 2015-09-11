@@ -13,15 +13,23 @@ class IssueManager
     "set_milestone" => :set_milestone
   ).freeze
 
-  def initialize(organization_name, repo_name)
-    @username     = Settings.github_credentials.username
-    @password     = Settings.github_credentials.password
-    raise "no GitHub credentials defined" if @username.nil? || @password.nil?
+  def self.build(organization_name, repo_name)
+    username     = Settings.github_credentials.username
+    password     = Settings.github_credentials.password
+    raise "no GitHub credentials defined" if username.nil? || password.nil?
 
-    @fq_repo_name = "#{organization_name}/#{repo_name}"
-    @user         = GitHubApi.connect(@username, @password)
-    @org          = @user.find_organization(organization_name)
-    @repo         = @org.get_repository(repo_name)
+    fq_repo_name = "#{organization_name}/#{repo_name}"
+    user         = GitHubApi.connect(username, password)
+    org          = user.find_organization(organization_name)
+    repo         = org.get_repository(repo_name)
+    new(repo, username, org, fq_repo_name)
+  end
+
+  def initialize(repo, username, org, fq_repo_name)
+    @repo = repo
+    @username = username
+    @org = org
+    @fq_repo_name = fq_repo_name
   end
 
   def logger

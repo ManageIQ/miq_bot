@@ -12,7 +12,7 @@ RSpec.describe IssueManagerWorker do
       create(:repo, :name => "#{org}/#{repo}")
 
       double("issue manager #{i}").tap do |issue_manager|
-        allow(IssueManager).to receive(:new).with(org, repo).and_return(issue_manager)
+        allow(IssueManager).to receive(:build).with(org, repo).and_return(issue_manager)
       end
     end
   end
@@ -21,14 +21,14 @@ RSpec.describe IssueManagerWorker do
     it "skips if the list of repo names is not provided" do
       stub_settings(:issue_manager, :repo_names, nil)
 
-      expect(IssueManager).to_not receive(:new)
+      expect(IssueManager).to_not receive(:build)
       subject.perform
     end
 
     it "skips if the list of repo names is empty" do
       stub_settings(:issue_manager, :repo_names, [])
 
-      expect(IssueManager).to_not receive(:new)
+      expect(IssueManager).to_not receive(:build)
       subject.perform
     end
 
