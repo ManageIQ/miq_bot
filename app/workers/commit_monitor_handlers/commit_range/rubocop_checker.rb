@@ -23,12 +23,12 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
     unmerged_results = []
 
-    files = filter_ruby_files(diff_details)
+    files = extract_ruby_files(diff_details)
     if files.any?
       unmerged_results << linter_results('rubocop', :format => 'json', nil => files)
     end
 
-    files = filter_haml_files(diff_details)
+    files = extract_haml_files(diff_details)
     if files.any?
       unmerged_results << linter_results('haml-lint', :reporter => 'json', nil => files)
     end
@@ -50,7 +50,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     end
   end
 
-  def filter_ruby_files(diff_details)
+  def extract_ruby_files(diff_details)
     filtered = diff_details.keys.select do |k|
       k.end_with?(".rb") ||
       k.end_with?(".ru") ||
@@ -62,7 +62,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     end
   end
 
-  def filter_haml_files(diff_details)
+  def extract_haml_files(diff_details)
     diff_details.keys.select do |k|
       k.end_with?(".haml")
     end
