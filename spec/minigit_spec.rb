@@ -195,6 +195,38 @@ index 4f807bb..57e5993 100644
     end
   end
 
+  context "#diff_file_names" do
+    it "parses the output" do
+      expect(service).to receive(:diff).with("--name-only", "6c4a4487~...6c4a4487").and_return(<<-EOGIT)
+/path/to/file/a.rb
+/path/to/file/b.rb
+    EOGIT
+
+      with_service do |git|
+        expect(git.diff_file_names("6c4a4487")).to eq [
+          "/path/to/file/a.rb",
+          "/path/to/file/b.rb"
+        ]
+      end
+    end
+
+    it "on a single commit" do
+      expect(service).to receive(:diff).with("--name-only", "6c4a4487~...6c4a4487").and_return("")
+
+      with_service do |git|
+        git.diff_file_names("6c4a4487")
+      end
+    end
+
+    it "with a destination branch" do
+      expect(service).to receive(:diff).with("--name-only", "master...6c4a4487").and_return("")
+
+      with_service do |git|
+        git.diff_file_names("master", "6c4a4487")
+      end
+    end
+  end
+
   it ".pr_branch" do
     expect(described_class.pr_branch(133)).to eq "pr/133"
   end

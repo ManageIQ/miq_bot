@@ -107,6 +107,14 @@ module MiqToolsServices
       end
     end
 
+    def diff_file_names(commit1, commit2 = nil)
+      if commit2.nil?
+        commit2 = commit1
+        commit1 = "#{commit1}~"
+      end
+      diff("--name-only", "#{commit1}...#{commit2}").split
+    end
+
     #
     # Pull Request specific methods
     #
