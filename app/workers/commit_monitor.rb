@@ -136,10 +136,10 @@ class CommitMonitor
     attrs[:last_commit] = new_commits.last if new_commits.any?
 
     if all_commits != branch.commits_list
-      attrs[:commits_list] = all_commits && all_commits.to_yaml # Rails, Y U NO serialize with update_columns?!
+      attrs[:commits_list] = all_commits
     end
 
-    # Update columns directly to avoid collisions wrt the serialized column issue
+    # Update columns directly to avoid collisions with other workers.  See: https://github.com/rails/rails/issues/8328
     branch.update_columns(attrs)
   end
 
