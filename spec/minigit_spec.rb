@@ -144,8 +144,9 @@ https://bugzilla.redhat.com/show_bug.cgi?id=345678
     end
   end
 
-  it "#diff_details" do
-    expect(service).to receive(:diff).with("--patience", "-U0", "--no-color", "6c4a4487~..6c4a4487").and_return(<<-EOGIT)
+  context "#diff_details" do
+    it "parses the diff contents" do
+      expect(service).to receive(:diff).with("--patience", "-U0", "--no-color", "6c4a4487~...6c4a4487").and_return(<<-EOGIT)
 diff --git a/new_file.rb b/new_file.rb
 new file mode 100644
 index 0000000..b4c1281
@@ -169,11 +170,28 @@ index 4f807bb..57e5993 100644
 -    end
     EOGIT
 
-    with_service do |git|
-      expect(git.diff_details("6c4a4487")).to eq(
-        "new_file.rb"     => [1, 2, 3],
-        "changed_file.rb" => [30, 32]
-      )
+      with_service do |git|
+        expect(git.diff_details("6c4a4487")).to eq(
+          "new_file.rb"     => [1, 2, 3],
+          "changed_file.rb" => [30, 32]
+        )
+      end
+    end
+
+    it "on a single commit" do
+      expect(service).to receive(:diff).with("--patience", "-U0", "--no-color", "6c4a4487~...6c4a4487").and_return("")
+
+      with_service do |git|
+        git.diff_details("6c4a4487")
+      end
+    end
+
+    it "with a destination branch" do
+      expect(service).to receive(:diff).with("--patience", "-U0", "--no-color", "master...6c4a4487").and_return("")
+
+      with_service do |git|
+        git.diff_details("master", "6c4a4487")
+      end
     end
   end
 
