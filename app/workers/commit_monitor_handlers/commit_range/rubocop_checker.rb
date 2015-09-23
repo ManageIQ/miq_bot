@@ -19,7 +19,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   private
 
   def process_branch
-    diff_details = diff_details_for_branch
+    diff_details = diff_details_for_merge
 
     unmerged_results = []
 
@@ -42,12 +42,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     end
 
     write_to_github
-  end
-
-  def diff_details_for_branch
-    branch.repo.with_git_service do |git|
-      git.diff_details(*commit_range)
-    end
   end
 
   def extract_ruby_files(diff_details)
