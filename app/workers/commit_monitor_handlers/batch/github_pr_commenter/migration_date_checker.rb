@@ -36,14 +36,8 @@ module CommitMonitorHandlers::Batch
     end
 
     def migration_files
-      diff_files_for_commit_range.select do |f|
+      diff_file_names_for_merge.select do |f|
         f.include?("db/migrate/")
-      end
-    end
-
-    def diff_files_for_commit_range
-      branch.repo.with_git_service do |git|
-        git.diff_details(*commit_range).keys
       end
     end
   end

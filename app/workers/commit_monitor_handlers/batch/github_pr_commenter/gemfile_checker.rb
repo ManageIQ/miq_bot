@@ -42,16 +42,8 @@ module CommitMonitorHandlers::Batch
 
     def gemfile_in_diff?
       return @gemfile_in_diff unless @gemfile_in_diff.nil?
-      @gemfile_in_diff = diff_files_for_commit_range.any? do |f|
+      @gemfile_in_diff = diff_file_names_for_merge.any? do |f|
         File.basename(f) == "Gemfile"
-      end
-    end
-
-    private
-
-    def diff_files_for_commit_range
-      branch.repo.with_git_service do |git|
-        git.diff_details(*commit_range).keys
       end
     end
   end

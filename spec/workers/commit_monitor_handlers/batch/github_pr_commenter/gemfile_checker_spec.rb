@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe CommitMonitorHandlers::Batch::GithubPrCommenter::GemfileChecker do
   let(:commits_list)   { ["123abc", "234def"] }
+  let(:diff_file_names_params) { ["master", commits_list.last] }
   let(:branch)         { create(:pr_branch, :commits_list => commits_list) }
   let(:batch_entry)    { BatchEntry.create!(:job => BatchJob.create!) }
   let(:git_service)    { stub_git_service }
@@ -19,9 +20,9 @@ describe CommitMonitorHandlers::Batch::GithubPrCommenter::GemfileChecker do
   context "when there are Gemfile changes" do
     context "adds a label to the PR" do
       before do
-        expect(git_service).to receive(:diff_details).with(*commits_list).and_return(
-          "Gemfile" => [1]
-        )
+        expect(git_service).to receive(:diff_file_names).with(*diff_file_names_params).and_return([
+          "Gemfile"
+        ])
 
         expect(github_service).to receive(:add_issue_labels).with(branch.pr_number, "gem changes")
       end
@@ -44,7 +45,7 @@ describe CommitMonitorHandlers::Batch::GithubPrCommenter::GemfileChecker do
 
   context "where there are no Gemfile changes" do
     before do
-      expect(git_service).to receive(:diff_details).with(*commits_list).and_return({})
+      expect(git_service).to receive(:diff_file_names).with(*diff_file_names_params).and_return([])
     end
 
     it "does not add a label to the PR" do

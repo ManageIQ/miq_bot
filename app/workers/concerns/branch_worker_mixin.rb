@@ -44,4 +44,16 @@ module BranchWorkerMixin
       logger.warn("#{branch.repo.name} has not been enabled.  Skipping.") unless enabled
     end
   end
+
+  def diff_details_for_merge
+    branch.repo.with_git_service do |git|
+      git.diff_details("master", commits.last) # TODO: Replace "master" with Branch#destination_branch
+    end
+  end
+
+  def diff_file_names_for_merge
+    branch.repo.with_git_service do |git|
+      git.diff_file_names("master", commits.last) # TODO: Replace "master" with Branch#destination_branch
+    end
+  end
 end
