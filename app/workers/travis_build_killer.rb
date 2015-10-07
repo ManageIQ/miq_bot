@@ -33,8 +33,8 @@ class TravisBuildKiller
       builds_to_cancel = travis.builds
         .take_while { |b| b.pending? || b.canceled? }
         .reject(&:canceled?)
-        .group_by(&:pull_request_number)
-        .flat_map { |_pr_number, builds| builds[1..-1] }
+        .group_by { |b| b.pull_request_number || b.branch_info }
+        .flat_map { |_key, builds| builds[1..-1] }
 
       builds_to_cancel.each do |b|
         if b.pull_request?
