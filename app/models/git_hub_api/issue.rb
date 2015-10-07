@@ -1,5 +1,3 @@
-require_relative 'git_hub_api'
-
 module GitHubApi
   class Issue
     attr_accessor :comments, :number, :body, :author, :created_at

@@ -1,5 +1,3 @@
-require_relative 'git_hub_api'
-
 module GitHubApi
   class Comment
     attr_accessor :issue, :updated_at, :body, :author
@@ -11,6 +9,6 @@ module GitHubApi
       @body          = octokit_comment.body
       @author        = octokit_comment.user.login
       @repo          = repo
-  	end
+    end
   end
 end

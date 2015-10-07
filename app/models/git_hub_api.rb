@@ -1,16 +1,5 @@
-require 'octokit'
 require 'benchmark'
-require_relative 'comment'
-require_relative 'notification'
-require_relative 'repo'
-require_relative 'milestone'
-require_relative 'issue'
-require_relative 'label'
-require_relative 'organization.rb'
-require_relative 'user.rb'
-require_relative '../logging'
 
-include Logging
 module GitHubApi
   def self.connect(username, password)
     @user = GitHubApi::User.new
@@ -31,5 +20,9 @@ module GitHubApi
     logger.error("#{err.class}: #{err}")
     logger.error(err.backtrace.join("\n"))
     raise
+  end
+
+  def self.logger
+    Rails.logger
   end
 end

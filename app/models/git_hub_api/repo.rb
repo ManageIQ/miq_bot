@@ -1,5 +1,3 @@
-require_relative 'git_hub_api'
-
 module GitHubApi
   class Repo
     attr_accessor :organization, :client, :fq_repo_name
