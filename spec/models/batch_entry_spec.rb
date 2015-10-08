@@ -20,15 +20,26 @@ describe BatchEntry do
                    "succeeded" => true
 
   describe "#check_job_complete" do
-    let(:entry) { described_class.create!(:job => BatchJob.create!) }
-    let(:job)   { entry.job }
+    let(:job)   { BatchJob.create! }
+    let(:entry) { described_class.create!(:job => job) }
 
-    it "when complete" do
-      entry.update_attributes(:state => "succeeded")
+    context "when complete" do
+      before do
+        entry.update_attributes(:state => "succeeded")
+      end
 
-      expect(job).to receive(:check_complete)
+      it "with job still available" do
+        expect(job).to receive(:check_complete)
 
-      entry.check_job_complete
+        entry.check_job_complete
+      end
+
+      it "when job destroyed externally" do
+        entry.reload # To remove job caching
+        job.destroy
+
+        expect { entry.check_job_complete }.to_not raise_error
+      end
     end
 
     it "when not complete" do
