@@ -1,5 +1,5 @@
-class IssueManager
-  ISSUE_MANAGER_YAML_FILE = Rails.root.join("config", "issue_manager.yml")
+class GithubNotificationMonitor
+  GITHUB_NOTIFICATION_MONITOR_YAML_FILE = Rails.root.join("config", "github_notification_monitor.yml")
 
   COMMANDS = Hash.new do |h, k|
     normalized = k.to_s.gsub("-", "_")            # Support - or _ in command
@@ -191,17 +191,17 @@ EOMSG
 
   def timestamps_full_hash
     @timestamps_full_hash ||=
-      (YAML.load_file(ISSUE_MANAGER_YAML_FILE) || {}).tap do |h|
+      (YAML.load_file(GITHUB_NOTIFICATION_MONITOR_YAML_FILE) || {}).tap do |h|
         h["timestamps"] ||= {}
         h["timestamps"][@fq_repo_name] ||= {}
       end
   rescue Errno::ENOENT
-    logger.warn("#{Time.now} #{ISSUE_MANAGER_YAML_FILE} was missing, recreating it...")
-    FileUtils.touch(ISSUE_MANAGER_YAML_FILE)
+    logger.warn("#{Time.now} #{GITHUB_NOTIFICATION_MONITOR_YAML_FILE} was missing, recreating it...")
+    FileUtils.touch(GITHUB_NOTIFICATION_MONITOR_YAML_FILE)
     retry
   end
 
   def save_timestamps
-    File.write(ISSUE_MANAGER_YAML_FILE, timestamps_full_hash.to_yaml)
+    File.write(GITHUB_NOTIFICATION_MONITOR_YAML_FILE, timestamps_full_hash.to_yaml)
   end
 end

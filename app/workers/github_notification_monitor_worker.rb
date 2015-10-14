@@ -1,4 +1,4 @@
-class IssueManagerWorker
+class GithubNotificationMonitorWorker
   include Sidekiq::Worker
   include Sidetiq::Schedulable
   include MiqToolsServices::SidekiqWorkerMixin
@@ -17,14 +17,14 @@ class IssueManagerWorker
   private
 
   def process_repos
-    repo_names = Array(Settings.issue_manager.repo_names)
+    repo_names = Array(Settings.github_notification_monitor.repo_names)
     Repo.where(:name => repo_names).each do |repo|
       process_notifications(repo)
     end
   end
 
   def process_notifications(repo)
-    IssueManager.build(repo.upstream_user, repo.project).process_notifications
+    GithubNotificationMonitor.build(repo.upstream_user, repo.project).process_notifications
   rescue => err
     logger.error err.message
     logger.error err.backtrace.join("\n")
