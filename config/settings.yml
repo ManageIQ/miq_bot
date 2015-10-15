@@ -10,7 +10,7 @@ commit_monitor:
 gemfile_checker:
   pr_contacts: []
   enabled_repos: []
-issue_manager:
+github_notification_monitor:
   repo_names: []
 travis_event:
   enabled_repos: []
