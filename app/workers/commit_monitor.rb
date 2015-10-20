@@ -64,6 +64,7 @@ class CommitMonitor
         sorted_branches = repo.branches.sort_by { |b| b.pull_request? ? 1 : -1 }
 
         sorted_branches.each do |branch|
+          @new_commits_details = nil
           @branch = branch
           process_branch
         end
