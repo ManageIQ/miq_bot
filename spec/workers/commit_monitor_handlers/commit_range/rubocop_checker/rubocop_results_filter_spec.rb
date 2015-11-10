@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe CommitMonitorHandlers::CommitRange::RubocopChecker::RubocopResultsFilter do
   describe "#filtered" do

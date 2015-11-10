@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe BatchEntry do
   include_examples "state predicates", :succeeded?,

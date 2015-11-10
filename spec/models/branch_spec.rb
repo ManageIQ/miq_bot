@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Branch do
   let(:last_commit) { "123abc" }
