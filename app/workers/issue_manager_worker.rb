@@ -1,18 +1,27 @@
 class IssueManagerWorker
   include Sidekiq::Worker
   include Sidetiq::Schedulable
+  include MiqToolsServices::SidekiqWorkerMixin
   sidekiq_options :queue => :miq_bot, :retry => false
 
   recurrence { minutely }
 
   def perform
+    if !first_unique_worker?
+      logger.info "#{self.class} is already running, skipping"
+    else
+      process_repos
+    end
+  end
+
+  private
+
+  def process_repos
     repo_names = Array(Settings.issue_manager.repo_names)
     Repo.where(:name => repo_names).each do |repo|
       process_notifications(repo)
     end
   end
-
-  private
 
   def process_notifications(repo)
     IssueManager.build(repo.upstream_user, repo.project).process_notifications
