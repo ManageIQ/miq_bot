@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20150827194533) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "batch_entries", force: true do |t|
+  create_table "batch_entries", force: :cascade do |t|
     t.integer "batch_job_id"
     t.string  "state"
     t.text    "result"
@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 20150827194533) do
 
   add_index "batch_entries", ["batch_job_id"], name: "index_batch_entries_on_batch_job_id", using: :btree
 
-  create_table "batch_jobs", force: true do |t|
+  create_table "batch_jobs", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "expires_at"
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 20150827194533) do
     t.string   "state"
   end
 
-  create_table "branches", force: true do |t|
+  create_table "branches", force: :cascade do |t|
     t.string   "name"
     t.string   "commit_uri"
     t.string   "last_commit"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20150827194533) do
     t.boolean  "mergeable"
   end
 
-  create_table "repos", force: true do |t|
+  create_table "repos", force: :cascade do |t|
     t.string   "name"
     t.string   "path"
     t.datetime "created_at"
