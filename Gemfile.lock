@@ -171,7 +171,7 @@ GEM
     mini_portile (0.6.2)
     minigit (0.0.4)
     minitest (5.8.0)
-    more_core_extensions (1.2.0)
+    more_core_extensions (2.0.0)
       activesupport (> 3.2)
     multi_json (1.11.2)
     multi_xml (0.5.5)
@@ -350,7 +350,7 @@ DEPENDENCIES
   jquery-rails
   minigit (~> 0.0.4)
   miq_tools_services!
-  more_core_extensions
+  more_core_extensions (~> 2.0.0)
   octokit (~> 3.8.0)
   pg
   rails (~> 4.2.4)

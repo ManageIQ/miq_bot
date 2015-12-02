@@ -40,7 +40,7 @@ gem 'travis', '~>1.7.6'
 
 gem 'awesome_spawn'
 gem 'default_value_for'
-gem 'more_core_extensions', :require => 'more_core_extensions/all'
+gem 'more_core_extensions', "~> 2.0.0", :require => 'more_core_extensions/all'
 gem 'rubocop', '>= 0.27.1'
 gem 'haml-lint', '~> 0.13.0'
 
