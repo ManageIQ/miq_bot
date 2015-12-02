@@ -30,8 +30,8 @@ gem 'foreman', '~> 0.64.0' # v0.65.0 breaks support for the older upstart on RHE
 gem 'rails_config', '0.5.0.beta1'
 
 # Sidekiq specific gems
-gem 'sidekiq', '~> 2.17'
-gem 'sidetiq'
+gem 'sidekiq', '~> 3.5.3'
+gem 'sidetiq', :github => "sfroehler/sidetiq", :branch => "celluloid-0-17-compatibility"
 gem 'sinatra', require: false
 gem 'slim'
 
@@ -40,7 +40,7 @@ gem 'travis', '~>1.7.6'
 
 gem 'awesome_spawn'
 gem 'default_value_for'
-gem 'more_core_extensions', :require => 'more_core_extensions/all'
+gem 'more_core_extensions', "~> 2.0.0", :require => 'more_core_extensions/all'
 gem 'rubocop', '>= 0.27.1'
 gem 'haml-lint', '~> 0.13.0'
 
