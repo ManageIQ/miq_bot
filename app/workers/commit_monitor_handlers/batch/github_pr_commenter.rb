@@ -1,7 +1,7 @@
 module CommitMonitorHandlers::Batch
   class GithubPrCommenter
     include Sidekiq::Worker
-    sidekiq_options :queue => :miq_bot
+    sidekiq_options :queue => :miq_bot_glacial
 
     include BatchJobWorkerMixin
     include BranchWorkerMixin

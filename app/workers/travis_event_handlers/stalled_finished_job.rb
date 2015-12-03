@@ -3,7 +3,7 @@ require 'travis/client'
 module TravisEventHandlers
   class StalledFinishedJob
     include Sidekiq::Worker
-    sidekiq_options :queue => :miq_bot
+    sidekiq_options :queue => :miq_bot_glacial
 
     STALLED_BUILD_TEXT = "\n\nNo output has been received in the last 10 minutes, this potentially indicates a stalled build or something wrong with the build itself.\n\nThe build has been terminated\n\n"
     HANDLED_EVENTS  = ['job:finished'].freeze

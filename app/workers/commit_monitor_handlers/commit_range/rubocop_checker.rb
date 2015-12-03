@@ -1,6 +1,6 @@
 class CommitMonitorHandlers::CommitRange::RubocopChecker
   include Sidekiq::Worker
-  sidekiq_options :queue => :miq_bot
+  sidekiq_options :queue => :miq_bot_glacial
 
   include BranchWorkerMixin
 
