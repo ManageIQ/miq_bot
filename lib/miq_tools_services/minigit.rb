@@ -90,7 +90,7 @@ module MiqToolsServices
 
       ret = Hash.new { |h, k| h[k] = [] }
       path = line_number = nil
-      output.lines.each_with_object(ret) do |line, h|
+      output.each_line do |line|
         case line
         when /^--- (?:a\/)?/
           next
@@ -100,11 +100,12 @@ module MiqToolsServices
           line_number = $1.to_i
         when /^([ +-])/
           if $1 != "-"
-            h[path] << line_number
+            ret[path] << line_number
             line_number += 1
           end
         end
       end
+      ret
     end
 
     def diff_file_names(commit1, commit2 = nil)
