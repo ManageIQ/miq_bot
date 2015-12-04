@@ -36,10 +36,7 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
     logger.info("Updating PR #{branch.pr_number} with mergability comment.")
 
     branch.repo.with_github_service do |github|
-      github.issues.comments.create(
-        :issue_id => branch.pr_number,
-        :body     => "#{tag}This pull request is not mergeable.  Please rebase and repush."
-      )
+      github.create_issue_comments(branch.pr_number, "#{tag}This pull request is not mergeable.  Please rebase and repush.")
     end
   end
 end
