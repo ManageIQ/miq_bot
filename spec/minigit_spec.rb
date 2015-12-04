@@ -249,86 +249,74 @@ index 4f807bb..57e5993 100644
   end
 
   it ".pr_branch" do
-    expect(described_class.pr_branch(133)).to eq "pr/133"
+    expect(described_class.pr_branch(133)).to eq "prs/133/head"
   end
 
   it "#pr_branch" do
     with_service do |git|
-      expect(git.pr_branch(133)).to eq "pr/133"
+      expect(git.pr_branch(133)).to eq "prs/133/head"
     end
   end
 
   it ".pr_number" do
-    expect(described_class.pr_number("pr/133")).to eq 133
+    expect(described_class.pr_number("prs/133/head")).to eq 133
   end
 
   it "#pr_number" do
     with_service do |git|
-      expect(git.pr_number("pr/133")).to eq 133
+      expect(git.pr_number("prs/133/head")).to eq 133
     end
   end
 
-  context ".pr_branch?" do
-    it "with a pr branch" do
-      expect(described_class.pr_branch?("pr/133")).to be_truthy
-    end
-
-    it "with a regular branch" do
-      expect(described_class.pr_branch?("master")).to be_falsey
-    end
-  end
-
-  context "#pr_branch?" do
-    it "with pr branch" do
+  context "#remotes" do
+    it "with single" do
+      allow(service).to receive(:remote).and_return("origin")
       with_service do |git|
-        expect(git.pr_branch?("pr/133")).to be_truthy
+        expect(git.remotes).to eq(["origin"])
       end
     end
 
-    it "with regular branch" do
+    it "with multiple" do
+      allow(service).to receive(:remote).and_return("origin\nupstream")
       with_service do |git|
-        expect(git.pr_branch?("master")).to be_falsey
-      end
-    end
-
-    it "with no branch and current branch is a pr branch" do
-      described_class.any_instance.stub(:current_branch => "pr/133")
-      with_service do |git|
-        expect(git.pr_branch?).to be_truthy
-      end
-    end
-
-    it "with no branch and current branch is a regular branch" do
-      described_class.any_instance.stub(:current_branch => "master")
-      with_service do |git|
-        expect(git.pr_branch?).to be_falsey
+        expect(git.remotes).to eq(["origin", "upstream"])
       end
     end
   end
 
-  context "#update_pr_branch" do
-    it "with pr branch" do
-      expect(service).to receive(:fetch).with("-fu", "origin", "refs/pull/133/head:pr/133").and_return("\n")
-      expect(service).to receive(:reset).with("--hard").and_return("\n")
-
-      with_service { |git| git.update_pr_branch("pr/133") }
+  context "#fetches" do
+    it "without pr fetcher" do
+      allow(service).to receive(:config).with("--get-all", "remote.origin.fetch").and_return("+refs/heads/*:refs/remotes/origin/*")
+      with_service do |git|
+        expect(git.fetches("origin")).to eq(["+refs/heads/*:refs/remotes/origin/*"])
+      end
     end
 
-    it "with no branch and on a pr branch" do
-      described_class.any_instance.stub(:current_branch => "pr/133")
-      expect(service).to receive(:fetch).with("-fu", "origin", "refs/pull/133/head:pr/133").and_return("\n")
-      expect(service).to receive(:reset).with("--hard").and_return("\n")
-
-      with_service { |git| git.update_pr_branch }
+    it "with pr fetcher" do
+      allow(service).to receive(:config).with("--get-all", "remote.origin.fetch").and_return("+refs/heads/*:refs/remotes/origin/*\n+refs/pull/*:refs/prs/*")
+      with_service do |git|
+        expect(git.fetches("origin")).to eq(["+refs/heads/*:refs/remotes/origin/*", "+refs/pull/*:refs/prs/*"])
+      end
     end
   end
 
-  context "#create_pr_branch" do
-    it "with pr branch" do
-      expect(service).to receive(:fetch).with("-fu", "origin", "refs/pull/133/head:pr/133").and_return("\n")
-      expect(service).to receive(:reset).with("--hard").and_return("\n")
+  context "#ensure_prs_refs" do
+    it "without pr fetcher will create it" do
+      allow_any_instance_of(described_class).to receive(:remote).and_return("origin")
+      allow_any_instance_of(described_class).to receive(:fetches).with("origin").and_return(["+refs/heads/*:refs/remotes/origin/*"])
 
-      with_service { |git| git.create_pr_branch("pr/133") }
+      expect_any_instance_of(described_class).to receive(:config).with("--add", "remote.origin.fetch", "+refs/pull/*:refs/prs/*")
+
+      with_service(&:ensure_prs_refs)
+    end
+
+    it "with pr fetcher will not create it" do
+      allow_any_instance_of(described_class).to receive(:remote).and_return("origin")
+      allow_any_instance_of(described_class).to receive(:fetches).with("origin").and_return(["+refs/heads/*:refs/remotes/origin/*", "+refs/pull/*:refs/prs/*"])
+
+      expect_any_instance_of(described_class).not_to receive(:config)
+
+      with_service(&:ensure_prs_refs)
     end
   end
 end

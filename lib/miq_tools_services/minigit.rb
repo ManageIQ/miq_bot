@@ -130,23 +130,14 @@ module MiqToolsServices
     #
 
     def self.pr_branch(pr_number)
-      "pr/#{pr_number}"
+      "prs/#{pr_number}/head"
     end
     delegate :pr_branch, :to => :class
 
     def self.pr_number(branch)
-      branch.split("/").last.to_i
+      branch.split("/")[1].to_i
     end
     delegate :pr_number, :to => :class
-
-    def self.pr_branch?(branch)
-      branch =~ %r{^pr/\d+$}
-    end
-
-    def pr_branch?(branch = nil)
-      branch ||= current_branch
-      self.class.pr_branch?(branch)
-    end
 
     def mergeable?(branch = nil, into_branch = "master")
       branch ||= current_branch
@@ -163,19 +154,18 @@ module MiqToolsServices
       end
     end
 
-    def update_pr_branch(branch = nil, remote = "origin")
-      create_or_update_pr_branch(branch || current_branch, remote)
+    def remotes
+      remote.split("\n").uniq.compact
     end
 
-    def create_pr_branch(branch, remote = "origin")
-      create_or_update_pr_branch(branch, remote)
+    def fetches(remote)
+      config("--get-all", "remote.#{remote}.fetch").split("\n").compact
     end
 
-    private
-
-    def create_or_update_pr_branch(branch, remote)
-      fetch("-fu", remote, "refs/pull/#{pr_number(branch)}/head:#{branch}")
-      reset("--hard")
+    def ensure_prs_refs
+      remotes.each do |remote_name|
+        config("--add", "remote.#{remote_name}.fetch", "+refs/pull/*:refs/prs/*") unless fetches(remote_name).include?("+refs/pull/*:refs/prs/*")
+      end
     end
   end
 end
