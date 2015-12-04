@@ -45,7 +45,11 @@ class Repo < ActiveRecord::Base
 
   def with_git_service
     raise "no block given" unless block_given?
-    MiqToolsServices::MiniGit.call(path) { |git| yield git }
+    MiqToolsServices::MiniGit.call(path) do |git|
+      git.ensure_prs_refs
+      git.fetch("--all")
+      yield git
+    end
   end
 
   def with_github_service
