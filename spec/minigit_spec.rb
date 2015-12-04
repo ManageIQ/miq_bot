@@ -13,6 +13,27 @@ describe MiqToolsServices::MiniGit do
 
   it_should_behave_like "ServiceMixin service"
 
+  context ".clone" do
+    let(:command) { "git clone" }
+    let(:params)  { ["git@example.com:org/repo.git", "destination_dir"] }
+
+    it "when it succeeds" do
+      result = stub_good_run!(command, :params => params)
+      expect(STDERR).to receive(:puts).with("+ #{result.command_line}")
+      expect(STDERR).to receive(:puts)
+
+      expect(described_class.clone(*params)).to be true
+    end
+
+    it "when it fails" do
+      result = stub_bad_run!(command, :params => params)
+      expect(STDERR).to receive(:puts).with("+ #{result.command_line}")
+
+      require 'minigit' # To bring in the classes for testing
+      expect { described_class.clone(*params) }.to raise_error(MiniGit::GitError)
+    end
+  end
+
   context ".bugzilla_ids" do
     it "with no bugs" do
       message = <<-EOF

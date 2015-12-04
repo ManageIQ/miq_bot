@@ -2,6 +2,16 @@ module MiqToolsServices
   class MiniGit
     include ServiceMixin
 
+    def self.clone(*args)
+      require 'awesome_spawn'
+      STDERR.puts "+ #{AwesomeSpawn.build_command_line("git clone", args)}"
+      STDERR.puts AwesomeSpawn.run!("git clone", :params => args).output
+      true
+    rescue AwesomeSpawn::CommandResultError => err
+      require 'minigit'
+      raise ::MiniGit::GitError.new(["clone"], err.result.error.chomp)
+    end
+
     # All MiniGit methods return stdout which always has a trailing newline
     # that is never wanted, so remove it always.
     def delegate_to_service(method_name, *args)
