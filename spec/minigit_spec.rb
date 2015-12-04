@@ -270,38 +270,38 @@ index 4f807bb..57e5993 100644
 
   context ".pr_branch?" do
     it "with a pr branch" do
-      expect(described_class.pr_branch?("pr/133")).to be_true
+      expect(described_class.pr_branch?("pr/133")).to be_truthy
     end
 
     it "with a regular branch" do
-      expect(described_class.pr_branch?("master")).to be_false
+      expect(described_class.pr_branch?("master")).to be_falsey
     end
   end
 
   context "#pr_branch?" do
     it "with pr branch" do
       with_service do |git|
-        expect(git.pr_branch?("pr/133")).to be_true
+        expect(git.pr_branch?("pr/133")).to be_truthy
       end
     end
 
     it "with regular branch" do
       with_service do |git|
-        expect(git.pr_branch?("master")).to be_false
+        expect(git.pr_branch?("master")).to be_falsey
       end
     end
 
     it "with no branch and current branch is a pr branch" do
       described_class.any_instance.stub(:current_branch => "pr/133")
       with_service do |git|
-        expect(git.pr_branch?).to be_true
+        expect(git.pr_branch?).to be_truthy
       end
     end
 
     it "with no branch and current branch is a regular branch" do
       described_class.any_instance.stub(:current_branch => "master")
       with_service do |git|
-        expect(git.pr_branch?).to be_false
+        expect(git.pr_branch?).to be_falsey
       end
     end
   end
