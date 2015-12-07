@@ -1,27 +1,34 @@
 class Repo < ActiveRecord::Base
+  BASE_PATH = Rails.root.join("repos")
+
   has_many :branches, :dependent => :destroy
 
   validates :name, :presence => true, :uniqueness => true
-  validates :path, :presence => true, :uniqueness => true
 
-  def self.create_from_github!(name, path)
-    MiqToolsServices::MiniGit.call(path) do |git|
-      git.checkout("master")
-      git.pull
+  def self.create_from_github!(name, url)
+    create_and_clone!(name, url, Branch.github_commit_uri(name))
+  end
 
-      repo = self.create!(
-        :name => name,
-        :path => path
-      )
+  def self.create_and_clone!(name, url, commit_uri)
+    path = BASE_PATH.join(name)
 
-      repo.branches.create!(
+    raise ArgumentError, "a git repo already exists at #{path}" if path.join(".git").exist?
+
+    MiqToolsServices::MiniGit.clone(url, path)
+    last_commit = MiqToolsServices::MiniGit.call(path, &:current_ref)
+
+    create!(
+      :name     => name,
+      :branches => Branch.new(
         :name        => "master",
-        :commit_uri  => Branch.github_commit_uri(name),
-        :last_commit => git.current_ref
+        :commit_uri  => commit_uri,
+        :last_commit => last_commit
       )
+    )
+  end
 
-      repo
-    end
+  def path
+    BASE_PATH.join(name)
   end
 
   def name_parts
@@ -34,10 +41,6 @@ class Repo < ActiveRecord::Base
 
   def project
     name_parts.last
-  end
-
-  def path=(val)
-    super(File.expand_path(val))
   end
 
   def with_git_service
