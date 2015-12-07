@@ -11,14 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150827194533) do
+ActiveRecord::Schema.define(version: 20151207193108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "batch_entries", force: :cascade do |t|
     t.integer "batch_job_id"
-    t.string  "state"
+    t.string  "state",        limit: 255
     t.text    "result"
   end
 
@@ -28,15 +28,15 @@ ActiveRecord::Schema.define(version: 20150827194533) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "expires_at"
-    t.string   "on_complete_class"
+    t.string   "on_complete_class", limit: 255
     t.text     "on_complete_args"
-    t.string   "state"
+    t.string   "state",             limit: 255
   end
 
   create_table "branches", force: :cascade do |t|
-    t.string   "name"
-    t.string   "commit_uri"
-    t.string   "last_commit"
+    t.string   "name",            limit: 255
+    t.string   "commit_uri",      limit: 255
+    t.string   "last_commit",     limit: 255
     t.integer  "repo_id"
     t.boolean  "pull_request"
     t.datetime "last_checked_on"
@@ -46,8 +46,7 @@ ActiveRecord::Schema.define(version: 20150827194533) do
   end
 
   create_table "repos", force: :cascade do |t|
-    t.string   "name"
-    t.string   "path"
+    t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end

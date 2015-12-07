@@ -44,18 +44,9 @@ describe Repo do
     end
   end
 
-  context "#path / #path=" do
-    let(:home) { File.expand_path("~") }
-
-    it "with expandable path" do
-      repo.path = "~/path"
-      expect(repo.path).to eq File.expand_path("~/path")
-    end
-
-    it "with absolute path" do
-      repo.path = "/Users/me/path"
-      expect(repo.path).to eq "/Users/me/path"
-    end
+  it "#path" do
+    expected = Rails.root.join("repos", repo.name)
+    expect(repo.path).to eq(expected)
   end
 
   it "#branch_names" do
