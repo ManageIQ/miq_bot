@@ -80,30 +80,25 @@ underscores replaced with hyphens.
    bundle exec rake db:setup
    ```
 
-6. Create/fork a test repository (replace `miq-test/sandbox` with your test
+6. Create/fork a test repository and add it to the database (replace `miq-test/sandbox` with your test
    repository below):
    ```
-   git clone -o upstream git@github.com:miq-test/sandbox.git repos/sandbox
+   bundle exec rails runner 'Repo.create_from_github!("miq-test/sandbox", "git@github.com:miq-test/sandbox.git")'
    ```
 
-7. Add the test repository to the database:
-   ```
-   bundle exec rails runner 'Repo.create_from_github!("miq-test/sandbox", Rails.root.join("repos", "sandbox"))'
-   ```
-
-8. Create a custom Procfile for development. Any changes you make to this file
+7. Create a custom Procfile for development. Any changes you make to this file
    won't be tracked.
    ```
    cp Procfile.tmpl Procfile
    ```
 
-9. Either start redis as a daemon or have foreman start it for you by
+8. Either start redis as a daemon or have foreman start it for you by
    adding this to the `Procfile`:
    ```yaml
    redis: redis-server /path/to/redis.conf  # change this to the redis.conf provided by your package manager.
    ```
 
-10. Configure the bot settings. First copy the template:
+9. Configure the bot settings. First copy the template:
     ```
     cp config/settings.yml config/settings/development.local.yml
     ```
@@ -129,12 +124,12 @@ underscores replaced with hyphens.
     enabled_repos: ["miq-test/sandbox"]
     ```
 
-11. You should now be able to run `foreman start` to start the services listed
+10. You should now be able to run `foreman start` to start the services listed
     in the `Procfile`.
 
-12. See `log/development.log` and `log/sidekiq.log` to make sure
+11. See `log/development.log` and `log/sidekiq.log` to make sure
     things are starting.
 
-13. You should be able to open a new PR on the miq-test/sandbox
+12. You should be able to open a new PR on the miq-test/sandbox
     repository with any rubocop problems, such as `MixedCaseConstant = 1`.
     Wait a few minutes and see if it comments on your PR.
