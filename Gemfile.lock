@@ -96,6 +96,7 @@ GEM
       execjs
     coffee-script-source (1.9.1.1)
     colored (1.2)
+    concurrent-ruby (1.0.0)
     connection_pool (2.2.0)
     daemons (1.2.3)
     default_value_for (3.0.1)
@@ -235,9 +236,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.0.0)
     rake (10.4.2)
-    redis (3.2.1)
-    redis-namespace (1.5.2)
-      redis (~> 3.0, >= 3.0.4)
+    redis (3.2.2)
     ref (2.0.0)
     rspec (3.3.0)
       rspec-core (~> 3.3.0)
@@ -276,12 +275,11 @@ GEM
     sawyer (0.6.0)
       addressable (~> 2.3.5)
       faraday (~> 0.8, < 0.10)
-    sidekiq (3.5.3)
-      celluloid (~> 0.17.2)
+    sidekiq (4.0.1)
+      concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
       json (~> 1.0)
       redis (~> 3.2, >= 3.2.1)
-      redis-namespace (~> 1.5, >= 1.5.2)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -359,7 +357,7 @@ DEPENDENCIES
   rspec-rails
   rubocop (>= 0.27.1)
   sass-rails (~> 4.0.0)
-  sidekiq (~> 3.5.3)
+  sidekiq (~> 4.0.1)
   sidetiq!
   sinatra
   slim
