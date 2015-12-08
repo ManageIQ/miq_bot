@@ -308,7 +308,7 @@ index 4f807bb..57e5993 100644
 
   context "#update_pr_branch" do
     it "with pr branch" do
-      expect(service).to receive(:fetch).with("-fu", "upstream", "refs/pull/133/head:pr/133").and_return("\n")
+      expect(service).to receive(:fetch).with("-fu", "origin", "refs/pull/133/head:pr/133").and_return("\n")
       expect(service).to receive(:reset).with("--hard").and_return("\n")
 
       with_service { |git| git.update_pr_branch("pr/133") }
@@ -316,7 +316,7 @@ index 4f807bb..57e5993 100644
 
     it "with no branch and on a pr branch" do
       described_class.any_instance.stub(:current_branch => "pr/133")
-      expect(service).to receive(:fetch).with("-fu", "upstream", "refs/pull/133/head:pr/133").and_return("\n")
+      expect(service).to receive(:fetch).with("-fu", "origin", "refs/pull/133/head:pr/133").and_return("\n")
       expect(service).to receive(:reset).with("--hard").and_return("\n")
 
       with_service { |git| git.update_pr_branch }
@@ -325,7 +325,7 @@ index 4f807bb..57e5993 100644
 
   context "#create_pr_branch" do
     it "with pr branch" do
-      expect(service).to receive(:fetch).with("-fu", "upstream", "refs/pull/133/head:pr/133").and_return("\n")
+      expect(service).to receive(:fetch).with("-fu", "origin", "refs/pull/133/head:pr/133").and_return("\n")
       expect(service).to receive(:reset).with("--hard").and_return("\n")
 
       with_service { |git| git.create_pr_branch("pr/133") }

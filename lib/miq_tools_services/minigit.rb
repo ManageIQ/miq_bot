@@ -163,11 +163,11 @@ module MiqToolsServices
       end
     end
 
-    def update_pr_branch(branch = nil, remote = "upstream")
+    def update_pr_branch(branch = nil, remote = "origin")
       create_or_update_pr_branch(branch || current_branch, remote)
     end
 
-    def create_pr_branch(branch, remote = "upstream")
+    def create_pr_branch(branch, remote = "origin")
       create_or_update_pr_branch(branch, remote)
     end
 
