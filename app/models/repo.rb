@@ -19,11 +19,11 @@ class Repo < ActiveRecord::Base
 
     create!(
       :name     => name,
-      :branches => Branch.new(
+      :branches => [Branch.new(
         :name        => "master",
         :commit_uri  => commit_uri,
         :last_commit => last_commit
-      )
+      )]
     )
   end
 
