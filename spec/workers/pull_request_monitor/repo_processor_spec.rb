@@ -15,7 +15,7 @@ RSpec.describe PullRequestMonitor::RepoProcessor do
       pr   = double("GitHub PR", :number => 1)
       stub_github_prs(github, [pr]).twice
 
-      expect(PullRequestMonitor::PrBranchRecord).to receive(:create).with(git, repo, pr, "pr/1")
+      expect(PullRequestMonitor::PrBranchRecord).to receive(:create).with(git, repo, pr, "prs/1/head")
 
       described_class.process(git, repo)
     end
@@ -37,7 +37,7 @@ RSpec.describe PullRequestMonitor::RepoProcessor do
       stub_github_prs(github, []).twice
 
       expect(git).to receive(:checkout).with("master") # again
-      expect(git).to receive(:destroy_branch).with("pr/#{pr_number}")
+      expect(git).to receive(:destroy_branch).with("prs/#{pr_number}/head")
 
       described_class.process(git, repo)
     end

@@ -8,7 +8,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
       branch_name = "foo/bar"
       git = spy("git")
 
-      expect(git).to receive(:create_pr_branch).with(branch_name).once
+      expect(git).to receive(:fetch).with("--all").once
 
       described_class.create(git, repo, pr, branch_name)
     end
