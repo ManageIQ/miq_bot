@@ -1,11 +1,12 @@
 GIT
   remote: git://github.com/ManageIQ/miq_tools_services.git
-  revision: f08c4fb14739ac3e156d62480761a2faf8400038
-  branch: master
+  revision: f0439d49e117d80f43c3b533431af26a36fd8d1d
+  tag: v0.1.0
   specs:
-    miq_tools_services (0.0.1)
+    miq_tools_services (0.1.0)
       active_bugzilla
       activesupport
+      awesome_spawn
       github_api (~> 0.11.1)
       minigit (~> 0.0.4)
       polisher (~> 0.10.2)
@@ -148,7 +149,7 @@ GEM
       haml (~> 4.0)
       rubocop (>= 0.25.0)
       sysexits (~> 1.1)
-    hashie (3.4.2)
+    hashie (3.4.3)
     highline (1.7.7)
     hike (1.2.3)
     hitimes (1.2.3)
@@ -159,7 +160,7 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (1.8.3)
-    jwt (1.5.1)
+    jwt (1.5.2)
     launchy (2.4.3)
       addressable (~> 2.3)
     libv8 (3.16.14.11)
@@ -347,7 +348,7 @@ DEPENDENCIES
   haml-lint (~> 0.13.0)
   jquery-rails
   minigit (~> 0.0.4)
-  miq_tools_services!
+  miq_tools_services (~> 0.1.0)!
   more_core_extensions (~> 2.0.0)
   octokit (~> 3.8.0)
   pg
