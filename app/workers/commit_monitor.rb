@@ -77,10 +77,9 @@ class CommitMonitor
     update_branch
 
     @new_commits, @all_commits = detect_commits
-    statistics[branch.name] = {
-      :new_commits => new_commits,
-      :all_commits => all_commits
-    }
+
+    statistics[branch.name] = {:new_commits => new_commits} unless branch.pull_request?
+
     logger.info "Detected new commits #{new_commits}" if new_commits.any?
 
     save_branch_record
