@@ -72,16 +72,6 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
 
       described_class.delete(git, repo, branch_1, branch_2)
     end
-
-    it "has git delete the local branches" do
-      repo = spy("Repo")
-      git = spy("git")
-      branch_name = "foo/bar"
-
-      expect(git).to receive(:destroy_branch).with(branch_name)
-
-      described_class.delete(git, repo, branch_name)
-    end
   end
 
   describe ".prune" do
@@ -95,7 +85,6 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
       allow(relation).to receive(:where).with(:name => [branch_name]).and_return(relation)
 
       expect(relation).to receive(:destroy_all)
-      expect(git).to receive(:destroy_branch).with(branch_name)
 
       described_class.prune(git, repo)
     end

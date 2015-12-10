@@ -17,9 +17,6 @@ class PullRequestMonitor
       return if branch_names.empty?
 
       repo.branches.where(:name => branch_names).destroy_all
-
-      git.checkout("master")
-      branch_names.each { |branch_name| git.destroy_branch(branch_name) }
     end
 
     def self.prune(git, repo)

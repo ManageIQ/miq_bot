@@ -36,10 +36,9 @@ RSpec.describe PullRequestMonitor::RepoProcessor do
       pr_number = repo.pr_branches.first.pr_number
       stub_github_prs(github, []).twice
 
-      expect(git).to receive(:checkout).with("master") # again
-      expect(git).to receive(:destroy_branch).with("prs/#{pr_number}/head")
-
       described_class.process(git, repo)
+
+      expect(repo.branches.reload).to be_blank
     end
   end
 end
