@@ -1,7 +1,7 @@
 class PullRequestMonitor
   class PrBranchRecord
     def self.create(git, repo, pr, branch_name)
-      git.create_pr_branch(branch_name)
+      git.fetch("--all")
       commit_uri  = File.join(pr.head.repo.html_url, "commit", "$commit")
       last_commit = git.merge_base(branch_name, "master")
       repo.branches.create!(

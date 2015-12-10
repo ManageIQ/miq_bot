@@ -35,7 +35,7 @@ gem 'sidetiq', :github => "sfroehler/sidetiq", :branch => "celluloid-0-17-compat
 gem 'sinatra', require: false
 gem 'slim'
 
-gem 'miq_tools_services', :git => "git://github.com/ManageIQ/miq_tools_services.git", :branch => "master"
+gem 'miq_tools_services', "~> 0.1.0", :git => "git://github.com/ManageIQ/miq_tools_services.git", :tag => "v0.1.0"
 gem 'travis', '~>1.7.6'
 
 gem 'awesome_spawn'

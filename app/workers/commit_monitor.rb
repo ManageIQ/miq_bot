@@ -87,12 +87,9 @@ class CommitMonitor
   end
 
   def update_branch
-    if branch.pull_request?
-      git.update_pr_branch(branch.name)
-    else
-      git.checkout(branch.name)
-      git.pull
-    end
+    return if branch.pull_request?
+    git.checkout(branch.name)
+    git.pull
   end
 
   def detect_commits
