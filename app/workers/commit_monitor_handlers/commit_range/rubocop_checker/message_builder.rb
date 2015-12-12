@@ -19,7 +19,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
 
   attr_reader :results, :message_builder
 
-  SUCCESS_EMOJI = %w{:+1: :cookie: :star: :cake:}
+  SUCCESS_EMOJI = %w{:+1: :cookie: :star: :cake: :trophy:}
 
   SEVERITY = {
     "fatal"      => ":red_circle: **Fatal**",
