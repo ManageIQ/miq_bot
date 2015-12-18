@@ -15,7 +15,7 @@ class PullRequestMonitor
         end
       end
 
-      PrBranchRecord.prune(git, repo)
+      PrBranchRecord.prune(repo)
     end
   end
 end
