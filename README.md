@@ -117,7 +117,7 @@ underscores replaced with hyphens.
     pr_contacts: ["@your_username"]
     enabled_repos: ["miq-test/sandbox"]
 
-    # issue_manager - leave blank to disable
+    # github_notification_monitor - leave blank to disable
     repo_names: ["sandbox"]
 
     # travis_event - leave blank to disable

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-RSpec.describe IssueManager do
+RSpec.describe GithubNotificationMonitor do
   describe "#process_notifications" do
     before do
-      allow(File).to receive(:write).with(described_class::ISSUE_MANAGER_YAML_FILE, anything)
+      allow(File).to receive(:write).with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE, anything)
     end
 
     let(:username) { "miq-bot" }
@@ -246,7 +246,7 @@ RSpec.describe IssueManager do
   end
 
   def stub_timestamps_for_repo_with_issue_number(repo, issue_number, timestamp)
-    allow(YAML).to receive(:load_file).with(described_class::ISSUE_MANAGER_YAML_FILE) do
+    allow(YAML).to receive(:load_file).with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE) do
       {"timestamps" => {repo => {issue_number => timestamp}}}
     end
   end
