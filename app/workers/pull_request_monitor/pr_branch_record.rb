@@ -13,14 +13,14 @@ class PullRequestMonitor
       )
     end
 
-    def self.delete(git, repo, *branch_names)
+    def self.delete(repo, *branch_names)
       return if branch_names.empty?
 
       repo.branches.where(:name => branch_names).destroy_all
     end
 
-    def self.prune(git, repo)
-      delete(git, repo, *repo.stale_pr_branches)
+    def self.prune(repo)
+      delete(repo, *repo.stale_pr_branches)
     end
   end
 end
