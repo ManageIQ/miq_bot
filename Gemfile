@@ -40,9 +40,10 @@ gem 'travis', '~>1.7.6'
 
 gem 'awesome_spawn'
 gem 'default_value_for'
-gem 'more_core_extensions', "~> 2.0.0", :require => 'more_core_extensions/all'
-gem 'rubocop'
 gem 'haml_lint'
+gem 'more_core_extensions', "~> 2.0.0", :require => 'more_core_extensions/all'
+gem 'rubocop',                          :require => false
+gem 'rugged',                           :require => false
 
 gem 'octokit',       '~> 3.8.0'
 gem 'minigit',       '~> 0.0.4'

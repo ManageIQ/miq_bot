@@ -75,4 +75,22 @@ class Branch < ActiveRecord::Base
       github.create_issue_comments(pr_number, message_builder.comments)
     end
   end
+
+  def branch_ref_name
+    return name if name.include?("prs/")
+    "origin/#{name}"
+  end
+
+  def git_diff
+    require 'rugged'
+    merge_head  = "origin/master" # TODO: should be a column
+    rugged_repo = Rugged::Repository.new(repo.path.to_s)
+    rugged_repo.diff(merge_head, branch_ref_name)
+  end
+
+  def git_branch_ref
+    require 'rugged'
+    rugged_repo = Rugged::Repository.new(repo.path.to_s)
+    rugged_repo.references["refs/#{branch_ref_name}"]
+  end
 end
