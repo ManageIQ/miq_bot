@@ -47,9 +47,9 @@ underscores replaced with hyphens.
 
 ### Prerequisites
 
-* ruby 1.9.3 with bundler
-* redis ~> 2.8.10
-* postgresql
+* Ruby 2.2 with bundler
+* Redis ~> 2.8.10
+* Postgresql
 
 ### Setup
 
