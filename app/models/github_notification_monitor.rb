@@ -53,9 +53,18 @@ class GithubNotificationMonitor
   end
 
   def process_issue_thread(issue)
+    process_issue_title(issue)
     process_issue_comment(issue, issue.author, issue.created_at, issue.body)
     issue.comments.each do |comment|
       process_issue_comment(comment.issue, comment.author, comment.updated_at, comment.body)
+    end
+  end
+
+  def process_issue_title(issue)
+    if issue.title_indicates_wip?
+      issue.add_labels([GitHubApi::Label.new(nil, "wip", nil)]) unless issue.applied_label?("wip")
+    else
+      issue.remove_label("wip") if issue.applied_label?("wip")
     end
   end
 
