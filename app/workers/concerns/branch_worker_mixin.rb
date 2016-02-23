@@ -47,13 +47,13 @@ module BranchWorkerMixin
 
   def diff_details_for_merge
     branch.repo.with_git_service do |git|
-      git.diff_details("master", commits.last) # TODO: Replace "master" with Branch#destination_branch
+      git.diff_details(branch.local_merge_target, commits.last)
     end
   end
 
   def diff_file_names_for_merge
     branch.repo.with_git_service do |git|
-      git.diff_file_names("master", commits.last) # TODO: Replace "master" with Branch#destination_branch
+      git.diff_file_names(branch.local_merge_target, commits.last)
     end
   end
 end

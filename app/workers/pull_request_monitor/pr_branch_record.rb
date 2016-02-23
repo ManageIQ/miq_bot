@@ -3,13 +3,14 @@ class PullRequestMonitor
     def self.create(git, repo, pr, branch_name)
       git.fetch("--all")
       commit_uri  = File.join(pr.head.repo.html_url, "commit", "$commit")
-      last_commit = git.merge_base(branch_name, "master")
+      last_commit = git.merge_base(branch_name, "origin/#{pr.base.ref}")
       repo.branches.create!(
         :name         => branch_name,
         :last_commit  => last_commit,
         :commits_list => [],
         :commit_uri   => commit_uri,
-        :pull_request => true
+        :pull_request => true,
+        :merge_target => pr.base.ref
       )
     end
 

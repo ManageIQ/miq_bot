@@ -23,7 +23,7 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   def process_mergeability
     was_mergeable = branch.mergeable?
     currently_mergeable = branch.repo.with_git_service do |git|
-      git.mergeable?(branch.name, "master")
+      git.mergeable?(branch.name, branch.local_merge_target)
     end
 
     write_to_github if was_mergeable && !currently_mergeable

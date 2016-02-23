@@ -15,11 +15,11 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
 
     it "creates a PR branch on the repo" do
       repo = instance_spy("Repo")
-      pr = spy("pr")
+      pr = spy("pr", :base => spy("base", :ref => "master"))
       branch_name = "foo/bar"
       last_commit = "123456"
       git = spy("git")
-      allow(git).to receive(:merge_base).with(branch_name, "master").and_return(last_commit)
+      allow(git).to receive(:merge_base).with(branch_name, "origin/master").and_return(last_commit)
       allow(pr).to receive_message_chain(:head, :repo, :html_url)
         .and_return("https://github.com/foo/bar")
 
@@ -28,7 +28,8 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
         :last_commit  => last_commit,
         :commits_list => [],
         :commit_uri   => "https://github.com/foo/bar/commit/$commit",
-        :pull_request => true
+        :pull_request => true,
+        :merge_target => "master"
       }
       expect(repo).to receive_message_chain(:branches, :create!).with hash_including(expected)
       described_class.create(git, repo, pr, branch_name)

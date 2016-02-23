@@ -3,9 +3,9 @@ require 'securerandom'
 FactoryGirl.define do
   factory :branch do
     sequence(:name) { |n| "branch_#{n}" }
-
-    commit_uri  { "https://example.com/#{repo.name}/commit/$commit" }
-    last_commit { SecureRandom.hex(40) }
+    commit_uri      { "https://example.com/#{repo.name}/commit/$commit" }
+    last_commit     { SecureRandom.hex(40) }
+    merge_target    "master"
 
     repo
   end

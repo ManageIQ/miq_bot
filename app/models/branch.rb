@@ -43,6 +43,10 @@ class Branch < ActiveRecord::Base
     commit_uri_to(last_commit)
   end
 
+  def local_merge_target
+    "origin/#{merge_target}"
+  end
+
   def compare_uri_for(commit1, commit2)
     # TODO: This needs use a different URI than the commit_uri
     commit_uri
