@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151207193108) do
+ActiveRecord::Schema.define(version: 20160119143158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20151207193108) do
     t.datetime "last_changed_on"
     t.text     "commits_list"
     t.boolean  "mergeable"
+    t.string   "merge_target"
   end
 
   create_table "repos", force: :cascade do |t|

@@ -101,7 +101,7 @@ class CommitMonitor
   end
 
   def detect_commits_on_pr_branch
-    all        = git.new_commits(git.merge_base(branch.name, "master"), branch.name)
+    all        = git.new_commits(git.merge_base(branch.name, branch.local_merge_target), branch.name)
     comparison = compare_commits_list(branch.commits_list, all)
     return comparison[:right_only], all
   end

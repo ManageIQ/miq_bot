@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CommitMonitorHandlers::Batch::GithubPrCommenter::MigrationDateChecker do
   let(:commits_list)   { ["123abc", "234def"] }
-  let(:diff_file_names_params) { ["master", commits_list.last] }
+  let(:diff_file_names_params) { ["origin/master", commits_list.last] }
   let(:branch)         { create(:pr_branch, :commits_list => commits_list) }
   let(:batch_entry)    { BatchEntry.create!(:job => BatchJob.create!) }
   let(:git_service)    { stub_git_service }
