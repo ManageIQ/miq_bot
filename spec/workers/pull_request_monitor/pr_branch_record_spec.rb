@@ -1,4 +1,5 @@
 require "spec_helper"
+require "rugged"
 
 RSpec.describe PullRequestMonitor::PrBranchRecord do
   describe ".create" do
@@ -6,33 +7,30 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
       repo = spy("Repo")
       pr = spy("pr")
       branch_name = "foo/bar"
-      git = spy("git")
 
-      expect(git).to receive(:fetch).with("--all").once
+      expect(repo).to receive(:git_fetch)
 
-      described_class.create(git, repo, pr, branch_name)
+      described_class.create(repo, pr, branch_name)
     end
 
     it "creates a PR branch on the repo" do
-      repo = instance_spy("Repo")
+      pr_branch = build(:pr_branch)
+      repo = pr_branch.repo
       pr = spy("pr", :base => spy("base", :ref => "master"))
-      branch_name = "foo/bar"
-      last_commit = "123456"
-      git = spy("git")
-      allow(git).to receive(:merge_base).with(branch_name, "origin/master").and_return(last_commit)
-      allow(pr).to receive_message_chain(:head, :repo, :html_url)
-        .and_return("https://github.com/foo/bar")
+      allow(pr).to receive_message_chain(:head, :repo, :html_url).and_return("https://github.com/foo/bar")
 
       expected = {
-        :name         => branch_name,
-        :last_commit  => last_commit,
+        :name         => pr_branch.name,
         :commits_list => [],
         :commit_uri   => "https://github.com/foo/bar/commit/$commit",
         :pull_request => true,
         :merge_target => "master"
       }
-      expect(repo).to receive_message_chain(:branches, :create!).with hash_including(expected)
-      described_class.create(git, repo, pr, branch_name)
+
+      expect(repo).to receive(:git_fetch)
+      expect(repo).to receive_message_chain(:branches, :build).with(hash_including(expected)).and_return(pr_branch)
+      expect_any_instance_of(Branch).to receive(:git_merge_base).and_return(pr_branch.last_commit)
+      described_class.create(repo, pr, pr_branch.name)
     end
   end
 

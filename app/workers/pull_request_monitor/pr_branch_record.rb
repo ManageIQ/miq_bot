@@ -1,17 +1,17 @@
 class PullRequestMonitor
   class PrBranchRecord
-    def self.create(git, repo, pr, branch_name)
-      git.fetch("--all")
-      commit_uri  = File.join(pr.head.repo.html_url, "commit", "$commit")
-      last_commit = git.merge_base(branch_name, "origin/#{pr.base.ref}")
-      repo.branches.create!(
+    def self.create(repo, pr, branch_name)
+      repo.git_fetch
+      commit_uri = File.join(pr.head.repo.html_url, "commit", "$commit")
+      branch     = repo.branches.build(
         :name         => branch_name,
-        :last_commit  => last_commit,
         :commits_list => [],
         :commit_uri   => commit_uri,
         :pull_request => true,
         :merge_target => pr.base.ref
       )
+      branch.last_commit = branch.git_merge_base
+      branch.save!
     end
 
     def self.delete(repo, *branch_names)

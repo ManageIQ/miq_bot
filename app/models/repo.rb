@@ -84,6 +84,12 @@ class Repo < ActiveRecord::Base
     pr_branch_names - github_branch_names
   end
 
+  def git_fetch
+    require 'rugged'
+    rugged_repo = Rugged::Repository.new(path.to_s)
+    rugged_repo.fetch(rugged_repo.remotes)
+  end
+
   private
 
   def github_branch_names

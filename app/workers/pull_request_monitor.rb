@@ -14,9 +14,7 @@ class PullRequestMonitor
         # TODO: Need a better check for repos that *can* have PRs
         next unless repo.upstream_user
 
-        repo.with_git_service do |git|
-          RepoProcessor.process(git, repo)
-        end
+        RepoProcessor.process(repo)
       end
     end
   end
