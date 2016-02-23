@@ -19,15 +19,10 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   private
 
   def process_branch
-    diff_details = diff_details_for_merge
-
     unmerged_results = []
+    unmerged_results << Linter::Rubocop.new(branch).result
 
-    files = extract_ruby_files(diff_details)
-    if files.any?
-      unmerged_results << linter_results('rubocop', :format => 'json', nil => files)
-    end
-
+    diff_details = diff_details_for_merge
     files = extract_haml_files(diff_details)
     if files.any?
       unmerged_results << linter_results('haml-lint', :reporter => 'json', nil => files)
@@ -44,18 +39,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     write_to_github
   end
 
-  def extract_ruby_files(diff_details)
-    filtered = diff_details.keys.select do |k|
-      k.end_with?(".rb") ||
-      k.end_with?(".ru") ||
-      k.end_with?(".rake") ||
-      File.basename(k).in?(%w{Gemfile Rakefile})
-    end
-    filtered.reject do |k|
-      k.end_with?("db/schema.rb")
-    end
-  end
-
   def extract_haml_files(diff_details)
     diff_details.keys.select do |k|
       k.end_with?(".haml")
@@ -65,9 +48,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   def linter_results(cmd, options = {})
     require 'awesome_spawn'
 
-    # rubocop exits 1 both when there are errors and when there are style issues.
-    #   Instead of relying on just exit_status, we check if there is anything
-    #   on stderr.
     result = branch.repo.with_git_service do |git|
       git.temporarily_checkout(commits.last) do
         logger.info("Executing: #{AwesomeSpawn.build_command_line(cmd, options)}")
