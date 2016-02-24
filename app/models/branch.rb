@@ -97,4 +97,10 @@ class Branch < ActiveRecord::Base
     rugged_repo = Rugged::Repository.new(repo.path.to_s)
     rugged_repo.references["refs/#{branch_ref_name}"]
   end
+
+  def git_merge_base
+    require 'rugged'
+    rugged_repo = Rugged::Repository.new(repo.path.to_s)
+    rugged_repo.merge_base("refs/#{branch_ref_name}", "origin/master") # TODO: origin/master should be the PR base branch
+  end
 end
