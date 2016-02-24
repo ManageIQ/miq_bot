@@ -87,7 +87,7 @@ class Repo < ActiveRecord::Base
   def git_fetch
     require 'rugged'
     rugged_repo = Rugged::Repository.new(path.to_s)
-    rugged_repo.fetch(rugged_repo.remotes)
+    rugged_repo.fetch(*rugged_repo.remotes.collect(&:name))
   end
 
   private
