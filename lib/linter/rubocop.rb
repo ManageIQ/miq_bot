@@ -21,7 +21,7 @@ module Linter
 
       # rubocop exits 1 both when there are errors and when there are style issues.
       #   Instead of relying on just exit_status, we check if there is anything on stderr.
-      raise result.error if result.exit_status == 1 && result.error.present?
+      raise result.error if result.exit_status != 0 && result.error.present?
       JSON.parse(result.output.chomp)
     end
 
