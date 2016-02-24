@@ -20,7 +20,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
   def process_branch
     unmerged_results = []
-    unmerged_results << Linter::Rubocop.new(branch).result
+    unmerged_results << Linter::Rubocop.new(branch).run
 
     diff_details = diff_details_for_merge
     files = extract_haml_files(diff_details)
