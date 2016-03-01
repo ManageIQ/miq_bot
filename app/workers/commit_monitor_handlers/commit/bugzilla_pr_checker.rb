@@ -62,10 +62,6 @@ module CommitMonitorHandlers
         when "NEW", "ASSIGNED"
           logger.info "Changing status of bug #{bug_id} to ON_DEV."
           bug.status = "ON_DEV"
-        else
-          logger.warn "Not changing status of bug #{bug_id} from #{bug_stat}."
-          bug.add_comment("Detected commit referencing this ticket while ticket status is #{bug_stat}.")
-          bug.flags["needinfo"] = "?"
         end
       end
     end
