@@ -86,8 +86,7 @@ class Branch < ActiveRecord::Base
   end
 
   def git_diff
-    merge_head  = "origin/master" # TODO: should be a column
-    rugged_repo.diff(merge_head, branch_ref_name)
+    rugged_repo.diff(git_merge_base, branch_ref_name)
   end
 
   def git_branch_ref
