@@ -94,7 +94,7 @@ class Branch < ActiveRecord::Base
   end
 
   def git_merge_base
-    rugged_repo.merge_base("refs/#{branch_ref_name}", "origin/master") # TODO: origin/master should be the PR base branch
+    rugged_repo.merge_base("refs/#{branch_ref_name}", "origin/#{merge_target}")
   end
 
   private
