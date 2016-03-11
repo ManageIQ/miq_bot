@@ -10,7 +10,7 @@ class PullRequestMonitor
         :pull_request => true,
         :merge_target => pr.base.ref
       )
-      branch.last_commit = branch.git_merge_base
+      branch.last_commit = branch.git_service.merge_base
       branch.save!
     end
 

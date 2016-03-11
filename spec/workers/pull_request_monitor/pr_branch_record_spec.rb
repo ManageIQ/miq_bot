@@ -29,7 +29,7 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
 
       expect(repo).to receive(:git_fetch)
       expect(repo).to receive_message_chain(:branches, :build).with(hash_including(expected)).and_return(pr_branch)
-      expect_any_instance_of(Branch).to receive(:git_merge_base).and_return(pr_branch.last_commit)
+      expect_any_instance_of(Branch).to receive_message_chain(:git_service, :merge_base).and_return(pr_branch.last_commit)
       described_class.create(repo, pr, pr_branch.name)
     end
   end

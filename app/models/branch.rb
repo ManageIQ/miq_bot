@@ -80,27 +80,7 @@ class Branch < ActiveRecord::Base
     end
   end
 
-  def branch_ref_name
-    return name if name.include?("prs/")
-    "origin/#{name}"
-  end
-
-  def git_diff
-    rugged_repo.diff(git_merge_base, branch_ref_name)
-  end
-
-  def git_branch_ref
-    rugged_repo.references["refs/#{branch_ref_name}"]
-  end
-
-  def git_merge_base
-    rugged_repo.merge_base("refs/#{branch_ref_name}", "origin/#{merge_target}")
-  end
-
-  private
-
-  def rugged_repo
-    require 'rugged'
-    Rugged::Repository.new(repo.path.to_s)
+  def git_service
+    GitService::Branch.new(self)
   end
 end
