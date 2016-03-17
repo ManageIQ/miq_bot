@@ -28,17 +28,16 @@ module Linter
     private
 
     def collect_files
-      ref              = @branch.git_branch_ref
-      diff             = @branch.git_diff
-      files_changed    = diff.deltas.collect { |delta| delta.try(:new_file).try(:[], :path) }.compact
-      files_to_rubocop = filtered_files(files_changed)
+      branch_service   = @branch.git_service
+      diff_service     = branch_service.diff
+      files_to_rubocop = filtered_files(diff_service.new_files)
 
-      (files_to_rubocop + [".rubocop.yml"]).each do |file|
-        blob = diff.owner.blob_at(ref.target.oid, file)
+      (files_to_rubocop + [".rubocop.yml"]).each do |path|
+        blob = branch_service.blob_at(path)
         next unless blob
-        temp_file = File.join(@work_dir, file)
+        temp_file = File.join(@work_dir, path)
         FileUtils.mkdir_p(File.dirname(temp_file))
-        File.write(temp_file, blob.content)
+        File.write(temp_file, blob.content.to_s)
       end
     end
 
