@@ -49,7 +49,7 @@ module Linter
         next unless blob
         temp_file = File.join(@work_dir, path)
         FileUtils.mkdir_p(File.dirname(temp_file))
-        File.write(temp_file, blob.content.to_s)
+        File.write(temp_file, blob.content.to_s, :mode => "wb") # To prevent Encoding::UndefinedConversionError: "\xD0" from ASCII-8BIT to UTF-8
       end
     end
 
