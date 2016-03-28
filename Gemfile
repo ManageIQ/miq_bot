@@ -31,7 +31,7 @@ gem 'rails_config', '0.5.0.beta1'
 
 # Sidekiq specific gems
 gem 'sidekiq'
-gem 'sidetiq', :github => "sfroehler/sidetiq", :branch => "celluloid-0-17-compatibility"
+gem 'sidetiq'
 gem 'sinatra', require: false
 gem 'slim'
 
