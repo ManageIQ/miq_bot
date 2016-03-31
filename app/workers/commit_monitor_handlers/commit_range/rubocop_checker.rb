@@ -37,6 +37,8 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     end
 
     write_to_github
+  rescue Rugged::IndexError
+    # Failed to create merge index, no point in trying to lint files for an unmergable PR
   end
 
   def extract_haml_files(diff_details)
