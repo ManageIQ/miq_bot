@@ -21,13 +21,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   def process_branch
     unmerged_results = []
     unmerged_results << Linter::Rubocop.new(branch).run
-
-    diff_details = diff_details_for_merge
-    files = extract_haml_files(diff_details)
-    if files.any?
-      unmerged_results << linter_results('haml-lint', :reporter => 'json', nil => files)
-    end
-
+    unmerged_results << Linter::Haml.new(branch).run
     unmerged_results.compact!
     if unmerged_results.empty?
       @results = {"files" => []}
@@ -39,26 +33,6 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     write_to_github
   rescue Rugged::IndexError
     # Failed to create merge index, no point in trying to lint files for an unmergable PR
-  end
-
-  def extract_haml_files(diff_details)
-    diff_details.keys.select do |k|
-      k.end_with?(".haml")
-    end
-  end
-
-  def linter_results(cmd, options = {})
-    require 'awesome_spawn'
-
-    result = branch.repo.with_git_service do |git|
-      git.temporarily_checkout(commits.last) do
-        logger.info("Executing: #{AwesomeSpawn.build_command_line(cmd, options)}")
-        AwesomeSpawn.run(cmd, :params => options, :chdir => branch.repo.path)
-      end
-    end
-    raise result.error if result.exit_status == 1 && result.error.present?
-
-    JSON.parse(result.output.chomp)
   end
 
   def merge_linter_results(*results)
