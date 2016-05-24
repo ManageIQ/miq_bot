@@ -1,3 +1,5 @@
+require 'rugged'
+
 class CommitMonitorHandlers::CommitRange::RubocopChecker
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot_glacial
