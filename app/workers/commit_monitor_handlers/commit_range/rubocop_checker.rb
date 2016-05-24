@@ -26,8 +26,9 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     if unmerged_results.empty?
       @results = {"files" => []}
     else
-      results = merge_linter_results(*unmerged_results)
-      @results = RubocopResultsFilter.new(results, diff_details).filtered
+      results      = merge_linter_results(*unmerged_results)
+      diff_details = diff_details_for_merge
+      @results     = RubocopResultsFilter.new(results, diff_details).filtered
     end
 
     write_to_github
