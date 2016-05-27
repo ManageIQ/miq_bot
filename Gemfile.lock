@@ -11,16 +11,6 @@ GIT
       minigit (~> 0.0.4)
       polisher (~> 0.10.2)
 
-GIT
-  remote: git://github.com/sfroehler/sidetiq.git
-  revision: 7bec4084165f853cb587205f66da5d1f25c02dff
-  branch: celluloid-0-17-compatibility
-  specs:
-    sidetiq (0.6.3)
-      celluloid (>= 0.14.1)
-      ice_cube (= 0.11.1)
-      sidekiq (>= 3.0.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -151,9 +141,9 @@ GEM
     hashie (3.4.3)
     highline (1.7.8)
     hike (1.2.3)
-    hitimes (1.2.3)
+    hitimes (1.2.4)
     i18n (0.7.0)
-    ice_cube (0.11.1)
+    ice_cube (0.13.3)
     jquery-rails (4.1.0)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
@@ -282,6 +272,10 @@ GEM
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
       redis (~> 3.2, >= 3.2.1)
+    sidetiq (0.7.0)
+      celluloid (>= 0.17.3)
+      ice_cube (~> 0.13.2)
+      sidekiq (>= 4.0.0)
     sinatra (1.4.7)
       rack (~> 1.5)
       rack-protection (~> 1.4)
@@ -362,7 +356,7 @@ DEPENDENCIES
   rugged
   sass-rails (~> 4.0.0)
   sidekiq
-  sidetiq!
+  sidetiq
   sinatra
   slim
   therubyracer
