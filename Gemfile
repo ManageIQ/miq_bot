@@ -30,8 +30,8 @@ gem 'foreman', '~> 0.64.0' # v0.65.0 breaks support for the older upstart on RHE
 gem 'rails_config', '0.5.0.beta1'
 
 # Sidekiq specific gems
-gem 'sidekiq', '~> 4.0.1'
-gem 'sidetiq', :github => "sfroehler/sidetiq", :branch => "celluloid-0-17-compatibility"
+gem 'sidekiq'
+gem 'sidetiq'
 gem 'sinatra', require: false
 gem 'slim'
 
