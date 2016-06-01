@@ -18,6 +18,13 @@ module GitService
       Diff.new(target_for_reference(merge_target_ref_name).diff(merge_tree))
     end
 
+    def mergeable?
+      merge_tree
+      true
+    rescue Rugged::IndexError
+      false
+    end
+
     def merge_base
       rugged_repo.merge_base(target_for_reference(merge_target_ref_name), target_for_reference(ref_name))
     end
