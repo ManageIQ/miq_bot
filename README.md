@@ -11,7 +11,6 @@ The ManageIQ bot is the ManageIQ team's helper to automate various developer pro
 
 - Commit monitoring and reaction to commits
   - Detection of Red Hat Bugzilla URLs in commit messages
-    - in pull request branches, setting the BZ to ON_DEV if not already set.
     - in regular branches, writing the commit details to the BZ ticket.
   - Detection of changes to a product's Gemfile, and setting a label.
 - GitHub pull request monitoring
