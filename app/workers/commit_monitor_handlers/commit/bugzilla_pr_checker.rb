@@ -41,9 +41,15 @@ module CommitMonitorHandlers
       def add_pr_comment(bug)
         if bug_has_pr_uri_comment?(bug)
           logger.info "Not commenting on bug #{bug.id} due to duplicate comment."
-        else
+          return
+        end
+
+        case bug.status
+        when "NEW", "ASSIGNED", "ON_DEV"
           logger.info "Adding PR comment to bug #{bug.id}."
           bug.add_comment(@branch.github_pr_uri)
+        else
+          logger.info "Not commenting on bug #{bug.id} due to status of #{bug.status}"
         end
       end
 
