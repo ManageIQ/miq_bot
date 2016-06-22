@@ -38,7 +38,7 @@ gem 'slim'
 gem 'miq_tools_services', "~> 0.1.0", :git => "git://github.com/ManageIQ/miq_tools_services.git", :tag => "v0.1.0"
 gem 'travis', '~>1.7.6'
 
-gem 'awesome_spawn'
+gem 'awesome_spawn', '>= 1.4.1'
 gem 'default_value_for'
 gem 'haml_lint'
 gem 'more_core_extensions', "~> 2.0.0", :require => 'more_core_extensions/all'
