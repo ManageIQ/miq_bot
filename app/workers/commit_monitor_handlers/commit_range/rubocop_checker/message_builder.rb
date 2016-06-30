@@ -1,4 +1,3 @@
-require 'stringio'
 require 'rubocop'
 require 'haml_lint'
 
@@ -21,13 +20,13 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
 
   SUCCESS_EMOJI = %w{:+1: :cookie: :star: :cake: :trophy:}
 
-  SEVERITY = {
-    "fatal"      => ":red_circle: **Fatal**",
-    "error"      => ":red_circle: **Error**",
-    "warning"    => ":red_circle: **Warn**",
-    "convention" => ":large_orange_diamond:",
-    "refactor"   => ":small_blue_diamond:",
-  }.freeze
+  SEVERITY_MAP = Hash.new(:unknown).merge(
+    "fatal"      => :error,
+    "error"      => :error,
+    "warning"    => :warn,
+    "convention" => :high,
+    "refactor"   => :low,
+  ).freeze
 
   COP_DOCUMENTATION_URI = File.join("http://rubydoc.info/gems/rubocop", RuboCop::Version.version)
   COP_URIS =
@@ -66,63 +65,47 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def write_offenses
-    files.each do |f|
-      message_builder.write("\n**#{f["path"]}**")
-      message_builder.write_lines(offense_lines(f))
-    end
+    content = OffenseMessage.new
+    content.entries = offenses
+    message_builder.write("")
+    message_builder.write_lines(content.lines)
+  end
+
+  def offenses
+    files.collect do |f|
+      f["offenses"].collect do |o|
+        OffenseMessage::Entry.new(
+          SEVERITY_MAP[o["severity"]],
+          format_message(o),
+          f["path"],
+          format_locator(f, o)
+        )
+      end
+    end.flatten
   end
 
   def files
-    results["files"].select { |f| f["offenses"].any? }.sort_by { |f| f["path"] }
+    results["files"].select { |f| f["offenses"].any? }
   end
 
-  def offense_lines(file)
-    sorted_offense_records(file).collect do |o|
-      "- [ ] %s - %s, %s - %s - %s" % [
-        format_severity(o["severity"]),
-        format_line(o["location"]["line"], file["path"]),
-        format_column(o["location"]["column"]),
-        format_cop_name(o["cop_name"]),
-        o["message"]
-      ]
-    end
+  def format_message(offense)
+    [format_cop_name(offense["cop_name"]), offense["message"]].join(" - ")
   end
 
-  def sorted_offense_records(file)
-    file["offenses"].sort_by do |o|
-      [
-        order_severity(o["severity"]),
-        o["location"]["line"],
-        o["location"]["column"],
-        o["cop_name"]
-      ]
-    end
+  def format_cop_name(cop_name)
+    COP_URIS[cop_name] || cop_name
   end
 
-  def order_severity(sev)
-    SEVERITY.keys.index(sev) || Float::INFINITY
-  end
-
-  def format_severity(sev)
-    SEVERITY[sev] || sev.capitalize[0, 5]
+  def format_locator(file, offense)
+    line = offense["location"]["line"]
+    col = offense["location"]["column"]
+    uri = File.join(line_uri, "blob", commits.last, file["path"]) << "#L#{line}"
+    "[Line #{line}](#{uri}), Col #{col}"
   end
 
   # TODO: Don't reuse the commit_uri.  This should probably be its own URI.
   def line_uri
     branch.commit_uri.chomp("commit/$commit")
-  end
-
-  def format_line(line, path)
-    uri = File.join(line_uri, "blob", commits.last, path)
-    "[Line #{line}](#{uri}#L#{line})"
-  end
-
-  def format_column(column)
-    "Col #{column}"
-  end
-
-  def format_cop_name(cop_name)
-    COP_URIS[cop_name] || cop_name
   end
 
   def rubocop_version
