@@ -89,7 +89,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def format_message(offense)
-    [format_cop_name(offense["cop_name"]), offense["message"]].join(" - ")
+    [format_cop_name(offense["cop_name"]), offense["message"]].compact.join(" - ")
   end
 
   def format_cop_name(cop_name)
@@ -97,10 +97,18 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def format_locator(file, offense)
+    [format_line(file, offense), format_column(offense)].compact.join(", ")
+  end
+
+  def format_line(file, offense)
     line = offense["location"]["line"]
-    col = offense["location"]["column"]
     uri = File.join(line_uri, "blob", commits.last, file["path"]) << "#L#{line}"
-    "[Line #{line}](#{uri}), Col #{col}"
+    "[Line #{line}](#{uri})"
+  end
+
+  def format_column(offense)
+    column = offense["location"]["column"]
+    column && "Col #{column}"
   end
 
   # TODO: Don't reuse the commit_uri.  This should probably be its own URI.
