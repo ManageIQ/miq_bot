@@ -53,5 +53,16 @@ Everything looks good.
       EOMSG
       expect(subject.last).to   start_with "<rubocop />**...continued**\n"
     end
+
+    it "with results without column numbers and cop names" do
+      expect(subject.length).to eq 1
+      expect(subject.first).to  eq <<-EOMSG
+<rubocop />Checked commits https://github.com/some_user/some_repo/compare/1ec36efd33279f79f8ddcf12984bb2aa48f3fbd6~...8942a195a0bfa69ceb82c020c60565408cb46d3e with ruby #{RUBY_VERSION}, rubocop #{rubocop_version}, and haml-lint #{hamllint_version}
+1 file checked, 1 offense detected
+
+**spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/example.haml**
+- [ ] :warning: - [Line 2](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_without_column_numbers_and_cop_names/example.haml#L2) - The - symbol should have one space separating it from code
+      EOMSG
+    end
   end
 end
