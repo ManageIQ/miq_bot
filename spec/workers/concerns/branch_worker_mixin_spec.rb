@@ -95,14 +95,14 @@ describe BranchWorkerMixin do
 
   describe "#branch_enabled?" do
     it "when enabled" do
-      stub_settings(:test_class, :enabled_repos, ["SomeUser/some_repo"])
+      stub_settings(:test_class => {:enabled_repos => ["SomeUser/some_repo"]})
       subject.find_branch(pr_branch.id)
 
       expect(subject.branch_enabled?).to be true
     end
 
     it "when disabled" do
-      stub_settings(:test_class, :enabled_repos, [])
+      stub_settings(:test_class => {:enabled_repos => []})
       subject.find_branch(pr_branch.id)
 
       expect(subject.branch_enabled?).to be false
@@ -111,14 +111,14 @@ describe BranchWorkerMixin do
 
   describe "#verify_branch_enabled" do
     it "when enabled" do
-      stub_settings(:test_class, :enabled_repos, ["SomeUser/some_repo"])
+      stub_settings(:test_class => {:enabled_repos => ["SomeUser/some_repo"]})
       subject.find_branch(pr_branch.id)
 
       expect(subject.verify_branch_enabled).to be true
     end
 
     it "when disabled" do
-      stub_settings(:test_class, :enabled_repos, [])
+      stub_settings(:test_class => {:enabled_repos => []})
       subject.find_branch(pr_branch.id)
 
       expect(subject.logger).to receive(:warn) do |message|
