@@ -7,11 +7,7 @@ module CommitMonitorHandlers::Batch
     include BranchWorkerMixin
 
     def self.batch_workers
-      [GemfileChecker, MigrationDateChecker]
-    end
-
-    def self.handled_branch_modes
-      [:pr]
+      [DiffFilenameChecker]
     end
 
     def perform(batch_job_id, branch_id, _new_commits)
@@ -62,17 +58,19 @@ module CommitMonitorHandlers::Batch
     end
 
     def new_comments
-      return [] unless entries_with_results.any?
+      return [] unless merged_results.any?
+
+      content = OffenseMessage.new
+      content.entries = merged_results
 
       message_builder = MiqToolsServices::Github::MessageBuilder.new(header, continuation_header)
-      entries_with_results.each do |entry|
-        message_builder.write("* #{entry.result}")
-      end
+      message_builder.write("")
+      message_builder.write_lines(content.lines)
       message_builder.comments
     end
 
-    def entries_with_results
-      @entries_with_results ||= batch_job.entries.select(&:result)
+    def merged_results
+      @merged_results ||= batch_job.entries.collect(&:result).flatten.compact
     end
   end
 end
