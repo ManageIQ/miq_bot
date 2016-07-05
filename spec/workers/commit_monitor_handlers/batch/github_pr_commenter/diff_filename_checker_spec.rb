@@ -1,64 +1,12 @@
-require 'spec_helper'
-
 describe CommitMonitorHandlers::Batch::GithubPrCommenter::DiffFilenameChecker do
-  let(:batch_entry)        { BatchEntry.create!(:job => BatchJob.create!) }
-  let(:branch)             { create(:pr_branch) }
-  let(:diff)               { double("RuggedDiff", :new_files => new_files) }
-  let(:git_service_double) { double("GitService", :diff => diff) }
-  let(:github_service)     { stub_github_service }
+  let(:batch_entry) { BatchEntry.create!(:job => BatchJob.create!) }
+  let(:branch)      { create(:pr_branch) }
+  let(:git_service) { double("GitService", :diff => double("RuggedDiff", :new_files => new_files)) }
 
   before do
     stub_sidekiq_logger
     stub_job_completion
-    stub_settings(:gemfile_checker, :pr_contacts, [])
-    stub_settings(:gemfile_checker, :enabled_repos, [branch.repo.name])
-    github_service
-    expect_any_instance_of(Branch).to receive(:git_service).and_return(git_service_double)
-  end
-
-  context "Gemfile Checker" do
-    context "when there are Gemfile changes" do
-      context "adds a label to the PR" do
-        let(:new_files) { ["Gemfile"] }
-        before do
-          expect(github_service).to receive(:add_issue_labels).with(branch.pr_number, "gem changes")
-        end
-
-        it "and adds a comment to the batch" do
-          described_class.new.perform(batch_entry.id, branch.id, nil)
-
-          result = batch_entry.reload.result
-          expect(result.length).to eq(1)
-          expect(result.first.to_s).to eq("- [ ] :grey_exclamation: - Gemfile changes detected.")
-        end
-
-        it "and adds a comment to the batch with PR contacts" do
-          stub_settings(:gemfile_checker, :pr_contacts, %w(@user1 @user2))
-
-          described_class.new.perform(batch_entry.id, branch.id, nil)
-
-          result = batch_entry.reload.result
-          expect(result.length).to eq(1)
-          expect(result.first.to_s).to eq("- [ ] :grey_exclamation: - Gemfile changes detected. /cc @user1 @user2")
-        end
-      end
-    end
-
-    context "where there are no Gemfile changes" do
-      let(:new_files) { [] }
-
-      it "does not add a label to the PR" do
-        expect(github_service).to_not receive(:add_issue_labels)
-
-        described_class.new.perform(batch_entry.id, branch.id, nil)
-      end
-
-      it "does not add a comment to the batch" do
-        described_class.new.perform(batch_entry.id, branch.id, nil)
-
-        expect(batch_entry.reload.result).to eq([])
-      end
-    end
+    expect_any_instance_of(Branch).to receive(:git_service).and_return(git_service)
   end
 
   context "Migration Timestamp" do
