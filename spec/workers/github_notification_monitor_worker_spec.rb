@@ -6,7 +6,7 @@ RSpec.describe GithubNotificationMonitorWorker do
 
   def stub_github_notification_monitors(*org_repo_pairs)
     repo_names = org_repo_pairs.collect { |pair| pair.join("/") }
-    stub_settings(:github_notification_monitor, :repo_names, repo_names)
+    stub_settings(:github_notification_monitor => {:repo_names => repo_names})
 
     org_repo_pairs.collect.with_index do |(org, repo), i|
       create(:repo, :name => "#{org}/#{repo}")
@@ -19,14 +19,14 @@ RSpec.describe GithubNotificationMonitorWorker do
 
   describe "#perform" do
     it "skips if the list of repo names is not provided" do
-      stub_settings(:github_notification_monitor, :repo_names, nil)
+      stub_settings(:github_notification_monitor => {:repo_names => nil})
 
       expect(GithubNotificationMonitor).to_not receive(:build)
       subject.perform
     end
 
     it "skips if the list of repo names is empty" do
-      stub_settings(:github_notification_monitor, :repo_names, [])
+      stub_settings(:github_notification_monitor => {:repo_names => []})
 
       expect(GithubNotificationMonitor).to_not receive(:build)
       subject.perform

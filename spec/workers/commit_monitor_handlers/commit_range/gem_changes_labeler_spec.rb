@@ -5,7 +5,7 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
 
   before do
     stub_sidekiq_logger
-    stub_settings(:gem_changes_labeler, :enabled_repos, [branch.repo.name])
+    stub_settings(:gem_changes_labeler => {:enabled_repos => [branch.repo.name]})
     expect_any_instance_of(Branch).to receive(:git_service).and_return(git_service)
   end
 
