@@ -16,27 +16,12 @@ module CommitMonitorHandlers::Batch
 
     def process_files
       @offenses = []
-      @tags = []
 
       branch.git_service.diff.new_files.each do |file|
-        check_for_gemfile_changes(file)
         validate_migration_timestamp(file)
       end
 
-      apply_tags
-
       @offenses
-    end
-
-    def check_for_gemfile_changes(file)
-      return unless File.basename(file) == "Gemfile"
-
-      contacts = Settings.gemfile_checker.pr_contacts.join(" ")
-      message = "Gemfile changes detected."
-      message << " /cc #{contacts}" unless contacts.blank?
-
-      @offenses << OffenseMessage::Entry.new(:low, message, file)
-      @tags |= ["gem changes"]
     end
 
     def validate_migration_timestamp(file)
@@ -51,15 +36,6 @@ module CommitMonitorHandlers::Batch
       Time.parse(ts)
     rescue ArgumentError
       false
-    end
-
-    def apply_tags
-      branch.repo.with_github_service do |github|
-        @tags.each do |tag|
-          logger.info("Updating PR #{pr_number} with label #{tag.inspect}.")
-          github.add_issue_labels(pr_number, tag)
-        end
-      end
     end
   end
 end
