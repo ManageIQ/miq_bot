@@ -7,7 +7,7 @@ module CommitMonitorHandlers::Batch
     include BranchWorkerMixin
 
     def self.batch_workers
-      [DiffFilenameChecker]
+      [DiffContentChecker, DiffFilenameChecker]
     end
 
     def perform(batch_job_id, branch_id, _new_commits)
