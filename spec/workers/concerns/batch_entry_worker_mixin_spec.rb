@@ -46,17 +46,17 @@ describe BatchEntryWorkerMixin do
     end
 
     it "with changes" do
-      subject.complete_batch_entry(:result => "something")
+      subject.complete_batch_entry(:result => ["something"])
 
       expect(subject.batch_entry.state).to  eq("succeeded")
-      expect(subject.batch_entry.result).to eq("something")
+      expect(subject.batch_entry.result).to eq(["something"])
     end
 
     it "with changes to " do
-      subject.complete_batch_entry(:state => "failed", :result => "failure reason")
+      subject.complete_batch_entry(:state => "failed", :result => ["failure 1", "failure 2"])
 
       expect(subject.batch_entry.state).to  eq("failed")
-      expect(subject.batch_entry.result).to eq("failure reason")
+      expect(subject.batch_entry.result).to eq(["failure 1", "failure 2"])
     end
   end
 end
