@@ -32,6 +32,27 @@ RSpec.describe PullRequestMonitor::PrBranchRecord do
       expect_any_instance_of(Branch).to receive_message_chain(:git_service, :merge_base).and_return(pr_branch.last_commit)
       described_class.create(repo, pr, pr_branch.name)
     end
+
+    it "creates a PR branch on the repo when the head repo is nil" do
+      pr_branch = build(:pr_branch)
+      repo = pr_branch.repo
+      pr = spy("pr", :base => spy("base", :ref => "master"))
+      allow(pr).to receive_message_chain(:head, :repo)
+      allow(pr).to receive_message_chain(:base, :repo, :html_url).and_return("https://github.com/foo/bar")
+
+      expected = {
+        :name         => pr_branch.name,
+        :commits_list => [],
+        :commit_uri   => "https://github.com/foo/bar/commit/$commit",
+        :pull_request => true,
+        :merge_target => "master"
+      }
+
+      expect(repo).to receive(:git_fetch)
+      expect(repo).to receive_message_chain(:branches, :build).with(hash_including(expected)).and_return(pr_branch)
+      expect_any_instance_of(Branch).to receive_message_chain(:git_service, :merge_base).and_return(pr_branch.last_commit)
+      described_class.create(repo, pr, pr_branch.name)
+    end
   end
 
   describe ".delete" do
