@@ -10,6 +10,10 @@ module CommitMonitorHandlers::Batch
       [DiffContentChecker, DiffFilenameChecker]
     end
 
+    def self.handled_branch_modes
+      [:pr]
+    end
+
     def perform(batch_job_id, branch_id, _new_commits)
       return unless find_batch_job(batch_job_id)
 
