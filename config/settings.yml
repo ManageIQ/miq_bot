@@ -11,5 +11,7 @@ gem_changes_labeler:
   enabled_repos: []
 github_notification_monitor:
   repo_names: []
+sql_migration_labeler:
+  enabled_repos: []
 travis_event:
   enabled_repos: []
