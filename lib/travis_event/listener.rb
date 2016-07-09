@@ -12,6 +12,11 @@ module TravisEvent
   class Listener
     ALL_EVENTS = %w(build:created build:started build:finished job:created job:started job:finished)
 
+    def self.run
+      require 'travis'
+      monitor(Settings.travis_event.enabled_repos)
+    end
+
     # repos: ["rails/rails", "manageiq/manageiq"]
     def self.monitor(*slugs)
       Travis.listen(*travis_repos(slugs)) do |stream|
@@ -47,6 +52,3 @@ module TravisEvent
     end
   end
 end
-
-require 'travis'
-TravisEvent::Listener.monitor(Settings.travis_event.enabled_repos)
