@@ -10,11 +10,30 @@ class PullRequestMonitor
     if !first_unique_worker?
       logger.info "#{self.class} is already running, skipping"
     else
-      Repo.includes(:branches).each do |repo|
-        # TODO: Need a better check for repos that *can* have PRs
-        next unless repo.upstream_user
+      process_repos
+    end
+  end
 
-        RepoProcessor.process(repo)
+  def process_repos
+    Repo.includes(:branches).each { |repo| process_repo(repo) }
+  end
+
+  def process_repo(repo)
+    return unless repo.can_have_prs?
+
+    repo.synchronize_pr_branches(github_prs(repo))
+  end
+
+  private
+
+  def github_prs(repo)
+    repo.with_github_service do |github|
+      github.pull_requests.all.collect do |github_pr|
+        {
+          :number       => github_pr.number,
+          :html_url     => github_pr.head.repo.try(:html_url) || github_pr.base.repo.html_url,
+          :merge_target => github_pr.base.ref
+        }
       end
     end
   end
