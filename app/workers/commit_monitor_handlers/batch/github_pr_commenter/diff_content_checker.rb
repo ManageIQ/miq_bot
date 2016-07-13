@@ -1,3 +1,5 @@
+require 'rugged'
+
 module CommitMonitorHandlers::Batch
   class GithubPrCommenter::DiffContentChecker
     include Sidekiq::Worker
@@ -17,12 +19,17 @@ module CommitMonitorHandlers::Batch
     def process_lines
       @offenses = []
 
+      check_diff_lines
+
+      @offenses
+    end
+
+    def check_diff_lines
       branch.git_service.diff.with_each_line do |line, _parent_hunk, parent_patch|
         next unless line.addition?
         check_line(line, parent_patch)
       end
-
-      @offenses
+    rescue Rugged::IndexError # Don't put any effort into unmergeable PRS
     end
 
     def check_line(line, patch)
