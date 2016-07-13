@@ -54,7 +54,7 @@ module GitService
     end
 
     def rugged_repo
-      Rugged::Repository.new(branch.repo.path.to_s)
+      @rugged_repo ||= Rugged::Repository.new(branch.repo.path.to_s)
     end
   end
 end
