@@ -1,3 +1,5 @@
+require 'rugged'
+
 module CommitMonitorHandlers::Batch
   class GithubPrCommenter::DiffFilenameChecker
     include Sidekiq::Worker
@@ -17,11 +19,16 @@ module CommitMonitorHandlers::Batch
     def process_files
       @offenses = []
 
+      check_diff_files
+
+      @offenses
+    end
+
+    def check_diff_files
       branch.git_service.diff.new_files.each do |file|
         validate_migration_timestamp(file)
       end
-
-      @offenses
+    rescue Rugged::IndexError # Don't put any effort into unmergeable PRS
     end
 
     def validate_migration_timestamp(file)
