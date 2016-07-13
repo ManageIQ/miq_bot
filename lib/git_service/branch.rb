@@ -23,6 +23,10 @@ module GitService
       true
     rescue Rugged::IndexError
       false
+    ensure
+      # Rugged seems to allocate large C structures, but not many Ruby objects,
+      #   and thus doesn't trigger a GC, so we will trigger one manually.
+      GC.start
     end
 
     def merge_base
