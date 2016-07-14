@@ -43,6 +43,11 @@ class Repo < ActiveRecord::Base
     name_parts.last
   end
 
+  def can_have_prs?
+    # TODO: Need a better check for repos that *can* have PRs
+    !!upstream_user
+  end
+
   def with_git_service
     raise "no block given" unless block_given?
     MiqToolsServices::MiniGit.call(path) do |git|
@@ -80,23 +85,48 @@ class Repo < ActiveRecord::Base
     pr_branches.collect(&:name)
   end
 
-  def stale_pr_branches
-    pr_branch_names - github_branch_names
+  # @param expected [Array<Hash>] The desired state of the PR branches.
+  #   Caller should pass an Array of Hashes that contain the PR's number,
+  #   html_url, and merge_target.
+  def synchronize_pr_branches(expected)
+    raise "repo cannot not have PR branches" unless can_have_prs?
+
+    git_fetch # TODO: Let's get rid of this!
+
+    transaction do
+      existing = pr_branches.index_by(&:pr_number)
+
+      expected.each do |e|
+        number   = e.delete(:number)
+        html_url = e.delete(:html_url)
+        e.merge!(
+          :name         => MiqToolsServices::MiniGit.pr_branch(number),
+          :commit_uri   => File.join(html_url, "commit", "$commit"),
+          :pull_request => true
+        )
+
+        branch = existing.delete(number)
+
+        if branch
+          # Update
+          branch.update_attributes!(e)
+        else
+          # Add
+          branch = branches.build(e)
+          branch.last_commit = branch.git_service.merge_base
+          branch.save!
+        end
+      end
+
+      # Delete
+      branches.destroy(existing.values)
+    end
   end
 
+  # TODO: Move this to GitService::Repo
   def git_fetch
     require 'rugged'
     rugged_repo = Rugged::Repository.new(path.to_s)
     rugged_repo.fetch(*rugged_repo.remotes.collect(&:name))
-  end
-
-  private
-
-  def github_branch_names
-    with_github_service do |github|
-      github.pull_requests.all.collect do |pr|
-        MiqToolsServices::MiniGit.pr_branch(pr.number)
-      end
-    end
   end
 end
