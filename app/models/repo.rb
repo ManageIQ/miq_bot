@@ -87,7 +87,7 @@ class Repo < ActiveRecord::Base
 
   # @param expected [Array<Hash>] The desired state of the PR branches.
   #   Caller should pass an Array of Hashes that contain the PR's number,
-  #   html_url, and merge_target.
+  #   pr_title, html_url, and merge_target.
   def synchronize_pr_branches(expected)
     raise "repo cannot not have PR branches" unless can_have_prs?
 
