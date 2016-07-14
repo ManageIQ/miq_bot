@@ -11,7 +11,8 @@ FactoryGirl.define do
   end
 
   factory :pr_branch, :parent => :branch do
-    sequence(:name) { |n| "prs/#{n}/head" }
+    sequence(:name)     { |n| "prs/#{n}/head" }
+    sequence(:pr_title) { |n| "PR title #{n}" }
 
     pull_request true
   end

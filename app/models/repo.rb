@@ -93,6 +93,8 @@ class Repo < ActiveRecord::Base
 
     git_fetch # TODO: Let's get rid of this!
 
+    results = Hash.new { |h, k| h[k] = [] }
+
     transaction do
       existing = pr_branches.index_by(&:pr_number)
 
@@ -109,18 +111,26 @@ class Repo < ActiveRecord::Base
 
         if branch
           # Update
-          branch.update_attributes!(e)
+          branch.attributes = e
+          key = branch.changed? ? :updated : :unchanged
         else
           # Add
           branch = branches.build(e)
           branch.last_commit = branch.git_service.merge_base
-          branch.save!
+          key = :added
         end
+
+        branch.save!
+        results[key] << branch
       end
 
       # Delete
-      branches.destroy(existing.values)
+      deleted = existing.values
+      branches.destroy(deleted)
+      results[:deleted] = deleted
     end
+
+    results
   end
 
   # TODO: Move this to GitService::Repo
