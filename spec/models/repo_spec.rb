@@ -121,7 +121,7 @@ describe Repo do
       branches = repo.branches.order(:id)
       expect(branches.size).to eq(2)
       expect(branches[0]).to eq(pr_branch_to_keep)
-      expect(branches[0].attributes.except(:last_changed_on)).to eq(pr_branch_to_keep.attributes.except(:last_changed_on))
+      expect(branches[0].attributes.except("last_changed_on")).to eq(pr_branch_to_keep.attributes.except("last_changed_on"))
       expect(branches[0].last_changed_on.to_i).to eq(pr_branch_to_keep.last_changed_on.to_i) # Ignore microsecond differences from the database
 
       expect(branches[1]).to have_attributes(
