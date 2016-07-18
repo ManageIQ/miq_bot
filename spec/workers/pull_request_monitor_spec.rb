@@ -7,6 +7,7 @@ describe PullRequestMonitor do
     let(:github_pr) do
       double("Github PR",
         :number => 1,
+        :title  => "PR number 1",
 
         :base => double("Github PR base",
           :ref  => "master",
@@ -34,6 +35,7 @@ describe PullRequestMonitor do
         :number       => 1,
         :html_url     => "https://github.com/SomeUser/some_repo",
         :merge_target => "master",
+        :pr_title     => "PR number 1"
       }])
 
       described_class.new.process_repo(repo)
@@ -49,6 +51,7 @@ describe PullRequestMonitor do
           :number       => 1,
           :html_url     => "https://github.com/#{repo.name}",
           :merge_target => "master",
+          :pr_title     => "PR number 1"
         }])
 
         described_class.new.process_repo(repo)

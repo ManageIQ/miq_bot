@@ -32,7 +32,8 @@ class PullRequestMonitor
         {
           :number       => github_pr.number,
           :html_url     => github_pr.head.repo.try(:html_url) || github_pr.base.repo.html_url,
-          :merge_target => github_pr.base.ref
+          :merge_target => github_pr.base.ref,
+          :pr_title     => github_pr.title
         }
       end
     end

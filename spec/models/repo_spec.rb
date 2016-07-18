@@ -109,12 +109,14 @@ describe Repo do
         {
           :number       => pr_branch_to_keep.pr_number,
           :html_url     => "https://example.com/SomeUser/some_repo",
-          :merge_target => "master"
+          :merge_target => "master",
+          :pr_title     => pr_branch_to_keep.pr_title
         },
         {
           :number       => pr_number_to_create,
           :html_url     => "https://example.com/SomeOtherUser/some_other_repo",
-          :merge_target => "master"
+          :merge_target => "master",
+          :pr_title     => "New PR"
         }
       ])
 
@@ -130,6 +132,7 @@ describe Repo do
         :commit_uri   => "https://example.com/SomeOtherUser/some_other_repo/commit/$commit",
         :pull_request => true,
         :merge_target => "master",
+        :pr_title     => "New PR",
         :last_commit  => "123abc",
       )
 
