@@ -62,6 +62,10 @@ module GitHubApi
       end
     end
 
+    def title_indicates_wip?
+      !!(@title =~ /\[WIP\]/i)
+    end
+
     private
 
     def update(options)
