@@ -24,7 +24,10 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     unmerged_results = []
     unmerged_results << Linter::Rubocop.new(branch).run
     unmerged_results << Linter::Haml.new(branch).run
+    unmerged_results << Linter::ESLint.new(branch).run
+    unmerged_results << Linter::SCSS.new(branch).run
     unmerged_results.compact!
+
     if unmerged_results.empty?
       @results = {"files" => []}
     else
