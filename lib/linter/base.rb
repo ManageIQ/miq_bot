@@ -27,13 +27,7 @@ module Linter
         end
       end
 
-      begin
-        offenses = JSON.parse(result.output.chomp)
-      rescue JSON::ParserError => error
-        logger.error("#{log_header} #{error.message}")
-        logger.error("#{log_header} Failed to parse JSON result #{result.output.inspect}")
-        return failed_linter_offenses("error parsing JSON result")
-      end
+      offenses = parse_output(result.output)
       logger.info("#{log_header} Completed run with offenses #{offenses.inspect}")
       offenses
     end
@@ -67,6 +61,21 @@ module Linter
 
     def files_to_lint
       @files_to_lint ||= filtered_files(diff_service.new_files)
+    end
+
+    def parse_output(str)
+      begin
+        convert_parsed(JSON.parse(str.chomp))
+      rescue JSON::ParserError => error
+        logger.error("#{log_header} #{error.message}")
+        logger.error("#{log_header} Failed to parse JSON result #{result.output.inspect}")
+        return failed_linter_offenses("error parsing JSON result")
+      end
+    end
+
+    # overriden in linters with different JSON format
+    def convert_parsed(hash_or_array)
+      hash_or_array
     end
 
     def run_linter(dir)
