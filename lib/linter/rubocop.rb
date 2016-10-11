@@ -5,7 +5,7 @@ module Linter
     private
 
     def config_files
-      [".rubocop.yml"]
+      [".rubocop_base.yml", ".rubocop.yml"]
     end
 
     def linter_executable
