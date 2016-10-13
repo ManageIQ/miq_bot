@@ -1,5 +1,3 @@
-require 'bugzilla_worker_common'
-
 module CommitMonitorHandlers
   module Commit
     class BugzillaCommenter
