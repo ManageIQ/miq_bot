@@ -35,7 +35,7 @@ gem 'sidetiq', '~> 0.7.0'
 gem 'sinatra', require: false
 gem 'slim'
 
-gem 'miq_tools_services', '~> 0.1.0', :git => 'git://github.com/ManageIQ/miq_tools_services.git', :tag => 'v0.1.0'
+gem 'miq_tools_services', '~> 0.1.0', :git => 'https://github.com/ManageIQ/miq_tools_services.git', :tag => 'v0.1.0'
 gem 'travis',             '~>1.7.6'
 
 gem 'awesome_spawn',        '>= 1.4.1'
