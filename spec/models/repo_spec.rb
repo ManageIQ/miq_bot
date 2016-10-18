@@ -3,6 +3,29 @@ require 'spec_helper'
 describe Repo do
   let(:repo) { build(:repo) }
 
+  describe ".create_from_github!" do
+    context "when a https url scheme is used" do
+      before(:each) do
+        allow(MiqToolsServices::MiniGit).to receive(:clone)
+        allow(MiqToolsServices::MiniGit).to receive(:call) { "last_commit" }
+      end
+
+      it "does not raise an error" do
+        expect do
+          described_class.create_from_github!("foo/bar", "https://github.com/foo/bar.git")
+        end.to_not raise_error
+      end
+    end
+
+    context "when a git url scheme is used" do
+      it "raises an ArgumentError" do
+        expect do
+          described_class.create_from_github!("foo/bar", "git@github.com:foo/bar.git")
+        end.to raise_error(ArgumentError)
+      end
+    end
+  end
+
   describe "#name_parts" do
     it "without an upstream user" do
       repo.name = "foo"
