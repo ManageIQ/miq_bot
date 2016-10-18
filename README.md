@@ -105,23 +105,25 @@ underscores replaced with hyphens.
 
     Then set to the following values:
     ```yaml
-    # config/settings.local.yml:
+    # config/development.local.yml:
 
-    # github_credentials
     #   Try to use a test account, as the account in question uses notifications
     #   and needs to read them and modify them.
-    username: "some-test-account"
-    password: # account token goes here
+    github_credentials:
+      username: "some-test-account"
+      password: # account token goes here
 
-    # gemfile_checker - leave blank to disable
-    pr_contacts: ["@your_username"]
-    enabled_repos: ["miq-test/sandbox"]
+    # Optional; leave blank to disable
+    gem_changes_labeler:
+      enabled_repos: ["miq-test/sandbox"]
 
-    # github_notification_monitor - leave blank to disable
-    repo_names: ["sandbox"]
+    # Optional; leave blank to disable
+    github_notification_monitor:
+      repo_names: ["miq-test/sandbox"]
 
-    # travis_event - leave blank to disable
-    enabled_repos: ["miq-test/sandbox"]
+    # Optional; leave blank to disable
+    travis_event:
+      enabled_repos: ["miq-test/sandbox"]
     ```
 
 10. You should now be able to run `foreman start` to start the services listed
