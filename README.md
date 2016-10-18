@@ -81,9 +81,9 @@ underscores replaced with hyphens.
    ```
 
 6. Create/fork a test repository and add it to the database (replace `miq-test/sandbox` with your test
-   repository below):
+   repository below). Note that the url provided must use the http or https scheme:
    ```
-   bundle exec rails runner 'Repo.create_from_github!("miq-test/sandbox", "git@github.com:miq-test/sandbox.git")'
+   bundle exec rails runner 'Repo.create_from_github!("miq-test/sandbox", "https://github.com/miq-test/sandbox.git")'
    ```
 
 7. Create a custom Procfile for development. Any changes you make to this file
