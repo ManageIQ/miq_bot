@@ -4,6 +4,8 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
 
   include BranchWorkerMixin
 
+  LABEL = "unmergeable".freeze
+
   def self.handled_branch_modes
     [:pr]
   end
@@ -24,7 +26,12 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
     was_mergeable       = branch.mergeable?
     currently_mergeable = branch.git_service.mergeable?
 
-    write_to_github if was_mergeable && !currently_mergeable
+    if was_mergeable && !currently_mergeable
+      write_to_github
+      apply_label
+    elsif !was_mergeable && currently_mergeable
+      remove_label
+    end
 
     # Update columns directly to avoid collisions wrt the serialized column issue
     branch.update_columns(:mergeable => currently_mergeable)
@@ -35,6 +42,22 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
 
     branch.repo.with_github_service do |github|
       github.create_issue_comments(branch.pr_number, "#{tag}This pull request is not mergeable.  Please rebase and repush.")
+    end
+  end
+
+  def apply_label
+    logger.info("Updating PR #{branch.pr_number} with label #{LABEL.inspect}.")
+
+    branch.repo.with_github_service do |github|
+      github.add_issue_labels(branch.pr_number, LABEL)
+    end
+  end
+
+  def remove_label
+    logger.info("Updating PR #{branch.pr_number} my removing label #{LABEL.inspect}.")
+
+    branch.repo.with_github_service do |github|
+      github.issues.labels.remove(github.user, github.repo, branch.pr_number, :label_name => LABEL)
     end
   end
 end

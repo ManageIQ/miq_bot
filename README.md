@@ -15,7 +15,7 @@ The ManageIQ bot is the ManageIQ team's helper to automate various developer pro
     - in regular branches, writing the commit details to the BZ ticket.
   - Detection of changes to a product's Gemfile, and setting a label.
 - GitHub pull request monitoring
-  - Comment on a PR when it becomes unmergeable.
+  - Label and comment on a PR when it becomes unmergeable.
   - Run [Rubocop](https://github.com/bbatsov/rubocop) and
     [haml-lint](https://github.com/brigade/haml-lint) against a PR diff and
     comment on any offenses found.
