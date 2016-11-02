@@ -8,7 +8,7 @@ module GitService
     end
 
     def blob_at(path) # Rugged::Blob object for a given file path on this branch
-      blob_data = merge_tree.path(path)
+      blob_data = tip_tree.path(path)
       blob = Rugged::Blob.lookup(rugged_repo, blob_data[:oid])
       (blob.type == :blob) ? blob : nil
     rescue Rugged::TreeError
@@ -41,6 +41,14 @@ module GitService
       # Rugged seems to allocate large C structures, but not many Ruby objects,
       #   and thus doesn't trigger a GC, so we will trigger one manually.
       GC.start
+    end
+
+    def tip_commit
+      target_for_reference(ref_name)
+    end
+
+    def tip_tree
+      tip_commit.tree
     end
 
     def target_for_reference(reference) # Rugged::Commit for a given refname i.e. "refs/remotes/origin/master"
