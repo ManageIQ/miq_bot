@@ -10,6 +10,8 @@ MiqBot::Application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'main#index'
 
+  get '/backport_requests' => 'backport_requests#index'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
