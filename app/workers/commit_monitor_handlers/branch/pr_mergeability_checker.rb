@@ -57,7 +57,10 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
     logger.info("Updating PR #{branch.pr_number} my removing label #{LABEL.inspect}.")
 
     branch.repo.with_github_service do |github|
-      github.issues.labels.remove(github.user, github.repo, branch.pr_number, :label_name => LABEL)
+      begin
+        github.issues.labels.remove(github.user, github.repo, branch.pr_number, :label_name => LABEL)
+      rescue Github::Error::NotFound # This label is not currently applied, skip
+      end
     end
   end
 end
