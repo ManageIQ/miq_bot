@@ -31,7 +31,7 @@ module CommitMonitorHandlers::Batch
     attr_reader :github
 
     def tag
-      "<github_pr_commenter_batch />"
+      "<github-pr-commenter-batch />"
     end
 
     def header
