@@ -19,7 +19,7 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   private
 
   def tag
-    "<pr_mergeability_checker />"
+    "<pr-mergeability-checker />"
   end
 
   def process_mergeability
