@@ -88,8 +88,7 @@ module Linter
               {
                 "severity" => "fatal",
                 "message"  => message,
-                "cop_name" => self.class.name.titleize,
-                "location" => {}
+                "cop_name" => self.class.name.titleize
               }
             ]
           }
