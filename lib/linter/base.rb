@@ -16,9 +16,15 @@ module Linter
 
       require 'tempfile'
       result = Dir.mktmpdir do |dir|
-        collect_files(dir)
-        logger.info("#{log_header} Collected files #{Dir.glob(File.join(dir, "**/*")).inspect}")
-        run_linter(dir)
+        files = collected_config_files(dir)
+        if files.blank?
+          logger.error("#{log_header} Failed to run due to missing config files.")
+          return failed_linter_offenses("missing config files")
+        else
+          files += collected_files_to_lint(dir)
+          logger.info("#{log_header} Collected files #{files.inspect}")
+          run_linter(dir)
+        end
       end
 
       begin
@@ -26,6 +32,7 @@ module Linter
       rescue JSON::ParserError => error
         logger.error("#{log_header} #{error.message}")
         logger.error("#{log_header} Failed to parse JSON result #{result.output.inspect}")
+        return failed_linter_offenses("error parsing JSON result")
       end
       logger.info("#{log_header} Completed run with offenses #{offenses.inspect}")
       offenses
@@ -33,14 +40,21 @@ module Linter
 
     private
 
-    def collect_files(dir)
-      (files_to_lint + config_files).each do |path|
-        blob = branch_service.blob_at(path)
-        next unless blob
-        temp_file = File.join(dir, path)
-        FileUtils.mkdir_p(File.dirname(temp_file))
-        File.write(temp_file, blob.content.to_s, :mode => "wb") # To prevent Encoding::UndefinedConversionError: "\xD0" from ASCII-8BIT to UTF-8
-      end
+    def collected_config_files(dir)
+      config_files.select { |path| extract_file(path, dir) }
+    end
+
+    def collected_files_to_lint(dir)
+      files_to_lint.select { |path| extract_file(path, dir) }
+    end
+
+    def extract_file(path, destination_dir)
+      blob = branch_service.blob_at(path)
+      return false unless blob
+      temp_file = File.join(destination_dir, path)
+      FileUtils.mkdir_p(File.dirname(temp_file))
+      File.write(temp_file, blob.content.to_s, :mode => "wb") # To prevent Encoding::UndefinedConversionError: "\xD0" from ASCII-8BIT to UTF-8
+      true
     end
 
     def branch_service
@@ -63,6 +77,29 @@ module Linter
         #   Instead of relying on just exit_status, we check if there is anything on stderr.
         raise result.error if result.exit_status != 0 && result.error.present?
       end
+    end
+
+    def failed_linter_offenses(message)
+      {
+        "files" => [
+          {
+            "path"     => "\\*\\*",
+            "offenses" => [
+              {
+                "severity" => "fatal",
+                "message"  => message,
+                "cop_name" => self.class.name.titleize,
+                "location" => {}
+              }
+            ]
+          }
+        ],
+        "summary" => {
+          "offense_count"        => 1,
+          "target_file_count"    => files_to_lint.length,
+          "inspected_file_count" => files_to_lint.length
+        }
+      }
     end
 
     def log_header
