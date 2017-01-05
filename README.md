@@ -37,8 +37,7 @@ underscores replaced with hyphens.
   Multiple labels should be comma-separated.  e.g.
   `@miq-bot remove_label label1, label2, label3`
 - `assign`: Assign the issue to the specified user.  The leading `@` for the
-  user is optional.  The user must be in the organization, and must have
-  publicized their membership in order to be assigned.  e.g.
+  user is optional.  The user must be in the Assignees list.  e.g.
   `@miq-bot assign @user`
 - `set_milestone`: Set the specified milestone on the issue. Do not wrap the
   milestone in quotes.  e.g. `@miq-bot set_milestone Sprint 27`

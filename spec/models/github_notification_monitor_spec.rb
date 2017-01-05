@@ -9,7 +9,7 @@ RSpec.describe GithubNotificationMonitor do
     let(:username) { "miq-bot" }
 
     it "assigns to a user" do
-      assignee = "foo"
+      assignee = "gooduser"
       issue_number = 1
       body = "@miq-bot assign #{assignee}"
       issue = instance_spy(
@@ -27,18 +27,17 @@ RSpec.describe GithubNotificationMonitor do
           )
         ]
       )
-      org = instance_double("GithubApi::Organization")
-      allow(org).to receive(:member?).with(assignee).and_return(true)
+      allow(repo).to receive(:valid_assignee?).with(assignee).and_return(true)
       fq_repo_name = "bar/baz"
       stub_timestamps_for_repo_with_issue_number(fq_repo_name, issue_number, 10.minutes.ago)
 
       expect(issue).to receive(:assign).with(assignee)
 
-      described_class.new(repo, username, org, fq_repo_name).process_notifications
+      described_class.new(repo, username, fq_repo_name).process_notifications
     end
 
     it "does not assign to an invalid user" do
-      assignee = "foo"
+      assignee = "baduser"
       issue_number = 1
       body = "@miq-bot assign #{assignee}"
       issue = instance_spy(
@@ -56,14 +55,13 @@ RSpec.describe GithubNotificationMonitor do
           )
         ]
       )
-      org = instance_spy("GithubApi::Organization")
-      allow(org).to receive(:member?).with(assignee).and_return(false)
+      allow(repo).to receive(:valid_assignee?).with(assignee).and_return(false)
       fq_repo_name = "bar/baz"
       stub_timestamps_for_repo_with_issue_number(fq_repo_name, issue_number, 10.minutes.ago)
 
-      expect(issue).not_to receive(:assign).with(assignee)
+      expect(issue).not_to receive(:assign)
 
-      described_class.new(repo, username, org, fq_repo_name).process_notifications
+      described_class.new(repo, username, fq_repo_name).process_notifications
     end
 
     it "adds valid labels" do
@@ -86,7 +84,6 @@ RSpec.describe GithubNotificationMonitor do
         ]
       )
       allow(repo).to receive(:valid_label?) { |arg| %(question wontfix).include?(arg) }
-      org = instance_spy("GithubApi::Organization")
       fq_repo_name = "bar/baz"
       stub_timestamps_for_repo_with_issue_number(fq_repo_name, issue_number, 10.minutes.ago)
 
@@ -94,7 +91,7 @@ RSpec.describe GithubNotificationMonitor do
         expect(labels.map(&:text)).to contain_exactly("question", "wontfix")
       end
 
-      described_class.new(repo, username, org, fq_repo_name).process_notifications
+      described_class.new(repo, username, fq_repo_name).process_notifications
     end
 
     it "does not add invalid labels" do
@@ -117,13 +114,12 @@ RSpec.describe GithubNotificationMonitor do
         ]
       )
       allow(repo).to receive(:valid_label?).with("invalidlabel").and_return(false)
-      org = instance_spy("GithubApi::Organization")
       fq_repo_name = "bar/baz"
       stub_timestamps_for_repo_with_issue_number(fq_repo_name, issue_number, 10.minutes.ago)
 
       expect(issue).not_to receive(:add_labels)
 
-      described_class.new(repo, username, org, fq_repo_name).process_notifications
+      described_class.new(repo, username, fq_repo_name).process_notifications
     end
 
     it "remove applied label" do
@@ -146,13 +142,12 @@ RSpec.describe GithubNotificationMonitor do
         ]
       )
       allow(repo).to receive(:valid_label?) { |arg| %(question wontfix).include?(arg) }
-      org = instance_spy("GithubApi::Organization")
       fq_repo_name = "bar/baz"
       stub_timestamps_for_repo_with_issue_number(fq_repo_name, issue_number, 10.minutes.ago)
 
       expect(issue).to receive(:remove_label).with("question")
 
-      described_class.new(repo, username, org, fq_repo_name).process_notifications
+      described_class.new(repo, username, fq_repo_name).process_notifications
     end
 
     it "remove unapplied label" do
@@ -175,13 +170,12 @@ RSpec.describe GithubNotificationMonitor do
         ]
       )
       allow(repo).to receive(:valid_label?) { |arg| %(question wontfix).include?(arg) }
-      org = instance_spy("GithubApi::Organization")
       fq_repo_name = "bar/baz"
       stub_timestamps_for_repo_with_issue_number(fq_repo_name, issue_number, 10.minutes.ago)
 
       expect(issue).not_to receive(:remove_label)
 
-      described_class.new(repo, username, org, fq_repo_name).process_notifications
+      described_class.new(repo, username, fq_repo_name).process_notifications
     end
 
     it "extra space in command" do
@@ -204,13 +198,12 @@ RSpec.describe GithubNotificationMonitor do
         ]
       )
       allow(repo).to receive(:valid_label?) { |arg| %(question wontfix).include?(arg) }
-      org = instance_spy("GithubApi::Organization")
       fq_repo_name = "bar/baz"
       stub_timestamps_for_repo_with_issue_number(fq_repo_name, issue_number, 10.minutes.ago)
 
       expect(issue).not_to receive(:add_labels)
 
-      described_class.new(repo, username, org, fq_repo_name).process_notifications
+      described_class.new(repo, username, fq_repo_name).process_notifications
     end
 
     it "extra comma in command values" do
@@ -233,7 +226,6 @@ RSpec.describe GithubNotificationMonitor do
         ]
       )
       allow(repo).to receive(:valid_label?) { |arg| %(question wontfix).include?(arg) }
-      org = instance_spy("GithubApi::Organization")
       fq_repo_name = "bar/baz"
       stub_timestamps_for_repo_with_issue_number(fq_repo_name, issue_number, 10.minutes.ago)
 
@@ -241,7 +233,7 @@ RSpec.describe GithubNotificationMonitor do
         expect(labels.map(&:text)).to contain_exactly("question", "wontfix")
       end
 
-      described_class.new(repo, username, org, fq_repo_name).process_notifications
+      described_class.new(repo, username, fq_repo_name).process_notifications
     end
   end
 
