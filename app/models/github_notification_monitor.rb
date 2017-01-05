@@ -22,13 +22,12 @@ class GithubNotificationMonitor
     user         = GitHubApi.connect(username, password)
     org          = user.find_organization(organization_name)
     repo         = org.get_repository(repo_name)
-    new(repo, username, org, fq_repo_name)
+    new(repo, username, fq_repo_name)
   end
 
-  def initialize(repo, username, org, fq_repo_name)
+  def initialize(repo, username, fq_repo_name)
     @repo = repo
     @username = username
-    @org = org
     @fq_repo_name = fq_repo_name
   end
 
@@ -109,7 +108,7 @@ EOMSG
   end
 
   def valid_milestone?(milestone)
-    # First reload the label cache if it's an invalid milestone
+    # First reload the cache if it's an invalid milestone
     @repo.refresh_milestones unless @repo.valid_milestone?(milestone)
 
     # Then see if it's *still* invalid
@@ -120,19 +119,19 @@ EOMSG
     user       = user.strip
     clean_user = user.delete('@')
 
-    if valid_member?(clean_user)
+    if valid_assignee?(clean_user)
       issue.assign(clean_user)
     else
-      issue.add_comment("@#{author} #{user} is an invalid user, ignoring...")
+      issue.add_comment("@#{author} #{user} is an invalid assignee, ignoring...")
     end
   end
 
-  def valid_member?(user)
-    # First reload the member cache if it's an invalid member
-    @org.refresh_members unless @org.member?(user)
+  def valid_assignee?(user)
+    # First reload the cache if it's an invalid assignee
+    @repo.refresh_assignees unless @repo.valid_assignee?(user)
 
     # Then see if it's *still* invalid
-    @org.member?(user)
+    @repo.valid_assignee?(user)
   end
 
   def add_labels(command_value, author, issue)
@@ -171,7 +170,7 @@ EOMSG
   end
 
   def validate_labels(label_names)
-    # First reload the label cache if there are any invalid labels
+    # First reload the cache if there are any invalid labels
     @repo.refresh_labels unless label_names.all? { |l| @repo.valid_label?(l) }
 
     # Then see if any are *still* invalid and split the list

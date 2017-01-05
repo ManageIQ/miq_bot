@@ -24,7 +24,7 @@ module GitHubApi
     def labels
       self.class.labels_cache[fq_repo_name] ||= begin
         repo_labels = GitHubApi.execute(@client, :labels, @fq_repo_name)
-        Set.new.tap { |set| repo_labels.each { |l| set.add(l.name) } }
+        Set.new(repo_labels.collect(&:name))
       end
     end
 
@@ -53,6 +53,25 @@ module GitHubApi
 
     def refresh_milestones
       self.class.milestones_cache.delete(fq_repo_name)
+    end
+
+    def self.assignees_cache
+      @assignees_cache ||= {}
+    end
+
+    def assignees
+      self.class.assignees_cache[fq_repo_name] ||= begin
+        repo_assignees = GitHubApi.execute(@client, :repo_assignees, @fq_repo_name)
+        Set.new(repo_assignees.collect(&:login))
+      end
+    end
+
+    def valid_assignee?(user)
+      assignees.include?(user)
+    end
+
+    def refresh_assignees
+      self.class.assignees_cache.delete(fq_repo_name)
     end
   end
 end
