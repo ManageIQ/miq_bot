@@ -110,6 +110,38 @@ describe Branch do
     end
   end
 
+  describe "#pr_title_tags" do
+    it "with a nil pr_title" do
+      branch.pr_title = nil
+      expect(branch.pr_title_tags).to eq []
+    end
+
+    it "with a blank pr_title" do
+      branch.pr_title = ""
+      expect(branch.pr_title_tags).to eq []
+    end
+
+    it "with a pr_title with tags" do
+      branch.pr_title = "[WIP] [foo_bar] This is a PR title"
+      expect(branch.pr_title_tags).to eq ["WIP", "foo_bar"]
+    end
+
+    it "with a pr_title with tags with leading spaces" do
+      branch.pr_title = "  [WIP] [foo_bar] This is a PR title"
+      expect(branch.pr_title_tags).to eq ["WIP", "foo_bar"]
+    end
+
+    it "with a pr_title with tag-like strings not at the start" do
+      branch.pr_title = "This is a [PR] title"
+      expect(branch.pr_title_tags).to eq []
+    end
+
+    it "with a pr_title with both tags at the start and tag-like strings not at the start" do
+      branch.pr_title = "[WIP] [foo_bar] This is a [PR] title"
+      expect(branch.pr_title_tags).to eq ["WIP", "foo_bar"]
+    end
+  end
+
   describe "#github_pr_uri" do
     it "creates correct pr uri" do
       branch.name = "pr/123"

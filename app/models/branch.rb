@@ -62,6 +62,10 @@ class Branch < ActiveRecord::Base
     MiqToolsServices::MiniGit.pr_number(name) if pull_request?
   end
 
+  def pr_title_tags
+    pr_title.to_s.match(/^(?:\s*\[\w+\])+/).to_s.split.map { |s| s[1...-1] }
+  end
+
   def github_pr_uri
     self.class.github_pr_uri(repo.name, pr_number) if pull_request?
   end

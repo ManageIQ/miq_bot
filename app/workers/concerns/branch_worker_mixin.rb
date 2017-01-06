@@ -1,7 +1,7 @@
 module BranchWorkerMixin
   attr_reader :branch
 
-  delegate :pr_number, :to => :branch
+  delegate :pr_number, :pr_title, :pr_title_tags, :merge_target, :to => :branch
 
   def find_branch(branch_id, required_mode = nil)
     @branch = Branch.where(:id => branch_id).first

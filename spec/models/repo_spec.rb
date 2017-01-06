@@ -118,22 +118,27 @@ describe Repo do
     end
 
     it "creates/updates/deletes PR branches" do
-      pr_branch_to_keep   = create(:pr_branch)
-      pr_branch_to_delete = create(:pr_branch)
+      pr_branch_to_keep   = create(:pr_branch, :repo => repo)
+      pr_branch_to_change = create(:pr_branch, :repo => repo)
+      pr_branch_to_delete = create(:pr_branch, :repo => repo)
       pr_number_to_create = pr_branch_to_delete.pr_number + 1
-
-      repo.update_attributes(:branches => [pr_branch_to_keep, pr_branch_to_delete])
 
       git_service = double("Git service", :merge_base => "123abc")
       expect(repo).to receive(:git_fetch)
-      expect_any_instance_of(Branch).to receive(:git_service).and_return(git_service)
+      allow_any_instance_of(Branch).to receive(:git_service).and_return(git_service)
 
-      repo.synchronize_pr_branches([
+      results = repo.synchronize_pr_branches([
         {
           :number       => pr_branch_to_keep.pr_number,
-          :html_url     => "https://example.com/SomeUser/some_repo",
-          :merge_target => "master",
+          :html_url     => "https://example.com/#{repo.name}",
+          :merge_target => pr_branch_to_keep.merge_target,
           :pr_title     => pr_branch_to_keep.pr_title
+        },
+        {
+          :number       => pr_branch_to_change.pr_number,
+          :html_url     => "https://example.com/#{repo.name}",
+          :merge_target => pr_branch_to_change.merge_target,
+          :pr_title     => "New Title"
         },
         {
           :number       => pr_number_to_create,
@@ -144,12 +149,24 @@ describe Repo do
       ])
 
       branches = repo.branches.order(:id)
-      expect(branches.size).to eq(2)
+      expect(branches.size).to eq(3)
+
+      expect(results).to eq(
+        :unchanged => [pr_branch_to_keep],
+        :updated   => [pr_branch_to_change],
+        :added     => [branches[2]],
+        :deleted   => [pr_branch_to_delete]
+      )
+
       expect(branches[0]).to eq(pr_branch_to_keep)
       expect(branches[0].attributes.except("last_changed_on")).to eq(pr_branch_to_keep.attributes.except("last_changed_on"))
       expect(branches[0].last_changed_on.to_i).to eq(pr_branch_to_keep.last_changed_on.to_i) # Ignore microsecond differences from the database
 
-      expect(branches[1]).to have_attributes(
+      expect(branches[1]).to eq(pr_branch_to_change)
+      expect(branches[1].attributes.except("last_changed_on", "pr_title")).to eq(pr_branch_to_change.attributes.except("last_changed_on", "pr_title"))
+      expect(branches[1].pr_title).to eq("New Title")
+
+      expect(branches[2]).to have_attributes(
         :name         => "prs/#{pr_number_to_create}/head",
         :commits_list => [],
         :commit_uri   => "https://example.com/SomeOtherUser/some_other_repo/commit/$commit",
@@ -163,8 +180,7 @@ describe Repo do
     end
 
     it "handles pruning PR branches" do
-      pr_branch = create(:pr_branch)
-      repo.update_attributes(:branches => [pr_branch])
+      pr_branch = create(:pr_branch, :repo => repo)
 
       expect(repo).to receive(:git_fetch)
 
