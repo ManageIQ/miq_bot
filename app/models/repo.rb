@@ -6,7 +6,6 @@ class Repo < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
 
   def self.create_from_github!(name, url)
-    raise ArgumentError, "do not use git scheme for url, use http or https instead" if url =~ /^git/
     create_and_clone!(name, url, Branch.github_commit_uri(name))
   end
 

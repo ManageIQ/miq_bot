@@ -3,27 +3,22 @@ require 'spec_helper'
 describe Repo do
   let(:repo) { build(:repo) }
 
-  describe ".create_from_github!" do
-    context "when a https url scheme is used" do
-      before(:each) do
-        allow(MiqToolsServices::MiniGit).to receive(:clone)
-        allow(MiqToolsServices::MiniGit).to receive(:call) { "last_commit" }
-      end
+  it ".create_from_github!" do
+    expected_repo_dir = described_class::BASE_PATH.join("foo/bar")
 
-      it "does not raise an error" do
-        expect do
-          described_class.create_from_github!("foo/bar", "https://github.com/foo/bar.git")
-        end.to_not raise_error
-      end
-    end
+    expect(MiqToolsServices::MiniGit).to receive(:clone)
+    expect(MiqToolsServices::MiniGit).to receive(:call).with(expected_repo_dir).and_return("0123abcd")
 
-    context "when a git url scheme is used" do
-      it "raises an ArgumentError" do
-        expect do
-          described_class.create_from_github!("foo/bar", "git@github.com:foo/bar.git")
-        end.to raise_error(ArgumentError)
-      end
-    end
+    described_class.create_from_github!("foo/bar", "https://github.com/foo/bar.git")
+
+    repo = described_class.first
+    expect(repo.name).to eq("foo/bar")
+    expect(repo.branches.size).to eq(1)
+
+    branch = repo.branches.first
+    expect(branch.name).to        eq("master")
+    expect(branch.commit_uri).to  eq("https://github.com/foo/bar/commit/$commit")
+    expect(branch.last_commit).to eq("0123abcd")
   end
 
   describe "#name_parts" do

@@ -80,7 +80,8 @@ underscores replaced with hyphens.
    ```
 
 6. Create/fork a test repository and add it to the database (replace `miq-test/sandbox` with your test
-   repository below). Note that the url provided must use the http or https scheme:
+   repository below).  Note that the bot account you are using must have SSH keys defined correctly
+   if you plan to use an SSH based URL, otherwise you should use an HTTPS based URL.
    ```
    bundle exec rails runner 'Repo.create_from_github!("miq-test/sandbox", "https://github.com/miq-test/sandbox.git")'
    ```
