@@ -7,7 +7,8 @@ describe Repo do
     expected_repo_dir = described_class::BASE_PATH.join("foo/bar")
 
     expect(MiqToolsServices::MiniGit).to receive(:clone)
-    expect(MiqToolsServices::MiniGit).to receive(:call).with(expected_repo_dir).and_return("0123abcd")
+    expect(MiqToolsServices::MiniGit).to receive(:call).with(expected_repo_dir).and_return("0123abcd") # current_ref
+    expect(MiqToolsServices::MiniGit).to receive(:call).with(expected_repo_dir).and_return(nil)        # ensure_prs_refs
 
     described_class.create_from_github!("foo/bar", "https://github.com/foo/bar.git")
 
