@@ -1,6 +1,5 @@
 def stub_git_service
   double("MiniGit service").tap do |git|
-    allow(git).to receive(:ensure_prs_refs)
     allow(git).to receive(:fetch).with("--all")
     allow(MiqToolsServices::MiniGit).to receive(:call).and_yield(git)
   end

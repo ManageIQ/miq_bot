@@ -6,7 +6,9 @@ class Repo < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
 
   def self.create_from_github!(name, url)
-    create_and_clone!(name, url, Branch.github_commit_uri(name))
+    create_and_clone!(name, url, Branch.github_commit_uri(name)).tap do |repo|
+      repo.ensure_prs_refs
+    end
   end
 
   def self.create_and_clone!(name, url, commit_uri)
@@ -48,10 +50,13 @@ class Repo < ActiveRecord::Base
     !!upstream_user
   end
 
+  def ensure_prs_refs
+    MiqToolsServices::MiniGit.call(path, &:ensure_prs_refs) if can_have_prs?
+  end
+
   def with_git_service
     raise "no block given" unless block_given?
     MiqToolsServices::MiniGit.call(path) do |git|
-      git.ensure_prs_refs
       git.fetch("--all")
       yield git
     end
