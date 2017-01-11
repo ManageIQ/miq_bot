@@ -137,6 +137,19 @@ class Repo < ActiveRecord::Base
   def git_fetch
     require 'rugged'
     rugged_repo = Rugged::Repository.new(path.to_s)
-    rugged_repo.fetch(*rugged_repo.remotes.collect(&:name))
+    rugged_repo.remotes.each do |remote|
+      fetch_options = {}
+
+      username = extract_username_from_git_remote_url(remote.url)
+      fetch_options[:credentials] = Rugged::Credentials::SshKeyFromAgent.new(:username => username) if username
+
+      rugged_repo.fetch(remote.name, fetch_options)
+    end
+  end
+
+  private
+
+  def extract_username_from_git_remote_url(url)
+    url.start_with?("http") ? nil : url.match(/^.+?(?=@)/).to_s.presence
   end
 end
