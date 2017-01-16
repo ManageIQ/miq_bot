@@ -5,6 +5,9 @@ bugzilla_credentials:
 github_credentials:
   username:
   password:
+pivotal_credentials:
+  token:
+
 commit_monitor:
   bugzilla_product:
 diff_content_checker: {}
@@ -13,6 +16,8 @@ gem_changes_labeler:
 github_notification_monitor:
   repo_names: []
 merge_target_titler:
+  enabled_repos: []
+pivotal_pr_checker:
   enabled_repos: []
 sql_migration_labeler:
   enabled_repos: []
