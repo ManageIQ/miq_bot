@@ -18,11 +18,11 @@ def rubocop_json_file
 end
 
 def rubocop_check_path
-  Pathname.new(@example.file_path).expand_path.dirname.join("data", rubocop_check_directory)
+  Pathname.new(@example.file_path).expand_path.dirname.join("data", rubocop_check_directory).relative_path_from(Rails.root)
 end
 
 def rubocop_check_path_file(file)
-  rubocop_check_path.join(file).relative_path_from(Rails.root)
+  rubocop_check_path.join(file)
 end
 
 def rubocop_check_directory

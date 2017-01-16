@@ -3,5 +3,5 @@ class CodingConvention
     :keys => :values,
     :arent => :aligned,
     :kind_of_like => :this
-  }
+  }.freeze
 end
