@@ -38,7 +38,7 @@ module CommitMonitorHandlers
       end
 
       def github_pr_uri?(text)
-        text.include?(branch.github_pr_uri)
+        text.to_s.include?(branch.github_pr_uri)
       end
     end
   end
