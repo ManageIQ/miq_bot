@@ -41,10 +41,10 @@ gem 'tracker_api',        '~> 1.6'
 
 gem 'awesome_spawn',        '>= 1.4.1'
 gem 'default_value_for'
-gem 'haml_lint',            '~> 0.19',  :require => false
-gem 'more_core_extensions', '~> 2.0.0', :require => 'more_core_extensions/all'
-gem 'rubocop',              '~> 0.46.0', :require => false
-gem 'rugged',                           :require => false
+gem 'haml_lint',            '~> 0.20.0', :require => false
+gem 'more_core_extensions', '~> 2.0.0',  :require => 'more_core_extensions/all'
+gem 'rubocop',              '~> 0.47.0', :require => false
+gem 'rugged',                            :require => false
 
 gem 'octokit', '~> 3.8.0'
 gem 'minigit', '~> 0.0.4'
