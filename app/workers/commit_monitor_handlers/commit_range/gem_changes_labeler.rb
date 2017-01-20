@@ -22,18 +22,18 @@ class CommitMonitorHandlers::CommitRange::GemChangesLabeler
   private
 
   def process_branch
-    apply_label if gemfile_changes_in_diff?
+    apply_label if gem_changes_in_diff?
   end
 
-  def gemfile_changes_in_diff?
-    branch.git_service.diff.new_files.any? { |file| gemfile_changes?(file) }
+  def gem_changes_in_diff?
+    branch.git_service.diff.new_files.any? { |file| gem_changes?(file) }
   rescue Rugged::IndexError
     # Failed to create merge index, no point in trying
     return false
   end
 
-  def gemfile_changes?(file)
-    File.basename(file) == "Gemfile"
+  def gem_changes?(file)
+    File.basename(file) == "Gemfile" || file.to_s.end_with?(".gemspec")
   end
 
   def apply_label

@@ -19,8 +19,28 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
     end
   end
 
+  context "when there are gemspec changes" do
+    let(:new_files) { ["some_gem.gemspec", "some/other/file.rb"] }
+
+    it "adds a label to the PR" do
+      expect(github_service).to receive(:add_issue_labels).with(branch.pr_number, "gem changes")
+
+      described_class.new.perform(branch.id, nil)
+    end
+  end
+
   context "when there are Gemfile changes to deep Gemfiles" do
     let(:new_files) { ["gems/pending/Gemfile", "some/other/file.rb"] }
+
+    it "adds a label to the PR" do
+      expect(github_service).to receive(:add_issue_labels).with(branch.pr_number, "gem changes")
+
+      described_class.new.perform(branch.id, nil)
+    end
+  end
+
+  context "when there are gemspec changes to deep gemspec" do
+    let(:new_files) { ["path/to/some_gem.gemspec", "some/other/file.rb"] }
 
     it "adds a label to the PR" do
       expect(github_service).to receive(:add_issue_labels).with(branch.pr_number, "gem changes")
