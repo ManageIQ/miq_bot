@@ -3,9 +3,9 @@ module MiqToolsServices
     include ServiceMixin
 
     class << self
-      attr_accessor :credentials
+      attr_accessor :credentials, :logger
     end
-    delegate :credentials, :to => self
+    delegate :credentials, :logger, :to => self
 
     def self.configure
       return if @configured
@@ -27,8 +27,15 @@ module MiqToolsServices
     def service
       @service ||= begin
         require 'github_api'
+        require 'miq_tools_services/github/connection_monkey_patch'
         self.class.configure
         ::Github.new(@options)
+        # TODO: In the newer versions of github_api, use this instead of the monkey patch above
+        # ::Github.new(@options) do |config|
+        #   config.stack = proc do |builder|
+        #     builder.insert_before ::Github::Response::RaiseError, Response::RatelimitLogger, logger
+        #   end
+        # end
       end
     end
 
