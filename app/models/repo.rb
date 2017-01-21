@@ -16,8 +16,8 @@ class Repo < ActiveRecord::Base
 
     raise ArgumentError, "a git repo already exists at #{path}" if path.join(".git").exist?
 
-    MiqToolsServices::MiniGit.clone(url, path)
-    last_commit = MiqToolsServices::MiniGit.call(path, &:current_ref)
+    MinigitService.clone(url, path)
+    last_commit = MinigitService.call(path, &:current_ref)
 
     create!(
       :name     => name,
@@ -51,12 +51,12 @@ class Repo < ActiveRecord::Base
   end
 
   def ensure_prs_refs
-    MiqToolsServices::MiniGit.call(path, &:ensure_prs_refs) if can_have_prs?
+    MinigitService.call(path, &:ensure_prs_refs) if can_have_prs?
   end
 
   def with_git_service
     raise "no block given" unless block_given?
-    MiqToolsServices::MiniGit.call(path) do |git|
+    MinigitService.call(path) do |git|
       git.fetch("--all")
       yield git
     end
@@ -64,7 +64,7 @@ class Repo < ActiveRecord::Base
 
   def with_github_service
     raise "no block given" unless block_given?
-    MiqToolsServices::Github.call(:user => upstream_user, :repo => project) { |github| yield github }
+    GithubService.call(:user => upstream_user, :repo => project) { |github| yield github }
   end
 
   def with_travis_service
@@ -107,7 +107,7 @@ class Repo < ActiveRecord::Base
         number   = e.delete(:number)
         html_url = e.delete(:html_url)
         e.merge!(
-          :name         => MiqToolsServices::MiniGit.pr_branch(number),
+          :name         => MinigitService.pr_branch(number),
           :commit_uri   => File.join(html_url, "commit", "$commit"),
           :pull_request => true
         )

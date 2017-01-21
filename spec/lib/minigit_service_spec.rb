@@ -1,17 +1,17 @@
 require 'spec_helper'
 
-describe MiqToolsServices::MiniGit do
+describe MinigitService do
   let(:service) { double("git service") }
 
   before do
-    described_class.any_instance.stub(:service => service)
+    allow_any_instance_of(described_class).to receive(:service).and_return(service)
   end
 
   def with_service
     described_class.call("/path/to/repo") { |git| yield git }
   end
 
-  it_should_behave_like "ServiceMixin service"
+  it_should_behave_like "ThreadsafeServiceMixin service"
 
   context ".clone" do
     let(:command) { "git clone" }

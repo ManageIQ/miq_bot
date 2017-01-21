@@ -1,17 +1,17 @@
 require 'spec_helper'
 
-describe MiqToolsServices::Bugzilla do
+describe BugzillaService do
   let(:service) { double("bugzilla service") }
 
   before do
-    described_class.any_instance.stub(:service => service)
+    allow_any_instance_of(described_class).to receive(:service).and_return(service)
   end
 
   def with_service
     described_class.call { |bz| yield bz }
   end
 
-  it_should_behave_like "ServiceMixin service"
+  it_should_behave_like "ThreadsafeServiceMixin service"
 
   context ".ids_in_git_commit_message" do
     it "with no bugs" do

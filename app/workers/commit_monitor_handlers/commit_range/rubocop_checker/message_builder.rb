@@ -56,7 +56,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def build_comments
-    @message_builder = MiqToolsServices::Github::MessageBuilder.new(header, continuation_header)
+    @message_builder = GithubService::MessageBuilder.new(header, continuation_header)
     files.empty? ? write_success : write_offenses
   end
 

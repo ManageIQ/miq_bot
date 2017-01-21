@@ -9,9 +9,9 @@ module ServiceMixin
     private_class_method :new
 
     class << self
-      attr_accessor :credentials
+      attr_accessor :credentials, :logger
     end
-    delegate :credentials, :to => self
+    delegate :credentials, :logger, :to => self
   end
 
   module ClassMethods

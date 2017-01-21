@@ -7,7 +7,7 @@ module BugzillaWorkerCommon
 
   def with_bug(bug_id)
     return unless block_given?
-    MiqToolsServices::Bugzilla.call do
+    BugzillaService.call do
       output = ActiveBugzilla::Bug.find(:product => product, :id => bug_id)
       raise BugNotFoundError if output.empty?
       bug = output.first

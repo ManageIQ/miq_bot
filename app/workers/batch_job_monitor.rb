@@ -1,7 +1,7 @@
 class BatchJobMonitor
   include Sidekiq::Worker
   include Sidetiq::Schedulable
-  include MiqToolsServices::SidekiqWorkerMixin
+  include SidekiqWorkerMixin
 
   sidekiq_options :queue => :miq_bot, :retry => false
 

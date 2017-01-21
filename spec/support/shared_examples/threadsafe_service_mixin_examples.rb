@@ -1,4 +1,4 @@
-shared_examples_for "ServiceMixin service" do
+shared_examples_for "ThreadsafeServiceMixin service" do
   context ".new" do
     it "is private" do
       expect { described_class.new }.to raise_error(NoMethodError)
@@ -8,7 +8,7 @@ shared_examples_for "ServiceMixin service" do
   context ".call" do
     it "will synchronize multiple callers" do
       t = Thread.new do
-        with_service do |service|
+        with_service do |_service|
           Thread.current[:locked] = true
           sleep 0.01 until Thread.current[:release]
         end

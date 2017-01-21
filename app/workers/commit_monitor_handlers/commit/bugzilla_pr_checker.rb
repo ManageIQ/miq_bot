@@ -19,7 +19,7 @@ module CommitMonitorHandlers
         @commit  = commit
         @message = commit_details["message"]
 
-        MiqToolsServices::Bugzilla.ids_in_git_commit_message(message).each do |bug_id|
+        BugzillaService.ids_in_git_commit_message(message).each do |bug_id|
           update_bugzilla_status(bug_id)
         end
       end

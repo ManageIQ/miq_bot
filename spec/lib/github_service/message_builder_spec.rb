@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MiqToolsServices::Github::MessageBuilder do
+describe GithubService::MessageBuilder do
   let(:max) { described_class::COMMENT_BODY_MAX_SIZE }
   let(:header) { "header stuff\n\n" }
   let(:continuation_header) { "continued...\n\n" }
