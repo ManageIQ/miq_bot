@@ -42,4 +42,16 @@ RSpec.configure do |config|
   config.expect_with(:rspec) { |c| c.syntax = [:should, :expect] }
 
   config.include FactoryGirl::Syntax::Methods
+
+  config.before do
+    [
+      BugzillaService,
+      GithubService,
+      MinigitService
+    ].each do |service_model|
+      allow_any_instance_of(service_model).to receive(:service).and_raise(
+        "Live execution is not allowed in specs.  Use stubs/expectations on service instead."
+      )
+    end
+  end
 end

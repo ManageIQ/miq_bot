@@ -14,7 +14,7 @@ class Branch < ActiveRecord::Base
   delegate :enabled_for?, :to => :repo
 
   def self.with_branch_or_pr_number(n)
-    n = MiqToolsServices::MiniGit.pr_branch(n) if n.kind_of?(Fixnum)
+    n = MinigitService.pr_branch(n) if n.kind_of?(Fixnum)
     where(:name => n)
   end
 
@@ -59,7 +59,7 @@ class Branch < ActiveRecord::Base
   end
 
   def pr_number
-    MiqToolsServices::MiniGit.pr_number(name) if pull_request?
+    MinigitService.pr_number(name) if pull_request?
   end
 
   def pr_title_tags
@@ -73,7 +73,7 @@ class Branch < ActiveRecord::Base
   def write_github_comment(header, continuation_header = nil, message = nil)
     raise ArgumentError, "Cannot comment on non-PR branch #{name}." unless pull_request?
 
-    message_builder = MiqToolsServices::Github::MessageBuilder.new(header, continuation_header)
+    message_builder = GithubService::MessageBuilder.new(header, continuation_header)
     message_builder.write(message) if message
 
     logger.info("Writing comment with header: #{header}")

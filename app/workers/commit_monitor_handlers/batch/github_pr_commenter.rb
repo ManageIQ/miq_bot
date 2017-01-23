@@ -67,7 +67,7 @@ module CommitMonitorHandlers::Batch
       content = OffenseMessage.new
       content.entries = merged_results
 
-      message_builder = MiqToolsServices::Github::MessageBuilder.new(header, continuation_header)
+      message_builder = GithubService::MessageBuilder.new(header, continuation_header)
       message_builder.write("")
       message_builder.write_lines(content.lines)
       message_builder.comments
