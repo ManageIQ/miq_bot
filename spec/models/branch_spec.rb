@@ -131,6 +131,16 @@ describe Branch do
       expect(branch.pr_title_tags).to eq ["WIP", "foo_bar"]
     end
 
+    it "with a pr_title with tags without space delimiters" do
+      branch.pr_title = "[WIP][foo_bar]This is a PR title"
+      expect(branch.pr_title_tags).to eq ["WIP", "foo_bar"]
+    end
+
+    it "with a pr_title with tags without space delimiters but with leading spaces" do
+      branch.pr_title = "  [WIP][foo_bar]This is a PR title"
+      expect(branch.pr_title_tags).to eq ["WIP", "foo_bar"]
+    end
+
     it "with a pr_title with tag-like strings not at the start" do
       branch.pr_title = "This is a [PR] title"
       expect(branch.pr_title_tags).to eq []
