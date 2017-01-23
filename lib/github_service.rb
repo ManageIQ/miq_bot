@@ -21,7 +21,7 @@ class GithubService
   def service
     @service ||= begin
       require 'github_api'
-      require_relative 'github_service/connection_monkey_patch'
+      require_relative 'github_service/logging_patch'
       self.class.configure
       Github.new(@options)
       # TODO: In the newer versions of github_api, use this instead of the monkey patch above
