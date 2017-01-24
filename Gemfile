@@ -6,6 +6,9 @@ gem 'rails', '~> 4.2.4'
 # Use PostgreSQL as the database for Active Record
 gem 'pg'
 
+# InfluxDB for Github rate limit tracking
+gem 'influxdb-rails'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
