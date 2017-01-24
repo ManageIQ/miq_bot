@@ -50,7 +50,6 @@ gem 'rubocop',              '~> 0.47.0', :require => false
 gem 'rugged',                            :require => false
 
 gem 'octokit', '~> 3.8.0'
-gem 'minigit', '~> 0.0.4'
 gem 'faraday', '~> 0.9.1'
 
 group :development, :test do
