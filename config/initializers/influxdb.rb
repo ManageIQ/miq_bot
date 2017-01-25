@@ -1,7 +1,7 @@
 InfluxDB::Rails.configure do |config|
-  config.influxdb_database = "miq_bot_#{Rails.env}"
-  config.influxdb_username = ENV['INFLUX_USERNAME']
-  config.influxdb_password = ENV['INFLUX_PASSWORD']
+  config.influxdb_database = Settings.influxdb.database_name
+  config.influxdb_username = Settings.influxdb.username
+  config.influxdb_password = Settings.influxdb.password
 end
 
 # HACK: InfluxDB's Ruby and Rails clients have some issues with their logging strategy.
