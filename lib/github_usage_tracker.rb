@@ -14,7 +14,11 @@ class GithubUsageTracker
   def record_datapoint
     # TODO: Clean this mess up
     client = Octokit::Client.new(:login => Settings.github_credentials.username, :password => Settings.github_credentials.password)
-    influxdb.write_point('rate_limit', :values => { :requests_remaining_count => client.rate_limit!.remaining })
+    influxdb.write_point(
+      'rate_limit',
+      :values    => { :requests_remaining_count => client.rate_limit!.remaining },
+      :timestamp => Time.now.to_i # Required to lower precision to seconds
+    )
   end
 
   private
