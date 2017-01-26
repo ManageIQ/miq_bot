@@ -149,3 +149,6 @@ $ influx
 
 > CREATE RETENTION POLICY "twelve_weeks" ON "<your_database_name>" DURATION 12w REPLICATION 1
 ```
+* For development, note that InfluxDB's default installation has authentication disabled.
+  Thus, you can ignore making a user with permissions and put whatever you want for
+  the user/pass in settings.
