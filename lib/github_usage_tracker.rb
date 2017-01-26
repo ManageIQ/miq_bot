@@ -3,18 +3,18 @@ class GithubUsageTracker
     new.record_datapoint
   end
 
-  def self.requests_remaining_measurements
-    new.requests_remaining_measurements
+  def self.rate_limit_measurements
+    new.rate_limit_measurements
   end
 
-  def requests_remaining_measurements
-    influxdb.query('SELECT * FROM github_requests_remaining')
+  def rate_limit_measurements
+    influxdb.query('SELECT * FROM rate_limit')
   end
 
   def record_datapoint
     # TODO: Clean this mess up
     client = Octokit::Client.new(:login => Settings.github_credentials.username, :password => Settings.github_credentials.password)
-    influxdb.write_point('github_requests_remaining', :values => { :count => client.rate_limit!.remaining })
+    influxdb.write_point('rate_limit', :values => { :requests_remaining_count => client.rate_limit!.remaining })
   end
 
   private
