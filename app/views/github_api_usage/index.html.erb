@@ -14,9 +14,9 @@
         $.getJSON("/github_api_usage/rate_limit_measurements", function(response) {
           var data = {
             cols: [{id: 'time', label: 'Time', type: 'datetime'},
-                   {id: 'count', label: 'API Requests Remaining', type: 'number'}],
+                   {id: 'count', label: 'Requests Remaining', type: 'number'}],
             rows: response[0]["values"].map(function(x) {
-              return {c:[{v: new Date(x.time)}, {v: x.requests_remaining}]}
+              return {c:[{v: new Date(x.time)}, {v: x.mean}]}
             })
           }
 
