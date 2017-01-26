@@ -16,7 +16,7 @@
             cols: [{id: 'time', label: 'Time', type: 'datetime'},
                    {id: 'count', label: 'API Requests Remaining', type: 'number'}],
             rows: response[0]["values"].map(function(x) {
-              return {c:[{v: new Date(x.time)}, {v: x.requests_remaining_count}]}
+              return {c:[{v: new Date(x.time)}, {v: x.requests_remaining}]}
             })
           }
 

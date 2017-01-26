@@ -14,7 +14,12 @@ class GithubService
       end
 
       def on_complete(env)
-        logger.info { "Executed #{env.method.to_s.upcase} #{env.url}...api calls remaining #{env.response_headers['x-ratelimit-remaining']}" }
+        api_calls_remaining = env.response_headers['x-ratelimit-remaining']
+        logger.info { "Executed #{env.method.to_s.upcase} #{env.url}...api calls remaining #{api_calls_remaining}" }
+        GithubUsageTracker.record_datapoint(
+          :requests_remaining => api_calls_remaining,
+          :timestamp          => DateTime.parse(env.response_headers["date"])
+        )
       end
     end
   end

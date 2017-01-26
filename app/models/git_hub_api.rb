@@ -14,7 +14,10 @@ module GitHubApi
     val = nil
     t = Benchmark.realtime { val = client.send(cmd, *args) }
     limit_after = client.rate_limit.remaining
-    logger.info("Executed #{cmd} #{args.inspect}...api calls remaining #{limit_after} (in #{"%0.3f" % t}s using #{limit_before - limit_after} calls)")
+    logger.info("Executed #{cmd} #{args.inspect}...api calls remaining #{limit_after} " \
+                "(in #{"%0.3f" % t}s using #{limit_before - limit_after} calls)")
+    GithubUsageTracker.record_datapoint(:requests_remaining => limit_after,
+                                        :timestamp          => client.last_response.time)
     val
   rescue => err
     logger.error("Executed #{cmd} #{args.inspect}...Failed in #{"%0.3f" % t}s")

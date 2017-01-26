@@ -1,6 +1,6 @@
 class GithubUsageTracker
-  def self.record_datapoint
-    new.record_datapoint
+  def self.record_datapoint(**args)
+    new.record_datapoint(args)
   end
 
   def self.rate_limit_measurements
@@ -11,13 +11,11 @@ class GithubUsageTracker
     influxdb.query('SELECT * FROM rate_limit')
   end
 
-  def record_datapoint
-    # TODO: Clean this mess up
-    client = Octokit::Client.new(:login => Settings.github_credentials.username, :password => Settings.github_credentials.password)
+  def record_datapoint(requests_remaining:, timestamp: nil)
     influxdb.write_point(
       'rate_limit',
-      :values    => { :requests_remaining_count => client.rate_limit!.remaining },
-      :timestamp => Time.now.to_i # Required to lower precision to seconds
+      :values    => { :requests_remaining => requests_remaining.to_i },
+      :timestamp => timestamp ? timestamp.to_i : Time.now.to_i
     )
   end
 
