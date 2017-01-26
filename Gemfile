@@ -7,7 +7,7 @@ gem 'rails', '~> 4.2.4'
 gem 'pg'
 
 # InfluxDB for Github rate limit tracking
-gem 'influxdb-rails'
+gem 'influxdb-rails', '~> 0.1.11'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
