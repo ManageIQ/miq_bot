@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">GitHub API Usage</h3>
+  </div>
+  <table class="table table-striped">
+    <div id="chart_div"></div>
+    <%= javascript_include_tag('https://www.gstatic.com/charts/loader.js') %>
+    <script type="text/javascript">
+      google.charts.load('current', {packages: ['corechart', 'line']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        $.getJSON("/github_api_usage/rate_limit_measurements", function(response) {
+          var data = {
+            cols: [{id: 'time', label: 'Time', type: 'datetime'},
+                   {id: 'count', label: 'Requests Remaining', type: 'number'}],
+            rows: response[0]["values"].map(function(x) {
+              return {c:[{v: new Date(x.time)}, {v: x.mean}]}
+            })
+          }
+
+          var table = new google.visualization.DataTable(data);
+
+          var options = {
+            hAxis: {
+              title: 'Time'
+            },
+            vAxis: {
+              title: 'API Requests Remaining'
+            }
+          };
+
+          var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+          chart.draw(table, options);
+        });
+      }
+    </script>
+  </table>
+</div>

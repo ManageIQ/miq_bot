@@ -8,6 +8,11 @@ github_credentials:
 pivotal_credentials:
   token:
 
+influxdb:
+  database_name:
+  username:
+  password:
+
 commit_monitor:
   bugzilla_product:
 diff_content_checker: {}

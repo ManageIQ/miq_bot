@@ -137,3 +137,18 @@ underscores replaced with hyphens.
 12. You should be able to open a new PR on the miq-test/sandbox
     repository with any rubocop problems, such as `MixedCaseConstant = 1`.
     Wait a few minutes and see if it comments on your PR.
+
+### GitHub Usage Tracking with InfluxDB
+
+* If you wish to use the GitHub API Usage feature, you'll need to set up InfluxDB
+  and enter in the proper credentials + database name in your settings yaml.
+* You will also need to set retention policy in Influx for rate_limit measurements to use:
+
+```plaintext
+$ influx
+
+> CREATE RETENTION POLICY "twelve_weeks" ON "<your_database_name>" DURATION 12w REPLICATION 1
+```
+* For development, note that InfluxDB's default installation has authentication disabled.
+  Thus, you can ignore making a user with permissions and put whatever you want for
+  the user/pass in settings.
