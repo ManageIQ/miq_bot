@@ -20,6 +20,7 @@ class GithubUsageTracker
       WHERE time > '#{from_time.rfc3339}'
       AND time <= '#{current_time.rfc3339}'
       GROUP BY time(1m)
+      fill(previous)
     eos
 
     influxdb.query(query)
