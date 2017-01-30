@@ -8,10 +8,10 @@ class GithubUsageTracker
       'rate_limit',
       { :tags      => { :bot_version        => MiqBot.version },
         :values    => { :requests_remaining => requests_remaining.to_i },
-        :timestamp => timestamp ? timestamp.to_i : Time.now.to_i },
-      nil, # Allow config to determine precision
-      'twelve_weeks' # Retention policy
+        :timestamp => timestamp ? timestamp.to_i : Time.now.to_i }
     )
+  rescue => e
+    logger.info("#{e.name}: #{e.message}")
   end
 
   private

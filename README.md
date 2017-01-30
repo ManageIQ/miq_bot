@@ -138,17 +138,17 @@ underscores replaced with hyphens.
     repository with any rubocop problems, such as `MixedCaseConstant = 1`.
     Wait a few minutes and see if it comments on your PR.
 
-### GitHub Usage Tracking with InfluxDB
+### InfluxDB and Grafana setup
 
-* If you wish to use the GitHub API Usage feature, you'll need to set up InfluxDB
-  and enter in the proper credentials + database name in your settings yaml.
-* You will also need to set retention policy in Influx for rate_limit measurements to use:
+The bot collects some optional data in a time series database
+([InfluxDB](https://github.com/influxdata/influxdb)) and displays it in an
+entirely separate user interface ([Grafana](http://grafana.org/)).
 
-```plaintext
-$ influx
+To use these features:
 
-> CREATE RETENTION POLICY "twelve_weeks" ON "<your_database_name>" DURATION 12w REPLICATION 1
-```
-* For development, note that InfluxDB's default installation has authentication disabled.
-  Thus, you can ignore making a user with permissions and put whatever you want for
-  the user/pass in settings.
+* Install and configure InfluxDB
+* Enter the database name and credentials in your local settings yaml
+* Install Grafana
+* Enter the url of the running Grafana instance in your local settings yaml
+
+Metrics tracking is optional and you should not need to do these extra steps to run miq_bot locally.
