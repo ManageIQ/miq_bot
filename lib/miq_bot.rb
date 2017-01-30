@@ -4,6 +4,6 @@ module MiqBot
   end
 
   def self.current_bot_sha
-    @current_git_sha ||= `git rev-parse --short --verify HEAD`.strip
+    @current_git_sha ||= `GIT_DIR=#{Rails.root.join('.git')} git rev-parse --short --verify HEAD`.strip
   end
 end
