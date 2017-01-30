@@ -16,7 +16,11 @@ class PullRequestMonitorHandlers::WipLabeler
   private
 
   def process_branch
-    apply_label if wip_in_title?
+    if wip_in_title?
+      apply_label
+    else
+      remove_label
+    end
   end
 
   def wip_in_title?
@@ -27,6 +31,13 @@ class PullRequestMonitorHandlers::WipLabeler
     branch.repo.with_github_service do |github|
       logger.info("Updating PR #{pr_number} with label #{LABEL.inspect}.")
       github.add_issue_labels(pr_number, LABEL)
+    end
+  end
+
+  def remove_label
+    branch.repo.with_github_service do |github|
+      logger.info("Updating PR #{pr_number} without label #{LABEL.inspect}.")
+      github.remove_issue_labels(pr_number, LABEL)
     end
   end
 end
