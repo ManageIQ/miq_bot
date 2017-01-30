@@ -13,6 +13,9 @@ influxdb:
   username:
   password:
 
+grafana:
+  url:
+
 commit_monitor:
   bugzilla_product:
 diff_content_checker: {}
