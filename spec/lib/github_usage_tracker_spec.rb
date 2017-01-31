@@ -11,7 +11,7 @@ describe GithubUsageTracker do
 
   describe "#record_datapoint" do
     after do
-      tracker.record_datapoint(requests_remaining: 1337, uri: request_uri )
+      tracker.record_datapoint(:requests_remaining => 1337, :uri => request_uri)
     end
 
     context "with full URLs" do

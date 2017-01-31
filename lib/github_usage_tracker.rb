@@ -11,7 +11,7 @@ class GithubUsageTracker
     influxdb.write_point(
       'github_api_request',
       { :tags      => { :bot_version        => MiqBot.version },
-        :values    => { :requests_remaining => requests_remaining.to_i, uri: request_uri },
+        :values    => { :requests_remaining => requests_remaining.to_i, :uri => request_uri },
         :timestamp => timestamp ? timestamp.to_i : Time.now.to_i }
     )
   rescue => e

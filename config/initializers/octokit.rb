@@ -4,6 +4,6 @@ Octokit.configure do |c|
   c.auto_paginate = true
 
   rack_builder = Octokit::Default.middleware
-  rack_builder.use GithubService::Response::RatelimitLogger
+  rack_builder.use(GithubService::Response::RatelimitLogger)
   c.middleware = rack_builder
 end
