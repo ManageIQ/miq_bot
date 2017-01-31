@@ -1,9 +1,9 @@
 require 'benchmark'
 
 module GitHubApi
-  def self.connect(username, password)
+  def self.connect
     @user = GitHubApi::User.new
-    @user.client ||= Octokit::Client.new(:login => username, :password => password, :auto_paginate => true)
+    @user.client ||= Octokit::Client.new
 
     return @user
   end

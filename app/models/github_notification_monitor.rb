@@ -14,15 +14,11 @@ class GithubNotificationMonitor
   ).freeze
 
   def self.build(organization_name, repo_name)
-    username     = Settings.github_credentials.username
-    password     = Settings.github_credentials.password
-    raise "no GitHub credentials defined" if username.nil? || password.nil?
-
     fq_repo_name = "#{organization_name}/#{repo_name}"
-    user         = GitHubApi.connect(username, password)
+    user         = GitHubApi.connect
     org          = user.find_organization(organization_name)
     repo         = org.get_repository(repo_name)
-    new(repo, username, fq_repo_name)
+    new(repo, Octokit.login, fq_repo_name)
   end
 
   def initialize(repo, username, fq_repo_name)
