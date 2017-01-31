@@ -17,6 +17,7 @@ module GitHubApi
     logger.info("Executed #{cmd} #{args.inspect}...api calls remaining #{limit_after} " \
                 "(in #{"%0.3f" % t}s using #{limit_before - limit_after} calls)")
     GithubUsageTracker.record_datapoint(:requests_remaining => limit_after,
+                                        :uri                => client.last_response.data.url,
                                         :timestamp          => client.last_response.time)
     val
   rescue => err

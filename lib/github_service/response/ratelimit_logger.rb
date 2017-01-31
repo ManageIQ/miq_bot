@@ -18,6 +18,7 @@ class GithubService
         logger.info { "Executed #{env.method.to_s.upcase} #{env.url}...api calls remaining #{api_calls_remaining}" }
         GithubUsageTracker.record_datapoint(
           :requests_remaining => api_calls_remaining,
+          :uri                => env.url.request_uri,
           :timestamp          => DateTime.parse(env.response_headers["date"])
         )
       end
