@@ -27,7 +27,7 @@ class GithubUsageTracker
       match = /(?:app\/workers\/)(?:\w+\/)*?(\w+)(?:\.rb\:\d+)/.match(l)
       return match[1] if match && match[1].exclude?("_mixin")
     end
-    false
+    nil
   end
 
   def influxdb
