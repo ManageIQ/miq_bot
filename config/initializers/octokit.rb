@@ -3,7 +3,10 @@ Octokit.configure do |c|
   c.password = Settings.github_credentials.password
   c.auto_paginate = true
 
-  rack_builder = Octokit::Default.middleware
-  rack_builder.use(GithubService::Response::RatelimitLogger)
-  c.middleware = rack_builder
+  c.middleware = Faraday::RackBuilder.new do |builder|
+    builder.use GithubService::Response::RatelimitLogger
+    builder.use Octokit::Response::RaiseError
+    builder.use Octokit::Response::FeedParser
+    builder.adapter Faraday.default_adapter
+  end
 end
