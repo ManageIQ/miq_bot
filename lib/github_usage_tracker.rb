@@ -5,12 +5,19 @@ class GithubUsageTracker
     new.record_datapoint(args)
   end
 
-  def record_datapoint(requests_remaining:, uri:, timestamp: nil)
+  def self.influxdb
+    @influx ||= InfluxDB::Client.new(Settings.influxdb.database_name,
+                                     :username => Settings.influxdb.username,
+                                     :password => Settings.influxdb.password,
+                                     :time_precision => 'ms')
+  end
+
+  def record_datapoint(requests_remaining:, uri:, timestamp: Time.now)
     request_uri = URI.parse(uri).path.chomp("/")
 
     values = { :tags      => { :bot_version        => MiqBot.version },
                :values    => { :requests_remaining => requests_remaining.to_i, :uri => request_uri },
-               :timestamp => timestamp ? timestamp.to_i : Time.now.to_i }
+               :timestamp => (timestamp.to_f * 1000).to_i } # ms precision
 
     worker = worker_from_backtrace
     values[:tags].merge!(:worker => worker) if worker
@@ -31,6 +38,6 @@ class GithubUsageTracker
   end
 
   def influxdb
-    InfluxDB::Rails.client
+    self.class.influxdb
   end
 end
