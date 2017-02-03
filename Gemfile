@@ -54,6 +54,7 @@ gem 'rugged',                            :require => false
 
 gem 'octokit', '~> 4.6.0'
 gem 'faraday', '~> 0.9.1'
+gem 'faraday-http-cache', '~> 2.0.0'
 
 group :development, :test do
   gem 'rspec'
