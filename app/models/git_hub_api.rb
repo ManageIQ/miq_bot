@@ -1,13 +1,6 @@
 require 'benchmark'
 
 module GitHubApi
-  def self.connect
-    @user = GitHubApi::User.new
-    @user.client ||= Octokit::Client.new
-
-    return @user
-  end
-
   def self.execute(client, cmd, *args)
     limit_before = client.rate_limit.remaining
     logger.debug("Executing #{cmd} #{args.inspect}...api calls remaining #{limit_before}")
