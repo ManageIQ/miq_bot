@@ -15,9 +15,7 @@ class GithubNotificationMonitor
 
   def self.build(organization_name, repo_name)
     fq_repo_name = "#{organization_name}/#{repo_name}"
-    user         = GitHubApi.connect
-    org          = user.find_organization(organization_name)
-    repo         = org.get_repository(repo_name)
+    repo         = GitHubApi::Repo.new(Octokit::Client.new, fq_repo_name)
     new(repo, Octokit.login, fq_repo_name)
   end
 

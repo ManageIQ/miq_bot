@@ -9,7 +9,7 @@ module GitHubApi
 
     def get_repository(repo_name)
       fq_repo_name = "#{@name}/#{repo_name}"
-      GitHubApi::Repo.new(self, fq_repo_name)
+      GitHubApi::Repo.new(Octokit::Client.new, fq_repo_name)
     end
   end
 end
