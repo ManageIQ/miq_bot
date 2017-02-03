@@ -35,4 +35,3 @@
 # Ignore local repos folder
 /repos
 
-/Gemfile.lock
