@@ -9,8 +9,7 @@ module GitHubApi
 
     def get_repository(repo_name)
       fq_repo_name = "#{@name}/#{repo_name}"
-      octokit_repo = GitHubApi.execute(@client, :repo, fq_repo_name)
-      GitHubApi::Repo.new(octokit_repo, self, fq_repo_name)
+      GitHubApi::Repo.new(self, fq_repo_name)
     end
   end
 end

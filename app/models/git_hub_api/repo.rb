@@ -2,7 +2,7 @@ module GitHubApi
   class Repo
     attr_accessor :organization, :client, :fq_repo_name
 
-    def initialize(octokit_repo, organization, fq_repo_name)
+    def initialize(organization, fq_repo_name)
       @organization = organization
       @client = organization.client
       @fq_repo_name = fq_repo_name
