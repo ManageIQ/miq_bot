@@ -52,7 +52,7 @@ gem 'more_core_extensions', '~> 2.0.0',  :require => 'more_core_extensions/all'
 gem 'rubocop',              '~> 0.47.0', :require => false
 gem 'rugged',                            :require => false
 
-gem 'octokit', '~> 3.8.0'
+gem 'octokit', '~> 4.6.0'
 gem 'faraday', '~> 0.9.1'
 
 group :development, :test do
