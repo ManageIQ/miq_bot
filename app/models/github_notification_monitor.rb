@@ -15,7 +15,7 @@ class GithubNotificationMonitor
 
   def self.build(organization_name, repo_name)
     fq_repo_name = "#{organization_name}/#{repo_name}"
-    repo         = GitHubApi::Repo.new(Octokit::Client.new, fq_repo_name)
+    repo         = OctokitWrappers::Repository.new(fq_repo_name)
     new(repo, Octokit.login, fq_repo_name)
   end
 
@@ -41,14 +41,15 @@ class GithubNotificationMonitor
   # last_processed_timestamp, and check every comment in the issue thread
   # skipping them until we are at the last processed comment.
   def process_notification(notification)
-    process_issue_thread(notification.issue)
+    issue = Octokit.issue(@fq_repo_name, notification.issue_number)
+    process_issue_thread(issue)
     notification.mark_thread_as_read
   end
 
   def process_issue_thread(issue)
     process_issue_comment(issue, issue.author, issue.created_at, issue.body)
     issue.comments.each do |comment|
-      process_issue_comment(comment.issue, comment.author, comment.updated_at, comment.body)
+      process_issue_comment(issue, comment.author, comment.updated_at, comment.body)
     end
   end
 
@@ -139,7 +140,6 @@ EOMSG
 
     if valid.any?
       valid.reject!  { |l| issue.applied_label?(l) }
-      valid.collect! { |l| GitHubApi::Label.new(@repo, l, issue) }
       issue.add_labels(valid)
     end
   end
