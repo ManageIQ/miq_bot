@@ -5,6 +5,8 @@ class BatchJob < ActiveRecord::Base
 
   validates :state, :inclusion => {:in => %w(finalizing), :allow_nil => true}
 
+  SEMAPHORE = Mutex.new
+
   def self.perform_async(workers, worker_args, job_attributes)
     new_entries = workers.size.times.collect { BatchEntry.new }
     create!(job_attributes.merge(:entries => new_entries))
@@ -35,9 +37,9 @@ class BatchJob < ActiveRecord::Base
   end
 
   def check_complete
-    # NOTE: The Thread.exclusive may need to be upgraded to a database row lock
+    # NOTE: The mutex may need to be upgraded to a database row lock
     #       if we go multi-process
-    Thread.exclusive do
+    SEMAPHORE.synchronize do
       begin
         reload
       rescue ActiveRecord::RecordNotFound
