@@ -7,4 +7,3 @@ module OctokitWrappers
     end
   end
 end
-

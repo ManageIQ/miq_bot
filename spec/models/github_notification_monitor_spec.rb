@@ -16,9 +16,9 @@ RSpec.describe GithubNotificationMonitor do
   let(:comments) do
     [
       double('comment',
-             :author => "notchrisarcand",
+             :author     => "notchrisarcand",
              :updated_at => 5.minutes.ago,
-             :body => comment_body)
+             :body       => comment_body)
     ]
   end
   let(:username)     { "miq-bot" }
@@ -41,7 +41,7 @@ RSpec.describe GithubNotificationMonitor do
     end
 
     context "when 'assign' command is given" do
-      let(:comment_body)     { "@#{username} assign #{assignee}" }
+      let(:comment_body) { "@#{username} assign #{assignee}" }
 
       before do
         allow(repo).to receive(:valid_assignee?).with("gooduser") { true }

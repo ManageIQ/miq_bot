@@ -32,7 +32,7 @@ module OctokitWrappers
       applied_labels << labels
       wipify_title if labels.include?("wip")
     end
-    alias :add_label :add_labels
+    alias add_label add_labels
 
     def remove_labels(labels)
       labels = Array(labels).uniq
@@ -40,7 +40,7 @@ module OctokitWrappers
       Octokit.replace_all_labels(fq_repo_name, number, applied_labels)
       unwipify_title if labels.include?("wip")
     end
-    alias :remove_label :remove_labels
+    alias remove_label remove_labels
 
     def author
       user.login
