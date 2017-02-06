@@ -1,5 +1,7 @@
 module GitHubApi
   class Issue
+    WIP_REGEX = /^(?:\s*\[wip\])+/i
+
     attr_accessor :comments, :number, :body, :author, :created_at
 
     def initialize(octokit_issue, repo)
@@ -44,12 +46,14 @@ module GitHubApi
       GitHubApi.execute(@client, :add_labels_to_an_issue, @repo_name, @number, labels)
 
       labels.each do |l|
+        wipify_title if l == "wip"
         applied_labels[l] = Label.new(@repo, l, self)
       end
     end
 
     def remove_label(label_name)
       applied_labels.delete(label_name)
+      unwipify_title if label_name == "wip"
       GitHubApi.execute(@client, :remove_label, @repo_name, @number, label_name)
     end
 
@@ -66,6 +70,22 @@ module GitHubApi
 
     def update(options)
       GitHubApi.execute(@client, :update_issue, @repo_name, @number, @title, @body, options)
+    end
+
+    def update_title(new_title)
+      GitHubApi.execute(@client, :update_issue, @repo_name, @number, :title => new_title)
+    end
+
+    def wipify_title
+      if @title !~ WIP_REGEX
+        update_title("[WIP] #{@title}")
+      end
+    end
+
+    def unwipify_title
+      if (match = @title.match(WIP_REGEX))
+        update_title(match.post_match.lstrip)
+      end
     end
   end
 end
