@@ -32,7 +32,8 @@ RSpec.describe GithubNotificationMonitor do
         .with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE) do
         { "timestamps" => { repo => { issue.number => 10.minutes.ago } } }
       end
-      allow(Octokit).to receive(:issue).and_return(issue)
+      allow(Octokit).to receive(:issue)
+      allow(OctokitWrappers::Issue).to receive(:new).and_return(issue)
     end
 
     after do
