@@ -48,7 +48,7 @@ class GithubNotificationMonitor
 
   def process_issue_thread(issue)
     process_issue_comment(issue, issue.author, issue.created_at, issue.body)
-    issue.comments.each do |comment|
+    issue.list_comments.each do |comment|
       process_issue_comment(issue, comment.author, comment.updated_at, comment.body)
     end
   end

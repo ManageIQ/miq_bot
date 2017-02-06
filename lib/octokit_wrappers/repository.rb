@@ -27,7 +27,9 @@ module OctokitWrappers
     end
 
     def notifications
-      Octokit.repository_notifications(fq_name, "all" => false)
+      Octokit.repository_notifications(fq_name, "all" => false).map do |notification|
+        OctokitWrappers::Notification.new(notification)
+      end
     end
 
     def labels

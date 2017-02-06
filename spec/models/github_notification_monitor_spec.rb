@@ -7,11 +7,11 @@ RSpec.describe GithubNotificationMonitor do
   let(:notification) { double('notification', :issue_number => issue.number) }
   let(:issue) do
     double('issue',
-           :author     => "notchrisarcand",
-           :body       => "Opened this issue",
-           :number     => 1,
-           :created_at => 10.minutes.ago,
-           :comments   => comments)
+           :author        => "notchrisarcand",
+           :body          => "Opened this issue",
+           :number        => 1,
+           :created_at    => 10.minutes.ago,
+           :list_comments => comments)
   end
   let(:comments) do
     [

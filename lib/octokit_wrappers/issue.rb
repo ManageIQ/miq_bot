@@ -4,7 +4,7 @@ module OctokitWrappers
   class Issue < SimpleDelegator
     # https://developer.github.com/v3/issues
 
-    def comments
+    def list_comments
       @comments ||= Octokit.issue_comments(fq_repo_name, number)
     end
 
