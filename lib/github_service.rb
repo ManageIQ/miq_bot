@@ -87,4 +87,14 @@ class GithubService
       issues.labels.add(user, repo, issue_id, label)
     end
   end
+
+  # Removes the labels specified, but only if they are on the issue.
+  def remove_issue_labels(issue_id, labels)
+    old_labels = issue_label_names(issue_id)
+
+    Array(labels).each do |label|
+      next unless old_labels.include?(label)
+      issues.label.remove(user, repo, issue_id, :label_name => label)
+    end
+  end
 end
