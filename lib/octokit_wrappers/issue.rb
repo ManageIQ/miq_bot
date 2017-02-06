@@ -7,7 +7,7 @@ module OctokitWrappers
     WIP_REGEX = /^(?:\s*\[wip\])+/i
 
     def list_comments
-      @comments ||= Octokit.issue_comments(fq_repo_name, number)
+      @comments ||= Octokit.issue_comments(fq_repo_name, number).map { |c| IssueComment.new(c) }
     end
 
     def assign(user)
