@@ -42,10 +42,14 @@ module OctokitWrappers
     end
     alias :remove_label :remove_labels
 
+    def author
+      user.login
+    end
+
     private
 
     def fq_repo_name
-      @fq_repo_name ||= repository_url.match(/repos\/(\w\/\w)\z/)[1]
+      @fq_repo_name ||= repository_url.match(/repos\/(\w+\/\w+)\z/)[1]
     end
 
     def update(options)

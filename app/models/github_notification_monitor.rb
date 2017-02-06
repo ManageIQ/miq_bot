@@ -41,7 +41,7 @@ class GithubNotificationMonitor
   # last_processed_timestamp, and check every comment in the issue thread
   # skipping them until we are at the last processed comment.
   def process_notification(notification)
-    issue = Octokit.issue(@fq_repo_name, notification.issue_number)
+    issue = OctokitWrappers::Issue.new(Octokit.issue(@fq_repo_name, notification.issue_number))
     process_issue_thread(issue)
     notification.mark_thread_as_read
   end
