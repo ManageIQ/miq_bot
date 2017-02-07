@@ -1,5 +1,4 @@
 thin:            bundle exec rails s -p $PORT
 sidekiq:         bundle exec sidekiq -q miq_bot
 sidekiq_glacial: bundle exec sidekiq -q miq_bot_glacial
-travis_listener: bundle exec rake travis_event_listener:run
 #rails:           tail -f -n 0 log/development.log
