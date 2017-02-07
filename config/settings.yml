@@ -29,7 +29,5 @@ pivotal_pr_checker:
   enabled_repos: []
 sql_migration_labeler:
   enabled_repos: []
-travis_event:
-  enabled_repos: []
 wip_labeler:
   enabled_repos: []
