@@ -35,6 +35,13 @@ module NewGithubService
         end
     end
 
+    # -> GithubService.create_issue_comments
+    def add_comments(fq_repo_name, issue_id, comments)
+      Array(comments).each do |comment|
+        add_comment(fq_repo_name, issue_id, comment)
+      end
+    end
+
     private
 
     def respond_to_missing?(method_name, include_private=false)

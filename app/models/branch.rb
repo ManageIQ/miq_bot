@@ -77,11 +77,7 @@ class Branch < ActiveRecord::Base
     message_builder.write(message) if message
 
     logger.info("Writing comment with header: #{header}")
-    repo.with_github_service do |github|
-      # TODO: Refactor the common "delete prior tagged issues" into miq_tools_services
-      # github.delete_issue_comments(pr_number, header)
-      github.create_issue_comments(pr_number, message_builder.comments)
-    end
+    GithubService.add_comments(repo.name, pr_number, message_builder.comments)
   end
 
   def git_service
