@@ -22,7 +22,7 @@ module CommitMonitorHandlers::Batch
         return
       end
 
-      process
+      replace_batch_comments
       complete_batch_job
     end
 
@@ -42,17 +42,10 @@ module CommitMonitorHandlers::Batch
       "#{tag}**...continued**\n"
     end
 
-    def process
+    def replace_batch_comments
       logger.info("Adding batch comment to PR #{pr_number}.")
 
-      branch.repo.with_github_service do |github|
-        @github = github
-        replace_batch_comments
-      end
-    end
-
-    def replace_batch_comments
-      github.replace_issue_comments(pr_number, new_comments) do |old_comment|
+      NewGithubService.replace_comments(branch.repo.name, pr_number, new_comments) do |old_comment|
         batch_comment?(old_comment)
       end
     end

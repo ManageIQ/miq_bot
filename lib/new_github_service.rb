@@ -35,11 +35,29 @@ module NewGithubService
         end
     end
 
-    # -> GithubService.create_issue_comments
-    def add_comments(fq_repo_name, issue_id, comments)
+    # DEPRECATES GithubService.create_issue_comments
+    def add_comments(fq_repo_name, issue_number, comments)
       Array(comments).each do |comment|
-        add_comment(fq_repo_name, issue_id, comment)
+        add_comment(fq_repo_name, issue_number, comment)
       end
+    end
+
+    # DEPRECATES GithubService.delete_issue_comments
+    def delete_comments(fq_repo_name, comment_ids)
+      Array(comment_ids).each do |comment_id|
+        delete_comment(fq_repo_name, comment_id)
+      end
+    end
+
+    # Deletes the issue comments found by the provided block, then creates new
+    # issue comments from those provided.
+    # DEPRECATES GithubService.replace_issue_comments
+    def replace_comments(fq_repo_name, issue_number, new_comments, &block)
+      raise "no block given" unless block_given?
+
+      to_delete = GithubService.issue_comments(fq_repo_name, issue_number).select { |c| yield c }
+      delete_comments(fq_repo_name, to_delete.map(&:id))
+      add_comments(fq_repo_name, issue_number, new_comments)
     end
 
     private
