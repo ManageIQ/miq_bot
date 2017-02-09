@@ -45,4 +45,4 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 end
 
-WebMock.disable_net_connect!(allow_localhost: true)
+WebMock.disable_net_connect!(:allow_localhost => true)

@@ -1,5 +1,5 @@
 describe PullRequestMonitorHandlers::MergeTargetTitler do
-  let(:branch)         { create(:pr_branch) }
+  let(:branch) { create(:pr_branch) }
 
   before do
     stub_sidekiq_logger
@@ -37,7 +37,7 @@ describe PullRequestMonitorHandlers::MergeTargetTitler do
   it "when the branch has a master merge target" do
     branch.update_attributes!(:merge_target => "master")
 
-      expect(NewGithubService).to_not receive(:pull_requests)
+    expect(NewGithubService).to_not receive(:pull_requests)
 
     described_class.new.perform(branch.id)
   end

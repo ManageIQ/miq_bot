@@ -52,7 +52,7 @@ module NewGithubService
     # Deletes the issue comments found by the provided block, then creates new
     # issue comments from those provided.
     # DEPRECATES GithubService.replace_issue_comments
-    def replace_comments(fq_repo_name, issue_number, new_comments, &block)
+    def replace_comments(fq_repo_name, issue_number, new_comments)
       raise "no block given" unless block_given?
 
       to_delete = GithubService.issue_comments(fq_repo_name, issue_number).select { |c| yield c }
@@ -62,8 +62,8 @@ module NewGithubService
 
     private
 
-    def respond_to_missing?(method_name, include_private=false)
-      service.respond_to?(method_name)
+    def respond_to_missing?(method_name, include_private = false)
+      service.respond_to?(method_name, include_private)
     end
 
     def method_missing(method_name, *args, &block)

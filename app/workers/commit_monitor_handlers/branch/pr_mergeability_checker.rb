@@ -60,8 +60,6 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
     # This label is not currently applied, skip
   end
 
-  private
-
   def fq_repo_name
     branch.repo.name
   end
