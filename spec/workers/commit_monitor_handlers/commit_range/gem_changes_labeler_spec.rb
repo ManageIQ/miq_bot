@@ -12,7 +12,7 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
     let(:new_files) { ["Gemfile", "some/other/file.rb"] }
 
     it "adds a label to the PR" do
-      expect(NewGithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
+      expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
       described_class.new.perform(branch.id, nil)
     end
@@ -22,7 +22,7 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
     let(:new_files) { ["some_gem.gemspec", "some/other/file.rb"] }
 
     it "adds a label to the PR" do
-      expect(NewGithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
+      expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
       described_class.new.perform(branch.id, nil)
     end
@@ -32,7 +32,7 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
     let(:new_files) { ["gems/pending/Gemfile", "some/other/file.rb"] }
 
     it "adds a label to the PR" do
-      expect(NewGithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
+      expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
       described_class.new.perform(branch.id, nil)
     end
@@ -42,7 +42,7 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
     let(:new_files) { ["path/to/some_gem.gemspec", "some/other/file.rb"] }
 
     it "adds a label to the PR" do
-      expect(NewGithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
+      expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
       described_class.new.perform(branch.id, nil)
     end
@@ -52,7 +52,7 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
     let(:new_files) { ["some/other/file.rb"] }
 
     it "does not add a label to the PR" do
-      expect(NewGithubService).to_not receive(:add_labels_to_an_issue)
+      expect(GithubService).to_not receive(:add_labels_to_an_issue)
 
       described_class.new.perform(branch.id, nil)
     end

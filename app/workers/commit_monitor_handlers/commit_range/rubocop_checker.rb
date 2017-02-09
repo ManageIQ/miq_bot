@@ -59,7 +59,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
   def replace_rubocop_comments
     logger.info("Updating PR #{pr_number} with rubocop comment.")
-    NewGithubService.replace_comments(fq_repo_name, pr_number, rubocop_comments) do |old_comment|
+    GithubService.replace_comments(fq_repo_name, pr_number, rubocop_comments) do |old_comment|
       rubocop_comment?(old_comment)
     end
   end

@@ -40,7 +40,7 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   def write_to_github
     logger.info("Updating PR #{branch.pr_number} with mergability comment.")
 
-    NewGithubService.add_comment(
+    GithubService.add_comment(
       fq_repo_name,
       branch.pr_number,
       "#{tag}This pull request is not mergeable.  Please rebase and repush."
@@ -50,12 +50,12 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   def apply_label
     logger.info("Updating PR #{branch.pr_number} with label #{LABEL.inspect}.")
 
-    NewGithubService.add_labels_to_an_issue(fq_repo_name, branch.pr_number, [LABEL])
+    GithubService.add_labels_to_an_issue(fq_repo_name, branch.pr_number, [LABEL])
   end
 
   def remove_label
     logger.info("Updating PR #{branch.pr_number} my removing label #{LABEL.inspect}.")
-    NewGithubService.remove_label(fq_repo_name, branch.pr_number, LABEL)
+    GithubService.remove_label(fq_repo_name, branch.pr_number, LABEL)
   rescue Octokit::NotFound
     # This label is not currently applied, skip
   end

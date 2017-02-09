@@ -38,6 +38,6 @@ class CommitMonitorHandlers::CommitRange::GemChangesLabeler
 
   def apply_label
     logger.info("Updating PR #{pr_number} with label #{LABEL.inspect}.")
-    NewGithubService.add_labels_to_an_issue(fq_repo_name, pr_number, [LABEL])
+    GithubService.add_labels_to_an_issue(fq_repo_name, pr_number, [LABEL])
   end
 end
