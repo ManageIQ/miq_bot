@@ -59,8 +59,4 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   rescue Octokit::NotFound
     # This label is not currently applied, skip
   end
-
-  def fq_repo_name
-    branch.repo.name
-  end
 end

@@ -23,7 +23,7 @@ class PullRequestMonitorHandlers::MergeTargetTitler
 
   def apply_title
     logger.info("Updating PR #{pr_number} with title change for merge target #{merge_target}.")
-    NewGithubService.update_pull_request(branch.repo.name, pr_number, :title => new_pr_title)
+    NewGithubService.update_pull_request(fq_repo_name, pr_number, :title => new_pr_title)
   end
 
   def new_pr_title

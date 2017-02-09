@@ -80,6 +80,10 @@ class Branch < ActiveRecord::Base
     NewGithubService.add_comments(repo.name, pr_number, message_builder.comments)
   end
 
+  def fq_repo_name
+    repo.name
+  end
+
   def git_service
     GitService::Branch.new(self)
   end

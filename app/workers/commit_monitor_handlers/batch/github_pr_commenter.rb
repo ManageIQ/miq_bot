@@ -45,7 +45,7 @@ module CommitMonitorHandlers::Batch
     def replace_batch_comments
       logger.info("Adding batch comment to PR #{pr_number}.")
 
-      NewGithubService.replace_comments(branch.repo.name, pr_number, new_comments) do |old_comment|
+      NewGithubService.replace_comments(fq_repo_name, pr_number, new_comments) do |old_comment|
         batch_comment?(old_comment)
       end
     end

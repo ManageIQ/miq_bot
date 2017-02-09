@@ -29,11 +29,11 @@ class PullRequestMonitorHandlers::WipLabeler
 
   def apply_label
     logger.info("Updating PR #{pr_number} with label #{LABEL.inspect}.")
-    NewGithubService.add_labels_to_an_issue(branch.repo.name, pr_number, [LABEL])
+    NewGithubService.add_labels_to_an_issue(fq_repo_name, pr_number, [LABEL])
   end
 
   def remove_label
     logger.info("Updating PR #{pr_number} without label #{LABEL.inspect}.")
-    NewGithubService.remove_label(branch.repo.name, pr_number, LABEL)
+    NewGithubService.remove_label(fq_repo_name, pr_number, LABEL)
   end
 end
