@@ -2,7 +2,6 @@ describe PullRequestMonitor do
   describe "#process_repo" do
     let(:repo)   { create(:repo) }
 
-    let(:github) { stub_github_service }
     let(:github_pr_head_repo) { double("Github repo", :html_url => "https://github.com/SomeUser/some_repo") }
     let(:github_pr) do
       double("Github PR",
@@ -36,7 +35,7 @@ describe PullRequestMonitor do
     end
 
     it "with Github PRs" do
-      stub_github_prs(github, github_pr)
+      stub_github_prs(github_pr)
       stub_git_service
 
       expect(repo).to receive(:synchronize_pr_branches).with([{
@@ -54,7 +53,7 @@ describe PullRequestMonitor do
       let(:github_pr_head_repo) { nil }
 
       it "creates a PR branch" do
-        stub_github_prs(github, github_pr)
+        stub_github_prs(github_pr)
         stub_git_service
 
         expect(repo).to receive(:synchronize_pr_branches).with([{
@@ -70,7 +69,7 @@ describe PullRequestMonitor do
     end
 
     it "when there are no Github PRs" do
-      stub_github_prs(github, [])
+      stub_github_prs([])
       stub_git_service
 
       expect(repo).to receive(:synchronize_pr_branches).with([]).and_call_original
