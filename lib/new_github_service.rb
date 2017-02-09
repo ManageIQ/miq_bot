@@ -55,7 +55,7 @@ module NewGithubService
     def replace_comments(fq_repo_name, issue_number, new_comments)
       raise "no block given" unless block_given?
 
-      to_delete = GithubService.issue_comments(fq_repo_name, issue_number).select { |c| yield c }
+      to_delete = issue_comments(fq_repo_name, issue_number).select { |c| yield c }
       delete_comments(fq_repo_name, to_delete.map(&:id))
       add_comments(fq_repo_name, issue_number, new_comments)
     end
