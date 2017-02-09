@@ -33,7 +33,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
       @results     = RubocopResultsFilter.new(results, diff_details).filtered
     end
 
-    write_to_github
+    replace_rubocop_comments
   rescue Rugged::IndexError
     # Failed to create merge index, no point in trying to lint files for an unmergable PR
   end
@@ -57,17 +57,9 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     MessageBuilder.new(results, branch).comments
   end
 
-  def write_to_github
-    logger.info("Updating PR #{pr_number} with rubocop comment.")
-
-    branch.repo.with_github_service do |github|
-      @github = github
-      replace_rubocop_comments
-    end
-  end
-
   def replace_rubocop_comments
-    github.replace_issue_comments(pr_number, rubocop_comments) do |old_comment|
+    logger.info("Updating PR #{pr_number} with rubocop comment.")
+    NewGithubService.replace_comments(branch.repo.name, pr_number, rubocop_comments) do |old_comment|
       rubocop_comment?(old_comment)
     end
   end
