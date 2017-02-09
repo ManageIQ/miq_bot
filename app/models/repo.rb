@@ -62,11 +62,6 @@ class Repo < ActiveRecord::Base
     end
   end
 
-  def with_github_service
-    raise "no block given" unless block_given?
-    GithubService.call(:user => upstream_user, :repo => project) { |github| yield github }
-  end
-
   def with_travis_service
     raise "no block given" unless block_given?
 
