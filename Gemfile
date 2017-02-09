@@ -40,7 +40,6 @@ gem 'slim'
 
 # Services gems
 gem 'active_bugzilla'
-gem 'github_api',     '~> 0.11.1'
 gem 'minigit',        '~> 0.0.4'
 gem 'tracker_api',    '~> 1.6'
 gem 'travis',         '~> 1.7.6'

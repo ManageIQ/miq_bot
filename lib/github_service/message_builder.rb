@@ -1,6 +1,6 @@
 require 'stringio'
 
-class GithubService
+module GithubService
   class MessageBuilder
     attr_accessor :header, :continuation_header
 
