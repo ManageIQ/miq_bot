@@ -1,6 +1,6 @@
 require 'faraday'
 
-class GithubService
+module GithubService
   module Response
     class RatelimitLogger < Faraday::Response::Middleware
       attr_accessor :logger

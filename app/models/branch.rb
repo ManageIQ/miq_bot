@@ -77,7 +77,7 @@ class Branch < ActiveRecord::Base
     message_builder.write(message) if message
 
     logger.info("Writing comment with header: #{header}")
-    NewGithubService.add_comments(repo.name, pr_number, message_builder.comments)
+    GithubService.add_comments(repo.name, pr_number, message_builder.comments)
   end
 
   def fq_repo_name

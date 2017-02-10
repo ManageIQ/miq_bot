@@ -40,7 +40,7 @@ class PullRequestMonitor
   private
 
   def github_prs(repo)
-    NewGithubService.pull_requests(repo.name).map do |github_pr|
+    GithubService.pull_requests(repo.name).map do |github_pr|
       {
         :number       => github_pr.number,
         :html_url     => github_pr.head.repo.try(:html_url) || github_pr.base.repo.html_url,

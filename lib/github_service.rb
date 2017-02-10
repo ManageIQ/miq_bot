@@ -1,100 +1,74 @@
-class GithubService
-  include ThreadsafeServiceMixin
+module GithubService
+  ##
+  # GithubService is miq-bot's interface to the Github API. It acts as a
+  # wrapper around Octokit, delegating calls directly to the Octokit client as
+  # well as providing a space to keep useful augmentations of the interface for
+  # our own use cases.
+  #
+  # You can find the official Octokit documentation at http://octokit.github.io/octokit.rb
+  #
+  # Please check the documentation first before adding helper methods, as they
+  # may already be well handled by Octokit itself.
+  #
+  class << self
+    def service
+      @service ||=
+        begin
+          require 'octokit'
 
-  def self.configure
-    return if @configured
+          unless Rails.env.test?
+            Octokit.configure do |c|
+              c.login    = Settings.github_credentials.username
+              c.password = Settings.github_credentials.password
+              c.auto_paginate = true
 
-    Github.configure do |config|
-      config.login           = credentials["username"]
-      config.password        = credentials["password"]
-      config.auto_pagination = true
+              c.middleware = Faraday::RackBuilder.new do |builder|
+                builder.use GithubService::Response::RatelimitLogger
+                builder.use Octokit::Response::RaiseError
+                builder.use Octokit::Response::FeedParser
+                builder.adapter Faraday.default_adapter
+              end
+            end
+          end
+
+          Octokit::Client.new
+        end
     end
 
-    @configured = true
-  end
-
-  def initialize(options)
-    @options = options
-    service # initialize the service
-  end
-
-  def service
-    @service ||= begin
-      require 'github_api'
-      require_relative 'github_service/logging_patch'
-      self.class.configure
-      Github.new(@options)
-      # TODO: In the newer versions of github_api, use this instead of the monkey patch above
-      # Github.new(@options) do |config|
-      #   config.stack = proc do |builder|
-      #     builder.insert_before Github::Response::RaiseError, Response::RatelimitLogger, logger
-      #   end
-      # end
+    def add_comments(fq_repo_name, issue_number, comments)
+      Array(comments).each do |comment|
+        add_comment(fq_repo_name, issue_number, comment)
+      end
     end
-  end
 
-  def select_issue_comments(issue_id)
-    raise "no block given" unless block_given?
-    issues.comments.all(:issue_id => issue_id).select { |c| yield c }
-  end
-
-  def create_issue_comments(issue_id, comments)
-    Array(comments).each do |comment|
-      issues.comments.create(
-        :issue_id => issue_id,
-        :body     => comment
-      )
+    def delete_comments(fq_repo_name, comment_ids)
+      Array(comment_ids).each do |comment_id|
+        delete_comment(fq_repo_name, comment_id)
+      end
     end
-  end
 
-  def edit_issue_comment(comment_id, comment)
-    issues.comments.edit(
-      :comment_id => comment_id,
-      :body       => comment
-    )
-  end
+    # Deletes the issue comments found by the provided block, then creates new
+    # issue comments from those provided.
+    def replace_comments(fq_repo_name, issue_number, new_comments)
+      raise "no block given" unless block_given?
 
-  def delete_issue_comments(comment_ids)
-    Array(comment_ids).each do |comment_id|
-      issues.comments.delete(:comment_id => comment_id)
+      to_delete = issue_comments(fq_repo_name, issue_number).select { |c| yield c }
+      delete_comments(fq_repo_name, to_delete.map(&:id))
+      add_comments(fq_repo_name, issue_number, new_comments)
     end
-  end
 
-  # Deletes the issue comments found by the provided block, then creates new
-  # issue comments from those provided.
-  def replace_issue_comments(issue_id, new_comments)
-    raise "no block given" unless block_given?
+    private
 
-    to_delete = select_issue_comments(issue_id) { |c| yield c }
-    delete_issue_comments(to_delete.collect(&:id))
-    create_issue_comments(issue_id, new_comments)
-  end
-
-  def issue_labels(issue_id)
-    issues.labels.all(:issue_id => issue_id)
-  end
-
-  def issue_label_names(issue_id)
-    issue_labels(issue_id).collect(&:name)
-  end
-
-  # Adds the labels specified, but only if they are not already on the issue.
-  def add_issue_labels(issue_id, labels)
-    old_labels = issue_label_names(issue_id)
-
-    Array(labels).each do |label|
-      next if old_labels.include?(label)
-      issues.labels.add(user, repo, issue_id, label)
+    def respond_to_missing?(method_name, include_private = false)
+      service.respond_to?(method_name, include_private)
     end
-  end
 
-  # Removes the labels specified, but only if they are on the issue.
-  def remove_issue_labels(issue_id, labels)
-    old_labels = issue_label_names(issue_id)
-
-    Array(labels).each do |label|
-      next unless old_labels.include?(label)
-      issues.label.remove(user, repo, issue_id, :label_name => label)
+    def method_missing(method_name, *args, &block)
+      if service.respond_to?(method_name)
+        service.send(method_name, *args, &block)
+      else
+        super
+      end
     end
   end
 end

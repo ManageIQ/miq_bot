@@ -12,7 +12,7 @@ describe CommitMonitorHandlers::CommitRange::SqlMigrationLabeler do
     let(:new_files) { ["db/migrate/20160706230546_some_migration.rb", "some/other/file.rb"] }
 
     it "adds a label to the PR" do
-      expect(NewGithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["sql migration"])
+      expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["sql migration"])
 
       described_class.new.perform(branch.id, nil)
     end
@@ -22,7 +22,7 @@ describe CommitMonitorHandlers::CommitRange::SqlMigrationLabeler do
     let(:new_files) { ["some/other/file.rb"] }
 
     it "does not add a label to the PR" do
-      expect(NewGithubService).to_not receive(:add_labels_to_an_issue)
+      expect(GithubService).to_not receive(:add_labels_to_an_issue)
 
       described_class.new.perform(branch.id, nil)
     end
@@ -32,7 +32,7 @@ describe CommitMonitorHandlers::CommitRange::SqlMigrationLabeler do
     let(:new_files) { ["spec/db/migrate/20160706230546_some_migration_spec.rb", "some/other/file.rb"] }
 
     it "does not add a label to the PR" do
-      expect(NewGithubService).to_not receive(:add_labels_to_an_issue)
+      expect(GithubService).to_not receive(:add_labels_to_an_issue)
 
       described_class.new.perform(branch.id, nil)
     end

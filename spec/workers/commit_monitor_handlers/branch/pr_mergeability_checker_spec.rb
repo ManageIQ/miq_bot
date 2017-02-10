@@ -12,9 +12,9 @@ describe CommitMonitorHandlers::Branch::PrMergeabilityChecker do
     it 'comments on the PR' do
       git_service = instance_double('GitService::Branch', :mergeable? => false)
       allow(GitService::Branch).to receive(:new) { git_service }
-      allow(NewGithubService).to receive(:add_labels_to_an_issue)
+      allow(GithubService).to receive(:add_labels_to_an_issue)
 
-      expect(NewGithubService).to receive(:add_comment)
+      expect(GithubService).to receive(:add_comment)
         .with(repo_name, 1, a_string_including("not mergeable"))
 
       described_class.new.perform(pr_branch.id)
@@ -23,9 +23,9 @@ describe CommitMonitorHandlers::Branch::PrMergeabilityChecker do
     it "adds an 'unmergeable' label to the PR" do
       git_service = instance_double('GitService::Branch', :mergeable? => false)
       allow(GitService::Branch).to receive(:new) { git_service }
-      allow(NewGithubService).to receive(:add_comment)
+      allow(GithubService).to receive(:add_comment)
 
-      expect(NewGithubService).to receive(:add_labels_to_an_issue)
+      expect(GithubService).to receive(:add_labels_to_an_issue)
         .with(repo_name, 1, ['unmergeable'])
 
       described_class.new.perform(pr_branch.id)
@@ -38,9 +38,9 @@ describe CommitMonitorHandlers::Branch::PrMergeabilityChecker do
     it "removes an 'unmergeable' label from the PR" do
       git_service = instance_double('GitService::Branch', :mergeable? => true)
       allow(GitService::Branch).to receive(:new) { git_service }
-      allow(NewGithubService).to receive(:add_comment)
+      allow(GithubService).to receive(:add_comment)
 
-      expect(NewGithubService).to receive(:remove_label)
+      expect(GithubService).to receive(:remove_label)
         .with(repo_name, 1, 'unmergeable')
 
       described_class.new.perform(pr_branch.id)
