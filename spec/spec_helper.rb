@@ -43,6 +43,11 @@ RSpec.configure do |config|
   config.expect_with(:rspec) { |c| c.syntax = [:should, :expect] }
 
   config.include FactoryGirl::Syntax::Methods
+
+  config.before do
+    allow_any_instance_of(MinigitService).to receive(:service)
+      .and_raise("Live execution is not allowed in specs.  Use stubs/expectations on service instead.")
+  end
 end
 
 WebMock.disable_net_connect!(:allow_localhost => true)
