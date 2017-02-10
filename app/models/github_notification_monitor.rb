@@ -19,16 +19,14 @@ class GithubNotificationMonitor
     @fq_repo_name = fq_repo_name
   end
 
-  def logger
-    Rails.logger
-  end
-
   def process_notifications
     notifications = @repo.notifications
     notifications.each do |notification|
       process_notification(notification)
     end
   end
+
+  private
 
   # A notification only notifies about a change to an issue thread, but
   # not which specific comments were added.  Thus, we keep track of the
@@ -174,8 +172,6 @@ EOMSG
     save_timestamps
   end
 
-  private
-
   def timestamps_full_hash
     @timestamps_full_hash ||=
       (YAML.load_file(GITHUB_NOTIFICATION_MONITOR_YAML_FILE) || {}).tap do |h|
@@ -190,5 +186,9 @@ EOMSG
 
   def save_timestamps
     File.write(GITHUB_NOTIFICATION_MONITOR_YAML_FILE, timestamps_full_hash.to_yaml)
+  end
+
+  def logger
+    Rails.logger
   end
 end
