@@ -1,9 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe GithubNotificationMonitor do
-  subject(:notification_monitor) { described_class.new(repo, username, fq_repo_name) }
+  subject(:notification_monitor) { described_class.new(fq_repo_name) }
 
-  let(:repo)         { double('repo', :notifications => [notification]) }
   let(:notification) { double('notification', :issue_number => issue.number) }
   let(:issue) do
     double('issue',
@@ -26,26 +25,31 @@ RSpec.describe GithubNotificationMonitor do
 
   describe "#process_notifications" do
     before do
+      allow(Settings).to receive(:github_credentials).and_return(double(:username => username))
       allow(File).to receive(:write)
         .with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE, anything)
       allow(YAML).to receive(:load_file)
         .with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE) do
-        { "timestamps" => { repo => { issue.number => 10.minutes.ago } } }
+        { "timestamps" => { fq_repo_name => { issue.number => 10.minutes.ago } } }
       end
-      allow(Octokit).to receive(:issue)
-      allow(OctokitWrappers::Issue).to receive(:new).and_return(issue)
+      allow(GithubService).to receive(:repository_notifications)
+        .with(fq_repo_name, a_hash_including("all" => false)).and_return([notification])
+      allow(GithubService).to receive(:issue)
+        .with(fq_repo_name, notification.issue_number).and_return(issue)
+      allow(GithubService).to receive(:list_comments)
+        .with(fq_repo_name, issue.number).and_return(comments)
     end
 
     after do
-      described_class.new(repo, username, fq_repo_name).process_notifications
+      notification_monitor.process_notifications
     end
 
     context "when 'assign' command is given" do
       let(:comment_body) { "@#{username} assign #{assignee}" }
 
       before do
-        allow(repo).to receive(:valid_assignee?).with("gooduser") { true }
-        allow(repo).to receive(:valid_assignee?).with("baduser") { false }
+        allow(GithubService).to receive(:valid_assignee?).with("gooduser") { true }
+        allow(GithubService).to receive(:valid_assignee?).with("baduser") { false }
       end
 
       context "with a valid user" do
@@ -61,7 +65,7 @@ RSpec.describe GithubNotificationMonitor do
         let(:assignee) { "baduser" }
 
         it "does not assign after reloading the cache on first failure, reports failure, and marks as read" do
-          expect(repo).to receive(:refresh_assignees)
+          expect(GithubService).to receive(:refresh_assignees)
           expect(issue).not_to receive(:assign)
           expect(issue).to receive(:add_comment).with(/invalid assignee/)
           expect(notification).to receive(:mark_thread_as_read)
@@ -72,9 +76,9 @@ RSpec.describe GithubNotificationMonitor do
     context "when 'add_labels' command is given" do
       before do
         allow(issue).to receive(:applied_label?).and_return(false)
-        allow(repo).to receive(:valid_label?).and_return(false)
+        allow(GithubService).to receive(:valid_label?).and_return(false)
         %w(question wontfix).each do |label|
-          allow(repo).to receive(:valid_label?).with(label).and_return(true)
+          allow(GithubService).to receive(:valid_label?).with(label).and_return(true)
         end
       end
 
@@ -114,7 +118,7 @@ RSpec.describe GithubNotificationMonitor do
         let(:comment_body) { "@#{username} add-label invalidlabel" }
 
         it "does not add invalid labels after refreshing cache, comments on error, and marks as read" do
-          expect(repo).to receive(:refresh_labels)
+          expect(GithubService).to receive(:refresh_labels)
           expect(issue).not_to receive(:add_labels)
           expect(issue).to receive(:add_comment).with(/Cannot apply the following label.*not recognized/)
           expect(notification).to receive(:mark_thread_as_read)
@@ -124,7 +128,7 @@ RSpec.describe GithubNotificationMonitor do
 
     context "when 'remove_labels' command is given" do
       before do
-        allow(repo).to receive(:valid_label?).with("question").and_return(true)
+        allow(GithubService).to receive(:valid_label?).with("question").and_return(true)
       end
 
       context "with applied labels" do

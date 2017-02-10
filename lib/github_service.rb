@@ -57,7 +57,71 @@ module GithubService
       add_comments(fq_repo_name, issue_number, new_comments)
     end
 
+    def issue(*args)
+      Issue.new(service.issue(*args))
+    end
+
+    def issue_comments(*args)
+      service.issue_comments(*args).map do |comment|
+        IssueComment.new(comment)
+      end
+    end
+
+    def repository_notifications(*args)
+      service.repository_notifications(*args).map do |notification|
+        Notification.new(notification)
+      end
+    end
+
+    def labels
+      labels_cache[fq_name] ||= Set.new(service.labels(fq_name).map(&:name))
+    end
+
+    def valid_label?(label_text)
+      labels.include?(label_text)
+    end
+
+    def refresh_labels
+      labels_cache.delete(fq_name)
+    end
+
+    def milestones
+      milestones_cache[fq_name] ||= Hash[service.list_milestones(fq_name).map { |m| [m.title, m.number] }]
+    end
+
+    def valid_milestone?(milestone)
+      milestones.include?(milestone)
+    end
+
+    def refresh_milestones
+      milestones_cache.delete(fq_name)
+    end
+
+    def assignees
+      assignees_cache[fq_name] ||= Set.new(service.repo_assignees(fq_name).map(&:login))
+    end
+
+    def valid_assignee?(user)
+      assignees.include?(user)
+    end
+
+    def refresh_assignees
+      assignees_cache.delete(fq_name)
+    end
+
     private
+
+    def labels_cache
+      @labels_cache ||= {}
+    end
+
+    def milestones_cache
+      @milestones_cache ||= {}
+    end
+
+    def assignees_cache
+      @assignees_cache ||= {}
+    end
 
     def respond_to_missing?(method_name, include_private = false)
       service.respond_to?(method_name, include_private)

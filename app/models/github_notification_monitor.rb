@@ -13,42 +13,32 @@ class GithubNotificationMonitor
     "set_milestone" => :set_milestone
   ).freeze
 
-  def self.build(organization_name, repo_name)
-    fq_repo_name = "#{organization_name}/#{repo_name}"
-    repo         = OctokitWrappers::Repository.new(fq_repo_name)
-    new(repo, Octokit.login, fq_repo_name)
-  end
-
-  def initialize(repo, username, fq_repo_name)
-    @repo = repo
-    @username = username
+  def initialize(fq_repo_name)
+    @username = Settings.github_credentials.username
     @fq_repo_name = fq_repo_name
   end
 
-  def logger
-    Rails.logger
-  end
-
   def process_notifications
-    notifications = @repo.notifications
-    notifications.each do |notification|
+    GithubService.repository_notifications(@fq_repo_name, "all" => false).each do |notification|
       process_notification(notification)
     end
   end
+
+  private
 
   # A notification only notifies about a change to an issue thread, but
   # not which specific comments were added.  Thus, we keep track of the
   # last_processed_timestamp, and check every comment in the issue thread
   # skipping them until we are at the last processed comment.
   def process_notification(notification)
-    issue = OctokitWrappers::Issue.new(Octokit.issue(@fq_repo_name, notification.issue_number))
+    issue = GithubService.issue(@fq_repo_name, notification.issue_number)
     process_issue_thread(issue)
     notification.mark_thread_as_read
   end
 
   def process_issue_thread(issue)
     process_issue_comment(issue, issue.author, issue.created_at, issue.body)
-    issue.list_comments.each do |comment|
+    GithubService.list_comments(@fq_repo_name, issue.number).each do |comment|
       process_issue_comment(issue, comment.author, comment.updated_at, comment.body)
     end
   end
@@ -104,10 +94,10 @@ EOMSG
 
   def valid_milestone?(milestone)
     # First reload the cache if it's an invalid milestone
-    @repo.refresh_milestones unless @repo.valid_milestone?(milestone)
+    GithubService.refresh_milestones unless GithubService.valid_milestone?(milestone)
 
     # Then see if it's *still* invalid
-    @repo.valid_milestone?(milestone)
+    GithubService.valid_milestone?(milestone)
   end
 
   def assign(user, author, issue)
@@ -123,10 +113,10 @@ EOMSG
 
   def valid_assignee?(user)
     # First reload the cache if it's an invalid assignee
-    @repo.refresh_assignees unless @repo.valid_assignee?(user)
+    GithubService.refresh_assignees unless GithubService.valid_assignee?(user)
 
     # Then see if it's *still* invalid
-    @repo.valid_assignee?(user)
+    GithubService.valid_assignee?(user)
   end
 
   def add_labels(command_value, author, issue)
@@ -165,10 +155,10 @@ EOMSG
 
   def validate_labels(label_names)
     # First reload the cache if there are any invalid labels
-    @repo.refresh_labels unless label_names.all? { |l| @repo.valid_label?(l) }
+    GithubService.refresh_labels unless label_names.all? { |l| GithubService.valid_label?(l) }
 
     # Then see if any are *still* invalid and split the list
-    label_names.partition { |l| @repo.valid_label?(l) }
+    label_names.partition { |l| GithubService.valid_label?(l) }
   end
 
   def timestamps
@@ -179,8 +169,6 @@ EOMSG
     timestamps[issue_number] = updated_at
     save_timestamps
   end
-
-  private
 
   def timestamps_full_hash
     @timestamps_full_hash ||=
@@ -196,5 +184,9 @@ EOMSG
 
   def save_timestamps
     File.write(GITHUB_NOTIFICATION_MONITOR_YAML_FILE, timestamps_full_hash.to_yaml)
+  end
+
+  def logger
+    Rails.logger
   end
 end
