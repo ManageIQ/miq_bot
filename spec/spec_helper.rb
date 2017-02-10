@@ -2,6 +2,7 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'webmock/rspec'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -44,14 +45,9 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
   config.before do
-    [
-      BugzillaService,
-      GithubService,
-      MinigitService
-    ].each do |service_model|
-      allow_any_instance_of(service_model).to receive(:service).and_raise(
-        "Live execution is not allowed in specs.  Use stubs/expectations on service instead."
-      )
-    end
+    allow_any_instance_of(MinigitService).to receive(:service)
+      .and_raise("Live execution is not allowed in specs.  Use stubs/expectations on service instead.")
   end
 end
+
+WebMock.disable_net_connect!(:allow_localhost => true)

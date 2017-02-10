@@ -27,7 +27,7 @@ module CommitMonitorHandlers
       private
 
       def bugzilla_comment
-        prefix     = "New commit detected on #{branch.repo.name}/#{branch.name}:"
+        prefix     = "New commit detected on #{fq_repo_name}/#{branch.name}:"
         commit_uri = branch.commit_uri_to(commit)
         comment    = "#{prefix}\n#{commit_uri}\n\n#{message}"
         comment

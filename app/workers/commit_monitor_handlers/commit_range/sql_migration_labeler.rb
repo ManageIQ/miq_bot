@@ -37,9 +37,7 @@ class CommitMonitorHandlers::CommitRange::SqlMigrationLabeler
   end
 
   def apply_label
-    branch.repo.with_github_service do |github|
-      logger.info("Updating PR #{pr_number} with label #{LABEL.inspect}.")
-      github.add_issue_labels(pr_number, LABEL)
-    end
+    logger.info("Updating PR #{pr_number} with label #{LABEL.inspect}.")
+    NewGithubService.add_labels_to_an_issue(fq_repo_name, pr_number, [LABEL])
   end
 end

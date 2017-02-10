@@ -12,7 +12,7 @@
 		<tbody>
 			<% @branches.each do |branch| %>
 				<tr>
-					<td><%= branch.repo.name %></td>
+					<td><%= branch.fq_repo_name %></td>
 					<td><%= branch.name %></td>
 					<td><%= link_to(branch.last_commit[0, 8], branch.last_commit_uri, :target => "_blank") %></td>
 					<td><%= time_ago_in_words_with_nil_check(branch.last_checked_on) %></td>

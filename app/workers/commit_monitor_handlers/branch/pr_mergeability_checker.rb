@@ -40,27 +40,23 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   def write_to_github
     logger.info("Updating PR #{branch.pr_number} with mergability comment.")
 
-    branch.repo.with_github_service do |github|
-      github.create_issue_comments(branch.pr_number, "#{tag}This pull request is not mergeable.  Please rebase and repush.")
-    end
+    NewGithubService.add_comment(
+      fq_repo_name,
+      branch.pr_number,
+      "#{tag}This pull request is not mergeable.  Please rebase and repush."
+    )
   end
 
   def apply_label
     logger.info("Updating PR #{branch.pr_number} with label #{LABEL.inspect}.")
 
-    branch.repo.with_github_service do |github|
-      github.add_issue_labels(branch.pr_number, LABEL)
-    end
+    NewGithubService.add_labels_to_an_issue(fq_repo_name, branch.pr_number, [LABEL])
   end
 
   def remove_label
     logger.info("Updating PR #{branch.pr_number} my removing label #{LABEL.inspect}.")
-
-    branch.repo.with_github_service do |github|
-      begin
-        github.issues.labels.remove(github.user, github.repo, branch.pr_number, :label_name => LABEL)
-      rescue Github::Error::NotFound # This label is not currently applied, skip
-      end
-    end
+    NewGithubService.remove_label(fq_repo_name, branch.pr_number, LABEL)
+  rescue Octokit::NotFound
+    # This label is not currently applied, skip
   end
 end

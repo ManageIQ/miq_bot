@@ -40,15 +40,13 @@ class PullRequestMonitor
   private
 
   def github_prs(repo)
-    repo.with_github_service do |github|
-      github.pull_requests.all.collect do |github_pr|
-        {
-          :number       => github_pr.number,
-          :html_url     => github_pr.head.repo.try(:html_url) || github_pr.base.repo.html_url,
-          :merge_target => github_pr.base.ref,
-          :pr_title     => github_pr.title
-        }
-      end
+    NewGithubService.pull_requests(repo.name).map do |github_pr|
+      {
+        :number       => github_pr.number,
+        :html_url     => github_pr.head.repo.try(:html_url) || github_pr.base.repo.html_url,
+        :merge_target => github_pr.base.ref,
+        :pr_title     => github_pr.title
+      }
     end
   end
 end

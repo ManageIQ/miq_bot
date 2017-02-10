@@ -1,7 +1,7 @@
 module BranchWorkerMixin
   attr_reader :branch
 
-  delegate :pr_number, :pr_title, :pr_title_tags, :merge_target, :to => :branch
+  delegate :fq_repo_name, :pr_number, :pr_title, :pr_title_tags, :merge_target, :to => :branch
 
   def find_branch(branch_id, required_mode = nil)
     @branch = Branch.where(:id => branch_id).first
@@ -41,7 +41,7 @@ module BranchWorkerMixin
 
   def verify_branch_enabled
     branch_enabled?.tap do |enabled|
-      logger.warn("#{branch.repo.name} has not been enabled.  Skipping.") unless enabled
+      logger.warn("#{fq_repo_name} has not been enabled.  Skipping.") unless enabled
     end
   end
 

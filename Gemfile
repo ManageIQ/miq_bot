@@ -63,5 +63,6 @@ group :development, :test do
 end
 
 group :test do
+  gem 'webmock'
   gem 'factory_girl_rails'
 end
