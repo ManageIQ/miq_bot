@@ -1,9 +1,9 @@
-module OctokitWrappers
+module GithubService
   class Notification < SimpleDelegator
     # https://developer.github.com/v3/activity/notifications/
 
     def mark_thread_as_read
-      Octokit.mark_thread_as_read(thread_id, "read" => false)
+      GithubService.mark_thread_as_read(thread_id, "read" => false)
     end
 
     def issue_number
