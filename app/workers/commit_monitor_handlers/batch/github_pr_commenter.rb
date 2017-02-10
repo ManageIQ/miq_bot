@@ -28,8 +28,6 @@ module CommitMonitorHandlers::Batch
 
     private
 
-    attr_reader :github
-
     def tag
       "<github-pr-commenter-batch />"
     end
