@@ -10,7 +10,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     [:pr]
   end
 
-  attr_reader :results, :github
+  attr_reader :results
 
   def perform(branch_id, _new_commits)
     return unless find_branch(branch_id, :pr)
