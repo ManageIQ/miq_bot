@@ -13,15 +13,9 @@ class GithubNotificationMonitor
     "set_milestone" => :set_milestone
   ).freeze
 
-  def self.build(organization_name, repo_name)
-    fq_repo_name = "#{organization_name}/#{repo_name}"
-    repo         = OctokitWrappers::Repository.new(fq_repo_name)
-    new(repo, Octokit.login, fq_repo_name)
-  end
-
-  def initialize(repo, username, fq_repo_name)
-    @repo = repo
-    @username = username
+  def initialize(fq_repo_name)
+    @repo = OctokitWrappers::Repository.new(fq_repo_name)
+    @username = Octokit.login
     @fq_repo_name = fq_repo_name
   end
 

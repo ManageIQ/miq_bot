@@ -24,7 +24,7 @@ class GithubNotificationMonitorWorker
   end
 
   def process_notifications(repo)
-    GithubNotificationMonitor.build(repo.upstream_user, repo.project).process_notifications
+    GithubNotificationMonitor.new(repo.name).process_notifications
   rescue => err
     logger.error err.message
     logger.error err.backtrace.join("\n")

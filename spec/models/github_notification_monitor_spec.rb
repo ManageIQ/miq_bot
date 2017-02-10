@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe GithubNotificationMonitor do
-  subject(:notification_monitor) { described_class.new(repo, username, fq_repo_name) }
+  subject(:notification_monitor) { described_class.new(fq_repo_name) }
 
   let(:repo)         { double('repo', :notifications => [notification]) }
   let(:notification) { double('notification', :issue_number => issue.number) }
@@ -32,12 +32,14 @@ RSpec.describe GithubNotificationMonitor do
         .with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE) do
         { "timestamps" => { repo => { issue.number => 10.minutes.ago } } }
       end
+      allow(OctokitWrappers::Repository).to receive(:new).with(fq_repo_name).and_return(repo)
       allow(Octokit).to receive(:issue)
+      allow(Octokit).to receive(:login).and_return(username)
       allow(OctokitWrappers::Issue).to receive(:new).and_return(issue)
     end
 
     after do
-      described_class.new(repo, username, fq_repo_name).process_notifications
+      notification_monitor.process_notifications
     end
 
     context "when 'assign' command is given" do
