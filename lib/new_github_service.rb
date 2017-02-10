@@ -12,7 +12,7 @@ module NewGithubService
   #
   class << self
     def service
-      @service ||= \
+      @service ||=
         begin
           require 'octokit'
 
