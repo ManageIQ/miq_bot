@@ -2,7 +2,7 @@ class BatchEntry < ActiveRecord::Base
   serialize :result
   belongs_to :job, :class_name => "BatchJob", :foreign_key => :batch_job_id
 
-  validates :state, :inclusion => {:in => %w(started failed succeeded), :allow_nil => true}
+  validates :state, :inclusion => {:in => %w(started failed succeeded skipped), :allow_nil => true}
 
   def succeeded?
     state == "succeeded"
@@ -12,11 +12,15 @@ class BatchEntry < ActiveRecord::Base
     state == "failed"
   end
 
+  def skipped?
+    state == "skipped"
+  end
+
   def complete?
-    failed? || succeeded?
+    failed? || succeeded? || skipped?
   end
 
   def check_job_complete
-    job.check_complete if job && complete?
+    job.check_complete if complete? && job
   end
 end

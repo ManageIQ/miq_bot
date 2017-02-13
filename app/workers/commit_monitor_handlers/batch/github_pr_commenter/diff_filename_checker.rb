@@ -10,7 +10,8 @@ module CommitMonitorHandlers::Batch
 
     def perform(batch_entry_id, branch_id, _new_commits)
       return unless find_batch_entry(batch_entry_id)
-      return unless find_branch(branch_id, :pr)
+      return skip_batch_entry unless find_branch(branch_id, :pr)
+
       complete_batch_entry(:result => process_files)
     end
 
