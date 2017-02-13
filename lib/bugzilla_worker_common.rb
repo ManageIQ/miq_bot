@@ -2,7 +2,7 @@ module BugzillaWorkerCommon
   BugNotFoundError = Class.new(StandardError)
 
   def product
-    Settings.commit_monitor.bugzilla_product
+    Settings.bugzilla.product
   end
 
   def with_bug(bug_id)

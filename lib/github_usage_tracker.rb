@@ -6,9 +6,9 @@ class GithubUsageTracker
   end
 
   def self.influxdb
-    @influx ||= InfluxDB::Client.new(Settings.influxdb.database_name,
-                                     :username => Settings.influxdb.username,
-                                     :password => Settings.influxdb.password,
+    @influx ||= InfluxDB::Client.new(Settings.influxdb_credentials.database,
+                                     :username => Settings.influxdb_credentials.username,
+                                     :password => Settings.influxdb_credentials.password,
                                      :time_precision => 'ms')
   end
 
