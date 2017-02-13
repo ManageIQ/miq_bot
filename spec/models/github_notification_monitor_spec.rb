@@ -9,8 +9,7 @@ RSpec.describe GithubNotificationMonitor do
            :author        => "notchrisarcand",
            :body          => "Opened this issue",
            :number        => 1,
-           :created_at    => 10.minutes.ago,
-           :list_comments => comments)
+           :created_at    => 10.minutes.ago)
   end
   let(:comments) do
     [
@@ -36,7 +35,7 @@ RSpec.describe GithubNotificationMonitor do
         .with(fq_repo_name, a_hash_including("all" => false)).and_return([notification])
       allow(GithubService).to receive(:issue)
         .with(fq_repo_name, notification.issue_number).and_return(issue)
-      allow(GithubService).to receive(:list_comments)
+      allow(GithubService).to receive(:issue_comments)
         .with(fq_repo_name, issue.number).and_return(comments)
     end
 
