@@ -23,11 +23,7 @@ class BugzillaService
   def service
     @service ||= begin
       require 'active_bugzilla'
-      bz = ActiveBugzilla::Service.new(
-        credentials["bugzilla_uri"],
-        credentials["username"],
-        credentials["password"]
-      )
+      bz = ActiveBugzilla::Service.new(*credentials.to_h.values_at(:url, :username, :password))
       ActiveBugzilla::Base.service = bz
     end
   end

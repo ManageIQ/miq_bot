@@ -1,23 +1,25 @@
+# Service credentials
 bugzilla_credentials:
-  bugzilla_uri:
+  url:
   username:
   password:
 github_credentials:
   username:
   password:
+influxdb_credentials:
+  database:
+  username:
+  password:
 pivotal_credentials:
   token:
 
-influxdb:
-  database_name:
-  username:
-  password:
-
+# General settings
+bugzilla:
+  product:
 grafana:
   url:
 
-commit_monitor:
-  bugzilla_product:
+# Worker settings
 diff_content_checker: {}
 gem_changes_labeler:
   enabled_repos: []
