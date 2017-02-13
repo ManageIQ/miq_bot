@@ -1,10 +1,11 @@
 class TravisBuildKiller
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
-  include SidekiqWorkerMixin
   sidekiq_options :queue => :miq_bot, :retry => false
 
+  include Sidetiq::Schedulable
   recurrence { hourly.minute_of_hour(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55) }
+
+  include SidekiqWorkerMixin
 
   def perform
     if !first_unique_worker?

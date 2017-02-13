@@ -2,11 +2,12 @@ require 'yaml'
 
 class CommitMonitor
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
-  include SidekiqWorkerMixin
   sidekiq_options :queue => :miq_bot_glacial, :retry => false
 
+  include Sidetiq::Schedulable
   recurrence { hourly.minute_of_hour(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55) }
+
+  include SidekiqWorkerMixin
 
   # commit handlers expect to handle a specific commit at a time.
   #
