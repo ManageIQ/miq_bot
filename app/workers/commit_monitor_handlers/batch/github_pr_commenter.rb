@@ -16,11 +16,7 @@ module CommitMonitorHandlers::Batch
 
     def perform(batch_job_id, branch_id, _new_commits)
       return unless find_batch_job(batch_job_id)
-
-      unless find_branch(branch_id, :pr)
-        complete_batch_job
-        return
-      end
+      return skip_batch_job unless find_branch(branch_id, :pr)
 
       replace_batch_comments
       complete_batch_job

@@ -5,18 +5,28 @@ describe BatchEntry do
                    nil         => false,
                    "started"   => false,
                    "failed"    => false,
+                   "skipped"   => false,
                    "succeeded" => true
 
   include_examples "state predicates", :failed?,
                    nil         => false,
                    "started"   => false,
                    "failed"    => true,
+                   "skipped"   => false,
+                   "succeeded" => false
+
+  include_examples "state predicates", :skipped?,
+                   nil         => false,
+                   "started"   => false,
+                   "failed"    => false,
+                   "skipped"   => true,
                    "succeeded" => false
 
   include_examples "state predicates", :complete?,
                    nil         => false,
                    "started"   => false,
                    "failed"    => true,
+                   "skipped"   => true,
                    "succeeded" => true
 
   describe "#check_job_complete" do

@@ -21,6 +21,10 @@ module BatchEntryWorkerMixin
     check_job_complete
   end
 
+  def skip_batch_entry
+    complete_batch_entry(:state => "skipped")
+  end
+
   private
 
   def update_batch_entry(updates)

@@ -27,4 +27,5 @@ module BatchJobWorkerMixin
   def complete_batch_job
     batch_job.destroy
   end
+  alias skip_batch_job complete_batch_job
 end
