@@ -1,11 +1,11 @@
 class BatchJobMonitor
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
-  include SidekiqWorkerMixin
-
   sidekiq_options :queue => :miq_bot, :retry => false
 
+  include Sidetiq::Schedulable
   recurrence { minutely }
+
+  include SidekiqWorkerMixin
 
   def perform
     if !first_unique_worker?
