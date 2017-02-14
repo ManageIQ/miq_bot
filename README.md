@@ -120,6 +120,10 @@ underscores replaced with hyphens.
       enabled_repos: ["miq-test/sandbox"]
 
     # Optional; leave blank to disable
+    graphics_labeler:
+      enabled_repos: ["miq-test/sandbox"]
+
+    # Optional; leave blank to disable
     github_notification_monitor:
       repo_names: ["miq-test/sandbox"]
 
