@@ -34,7 +34,7 @@ gem 'config'
 
 # Sidekiq specific gems
 gem 'sidekiq', '~> 4.1.1'
-gem 'sidetiq', '~> 0.7.0'
+gem 'sidekiq-cron', '~> 0.4.0'
 gem 'sinatra', require: false
 gem 'slim'
 

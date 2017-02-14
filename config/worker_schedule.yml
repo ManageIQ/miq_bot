@@ -1,0 +1,32 @@
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  *
+#
+# * = any value
+# , = value list separator
+# - = range of values
+# / = step values
+
+batch_job_monitor:
+  cron: '* * * * *' # every minute
+  class: 'BatchJobMonitor'
+
+commit_monitor:
+  cron: '*/5 * * * *' # every 5 minutes
+  class: 'CommitMonitor'
+
+github_notification_monitor:
+  cron: '* * * * *' # every minute
+  class: 'GithubNotificationMonitorWorker'
+
+pull_request_monitor:
+  cron: '*/5 * * * *' # every 5 minutes
+  class: 'PullRequestMonitor'
+
+travis_build_killer:
+  cron: '*/5 * * * *' # every 5 minutes
+  class: 'TravisBuildKiller'

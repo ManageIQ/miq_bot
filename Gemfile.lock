@@ -51,23 +51,6 @@ GEM
     backports (3.6.8)
     builder (3.2.2)
     cause (0.1)
-    celluloid (0.17.3)
-      celluloid-essentials
-      celluloid-extras
-      celluloid-fsm
-      celluloid-pool
-      celluloid-supervision
-      timers (>= 4.1.1)
-    celluloid-essentials (0.20.5)
-      timers (>= 4.1.1)
-    celluloid-extras (0.20.5)
-      timers (>= 4.1.1)
-    celluloid-fsm (0.20.5)
-      timers (>= 4.1.1)
-    celluloid-pool (0.20.5)
-      timers (>= 4.1.1)
-    celluloid-supervision (0.20.6)
-      timers (>= 4.1.1)
     coderay (1.1.1)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -138,9 +121,7 @@ GEM
     hashdiff (0.3.2)
     highline (1.7.8)
     hike (1.2.3)
-    hitimes (1.2.4)
     i18n (0.7.0)
-    ice_cube (0.13.3)
     ice_nine (0.11.2)
     influxdb (0.3.13)
       cause
@@ -219,6 +200,8 @@ GEM
     rainbow (2.2.1)
     rake (10.5.0)
     redis (3.3.0)
+    redis-namespace (1.5.2)
+      redis (~> 3.0, >= 3.0.4)
     ref (2.0.0)
     representable (3.0.2)
       declarative (~> 0.0.5)
@@ -251,6 +234,8 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.8.1)
+    rufus-scheduler (3.3.3)
+      tzinfo
     rugged (0.24.0)
     safe_yaml (1.0.4)
     sass (3.2.19)
@@ -267,9 +252,9 @@ GEM
       connection_pool (~> 2.2, >= 2.2.0)
       redis (~> 3.2, >= 3.2.1)
       sinatra (>= 1.4.7)
-    sidetiq (0.7.0)
-      celluloid (>= 0.17.3)
-      ice_cube (~> 0.13.2)
+    sidekiq-cron (0.4.3)
+      redis-namespace (>= 1.5.2)
+      rufus-scheduler (>= 2.0.24)
       sidekiq (>= 4.0.0)
     sinatra (1.4.7)
       rack (~> 1.5)
@@ -301,8 +286,6 @@ GEM
     thread_safe (0.3.5)
     tilt (1.4.1)
     timecop (0.8.1)
-    timers (4.1.1)
-      hitimes
     tracker_api (1.6.0)
       addressable
       equalizer
@@ -372,7 +355,7 @@ DEPENDENCIES
   rugged
   sass-rails (~> 4.0.0)
   sidekiq (~> 4.1.1)
-  sidetiq (~> 0.7.0)
+  sidekiq-cron (~> 0.4.0)
   sinatra
   slim
   therubyracer
