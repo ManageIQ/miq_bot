@@ -94,10 +94,10 @@ EOMSG
 
   def valid_milestone?(milestone)
     # First reload the cache if it's an invalid milestone
-    GithubService.refresh_milestones unless GithubService.valid_milestone?(milestone)
+    GithubService.refresh_milestones(@fq_repo_name) unless GithubService.valid_milestone?(@fq_repo_name, milestone)
 
     # Then see if it's *still* invalid
-    GithubService.valid_milestone?(milestone)
+    GithubService.valid_milestone?(@fq_repo_name, milestone)
   end
 
   def assign(user, author, issue)
@@ -113,10 +113,10 @@ EOMSG
 
   def valid_assignee?(user)
     # First reload the cache if it's an invalid assignee
-    GithubService.refresh_assignees unless GithubService.valid_assignee?(user)
+    GithubService.refresh_assignees(@fq_repo_name) unless GithubService.valid_assignee?(@fq_repo_name, user)
 
     # Then see if it's *still* invalid
-    GithubService.valid_assignee?(user)
+    GithubService.valid_assignee?(@fq_repo_name, user)
   end
 
   def add_labels(command_value, author, issue)
@@ -155,10 +155,10 @@ EOMSG
 
   def validate_labels(label_names)
     # First reload the cache if there are any invalid labels
-    GithubService.refresh_labels unless label_names.all? { |l| GithubService.valid_label?(l) }
+    GithubService.refresh_labels(@fq_repo_name) unless label_names.all? { |l| GithubService.valid_label?(@fq_repo_name, l) }
 
     # Then see if any are *still* invalid and split the list
-    label_names.partition { |l| GithubService.valid_label?(l) }
+    label_names.partition { |l| GithubService.valid_label?(@fq_repo_name, l) }
   end
 
   def timestamps
