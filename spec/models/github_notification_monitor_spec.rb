@@ -47,8 +47,8 @@ RSpec.describe GithubNotificationMonitor do
       let(:comment_body) { "@#{username} assign #{assignee}" }
 
       before do
-        allow(GithubService).to receive(:valid_assignee?).with("gooduser") { true }
-        allow(GithubService).to receive(:valid_assignee?).with("baduser") { false }
+        allow(GithubService).to receive(:valid_assignee?).with(fq_repo_name, "gooduser") { true }
+        allow(GithubService).to receive(:valid_assignee?).with(fq_repo_name, "baduser") { false }
       end
 
       context "with a valid user" do
@@ -64,7 +64,7 @@ RSpec.describe GithubNotificationMonitor do
         let(:assignee) { "baduser" }
 
         it "does not assign after reloading the cache on first failure, reports failure, and marks as read" do
-          expect(GithubService).to receive(:refresh_assignees)
+          expect(GithubService).to receive(:refresh_assignees).with(fq_repo_name)
           expect(issue).not_to receive(:assign)
           expect(issue).to receive(:add_comment).with(/invalid assignee/)
           expect(notification).to receive(:mark_thread_as_read)
@@ -77,7 +77,7 @@ RSpec.describe GithubNotificationMonitor do
         allow(issue).to receive(:applied_label?).and_return(false)
         allow(GithubService).to receive(:valid_label?).and_return(false)
         %w(question wontfix).each do |label|
-          allow(GithubService).to receive(:valid_label?).with(label).and_return(true)
+          allow(GithubService).to receive(:valid_label?).with(fq_repo_name, label).and_return(true)
         end
       end
 
@@ -117,7 +117,7 @@ RSpec.describe GithubNotificationMonitor do
         let(:comment_body) { "@#{username} add-label invalidlabel" }
 
         it "does not add invalid labels after refreshing cache, comments on error, and marks as read" do
-          expect(GithubService).to receive(:refresh_labels)
+          expect(GithubService).to receive(:refresh_labels).with(fq_repo_name)
           expect(issue).not_to receive(:add_labels)
           expect(issue).to receive(:add_comment).with(/Cannot apply the following label.*not recognized/)
           expect(notification).to receive(:mark_thread_as_read)
@@ -127,7 +127,7 @@ RSpec.describe GithubNotificationMonitor do
 
     context "when 'remove_labels' command is given" do
       before do
-        allow(GithubService).to receive(:valid_label?).with("question").and_return(true)
+        allow(GithubService).to receive(:valid_label?).with(fq_repo_name, "question").and_return(true)
       end
 
       context "with applied labels" do

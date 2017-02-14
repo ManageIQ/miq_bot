@@ -49,39 +49,39 @@ module GithubService
       end
     end
 
-    def labels
+    def labels(fq_name)
       labels_cache[fq_name] ||= Set.new(service.labels(fq_name).map(&:name))
     end
 
-    def valid_label?(label_text)
-      labels.include?(label_text)
+    def valid_label?(fq_name, label_text)
+      labels(fq_name).include?(label_text)
     end
 
-    def refresh_labels
+    def refresh_labels(fq_name)
       labels_cache.delete(fq_name)
     end
 
-    def milestones
+    def milestones(fq_name)
       milestones_cache[fq_name] ||= Hash[service.list_milestones(fq_name).map { |m| [m.title, m.number] }]
     end
 
-    def valid_milestone?(milestone)
-      milestones.include?(milestone)
+    def valid_milestone?(fq_name, milestone)
+      milestones(fq_name).include?(milestone)
     end
 
-    def refresh_milestones
+    def refresh_milestones(fq_name)
       milestones_cache.delete(fq_name)
     end
 
-    def assignees
+    def assignees(fq_name)
       assignees_cache[fq_name] ||= Set.new(service.repo_assignees(fq_name).map(&:login))
     end
 
-    def valid_assignee?(user)
-      assignees.include?(user)
+    def valid_assignee?(fq_name, user)
+      assignees(fq_name).include?(user)
     end
 
-    def refresh_assignees
+    def refresh_assignees(fq_name)
       assignees_cache.delete(fq_name)
     end
 

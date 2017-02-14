@@ -50,7 +50,7 @@ module GithubService
 
     def applied_labels
       @applied_labels ||= begin
-        labels = Octokit.labels_for_issue(fq_repo_name, number).map(&:name)
+        labels = GithubService.labels_for_issue(fq_repo_name, number).map(&:name)
         Set.new(labels)
       end
     end
