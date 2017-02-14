@@ -33,8 +33,8 @@ gem 'foreman', '~> 0.64.0' # v0.65.0 breaks support for the older upstart on RHE
 gem 'config'
 
 # Sidekiq specific gems
-gem 'sidekiq', '~> 4.1.1'
-gem 'sidekiq-cron', '~> 0.4.0'
+gem 'sidekiq', '~> 4.2.0'
+gem 'sidekiq-cron', '~> 0.4.5'
 gem 'sinatra', require: false
 gem 'slim'
 
