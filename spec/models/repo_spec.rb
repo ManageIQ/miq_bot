@@ -196,34 +196,4 @@ describe Repo do
       expect { repo.synchronize_pr_branches([]) }.to_not raise_error
     end
   end
-
-  describe "#enabled_for?" do
-    subject(:repo) { build(:repo, :name => "foo/bar") }
-
-    let(:settings) do
-      { "checker_1" => { "enabled_repos" => { "foo/bar" => [{ "pattern" => "ansible_tower", "label" => "bug" }] }},
-        "checker_2" => { "enabled_repos" => {} },
-        "checker_3" => { "enabled_repos" => ["foo/bar"] },
-        "checker_4" => { "enabled_repos" => ["not/theone"] },
-        "checker_5" => { "enabled_repos" => "foo/bar" },
-        "checker_6" => { "enabled_repos" => "not/theone" } }
-    end
-
-    before { stub_settings(settings) }
-
-    it "handles hashes" do
-      expect(repo.enabled_for?("checker_1")).to be_truthy
-      expect(repo.enabled_for?("checker_2")).to be_falsey
-    end
-
-    it "handles arrays" do
-      expect(repo.enabled_for?("checker_3")).to be_truthy
-      expect(repo.enabled_for?("checker_4")).to be_falsey
-    end
-
-    it "handles strings" do
-      expect(repo.enabled_for?("checker_5")).to be_truthy
-      expect(repo.enabled_for?("checker_6")).to be_falsey
-    end
-  end
 end

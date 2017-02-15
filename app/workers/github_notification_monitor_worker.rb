@@ -15,16 +15,11 @@ class GithubNotificationMonitorWorker
     end
   end
 
-  private
-
   def process_repos
-    repo_names = Array(Settings.github_notification_monitor.repo_names)
-    Repo.where(:name => repo_names).each do |repo|
-      process_notifications(repo)
-    end
+    enabled_repos.each { |repo| process_repo(repo) }
   end
 
-  def process_notifications(repo)
+  def process_repo(repo)
     GithubNotificationMonitor.new(repo.name).process_notifications
   rescue => err
     logger.error err.message

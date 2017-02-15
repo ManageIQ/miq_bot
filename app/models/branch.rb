@@ -14,8 +14,6 @@ class Branch < ActiveRecord::Base
 
   after_initialize(:unless => :commit_uri) { self.commit_uri = self.class.github_commit_uri(repo.try(:name)) }
 
-  delegate :enabled_for?, :to => :repo
-
   scope :regular_branches, -> { where(:pull_request => [false, nil]) }
 
   def self.with_branch_or_pr_number(n)
@@ -87,6 +85,10 @@ class Branch < ActiveRecord::Base
 
   def fq_repo_name
     repo.name
+  end
+
+  def fq_branch_name
+    "#{fq_repo_name}@#{name}"
   end
 
   def git_service

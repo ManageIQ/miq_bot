@@ -10,7 +10,6 @@ class CommitMonitorHandlers::CommitRange::PathBasedLabeler
 
   def perform(branch_id, _new_commits)
     return unless find_branch(branch_id, :pr)
-    return unless verify_branch_enabled
 
     process_branch
   end
@@ -29,6 +28,6 @@ class CommitMonitorHandlers::CommitRange::PathBasedLabeler
   end
 
   def label_rules
-    Settings.path_based_labeler.enabled_repos[fq_repo_name]
+    Settings.path_based_labeler.rules[fq_repo_name]
   end
 end

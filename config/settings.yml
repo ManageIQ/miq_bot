@@ -20,18 +20,11 @@ grafana:
   url:
 
 # Worker settings
-code_analyzer:
-  enabled_repos: []
-diff_content_checker: {}
-github_notification_monitor:
-  repo_names: []
+diff_content_checker:
+  offenses: {}
 merge_target_titler:
-  enabled_repos: []
+  included_repos: []
 path_based_labeler:
-  enabled_repos: {}
-pivotal_pr_checker:
-  enabled_repos: []
-stale_issue_marker:
-  enabled_repos: []
-wip_labeler:
-  enabled_repos: []
+  rules: {}
+travis_build_killer:
+  included_repos: []

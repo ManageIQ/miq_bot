@@ -6,7 +6,6 @@ class PullRequestMonitorHandlers::MergeTargetTitler
 
   def perform(branch_id)
     return unless find_branch(branch_id, :pr)
-    return unless verify_branch_enabled
 
     process_branch
   end

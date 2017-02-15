@@ -1,20 +1,18 @@
-require 'spec_helper'
-
 describe BranchWorkerMixin do
   subject do
     Class.new do
-      include BranchWorkerMixin
-
       def self.name
         "TestModule::TestClass"
       end
+
+      include BranchWorkerMixin
 
       def logger
         @logger ||= RSpec::Mocks::Double.new("logger")
       end
     end.new
   end
-  let(:repo)      { create(:repo, :name => "SomeUser/some_repo") }
+  let!(:repo)     { create(:repo, :name => "SomeUser/some_repo") }
   let(:branch)    { create(:branch,    :name => "master", :repo => repo) }
   let(:pr_branch) { create(:pr_branch, :name => "pr/1",   :repo => repo) }
 
@@ -93,38 +91,96 @@ describe BranchWorkerMixin do
     end
   end
 
-  describe "#branch_enabled?" do
-    it "when enabled" do
-      stub_settings(:test_class => {:enabled_repos => ["SomeUser/some_repo"]})
-      subject.find_branch(pr_branch.id)
-
-      expect(subject.branch_enabled?).to be true
+  describe ".enabled_repos" do
+    it "raises an exception if both included_repos and excluded_repos are set" do
+      stub_settings(:test_class => {:included_repos => ["SomeUser/some_repo"], :excluded_repos => ["SomeUser/some_other_repo"]})
+      expect { subject.enabled_repos }.to raise_error(RuntimeError, /Do not specify both/)
     end
 
-    it "when disabled" do
-      stub_settings(:test_class => {:enabled_repos => []})
-      subject.find_branch(pr_branch.id)
+    it "with no settings includes all repos" do
+      expect(subject.enabled_repos).to eq([repo])
+    end
 
-      expect(subject.branch_enabled?).to be false
+    it "with included_repos" do
+      stub_settings(:test_class => {:included_repos => ["SomeUser/some_repo"]})
+      expect(subject.enabled_repos).to eq([repo])
+    end
+
+    it "with other included_repos" do
+      stub_settings(:test_class => {:included_repos => ["SomeUser/some_other_repo"]})
+      expect(subject.enabled_repos).to eq([])
+    end
+
+    it "with excluded_repos" do
+      stub_settings(:test_class => {:excluded_repos => ["SomeUser/some_repo"]})
+      expect(subject.enabled_repos).to eq([])
+    end
+
+    it "with other excluded_repos" do
+      stub_settings(:test_class => {:excluded_repos => ["SomeUser/some_other_repo"]})
+      expect(subject.enabled_repos).to eq([repo])
     end
   end
 
-  describe "#verify_branch_enabled" do
-    it "when enabled" do
-      stub_settings(:test_class => {:enabled_repos => ["SomeUser/some_repo"]})
-      subject.find_branch(pr_branch.id)
-
-      expect(subject.verify_branch_enabled).to be true
+  describe ".enabled_repo_names" do
+    it "raises an exception if both included_repos and excluded_repos are set" do
+      stub_settings(:test_class => {:included_repos => ["SomeUser/some_repo"], :excluded_repos => ["SomeUser/some_other_repo"]})
+      expect { subject.enabled_repo_names }.to raise_error(RuntimeError, /Do not specify both/)
     end
 
-    it "when disabled" do
-      stub_settings(:test_class => {:enabled_repos => []})
-      subject.find_branch(pr_branch.id)
+    it "with no settings includes all repos" do
+      expect(subject.enabled_repo_names).to eq([repo.name])
+    end
 
-      expect(subject.logger).to receive(:warn) do |message|
-        expect(message).to match(/has not been enabled/)
-      end
-      expect(subject.verify_branch_enabled).to be false
+    it "with included_repos" do
+      stub_settings(:test_class => {:included_repos => ["SomeUser/some_repo"]})
+      expect(subject.enabled_repo_names).to eq([repo.name])
+    end
+
+    it "with other included_repos" do
+      stub_settings(:test_class => {:included_repos => ["SomeUser/some_other_repo"]})
+      expect(subject.enabled_repo_names).to eq([])
+    end
+
+    it "with excluded_repos" do
+      stub_settings(:test_class => {:excluded_repos => ["SomeUser/some_repo"]})
+      expect(subject.enabled_repo_names).to eq([])
+    end
+
+    it "with other excluded_repos" do
+      stub_settings(:test_class => {:excluded_repos => ["SomeUser/some_other_repo"]})
+      expect(subject.enabled_repo_names).to eq([repo.name])
+    end
+  end
+
+  describe ".enabled_for?" do
+    it "raises an exception if both included_repos and excluded_repos are set" do
+      stub_settings(:test_class => {:included_repos => ["SomeUser/some_repo"], :excluded_repos => ["SomeUser/some_other_repo"]})
+      expect { subject.enabled_for?(repo) }.to raise_error(RuntimeError, /Do not specify both/)
+    end
+
+    it "with no settings allows all repos" do
+      expect(subject.enabled_for?(repo)).to be true
+    end
+
+    it "with included_repos" do
+      stub_settings(:test_class => {:included_repos => ["SomeUser/some_repo"]})
+      expect(subject.enabled_for?(repo)).to be true
+    end
+
+    it "with other included_repos" do
+      stub_settings(:test_class => {:included_repos => ["SomeUser/some_other_repo"]})
+      expect(subject.enabled_for?(repo)).to be false
+    end
+
+    it "with excluded_repos" do
+      stub_settings(:test_class => {:excluded_repos => ["SomeUser/some_repo"]})
+      expect(subject.enabled_for?(repo)).to be false
+    end
+
+    it "with other excluded_repos" do
+      stub_settings(:test_class => {:excluded_repos => ["SomeUser/some_other_repo"]})
+      expect(subject.enabled_for?(repo)).to be true
     end
   end
 end

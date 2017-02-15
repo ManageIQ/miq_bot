@@ -7,6 +7,10 @@ class PullRequestMonitor
 
   include SidekiqWorkerMixin
 
+  def self.enabled_repos
+    super.includes(:branches).select(&:can_have_prs?)
+  end
+
   def self.handlers
     @handlers ||= begin
       workers_path = Rails.root.join("app/workers")
@@ -15,6 +19,10 @@ class PullRequestMonitor
         path.chomp(".rb").classify.constantize
       end
     end
+  end
+
+  def self.handlers_for(repo)
+    handlers.select { |h| h.enabled_for?(repo) }
   end
 
   def perform
@@ -26,7 +34,7 @@ class PullRequestMonitor
   end
 
   def process_repos
-    Repo.includes(:branches).each { |repo| process_repo(repo) }
+    enabled_repos.each { |repo| process_repo(repo) }
   end
 
   def process_repo(repo)
@@ -35,7 +43,7 @@ class PullRequestMonitor
     results = repo.synchronize_pr_branches(github_prs(repo))
 
     branches = results[:updated] + results[:added]
-    branches.product(self.class.handlers) { |b, h| h.perform_async(b.id) }
+    branches.product(self.class.handlers_for(repo)) { |b, h| h.perform_async(b.id) }
   end
 
   private

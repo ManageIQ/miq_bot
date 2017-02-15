@@ -1,0 +1,8 @@
+# In test, turn everything on by default
+#   NOTE: Using empty string is a HACK until we can get
+#   https://github.com/danielsdeleo/deep_merge/pull/33 released via the
+#   config gem.
+merge_target_titler:
+  included_repos: ''
+travis_build_killer:
+  included_repos: ''

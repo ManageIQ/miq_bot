@@ -9,17 +9,11 @@ module Schedulers
     include SidekiqWorkerMixin
 
     def perform
-      Repo.where(:name => fq_repo_names).each do |repo|
+      enabled_repos.each do |repo|
         repo.branches.regular_branches.pluck(:id).each do |branch_id|
           CommitMonitorHandlers::Branch::CodeAnalyzer.perform_async(branch_id)
         end
       end
-    end
-
-    private
-
-    def fq_repo_names
-      Settings.code_analyzer.enabled_repos
     end
   end
 end
