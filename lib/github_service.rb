@@ -67,6 +67,15 @@ module GithubService
       service.add_labels_to_an_issue(repo, issue_number, labels_to_add)
     end
 
+    # Overrides Octokit.remove_label
+    # Github raises an exception if the label isn't present on the issue already
+    # This removes that error, making it a no-op
+    def remove_label(fq_repo_name, issue_number, label, raise_on_absence: false)
+      service.remove_label(fq_repo_name, issue_number, label)
+    rescue Octokit::NotFound
+      raise if raise_on_absence
+    end
+
     def labels(fq_name)
       labels_cache[fq_name] ||= Set.new(service.labels(fq_name).map(&:name))
     end
