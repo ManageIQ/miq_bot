@@ -49,11 +49,12 @@ module Linter
     end
 
     def extract_file(path, destination_dir)
-      blob = branch_service.blob_at(path)
-      return false unless blob
+      content = branch_service.content_at(path)
+      return false unless content
+
       temp_file = File.join(destination_dir, path)
       FileUtils.mkdir_p(File.dirname(temp_file))
-      File.write(temp_file, blob.content.to_s, :mode => "wb") # To prevent Encoding::UndefinedConversionError: "\xD0" from ASCII-8BIT to UTF-8
+      File.write(temp_file, content, :mode => "wb") # To prevent Encoding::UndefinedConversionError: "\xD0" from ASCII-8BIT to UTF-8
       true
     end
 
