@@ -149,7 +149,7 @@ EOMSG
   end
 
   def extract_label_names(command_value)
-    label_names = command_value.split(",").collect(&:strip)
+    label_names = command_value.split(",").map { |label| label.strip.downcase }
     validate_labels(label_names)
   end
 
