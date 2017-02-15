@@ -52,6 +52,6 @@ module BranchWorkerMixin
   end
 
   def diff_file_names
-    branch.git_service.diff.new_files
+    @diff_file_names ||= branch.git_service.diff.new_files
   end
 end
