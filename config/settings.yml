@@ -28,10 +28,7 @@ github_notification_monitor:
 merge_target_titler:
   enabled_repos: []
 path_based_labeler:
-  enabled_repos: []
-  rules: []
-    # - pattern:
-    #   label:
+  enabled_repos: {}
 pivotal_pr_checker:
   enabled_repos: []
 sql_migration_labeler:

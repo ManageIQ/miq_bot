@@ -22,6 +22,6 @@ class PullRequestMonitorHandlers::PathBasedLabeler
   end
 
   def label_rules
-    Settings.path_based_labeler.rules
+    Settings.path_based_labeler.enabled_repos[fq_repo_name]
   end
 end
