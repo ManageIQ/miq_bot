@@ -19,22 +19,20 @@ module GithubService
     end
 
     def applied_label?(label_text)
-      applied_labels.include?(label_text)
+      labels.include?(label_text)
     end
 
-    def add_labels(labels)
-      labels = Array(labels).uniq
-      GithubService.add_labels_to_an_issue(fq_repo_name, number, labels)
-      applied_labels << labels
-      wipify_title if labels.include?("wip")
+    def add_labels(labels_to_add)
+      labels.merge(Array(labels_to_add).uniq)
+      wipify_title if labels_to_add.include?("wip")
+      GithubService.replace_all_labels(fq_repo_name, number, labels)
     end
     alias add_label add_labels
 
-    def remove_labels(labels)
-      labels = Array(labels).uniq
-      applied_labels.subtract(labels)
-      GithubService.replace_all_labels(fq_repo_name, number, applied_labels)
-      unwipify_title if labels.include?("wip")
+    def remove_labels(labels_to_remove)
+      labels.subtract(Array(labels_to_remove).uniq)
+      unwipify_title if labels_to_remove.include?("wip")
+      GithubService.replace_all_labels(fq_repo_name, number, labels)
     end
     alias remove_label remove_labels
 
@@ -42,17 +40,17 @@ module GithubService
       user.login
     end
 
+    # Overrides Octokit response key
+    # We manage this ourselves for the life of the issue object to avoid making
+    # extra API calls.
+    def labels
+      @labels ||= Set.new(__getobj__.labels.map(&:name))
+    end
+
     private
 
     def fq_repo_name
       @fq_repo_name ||= repository_url.match(/repos\/(\w+\/\w+)\z/)[1]
-    end
-
-    def applied_labels
-      @applied_labels ||= begin
-        labels = GithubService.labels_for_issue(fq_repo_name, number).map(&:name)
-        Set.new(labels)
-      end
     end
 
     def wipify_title
@@ -65,6 +63,10 @@ module GithubService
       if (match = title.match(WIP_REGEX))
         update(:title => match.post_match.lstrip)
       end
+    end
+
+    def update(options)
+      GithubService.update_issue(fq_repo_name, number, options)
     end
   end
 end
