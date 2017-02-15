@@ -52,19 +52,20 @@ module GithubService
     # Overrides Octokit.add_labels_to_an_issue
     # Github automatically creates a label for the repo if it does not exist.
     # This requires you to opt-in to that behavior.
-    def add_labels_to_an_issue(fq_repo_name, issue_number, requested_labels, create_if_missing: false)
+    def add_labels_to_an_issue(fq_repo_name, issue_number, requested_labels, create_if_absent: false)
+      requested_labels = Array(requested_labels)
       labels_to_add = requested_labels
 
-      unless create_if_missing
+      unless create_if_absent
         requested_labels.each do |label|
           unless valid_label?(fq_repo_name, label)
-            logger.warn "The label '#{label}' was attempted to be added to #{fq_repo_name} ##{issue_number}, but that label doesn't exist on the repo."
+            Rails.logger.warn "WARNING: The label '#{label}' was attempted to be added to #{fq_repo_name} ##{issue_number}, but that label doesn't exist on the repo."
             labels_to_add.delete(label)
           end
         end
       end
 
-      service.add_labels_to_an_issue(repo, issue_number, labels_to_add)
+      service.add_labels_to_an_issue(fq_repo_name, issue_number, labels_to_add) unless labels_to_add.empty?
     end
 
     # Overrides Octokit.remove_label
