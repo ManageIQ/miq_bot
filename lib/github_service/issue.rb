@@ -23,7 +23,7 @@ module GithubService
     end
 
     def add_labels(labels_to_add)
-      labels << Array(labels_to_add).uniq
+      labels.merge(Array(labels_to_add).uniq)
       GithubService.replace_all_labels(fq_repo_name, number, labels)
       wipify_title if labels.include?("wip")
     end
