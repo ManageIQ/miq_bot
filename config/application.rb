@@ -22,5 +22,9 @@ module MiqBot
 
     config.eager_load_paths << Rails.root.join("app/workers/concerns")
     config.eager_load_paths << Rails.root.join("lib")
+
+    console do
+      TOPLEVEL_BINDING.eval('self').extend(ConsoleMethods)
+    end
   end
 end
