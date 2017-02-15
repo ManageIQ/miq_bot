@@ -51,9 +51,7 @@ module BranchWorkerMixin
     end
   end
 
-  def diff_file_names_for_merge
-    branch.repo.with_git_service do |git|
-      git.diff_file_names(branch.local_merge_target, commits.last)
-    end
+  def diff_file_names
+    branch.git_service.diff.new_files
   end
 end
