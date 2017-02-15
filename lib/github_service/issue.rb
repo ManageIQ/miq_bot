@@ -24,15 +24,15 @@ module GithubService
 
     def add_labels(labels_to_add)
       labels.merge(Array(labels_to_add).uniq)
+      wipify_title if labels_to_add.include?("wip")
       GithubService.replace_all_labels(fq_repo_name, number, labels)
-      wipify_title if labels.include?("wip")
     end
     alias add_label add_labels
 
     def remove_labels(labels_to_remove)
       labels.subtract(Array(labels_to_remove).uniq)
+      unwipify_title if labels_to_remove.include?("wip")
       GithubService.replace_all_labels(fq_repo_name, number, labels)
-      unwipify_title if labels.include?("wip")
     end
     alias remove_label remove_labels
 
@@ -63,6 +63,10 @@ module GithubService
       if (match = title.match(WIP_REGEX))
         update(:title => match.post_match.lstrip)
       end
+    end
+
+    def update(options)
+      GithubService.update_issue(fq_repo_name, number, options)
     end
   end
 end
