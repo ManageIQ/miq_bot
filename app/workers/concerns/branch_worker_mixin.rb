@@ -1,10 +1,10 @@
 module BranchWorkerMixin
-  attr_reader :branch
+  attr_accessor :branch
 
   delegate :fq_repo_name, :pr_number, :pr_title, :pr_title_tags, :merge_target, :to => :branch
 
   def find_branch(branch_id, required_mode = nil)
-    @branch = Branch.where(:id => branch_id).first
+    @branch ||= Branch.where(:id => branch_id).first
 
     if @branch.nil?
       logger.warn("Branch #{branch_id} no longer exists.  Skipping.")

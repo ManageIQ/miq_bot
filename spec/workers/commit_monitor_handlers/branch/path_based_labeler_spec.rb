@@ -1,4 +1,6 @@
 describe CommitMonitorHandlers::Branch::PathBasedLabeler do
+  subject(:labeler) { described_class.new }
+
   let(:branch)         { create(:pr_branch) }
   let(:git_service)    { double("GitService", :diff => double("RuggedDiff", :new_files => new_files)) }
   let(:settings) do
@@ -9,7 +11,8 @@ describe CommitMonitorHandlers::Branch::PathBasedLabeler do
   before do
     stub_sidekiq_logger
     stub_settings(settings)
-    expect_any_instance_of(Branch).to receive(:git_service).and_return(git_service)
+    labeler.branch = branch
+    allow(branch).to receive(:git_service).and_return(git_service)
   end
 
   context "when there are Gemfile changes" do
@@ -18,7 +21,7 @@ describe CommitMonitorHandlers::Branch::PathBasedLabeler do
     it "adds a label to the PR" do
       expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
-      described_class.new.perform(branch.id)
+      labeler.perform(branch.id)
     end
   end
 
@@ -28,7 +31,7 @@ describe CommitMonitorHandlers::Branch::PathBasedLabeler do
     it "adds a label to the PR" do
       expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
-      described_class.new.perform(branch.id)
+      labeler.perform(branch.id)
     end
   end
 
@@ -38,7 +41,7 @@ describe CommitMonitorHandlers::Branch::PathBasedLabeler do
     it "adds a label to the PR" do
       expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
-      described_class.new.perform(branch.id)
+      labeler.perform(branch.id)
     end
   end
 
@@ -48,7 +51,7 @@ describe CommitMonitorHandlers::Branch::PathBasedLabeler do
     it "adds a label to the PR" do
       expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
-      described_class.new.perform(branch.id)
+      labeler.perform(branch.id)
     end
   end
 
@@ -58,7 +61,7 @@ describe CommitMonitorHandlers::Branch::PathBasedLabeler do
     it "does not add a label to the PR" do
       expect(GithubService).to_not receive(:add_labels_to_an_issue)
 
-      described_class.new.perform(branch.id)
+      labeler.perform(branch.id)
     end
   end
 
@@ -68,7 +71,7 @@ describe CommitMonitorHandlers::Branch::PathBasedLabeler do
     it "adds a label to the PR" do
       expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["sql migration"])
 
-      described_class.new.perform(branch.id)
+      labeler.perform(branch.id)
     end
   end
 
@@ -78,7 +81,7 @@ describe CommitMonitorHandlers::Branch::PathBasedLabeler do
     it "does not add a label to the PR" do
       expect(GithubService).to_not receive(:add_labels_to_an_issue)
 
-      described_class.new.perform(branch.id)
+      labeler.perform(branch.id)
     end
   end
 
@@ -88,7 +91,7 @@ describe CommitMonitorHandlers::Branch::PathBasedLabeler do
     it "does not add a label to the PR" do
       expect(GithubService).to_not receive(:add_labels_to_an_issue)
 
-      described_class.new.perform(branch.id)
+      labeler.perform(branch.id)
     end
   end
 end
