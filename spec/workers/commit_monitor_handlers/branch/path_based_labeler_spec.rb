@@ -1,10 +1,13 @@
-describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
+describe CommitMonitorHandlers::Branch::PathBasedLabeler do
   let(:branch)         { create(:pr_branch) }
   let(:git_service)    { double("GitService", :diff => double("RuggedDiff", :new_files => new_files)) }
+  let(:settings) do
+    { "path_based_labeler" => { "enabled_repos" => { branch.repo.name => [{ "pattern" => '(Gemfile\z)|(Gemfile\.lock\z)|(\.gemspec\z)', "label" => "gem changes" }] } } }
+  end
 
   before do
     stub_sidekiq_logger
-    stub_settings(:gem_changes_labeler => {:enabled_repos => [branch.repo.name]})
+    stub_settings(settings)
     expect_any_instance_of(Branch).to receive(:git_service).and_return(git_service)
   end
 
@@ -14,7 +17,7 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
     it "adds a label to the PR" do
       expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
-      described_class.new.perform(branch.id, nil)
+      described_class.new.perform(branch.id)
     end
   end
 
@@ -24,7 +27,7 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
     it "adds a label to the PR" do
       expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
-      described_class.new.perform(branch.id, nil)
+      described_class.new.perform(branch.id)
     end
   end
 
@@ -34,7 +37,7 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
     it "adds a label to the PR" do
       expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
-      described_class.new.perform(branch.id, nil)
+      described_class.new.perform(branch.id)
     end
   end
 
@@ -44,7 +47,7 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
     it "adds a label to the PR" do
       expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["gem changes"])
 
-      described_class.new.perform(branch.id, nil)
+      described_class.new.perform(branch.id)
     end
   end
 
@@ -54,7 +57,7 @@ describe CommitMonitorHandlers::CommitRange::GemChangesLabeler do
     it "does not add a label to the PR" do
       expect(GithubService).to_not receive(:add_labels_to_an_issue)
 
-      described_class.new.perform(branch.id, nil)
+      described_class.new.perform(branch.id)
     end
   end
 end

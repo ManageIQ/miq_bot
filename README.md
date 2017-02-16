@@ -116,10 +116,6 @@ underscores replaced with hyphens.
       password: # account token goes here
 
     # Optional; leave blank to disable
-    gem_changes_labeler:
-      enabled_repos: ["miq-test/sandbox"]
-
-    # Optional; leave blank to disable
     github_notification_monitor:
       repo_names: ["miq-test/sandbox"]
 
