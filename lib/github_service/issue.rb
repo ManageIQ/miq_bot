@@ -22,19 +22,37 @@ module GithubService
       labels.include?(label_text)
     end
 
-    def add_labels(labels_to_add)
-      labels.merge(Array(labels_to_add).uniq)
-      wipify_title if labels_to_add.include?("wip")
-      GithubService.replace_all_labels(fq_repo_name, number, labels)
+    # Note: This method creates labels on the repo if they don't exist,
+    # and assumes that the labels being passed in have already been validated
+    # if you don't want that behavior.
+    #
+    # For example, the notification monitor responds to users about any labels
+    # being requested to be added that aren't valid, before calling this method.
+    #
+    def add_labels(requested_labels_to_add)
+      actual_labels_to_add = []
+
+      Array(requested_labels_to_add).uniq.each do |label|
+        actual_labels_to_add << label if labels.add?(label)
+      end
+
+      return false if actual_labels_to_add.empty?
+      wipify_title if actual_labels_to_add.include?("wip")
+
+      # GithubService itself uses this method to override the Octokit method.
+      # Do NOT use the raw service like this under normal circumstances.
+      GithubService.send(:service).add_labels_to_an_issue(fq_repo_name, number, actual_labels_to_add)
     end
     alias add_label add_labels
 
-    def remove_labels(labels_to_remove)
-      labels.subtract(Array(labels_to_remove).uniq)
-      unwipify_title if labels_to_remove.include?("wip")
-      GithubService.replace_all_labels(fq_repo_name, number, labels)
+    def remove_label(label_to_remove)
+      return false unless labels.delete?(label_to_remove)
+      unwipify_title if label_to_remove.include?("wip")
+
+      # GithubService itself uses this method to override the Octokit method.
+      # Do NOT use the raw service like this under normal circumstances.
+      GithubService.send(:service).remove_label(fq_repo_name, number, label_to_remove)
     end
-    alias remove_label remove_labels
 
     def author
       user.login

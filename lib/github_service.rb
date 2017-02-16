@@ -50,31 +50,22 @@ module GithubService
     end
 
     # Overrides Octokit.add_labels_to_an_issue
-    # Github automatically creates a label for the repo if it does not exist.
-    # This requires you to opt-in to that behavior.
-    def add_labels_to_an_issue(fq_repo_name, issue_number, requested_labels, create_if_absent: false)
-      requested_labels = Array(requested_labels)
-      labels_to_add = requested_labels
-
-      unless create_if_absent
-        requested_labels.each do |label|
-          unless valid_label?(fq_repo_name, label)
-            Rails.logger.warn "WARNING: The label '#{label}' was attempted to be added to #{fq_repo_name} ##{issue_number}, but that label doesn't exist on the repo."
-            labels_to_add.delete(label)
-          end
-        end
-      end
-
-      service.add_labels_to_an_issue(fq_repo_name, issue_number, labels_to_add) unless labels_to_add.empty?
+    # Note: This method creates labels on the repo if they don't exist, and assumes
+    # that the labels being passed in have already been validated if you don't
+    # want that behavior.
+    #
+    # For example, the notification monitor responds to users about any labels
+    # being requested to be added that aren't valid, before calling this method.
+    #
+    def add_labels_to_an_issue(fq_repo_name, issue_number, requested_labels)
+      issue(fq_repo_name, issue_number).add_labels(requested_labels)
     end
 
     # Overrides Octokit.remove_label
-    # Github raises an exception if the label isn't present on the issue already
-    # This removes that error, making it a no-op
-    def remove_label(fq_repo_name, issue_number, label, raise_on_absence: false)
-      service.remove_label(fq_repo_name, issue_number, label)
-    rescue Octokit::NotFound
-      raise if raise_on_absence
+    # Github raises an exception if the label isn't present on the issue already.
+    # This removes that error, making it a no-op, as Issue checks for the labels presence first.
+    def remove_label(fq_repo_name, issue_number, label)
+      issue(fq_repo_name, issue_number).remove_label(label)
     end
 
     def labels(fq_name)
