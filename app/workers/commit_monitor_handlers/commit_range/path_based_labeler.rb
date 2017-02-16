@@ -1,4 +1,4 @@
-class CommitMonitorHandlers::Branch::PathBasedLabeler
+class CommitMonitorHandlers::CommitRange::PathBasedLabeler
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot
 
@@ -8,7 +8,7 @@ class CommitMonitorHandlers::Branch::PathBasedLabeler
     [:pr]
   end
 
-  def perform(branch_id)
+  def perform(branch_id, _new_commits)
     return unless find_branch(branch_id, :pr)
     return unless verify_branch_enabled
 
