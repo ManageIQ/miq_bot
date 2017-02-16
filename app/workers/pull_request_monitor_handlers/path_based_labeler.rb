@@ -14,11 +14,13 @@ class PullRequestMonitorHandlers::PathBasedLabeler
   private
 
   def process_branch
+    labels = []
     label_rules.each do |rule|
       if diff_file_names.any? { |file_name| file_name =~ Regexp.new(rule.pattern) }
-        GithubService.add_labels_to_an_issue(fq_repo_name, pr_number, [rule.label])
+        labels << rule.label
       end
     end
+    GithubService.add_labels_to_an_issue(fq_repo_name, pr_number, labels) if labels.present?
   end
 
   def label_rules
