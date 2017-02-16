@@ -1,10 +1,10 @@
 module BranchWorkerMixin
-  attr_reader :branch
+  attr_accessor :branch
 
   delegate :fq_repo_name, :pr_number, :pr_title, :pr_title_tags, :merge_target, :to => :branch
 
   def find_branch(branch_id, required_mode = nil)
-    @branch = Branch.where(:id => branch_id).first
+    @branch ||= Branch.where(:id => branch_id).first
 
     if @branch.nil?
       logger.warn("Branch #{branch_id} no longer exists.  Skipping.")
@@ -51,9 +51,7 @@ module BranchWorkerMixin
     end
   end
 
-  def diff_file_names_for_merge
-    branch.repo.with_git_service do |git|
-      git.diff_file_names(branch.local_merge_target, commits.last)
-    end
+  def diff_file_names
+    @diff_file_names ||= branch.git_service.diff.new_files
   end
 end

@@ -70,7 +70,9 @@ class Repo < ActiveRecord::Base
   end
 
   def enabled_for?(checker)
-    Array(Settings.public_send(checker).enabled_repos).include?(name)
+    Array(Settings.public_send(checker).enabled_repos).each_with_object([]) { |value, values|
+      values << (value.kind_of?(Array) ? value.first.to_s : value)
+    }.include?(name)
   end
 
   def branch_names
