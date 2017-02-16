@@ -23,6 +23,8 @@ grafana:
 diff_content_checker: {}
 gem_changes_labeler:
   enabled_repos: []
+graphics_labeler:
+  enabled_repos: []
 github_notification_monitor:
   repo_names: []
 merge_target_titler:
