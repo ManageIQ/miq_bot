@@ -1,8 +1,12 @@
-class PullRequestMonitorHandlers::PathBasedLabeler
+class CommitMonitorHandlers::Branch::PathBasedLabeler
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot
 
   include BranchWorkerMixin
+
+  def self.handled_branch_modes
+    [:pr]
+  end
 
   def perform(branch_id)
     return unless find_branch(branch_id, :pr)
