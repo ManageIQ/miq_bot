@@ -30,7 +30,8 @@ module CommitMonitorHandlers::Batch
         next unless line.addition?
         check_line(line, parent_patch)
       end
-    rescue Rugged::IndexError # Don't put any effort into unmergeable PRS
+    rescue GitService::UnmergeableError
+      nil # Avoid working on unmergeable PRs
     end
 
     def check_line(line, patch)

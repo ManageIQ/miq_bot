@@ -29,7 +29,8 @@ module CommitMonitorHandlers::Batch
       branch.git_service.diff.new_files.each do |file|
         validate_migration_timestamp(file)
       end
-    rescue Rugged::IndexError # Don't put any effort into unmergeable PRS
+    rescue GitService::UnmergeableError
+      nil # Avoid working on unmergeable PRs
     end
 
     def validate_migration_timestamp(file)

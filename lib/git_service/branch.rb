@@ -18,7 +18,7 @@ module GitService
     def mergeable?
       merge_tree
       true
-    rescue Rugged::IndexError
+    rescue UnmergeableError
       false
     end
 
@@ -33,6 +33,8 @@ module GitService
     def merge_tree # Rugged::Tree object for the merge of this branch
       tree_ref = merge_index.write_tree(rugged_repo)
       rugged_repo.lookup(tree_ref)
+    rescue Rugged::IndexError
+      raise UnmergeableError
     ensure
       # Rugged seems to allocate large C structures, but not many Ruby objects,
       #   and thus doesn't trigger a GC, so we will trigger one manually.
