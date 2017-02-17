@@ -20,8 +20,7 @@ class CommitMonitorHandlers::CommitRange::PathBasedLabeler
   def process_branch
     labels = []
     label_rules.each do |rule|
-      pattern = Regexp.new(rule.pattern)
-      if diff_file_names.any? { |file_name| file_name =~ pattern }
+      if diff_file_names.any? { |file_name| file_name =~ rule.regex }
         labels << rule.label
       end
     end
