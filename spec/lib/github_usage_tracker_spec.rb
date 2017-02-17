@@ -4,6 +4,7 @@ describe GithubUsageTracker do
   let(:logger) { double(:info) }
 
   before do
+    allow(tracker).to receive(:configured?).and_return(true)
     allow(tracker).to receive(:influxdb).and_return(influxdb_client)
     stub_const("Rails", double(:logger => logger))
     stub_const("MiqBot", double(:version => "test"))
