@@ -34,8 +34,8 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
     end
 
     replace_rubocop_comments
-  rescue Rugged::IndexError
-    # Failed to create merge index, no point in trying to lint files for an unmergable PR
+  rescue GitService::UnmergeableError
+    nil # Avoid working on unmergeable PRs
   end
 
   def merge_linter_results(*results)
