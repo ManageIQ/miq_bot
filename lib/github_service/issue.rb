@@ -65,11 +65,11 @@ module GithubService
       @labels ||= Set.new(__getobj__.labels.map(&:name))
     end
 
-    private
-
     def fq_repo_name
       @fq_repo_name ||= repository_url.match(/repos\/([^\/]+\/[^\/]+)\z/)[1]
     end
+
+    private
 
     def wipify_title
       if title !~ WIP_REGEX
