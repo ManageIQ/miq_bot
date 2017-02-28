@@ -51,75 +51,34 @@ RSpec.describe GithubService::CommandDispatcher do
     end
 
     context "when 'add_labels' command is given" do
-      before do
-        allow(command_dispatcher.issue).to receive(:applied_label?).and_return(false)
-        allow(GithubService).to receive(:valid_label?).and_return(false)
-        %w(question wontfix).each do |label|
-          allow(GithubService).to receive(:valid_label?).with(fq_repo_name, label).and_return(true)
-        end
+      let(:text) { "@#{bot_name} add-label question, wontfix" }
+      let(:command_class) { double }
+
+      it "dispatches to AddLabel" do
+        expect(GithubService::Commands::AddLabel).to receive(:new).and_return(command_class)
+        expect(command_class).to receive(:execute!)
+          .with(:issuer => command_issuer, :value => "question, wontfix")
       end
 
-      context "with valid labels" do
-        let(:text) { "@#{bot_name} add-label question, wontfix" }
+      context "with extra space in command" do
+        let(:text) { "@#{bot_name} add label question, wontfix" }
 
-        it "adds the labels and marks as read" do
-          expect(command_dispatcher.issue).to receive(:add_labels) do |labels|
-            expect(labels).to contain_exactly("question", "wontfix")
-          end
-        end
-
-        context "with extra space in command" do
-          let(:text) { "@#{bot_name} add label question, wontfix" }
-
-          it "doesn't add labels, comments on error, and marks as read" do
-            expect(command_dispatcher.issue).not_to receive(:add_labels)
-            expect(command_dispatcher.issue).to receive(:add_comment)
-              .with(a_string_including("@#{command_issuer} unrecognized command 'add'"))
-          end
-        end
-
-        context "with extra comma in command values and marks as read" do
-          let(:text) { "@#{bot_name} add-label question, wontfix," }
-
-          it "adds the labels" do
-            expect(command_dispatcher.issue).to receive(:add_labels) do |labels|
-              expect(labels).to contain_exactly("question", "wontfix")
-            end
-          end
-        end
-      end
-
-      context "with invalid labels" do
-        let(:text) { "@#{bot_name} add-label invalidlabel" }
-
-        it "does not add invalid labels, comments on error, and marks as read" do
-          expect(command_dispatcher.issue).not_to receive(:add_labels)
-          expect(command_dispatcher.issue).to receive(:add_comment).with(/Cannot apply the following label.*not recognized/)
+        it "doesn't dispatch and comments on error" do
+          expect(GithubService::Commands::AddLabel).to_not receive(:new)
+          expect(command_dispatcher.issue).to receive(:add_comment)
+            .with(a_string_including("@#{command_issuer} unrecognized command 'add'"))
         end
       end
     end
 
     context "when 'remove_labels' command is given" do
-      before do
-        allow(GithubService).to receive(:valid_label?).with(fq_repo_name, "question").and_return(true)
-      end
+      let(:text) { "@#{bot_name} remove-label question" }
+      let(:command_class) { double }
 
-      context "with applied labels" do
-        let(:text) { "@#{bot_name} remove-label question" }
-
-        it "removes the applied label and marks as read" do
-          expect(command_dispatcher.issue).to receive(:applied_label?).and_return(true)
-          expect(command_dispatcher.issue).to receive(:remove_label).with("question")
-        end
-      end
-
-      context "with unapplied labels" do
-        let(:text) { "@#{bot_name} remove-label question" }
-
-        it "doesn't remove any labels and marks as read" do
-          expect(command_dispatcher.issue).to receive(:applied_label?).and_return(false)
-          expect(command_dispatcher.issue).not_to receive(:remove_label)
-        end
+      it "dispatches to RemoveLabel" do
+        expect(GithubService::Commands::RemoveLabel).to receive(:new).and_return(command_class)
+        expect(command_class).to receive(:execute!)
+          .with(:issuer => command_issuer, :value => "question")
       end
     end
   end

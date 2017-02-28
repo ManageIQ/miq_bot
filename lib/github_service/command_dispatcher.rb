@@ -5,12 +5,23 @@ module GithubService
       normalized.chop! if normalized.end_with?("s") # Support singular or plural
       h[normalized]    if h.key?(normalized)
     end.merge(
-      "add_label"     => :add_labels,
-      "remove_label"  => :remove_labels,
-      "rm_label"      => :remove_labels,
       "assign"        => :assign,
       "set_milestone" => :set_milestone
     ).freeze
+
+    class << self
+      def registry
+        @registry ||= Hash.new do |h, k|
+          normalized = k.to_s.tr("-", "_")              # Support - or _ in command
+          normalized.chop! if normalized.end_with?("s") # Support singular or plural
+          h[normalized]    if h.key?(normalized)
+        end
+      end
+
+      def register_command(command_name, command_class)
+        registry[command_name.to_s] = command_class
+      end
+    end
 
     attr_reader :issue
 
@@ -29,17 +40,20 @@ module GithubService
         command       = match.captures.first
         command_value = match.post_match
         method_name   = COMMANDS[command].to_s
+        command_class = self.class.registry[command]
 
-        if method_name.empty?
+        if method_name.present?
+          Rails.logger.info("Running command #{method_name}(#{command_value.inspect}, #{issue.author.inspect}, #{issue.number})")
+          self.send(method_name, command_value, author, issue)
+        elsif command_class.present?
+          command_class.new(issue).execute!(issuer: author, value: command_value)
+        else
           message = <<-EOMSG
 @#{author} unrecognized command '#{command}', ignoring...
 
 Accepted commands are: #{COMMANDS.keys.join(", ")}
           EOMSG
           issue.add_comment(message)
-        else
-          Rails.logger.info("Running command #{method_name}(#{command_value.inspect}, #{issue.author.inspect}, #{issue.number})")
-          self.send(method_name, command_value, author, issue)
         end
       end
     end
@@ -82,48 +96,6 @@ Accepted commands are: #{COMMANDS.keys.join(", ")}
 
       # Then see if it's *still* invalid
       GithubService.valid_assignee?(@fq_repo_name, user)
-    end
-
-    def add_labels(command_value, author, issue)
-      valid, invalid = extract_label_names(command_value)
-
-      if invalid.any?
-        message = "@#{author} Cannot apply the following label#{"s" if invalid.length > 1} because they are not recognized: "
-        message << invalid.join(", ")
-        issue.add_comment(message)
-      end
-
-      if valid.any?
-        valid.reject!  { |l| issue.applied_label?(l) }
-        issue.add_labels(valid)
-      end
-    end
-
-    def remove_labels(command_value, author, issue)
-      valid, invalid = extract_label_names(command_value)
-
-      if invalid.any?
-        message = "@#{author} Cannot remove the following label#{"s" if invalid.length > 1} because they are not recognized: "
-        message << invalid.join(", ")
-        issue.add_comment(message)
-      end
-
-      valid.each do |l|
-        issue.remove_label(l) if issue.applied_label?(l)
-      end
-    end
-
-    def extract_label_names(command_value)
-      label_names = command_value.split(",").map { |label| label.strip.downcase }
-      validate_labels(label_names)
-    end
-
-    def validate_labels(label_names)
-      # First reload the cache if there are any invalid labels
-      GithubService.refresh_labels(@fq_repo_name) unless label_names.all? { |l| GithubService.valid_label?(@fq_repo_name, l) }
-
-      # Then see if any are *still* invalid and split the list
-      label_names.partition { |l| GithubService.valid_label?(@fq_repo_name, l) }
     end
   end
 end
