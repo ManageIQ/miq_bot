@@ -5,7 +5,6 @@ module GithubService
       normalized.chop! if normalized.end_with?("s") # Support singular or plural
       h[normalized]    if h.key?(normalized)
     end.merge(
-      "assign"        => :assign,
       "set_milestone" => :set_milestone
     ).freeze
 
@@ -77,25 +76,6 @@ Accepted commands are: #{COMMANDS.keys.join(", ")}
 
       # Then see if it's *still* invalid
       GithubService.valid_milestone?(@fq_repo_name, milestone)
-    end
-
-    def assign(user, author, issue)
-      user       = user.strip
-      clean_user = user.delete('@')
-
-      if valid_assignee?(clean_user)
-        issue.assign(clean_user)
-      else
-        issue.add_comment("@#{author} #{user} is an invalid assignee, ignoring...")
-      end
-    end
-
-    def valid_assignee?(user)
-      # First reload the cache if it's an invalid assignee
-      GithubService.refresh_assignees(@fq_repo_name) unless GithubService.valid_assignee?(@fq_repo_name, user)
-
-      # Then see if it's *still* invalid
-      GithubService.valid_assignee?(@fq_repo_name, user)
     end
   end
 end

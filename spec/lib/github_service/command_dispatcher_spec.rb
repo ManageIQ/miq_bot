@@ -25,28 +25,13 @@ RSpec.describe GithubService::CommandDispatcher do
     end
 
     context "when 'assign' command is given" do
-      let(:text) { "@#{bot_name} assign #{assignee}" }
+      let(:text) { "@#{bot_name} assign chrisarcand" }
+      let(:command_class) { double }
 
-      before do
-        allow(GithubService).to receive(:valid_assignee?).with(fq_repo_name, "gooduser") { true }
-        allow(GithubService).to receive(:valid_assignee?).with(fq_repo_name, "baduser") { false }
-      end
-
-      context "with a valid user" do
-        let(:assignee) { "gooduser" }
-
-        it "assigns to that user" do
-          expect(command_dispatcher.issue).to receive(:assign).with(assignee)
-        end
-      end
-
-      context "with an invalid user" do
-        let(:assignee) { "baduser" }
-
-        it "does not assign, reports failure" do
-          expect(command_dispatcher.issue).not_to receive(:assign)
-          expect(command_dispatcher.issue).to receive(:add_comment).with("@#{command_issuer} #{assignee} is an invalid assignee, ignoring...")
-        end
+      it "dispatches to Assign" do
+        expect(GithubService::Commands::Assign).to receive(:new).and_return(command_class)
+        expect(command_class).to receive(:execute!)
+          .with(:issuer => command_issuer, :value => "chrisarcand")
       end
     end
 
