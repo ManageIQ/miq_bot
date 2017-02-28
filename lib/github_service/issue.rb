@@ -11,7 +11,12 @@ module GithubService
     end
 
     def set_milestone(milestone)
-      GithubService.update_issue(fq_repo_name, number, "milestone" => milestone)
+      if GithubService.valid_milestone?(fq_repo_name, milestone)
+        milestone_id = GithubService.milestones(fq_repo_name)[milestone]
+        GithubService.update_issue(fq_repo_name, number, "milestone" => milestone_id)
+      else
+        false
+      end
     end
 
     def add_comment(message)
