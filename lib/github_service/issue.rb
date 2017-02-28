@@ -74,6 +74,14 @@ module GithubService
       @fq_repo_name ||= repository_url.match(/repos\/([^\/]+\/[^\/]+)\z/)[1]
     end
 
+    def organization_name
+      @organization_name ||= fq_repo_name.split("/")[0]
+    end
+
+    def repo_name
+      @repo_name ||= fq_repo_name.split("/")[1]
+    end
+
     private
 
     def wipify_title

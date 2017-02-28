@@ -1,7 +1,9 @@
 module GithubService
   module Commands
     class AddLabel < Base
-      def execute!(issuer:, value:)
+      private
+
+      def _execute(issuer:, value:)
         valid, invalid = extract_label_names(value)
 
         if invalid.any?
@@ -15,8 +17,6 @@ module GithubService
           issue.add_labels(valid)
         end
       end
-
-      private
 
       def extract_label_names(value)
         label_names = value.split(",").map { |label| label.strip.downcase }

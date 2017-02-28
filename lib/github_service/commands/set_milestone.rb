@@ -1,7 +1,9 @@
 module GithubService
   module Commands
     class SetMilestone < Base
-      def execute!(issuer:, value:)
+      private
+
+      def _execute(issuer:, value:)
         milestone = value.strip
 
         if valid_milestone?(milestone)
@@ -10,8 +12,6 @@ module GithubService
           issue.add_comment("@#{issuer} Milestone #{milestone} is not recognized, ignoring...")
         end
       end
-
-      private
 
       def valid_milestone?(milestone)
         # First reload the cache if it's an invalid milestone
