@@ -49,7 +49,7 @@ class GithubNotificationMonitor
     last_processed_timestamp = timestamps[issue.number] || Time.at(0)
     return if timestamp <= last_processed_timestamp
 
-    @dispatcher.dispatch!(author: author, text: body)
+    @dispatcher.dispatch!(:issuer => author, :text => body)
     update_timestamp(timestamp, issue.number)
   end
 

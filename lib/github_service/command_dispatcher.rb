@@ -22,7 +22,7 @@ module GithubService
       @fq_repo_name = @issue.fq_repo_name
     end
 
-    def dispatch!(author:, text:)
+    def dispatch!(issuer:, text:)
       lines = text.split("\n")
       lines.each do |line|
         match = line.strip.match(/^@#{@bot_name}\s+([-@a-z0-9_]+)\s+/i)
@@ -33,11 +33,11 @@ module GithubService
         command_class = self.class.registry[command]
 
         if command_class.present?
-          Rails.logger.info("Dispatching '#{command}' to #{command_class} on issue ##{issue.number} | issuer: #{author}, value: #{command_value}")
-          command_class.new(issue).execute!(issuer: author, value: command_value)
+          Rails.logger.info("Dispatching '#{command}' to #{command_class} on issue ##{issue.number} | issuer: #{issuer}, value: #{command_value}")
+          command_class.new(issue).execute!(:issuer => issuer, :value => command_value)
         else
           message = <<-EOMSG
-@#{author} unrecognized command '#{command}', ignoring...
+@#{issuer} unrecognized command '#{command}', ignoring...
 
 Accepted commands are: #{self.class.registry.keys.join(", ")}
           EOMSG

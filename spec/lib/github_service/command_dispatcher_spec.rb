@@ -21,7 +21,7 @@ RSpec.describe GithubService::CommandDispatcher do
     end
 
     after do
-      command_dispatcher.dispatch!(author: command_issuer, text: text)
+      command_dispatcher.dispatch!(:issuer => command_issuer, :text => text)
     end
 
     context "when 'assign' command is given" do

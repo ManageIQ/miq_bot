@@ -57,13 +57,13 @@ RSpec.describe GithubNotificationMonitor do
     it "calls the command dispatcher for new comments and marks notification as read" do
       expect(GithubService::CommandDispatcher).to receive(:new).with(issue).and_return(command_dispatcher)
       expect(command_dispatcher).not_to receive(:dispatch!)
-        .with(:author => "notchrisarcand", :text => issue.body)
+        .with(:issuer => "notchrisarcand", :text => issue.body)
       expect(command_dispatcher).not_to receive(:dispatch!)
-        .with(:author => "Commenter One", :text => "This is an old comment.")
+        .with(:issuer => "Commenter One", :text => "This is an old comment.")
       expect(command_dispatcher).to receive(:dispatch!)
-        .with(:author => "Commenter Two", :text => "This is a new comment.")
+        .with(:issuer => "Commenter Two", :text => "This is a new comment.")
       expect(command_dispatcher).to receive(:dispatch!)
-        .with(:author => "Commenter Three", :text => "This is also a new comment.")
+        .with(:issuer => "Commenter Three", :text => "This is also a new comment.")
       expect(notification).to receive(:mark_thread_as_read)
     end
   end
