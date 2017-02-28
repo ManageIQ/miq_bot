@@ -13,9 +13,7 @@ module GithubService
           subclass.extend(CommandMethods)
 
           class_name = subclass.to_s.demodulize
-          unless class_name == 'Base'
-            subclass.register_as(class_name.underscore)
-          end
+          subclass.register_as(class_name.underscore)
         end
 
         def execute!(*args)
