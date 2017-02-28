@@ -33,16 +33,37 @@ its own line, in the form `@miq-bot command params`.  Available commands are
 below.  Any command can also be pluralized, where sensible, or have the
 underscores replaced with hyphens.
 
-- `add_label`: Add one or more labels to an issue.  Multiple labels should be
-  comma-separated.  e.g. `@miq-bot add_label label1, label2, label3`
-- `remove_label` (or `rm_label`): Remove one or more labels to an issue.
-  Multiple labels should be comma-separated.  e.g.
-  `@miq-bot remove_label label1, label2, label3`
-- `assign`: Assign the issue to the specified user.  The leading `@` for the
-  user is optional.  The user must be in the Assignees list.  e.g.
-  `@miq-bot assign @user`
-- `set_milestone`: Set the specified milestone on the issue. Do not wrap the
-  milestone in quotes.  e.g. `@miq-bot set_milestone Sprint 27`
+- **`add_label label1[, label2]`**  
+  Add one or more labels to an issue.  Multiple labels should be
+  comma-separated.
+
+  Example: `@miq-bot add_labels label1, label2`
+
+- **`remove_label label1[, label2]`**  
+  Remove one or more labels to an issue. Multiple labels should be comma-separated.
+
+  Example: `@miq-bot remove_label wontfix`
+
+- **`assign [@]user`**  
+  Assign the issue to the specified user.  The leading `@` for the
+  user is optional.  The user must be in the Assignees list.
+
+  Example: `@miq-bot assign @user`
+
+- **`set_milestone milestone_name`**  
+  Set the specified milestone on the issue. Do not wrap the
+  milestone in quotes.
+
+  Example: `@miq-bot set_milestone Sprint 27`
+
+- **`move_issue [organization_name/]repo_name`**  
+  Moves the issue to the specified repo. The bot will open a new issue with
+  your original title and description and close the current one. Useful for
+  reorganizing issues opened on the core ManageIQ/manageiq repo to a more
+  appropriate project (a provider or other ManageIQ plugin). The repository
+  being moved to must be under the same organization as the issue being moved.
+
+  Example: `@miq-bot move_issue manageiq-providers-amazon`
 
 ## Development
 
