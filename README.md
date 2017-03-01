@@ -60,10 +60,22 @@ underscores replaced with hyphens.
   Moves the issue to the specified repo. The bot will open a new issue with
   your original title and description and close the current one. Useful for
   reorganizing issues opened on the core ManageIQ/manageiq repo to a more
-  appropriate project (a provider or other ManageIQ plugin). The repository
-  being moved to must be under the same organization as the issue being moved.
+  appropriate project (a provider or other ManageIQ plugin).
+
+  * This command is restricted to members of the organization containing the issue.
+  * The repository being moved to must be under the same organization as the issue being moved.
+  * You cannot move a pull request.
 
   Example: `@miq-bot move_issue manageiq-providers-amazon`
+
+- **`close_issue`**  
+  Closes the issue.
+
+  * This command is restricted to members of the organization containing the issue.
+  * Restricted use on pull requests. Only the pull request author or a committer can close
+    pull requests (who have access to close them directly anyway). This is intended.
+
+  Example: `@miq-bot close_issue`
 
 ## Development
 
