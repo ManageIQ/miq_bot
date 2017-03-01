@@ -1,7 +1,9 @@
 module GithubService
   module Commands
     class Assign < Base
-      def execute!(issuer:, value:)
+      private
+
+      def _execute(issuer:, value:)
         user = value.strip.delete('@')
 
         if valid_assignee?(user)
@@ -10,8 +12,6 @@ module GithubService
           issue.add_comment("@#{issuer} '#{user}' is an invalid assignee, ignoring...")
         end
       end
-
-      private
 
       def valid_assignee?(user)
         # First reload the cache if it's an invalid assignee
