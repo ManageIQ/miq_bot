@@ -63,6 +63,10 @@ module GithubService
       user.login
     end
 
+    def pull_request?
+      respond_to?(:pull_request)
+    end
+
     # Overrides Octokit response key
     # We manage this ourselves for the life of the issue object to avoid making
     # extra API calls.

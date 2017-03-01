@@ -18,18 +18,17 @@ module GithubService
 
     def initialize(issue)
       @issue = issue.kind_of?(GithubService::Issue) ? issue : GithubService::Issue.new(issue)
-      @bot_name = Settings.github_credentials.username
       @fq_repo_name = @issue.fq_repo_name
     end
 
     def dispatch!(issuer:, text:)
       lines = text.split("\n")
       lines.each do |line|
-        match = line.strip.match(/^@#{@bot_name}\s+([-@a-z0-9_]+)\s+/i)
+        match = command_regex.match(line.strip)
         next unless match
 
-        command       = match.captures.first
-        command_value = match.post_match
+        command       = match[:command]
+        command_value = match[:command_value]
         command_class = self.class.registry[command]
 
         if command_class.present?
@@ -44,6 +43,16 @@ Accepted commands are: #{self.class.registry.keys.join(", ")}
           issue.add_comment(message)
         end
       end
+    end
+
+    private
+
+    def command_regex
+      /\A@#{bot_name}\s+(?<command>[a-z_-]+)(?:\s*)(?<command_value>.*)\z/i
+    end
+
+    def bot_name
+      @bot_name ||= Settings.github_credentials.username
     end
   end
 end
