@@ -29,5 +29,7 @@ path_based_labeler:
   enabled_repos: {}
 pivotal_pr_checker:
   enabled_repos: []
+stale_issue_marker:
+  enabled_repos: []
 wip_labeler:
   enabled_repos: []
