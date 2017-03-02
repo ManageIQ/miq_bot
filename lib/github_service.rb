@@ -81,7 +81,7 @@ module GithubService
     end
 
     def milestones(fq_name)
-      milestones_cache[fq_name] ||= Hash[service.list_milestones(fq_name).map { |m| [m.title, m.number] }]
+      milestones_cache[fq_name] ||= Hash[service.list_milestones(fq_name, :state => :all).map { |m| [m.title, m.number] }]
     end
 
     def valid_milestone?(fq_name, milestone)
