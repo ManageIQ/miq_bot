@@ -8,15 +8,15 @@ class StaleIssueMarker
   PINNED_LABELS    = ['pinned'].freeze
 
   STALE_LABEL_NAME = 'stale'.freeze
-  STALE_ISSUE_MESSAGE = <<-EOS
-This issue has been automatically marked as stale because it has not been updated for at least 3 months.
+  STALE_ISSUE_MESSAGE = <<-EOS.freeze
+This issue has been automatically marked as stale because it has not been updated for at least 6 months.
 
 If you can still reproduce this issue on the current release or on `master`, please reply with all of the information you have about it in order to keep the issue open.
 
 Thank you for all your contributions!
   EOS
-  CLOSABLE_PR_MESSAGE = <<-EOS
-This pull request has been automatically closed because it has not been updated for at least 3 months.
+  CLOSABLE_PR_MESSAGE = <<-EOS.freeze
+This pull request has been automatically closed because it has not been updated for at least 6 months.
 
 Feel free to reopen this pull request if these changes are still valid.
 
@@ -58,7 +58,7 @@ Thank you for all your contributions!
   private
 
   def stale_date
-    @stale_date ||= 3.months.ago
+    @stale_date ||= 6.months.ago
   end
 
   def stale_issues
