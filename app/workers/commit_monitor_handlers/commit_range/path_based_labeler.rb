@@ -25,6 +25,7 @@ class CommitMonitorHandlers::CommitRange::PathBasedLabeler
       end
     end
     GithubService.add_labels_to_an_issue(fq_repo_name, pr_number, labels) if labels.present?
+  rescue GitService::UnmergeableError
   end
 
   def label_rules
