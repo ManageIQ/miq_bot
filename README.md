@@ -1,5 +1,7 @@
 # ManageIQ Bot
 
+[![Join the chat at https://gitter.im/ManageIQ/miq_bot](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ManageIQ/miq_bot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/ManageIQ/miq_bot.svg)](https://travis-ci.org/ManageIQ/miq_bot)
 [![Code Climate](https://codeclimate.com/github/ManageIQ/miq_bot/badges/gpa.svg)](https://codeclimate.com/github/ManageIQ/miq_bot)
 
