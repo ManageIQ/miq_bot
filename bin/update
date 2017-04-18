@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+require 'pathname'
+
+# path to your application root.
+APP_ROOT = Pathname.new File.expand_path('../../',  __FILE__)
+
+Dir.chdir APP_ROOT do
+  puts "== Installing dependencies =="
+  system "bundle update"
+  system "bower update --allow-root -F --config.analytics=false"
+
+  puts "\n== Migrating database =="
+  system "bin/rake db:migrate db:setup"
+
+  puts "\n== Resetting tests =="
+  system "rspec spec"
+end
