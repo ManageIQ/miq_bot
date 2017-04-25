@@ -41,7 +41,7 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
       expect(subject.first).to  start_with <<-EOMSG.chomp
 <rubocop />Checked commits https://github.com/some_user/some_repo/compare/1ec36efd33279f79f8ddcf12984bb2aa48f3fbd6~...8942a195a0bfa69ceb82c020c60565408cb46d3e with ruby #{RUBY_VERSION}, rubocop #{rubocop_version}, and haml-lint #{hamllint_version}
 1 file checked, 0 offenses detected
-Everything looks good.
+Everything looks fine.
       EOMSG
       expect(subject.first.split(" ").last).to match /:[\w\d\+]+:/ # Ends with an emoji ;)
     end

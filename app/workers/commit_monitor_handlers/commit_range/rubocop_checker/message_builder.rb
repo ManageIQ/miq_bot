@@ -61,7 +61,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def write_success
-    message_builder.write("Everything looks good. #{SUCCESS_EMOJI.sample}")
+    message_builder.write("Everything looks fine. #{SUCCESS_EMOJI.sample}")
   end
 
   def write_offenses
