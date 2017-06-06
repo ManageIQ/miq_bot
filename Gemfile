@@ -31,6 +31,7 @@ gem 'thin'
 gem 'foreman', '~> 0.64.0' # v0.65.0 breaks support for the older upstart on RHEL 6
 
 gem 'config'
+gem 'listen'
 
 # Sidekiq specific gems
 gem 'sidekiq', '~> 4.1.1'
