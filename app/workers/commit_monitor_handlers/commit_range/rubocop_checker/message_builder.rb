@@ -42,7 +42,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def header
-    header1 = "Checked #{"commit".pluralize(commits.length)} #{commit_range_text} with ruby #{RUBY_VERSION}, rubocop #{rubocop_version}, and haml-lint #{hamllint_version}"
+    header1 = "Checked #{"commit".pluralize(commits.length)} #{commit_range_text} with ruby #{RUBY_VERSION}, rubocop #{rubocop_version}, haml-lint #{hamllint_version}, and yamllint #{yamllint_version}"
 
     file_count    = results.fetch_path("summary", "target_file_count").to_i
     offense_count = results.fetch_path("summary", "offense_count").to_i
@@ -123,5 +123,10 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
 
   def hamllint_version
     HamlLint::VERSION
+  end
+
+  def yamllint_version
+    _out, err, _ps = Open3.capture3("yamllint -v")
+    err.split.last
   end
 end

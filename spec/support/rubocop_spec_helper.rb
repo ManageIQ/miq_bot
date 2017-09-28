@@ -36,3 +36,8 @@ end
 def hamllint_version
   HamlLint::VERSION
 end
+
+def yamllint_version
+  _out, err, _ps = Open3.capture3("yamllint -v")
+  err.split.last
+end
