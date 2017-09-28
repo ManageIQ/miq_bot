@@ -27,18 +27,20 @@ module Linter
         end
       end
 
-      begin
-        offenses = JSON.parse(result.output.chomp)
-      rescue JSON::ParserError => error
-        logger.error("#{log_header} #{error.message}")
-        logger.error("#{log_header} Failed to parse JSON result #{result.output.inspect}")
-        return failed_linter_offenses("error parsing JSON result")
-      end
+      offenses = parse_output(result.output)
       logger.info("#{log_header} Completed run with offenses #{offenses.inspect}")
       offenses
     end
 
     private
+
+    def parse_output(output)
+      JSON.parse(output.chomp)
+    rescue JSON::ParserError => error
+      logger.error("#{log_header} #{error.message}")
+      logger.error("#{log_header} Failed to parse JSON result #{output.inspect}")
+      return failed_linter_offenses("error parsing JSON result")
+    end
 
     def collected_config_files(dir)
       config_files.select { |path| extract_file(path, dir) }
