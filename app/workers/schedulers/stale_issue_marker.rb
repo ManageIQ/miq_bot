@@ -4,7 +4,7 @@ module Schedulers
     sidekiq_options :queue => :miq_bot_glacial, :retry => false
 
     include Sidetiq::Schedulable
-    recurrence { weekly.day(:saturday) }
+    recurrence { weekly.day(:monday) }
 
     include SidekiqWorkerMixin
 
