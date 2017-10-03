@@ -4,6 +4,8 @@ sudo: false
 cache: bundler
 services:
 - redis-server
+before_install:
+- sudo pip install yamllint
 before_script:
 - cp config/database.tmpl.yml config/database.yml
 - bundle exec rake db:setup
