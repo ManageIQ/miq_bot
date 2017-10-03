@@ -1,6 +1,6 @@
 RSpec.describe Linter::Yaml do
   describe "#parse_output" do
-    it "does something" do
+    it "formats the output in the same form as rubocop" do
       output = <<-EOOUTPUT
 config/settings.yml:8:5: [warning] wrong indentation: expected 2 but found 4 (indentation)
 config/settings.yml:11:1: [error] duplication of key ":a" in mapping (key-duplicates)
