@@ -84,6 +84,7 @@ underscores replaced with hyphens.
 * Ruby 2.2 with bundler
 * Redis ~> 2.8.10
 * Postgresql
+* pip
 
 ### Setup
 
@@ -97,9 +98,10 @@ underscores replaced with hyphens.
    git fetch —-all
    ```
 
-3. Install any gem dependencies:
+3. Install any dependencies:
    ```
    bundle install
+   sudo pip install yamllint
    ```
 
 4. Create the `database.yml` file.
