@@ -53,7 +53,23 @@ module GitService
       rugged_repo.references[reference].target
     end
 
+    def tip_files
+      recursive_list_files_in_tree(tip_tree.oid)
+    end
+
     private
+
+    def recursive_list_files_in_tree(rugged_tree_oid, files = [], current_path = Pathname.new(""))
+      rugged_repo.lookup(rugged_tree_oid).each do |i|
+        case i[:type]
+        when :blob
+          files << current_path.join(i[:name]).to_s
+        when :tree
+          recursive_list_files_in_tree(i[:oid], files, current_path.join(i[:name]))
+        end
+      end
+      files
+    end
 
     def ref_name
       return "refs/#{branch.name}" if branch.name.include?("prs/")

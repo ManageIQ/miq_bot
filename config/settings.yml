@@ -20,6 +20,8 @@ grafana:
   url:
 
 # Worker settings
+code_analyzer:
+  enabled_repos: []
 diff_content_checker: {}
 github_notification_monitor:
   repo_names: []
