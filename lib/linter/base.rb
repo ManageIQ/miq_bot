@@ -105,7 +105,7 @@ module Linter
     end
 
     def log_header
-      "#{self.class.name} Branch #{branch.name} -"
+      "#{self.class.name} Repo: #{branch.repo.name} Branch #{branch.name} -"
     end
   end
 end
