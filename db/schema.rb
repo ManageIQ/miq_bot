@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170127173128) do
+ActiveRecord::Schema.define(version: 20171006050814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,9 +34,9 @@ ActiveRecord::Schema.define(version: 20170127173128) do
   end
 
   create_table "branches", force: :cascade do |t|
-    t.string   "name",            limit: 255
-    t.string   "commit_uri",      limit: 255
-    t.string   "last_commit",     limit: 255
+    t.string   "name",                 limit: 255
+    t.string   "commit_uri",           limit: 255
+    t.string   "last_commit",          limit: 255
     t.integer  "repo_id"
     t.boolean  "pull_request"
     t.datetime "last_checked_on"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20170127173128) do
     t.boolean  "mergeable"
     t.string   "merge_target"
     t.string   "pr_title"
+    t.integer  "linter_offense_count"
   end
 
   create_table "repos", force: :cascade do |t|
