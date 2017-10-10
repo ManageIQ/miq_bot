@@ -61,11 +61,12 @@ module GitService
 
     def recursive_list_files_in_tree(rugged_tree_oid, files = [], current_path = Pathname.new(""))
       rugged_repo.lookup(rugged_tree_oid).each do |i|
+        full_path = current_path.join(i[:name])
         case i[:type]
         when :blob
-          files << current_path.join(i[:name]).to_s
+          files << full_path.to_s
         when :tree
-          recursive_list_files_in_tree(i[:oid], files, current_path.join(i[:name]))
+          recursive_list_files_in_tree(i[:oid], files, full_path)
         end
       end
       files
