@@ -10,7 +10,7 @@ module Schedulers
 
     def perform
       Repo.where(:name => fq_repo_names).each do |repo|
-        repo.branches.pluck(:id).each do |branch_id|
+        repo.branches.regular_branches.pluck(:id).each do |branch_id|
           CommitMonitorHandlers::Branch::CodeAnalyzer.perform_async(branch_id)
         end
       end

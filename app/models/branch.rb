@@ -13,6 +13,8 @@ class Branch < ActiveRecord::Base
 
   delegate :enabled_for?, :to => :repo
 
+  scope :regular_branches, -> { where(:pull_request => [false, nil]) }
+
   def self.with_branch_or_pr_number(n)
     n = MinigitService.pr_branch(n) if n.kind_of?(Fixnum)
     where(:name => n)
