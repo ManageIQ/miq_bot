@@ -11,6 +11,9 @@ module CodeAnalysisMixin
       new_results['files'] += result['files']
     end
 
+    new_results ||= {}
+    new_results["files"] ||= []
+
     new_results
   end
 

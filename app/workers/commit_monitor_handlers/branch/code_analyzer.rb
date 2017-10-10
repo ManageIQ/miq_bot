@@ -21,17 +21,8 @@ class CommitMonitorHandlers::Branch::CodeAnalyzer
 
   def analyze
     branch.repo.git_fetch
-    run_linters
+    @results = merge_linter_results(run_all_linters)
     offense_count = @results.fetch_path("summary", "offense_count")
     branch.update_attributes(:linter_offense_count => offense_count)
-  end
-
-  def run_linters
-    unmerged_results = run_all_linters
-    if unmerged_results.empty?
-      @results = {"files" => []}
-    else
-      @results = merge_linter_results(*unmerged_results)
-    end
   end
 end

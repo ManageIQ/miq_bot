@@ -22,11 +22,8 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
   private
 
   def process_branch
-    unmerged_results = run_all_linters
-    if unmerged_results.empty?
-      @results = {"files" => []}
-    else
-      results      = merge_linter_results(*unmerged_results)
+    @results = merge_linter_results(run_all_linters)
+    unless @results["files"].empty?
       diff_details = diff_details_for_merge
       @results     = RubocopResultsFilter.new(results, diff_details).filtered
     end
