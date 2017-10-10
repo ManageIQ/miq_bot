@@ -54,22 +54,21 @@ module GitService
     end
 
     def tip_files
-      recursive_list_files_in_tree(tip_tree.oid)
+      list_files_in_tree(tip_tree.oid)
     end
 
     private
 
-    def recursive_list_files_in_tree(rugged_tree_oid, files = [], current_path = Pathname.new(""))
-      rugged_repo.lookup(rugged_tree_oid).each do |i|
+    def list_files_in_tree(rugged_tree_oid, current_path = Pathname.new(""))
+      rugged_repo.lookup(rugged_tree_oid).each_with_object([]) do |i, files|
         full_path = current_path.join(i[:name])
         case i[:type]
         when :blob
           files << full_path.to_s
         when :tree
-          recursive_list_files_in_tree(i[:oid], files, full_path)
+          files.concat(list_files_in_tree(i[:oid], full_path))
         end
       end
-      files
     end
 
     def ref_name
