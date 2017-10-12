@@ -53,7 +53,23 @@ module GitService
       rugged_repo.references[reference].target
     end
 
+    def tip_files
+      list_files_in_tree(tip_tree.oid)
+    end
+
     private
+
+    def list_files_in_tree(rugged_tree_oid, current_path = Pathname.new(""))
+      rugged_repo.lookup(rugged_tree_oid).each_with_object([]) do |i, files|
+        full_path = current_path.join(i[:name])
+        case i[:type]
+        when :blob
+          files << full_path.to_s
+        when :tree
+          files.concat(list_files_in_tree(i[:oid], full_path))
+        end
+      end
+    end
 
     def ref_name
       return "refs/#{branch.name}" if branch.name.include?("prs/")
