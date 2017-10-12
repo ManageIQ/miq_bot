@@ -10,6 +10,7 @@ class Branch < ActiveRecord::Base
 
   default_value_for(:commits_list) { [] }
   default_value_for :mergeable, true
+  default_value_for :pull_request, false
 
   delegate :enabled_for?, :to => :repo
 
