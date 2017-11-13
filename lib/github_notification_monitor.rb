@@ -31,8 +31,10 @@ class GithubNotificationMonitor
   # last_processed_timestamp, and check every comment in the issue thread
   # skipping them until we are at the last processed comment.
   def process_notification(notification)
-    issue = GithubService.issue(@fq_repo_name, notification.issue_number)
-    process_issue_thread(issue)
+    if notification.issue_number.present?
+      issue = GithubService.issue(@fq_repo_name, notification.issue_number)
+      process_issue_thread(issue)
+    end
     notification.mark_thread_as_read
   end
 
@@ -46,6 +48,11 @@ class GithubNotificationMonitor
   end
 
   def process_issue_comment(issue, author, timestamp, body)
+    if body.blank?
+      logger.warn("Skipping comment due to empty body. Issue: #{issue.url} Author: #{author}, Timestamp: #{timestamp}")
+      return
+    end
+
     last_processed_timestamp = timestamps[issue.number] || Time.at(0)
     return if timestamp <= last_processed_timestamp
 
