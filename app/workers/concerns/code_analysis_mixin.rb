@@ -22,6 +22,6 @@ module CodeAnalysisMixin
     unmerged_results << Linter::Rubocop.new(branch).run
     unmerged_results << Linter::Haml.new(branch).run
     unmerged_results << Linter::Yaml.new(branch).run
-    unmerged_results.compact!
+    unmerged_results.tap(&:compact!)
   end
 end
