@@ -21,7 +21,7 @@ class CommitMonitorHandlers::Branch::CodeAnalyzer
 
   def analyze
     branch.repo.git_fetch
-    @results = merge_linter_results(run_all_linters)
+    @results = merged_linter_results
     offense_count = @results.fetch_path("summary", "offense_count")
     branch.update_attributes(:linter_offense_count => offense_count)
   end
