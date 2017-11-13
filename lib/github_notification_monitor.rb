@@ -46,6 +46,11 @@ class GithubNotificationMonitor
   end
 
   def process_issue_comment(issue, author, timestamp, body)
+    if body.blank?
+      logger.warn("Skipping comment due to empty body. Issue: #{issue.url} Author: #{author}, Timestamp: #{timestamp}")
+      return
+    end
+
     last_processed_timestamp = timestamps[issue.number] || Time.at(0)
     return if timestamp <= last_processed_timestamp
 
