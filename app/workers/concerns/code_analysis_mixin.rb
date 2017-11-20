@@ -1,5 +1,6 @@
 module CodeAnalysisMixin
-  def merge_linter_results(*results)
+  def merged_linter_results
+    results = run_all_linters
     return if results.empty?
 
     new_results = results[0].dup
@@ -22,6 +23,6 @@ module CodeAnalysisMixin
     unmerged_results << Linter::Rubocop.new(branch).run
     unmerged_results << Linter::Haml.new(branch).run
     unmerged_results << Linter::Yaml.new(branch).run
-    unmerged_results.compact!
+    unmerged_results.tap(&:compact!)
   end
 end
