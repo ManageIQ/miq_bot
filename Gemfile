@@ -49,7 +49,7 @@ gem 'awesome_spawn',        '>= 1.4.1'
 gem 'default_value_for'
 gem 'haml_lint',            '~> 0.20.0', :require => false
 gem 'more_core_extensions', '~> 2.0.0',  :require => 'more_core_extensions/all'
-gem 'rubocop',              '~> 0.47.0', :require => false
+gem 'rubocop',              '~> 0.49.0', :require => false
 gem 'rugged',                            :require => false
 
 gem 'octokit', '~> 4.6.0', :require => false
