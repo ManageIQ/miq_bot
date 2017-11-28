@@ -149,7 +149,7 @@ class Repo < ActiveRecord::Base
     b = branches.new(:name => branch_name)
 
     # Make sure the branch is a real git branch before continuing and saving a record
-    raise(ActiveRecord::RecordInvalid, "Branch not found in git") unless b.git_service.send(:rugged_repo).branches.exists?("origin/#{b.name}")
+    raise(ActiveRecord::RecordInvalid, "Branch not found in git") unless b.git_service.exists?
 
     b.last_commit = b.git_service.merge_base("master")
 

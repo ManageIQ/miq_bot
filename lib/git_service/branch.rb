@@ -15,6 +15,10 @@ module GitService
       Diff.new(target_for_reference(merge_target_ref_name(merge_target)).diff(merge_tree))
     end
 
+    def exists?
+      rugged_repo.branches.exists?(ref_name)
+    end
+
     def mergeable?
       merge_tree
       true
