@@ -149,6 +149,22 @@ class Repo < ActiveRecord::Base
     end
   end
 
+  def create_branch!(branch_name)
+    b = branches.new(
+      :name => branch_name,
+      :commit_uri => "https://github.com/#{branch_name}/commit/$commit",
+    )
+
+    # Make sure the branch is a real git branch before continuing and saving a record
+    raise(ActiveRecord::RecordInvalid, "Branch not found in git") unless b.git_service.send(:rugged_repo).branches.exists?("origin/#{b.name}")
+
+    b.merge_target = "master"  # I know this shouldn't be, but I need it for the last_commit
+    b.last_commit  = b.git_service.merge_base
+    b.merge_target = nil
+
+    b.save!
+  end
+
   private
 
   def extract_username_from_git_remote_url(url)
