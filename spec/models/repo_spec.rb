@@ -7,8 +7,11 @@ describe Repo do
     expected_repo_dir = described_class::BASE_PATH.join("foo/bar")
 
     expect(MinigitService).to receive(:clone)
-    expect(MinigitService).to receive(:call).with(expected_repo_dir).and_return("0123abcd") # current_ref
     expect(MinigitService).to receive(:call).with(expected_repo_dir).and_return(nil)        # ensure_prs_refs
+
+    git_service_branch = double(:exists? => true)
+    expect(GitService::Branch).to receive(:new).twice.and_return(git_service_branch)
+    expect(git_service_branch).to receive(:merge_base).with("master").and_return("0123abcd")
 
     described_class.create_from_github!("foo/bar", "https://github.com/foo/bar.git")
 

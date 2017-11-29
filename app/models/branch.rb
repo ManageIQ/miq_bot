@@ -12,6 +12,8 @@ class Branch < ActiveRecord::Base
   default_value_for :mergeable, true
   default_value_for :pull_request, false
 
+  after_initialize(:unless => :commit_uri) { self.commit_uri = self.class.github_commit_uri(repo.try(:name)) }
+
   delegate :enabled_for?, :to => :repo
 
   scope :regular_branches, -> { where(:pull_request => [false, nil]) }

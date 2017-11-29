@@ -6,27 +6,19 @@ class Repo < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
 
   def self.create_from_github!(name, url)
-    create_and_clone!(name, url, Branch.github_commit_uri(name)).tap do |repo|
-      repo.ensure_prs_refs
-    end
+    create_and_clone!(name, url).tap(&:ensure_prs_refs)
   end
 
-  def self.create_and_clone!(name, url, commit_uri)
+  def self.create_and_clone!(name, url)
     path = BASE_PATH.join(name)
 
     raise ArgumentError, "a git repo already exists at #{path}" if path.join(".git").exist?
 
     MinigitService.clone(url, path)
-    last_commit = MinigitService.call(path, &:current_ref)
 
-    create!(
-      :name     => name,
-      :branches => [Branch.new(
-        :name        => "master",
-        :commit_uri  => commit_uri,
-        :last_commit => last_commit
-      )]
-    )
+    create!(:name => name).tap do |repo|
+      repo.create_branch!("master")
+    end
   end
 
   def path
@@ -147,6 +139,17 @@ class Repo < ActiveRecord::Base
 
       rugged_repo.fetch(remote.name, fetch_options)
     end
+  end
+
+  def create_branch!(branch_name)
+    b = branches.new(:name => branch_name)
+
+    # Make sure the branch is a real git branch before continuing and saving a record
+    raise(ActiveRecord::RecordInvalid, "Branch not found in git") unless b.git_service.exists?
+
+    b.last_commit = b.git_service.merge_base("master")
+
+    b.save!
   end
 
   private
