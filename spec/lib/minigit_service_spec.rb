@@ -108,60 +108,11 @@ https://bugzilla.redhat.com/show_bug.cgi?id=345678
     end
   end
 
-  context "#ref_name" do
-    it "on a named ref" do
-      expect(service).to receive(:rev_parse).and_return("master\n")
-
-      with_service do |git|
-        expect(git.ref_name("123abc")).to eq "master"
-      end
-    end
-
-    it "on an unnamed ref" do
-      expect(service).to receive(:rev_parse).and_return("\n")
-
-      with_service do |git|
-        expect(git.ref_name("123abc")).to eq "123abc"
-      end
-    end
-  end
-
-  context "#current_branch" do
-    it "on a named ref" do
-      expect(service).to receive(:rev_parse).and_return("master\n")
-
-      with_service do |git|
-        expect(git.current_branch).to eq "master"
-      end
-    end
-
-    it "on an unnamed ref" do
-      expect(service).to receive(:rev_parse).and_return("HEAD\n")
-      expect(service).to receive(:rev_parse).and_return("123abc\n")
-
-      with_service do |git|
-        expect(git.current_branch).to eq "123abc"
-      end
-    end
-  end
-
   it "#current_ref" do
     expect(service).to receive(:rev_parse).and_return("123abc\n")
 
     with_service do |git|
       expect(git.current_ref).to eq "123abc"
-    end
-  end
-
-  it "#branches" do
-    expect(service).to receive(:branch).and_return(<<-EOGIT)
-* master
-  branch1
-  branch2
-    EOGIT
-
-    with_service do |git|
-      expect(git.branches).to eq %w{master branch1 branch2}
     end
   end
 

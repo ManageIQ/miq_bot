@@ -36,15 +36,6 @@ class MinigitService
     BugzillaService.ids_in_git_commit_message(commit_message(ref))
   end
 
-  def temporarily_checkout(ref)
-    ref      = ref_name(ref)
-    orig_ref = current_branch
-    checkout(ref) unless ref == orig_ref
-    yield
-  ensure
-    checkout(orig_ref) unless ref == orig_ref
-  end
-
   def new_commits(since_commit, ref = "HEAD")
     rev_list({:reverse => true}, "#{since_commit}..#{ref}").split("\n")
   end
@@ -53,41 +44,8 @@ class MinigitService
     show({:pretty => "fuller"}, "--stat", "--summary", commit)
   end
 
-  def ref_name(ref)
-    name = rev_parse("--abbrev-ref", ref)
-    name.empty? ? ref : name
-  end
-
-  def author_name(ref)
-    log("-1", "--format=\"%an\"", ref)
-  end
-
-  def author_email(ref)
-    log("-1", "--format=\"%ae\"", ref)
-  end
-
-  def subject(ref)
-    log("-1", "--format=\"%s\"", ref)
-  end
-
-  def current_branch
-    ref = ref_name("HEAD")
-    ref == "HEAD" ? current_ref : ref
-  end
-
   def current_ref
     rev_parse("HEAD")
-  end
-
-  def branches
-    branch.split("\n").collect do |b|
-      b = b[1..-1] if b.start_with?("*")
-      b.strip
-    end
-  end
-
-  def destroy_branch(branch_name)
-    branch("-D", branch_name)
   end
 
   def diff_details(commit1, commit2 = nil)
@@ -137,21 +95,6 @@ class MinigitService
     branch.split("/")[1].to_i
   end
   delegate :pr_number, :to => :class
-
-  def mergeable?(branch = nil, into_branch = "master")
-    branch ||= current_branch
-
-    temporarily_checkout(into_branch) do
-      begin
-        merge("--no-commit", "--no-ff", branch)
-        return true
-      rescue MiniGit::GitError
-        return false
-      ensure
-        merge("--abort")
-      end
-    end
-  end
 
   def remotes
     remote.split("\n").uniq.compact
