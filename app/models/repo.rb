@@ -15,13 +15,9 @@ class Repo < ActiveRecord::Base
     raise ArgumentError, "a git repo already exists at #{path}" if path.join(".git").exist?
 
     MinigitService.clone(url, path)
-    last_commit = MinigitService.call(path, &:current_ref)
 
     create!(:name => name).tap do |repo|
-      repo.branches.create!(
-        :name        => "master",
-        :last_commit => last_commit
-      )
+      repo.create_branch!("master")
     end
   end
 
