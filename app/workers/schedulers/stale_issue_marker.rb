@@ -9,15 +9,7 @@ module Schedulers
     include SidekiqWorkerMixin
 
     def perform
-      fq_repo_names.each do |name|
-        ::StaleIssueMarker.perform_async(name)
-      end
-    end
-
-    private
-
-    def fq_repo_names
-      Settings.stale_issue_marker.enabled_repos
+      enabled_repo_names.each { |r| ::StaleIssueMarker.perform_async(r) }
     end
   end
 end

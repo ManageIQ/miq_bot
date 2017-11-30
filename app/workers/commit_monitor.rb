@@ -45,30 +45,32 @@ class CommitMonitor
     if !first_unique_worker?
       logger.info "#{self.class} is already running, skipping"
     else
-      process_branches
+      process_repos
     end
+  end
+
+  def process_repos
+    enabled_repos.includes(:branches).each { |repo| process_repo(repo) }
   end
 
   private
 
   attr_reader :repo, :git, :branch, :new_commits, :all_commits, :statistics
 
-  def process_branches
-    Repo.includes(:branches).each do |repo|
-      @statistics = {}
+  def process_repo(repo)
+    @statistics = {}
 
-      @repo = repo
-      repo.with_git_service do |git|
-        @git = git
+    @repo = repo
+    repo.with_git_service do |git|
+      @git = git
 
-        # Sort PR branches after regular branches
-        sorted_branches = repo.branches.sort_by { |b| b.pull_request? ? 1 : -1 }
+      # Sort PR branches after regular branches
+      sorted_branches = repo.branches.sort_by { |b| b.pull_request? ? 1 : -1 }
 
-        sorted_branches.each do |branch|
-          @new_commits_details = nil
-          @branch = branch
-          process_branch
-        end
+      sorted_branches.each do |branch|
+        @new_commits_details = nil
+        @branch = branch
+        process_branch
       end
     end
   end
@@ -155,7 +157,9 @@ class CommitMonitor
   private_class_method(:handlers_for)
 
   def filter_handlers(handlers)
-    handlers.select { |h| h.handled_branch_modes.include?(branch.mode) }
+    handlers.select do |h|
+      h.handled_branch_modes.include?(branch.mode) && h.enabled_for?(repo)
+    end
   end
 
   def commit_handlers

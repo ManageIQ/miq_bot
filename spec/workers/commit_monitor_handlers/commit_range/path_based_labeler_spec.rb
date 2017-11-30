@@ -4,8 +4,8 @@ describe CommitMonitorHandlers::CommitRange::PathBasedLabeler do
   let(:branch)         { create(:pr_branch) }
   let(:git_service)    { double("GitService", :diff => double("RuggedDiff", :new_files => new_files)) }
   let(:settings) do
-    { "path_based_labeler" => { "enabled_repos" => { branch.repo.name => [{ "regex" => /(?:Gemfile|Gemfile\.lock|\.gemspec)\z/, "label" => "gem changes" },
-                                                                          { "regex" => /db\/migrate.+\.rb\z/, "label" => "sql migration" }] } } }
+    { "path_based_labeler" => { "rules" => { branch.repo.name => [{ "regex" => /(?:Gemfile|Gemfile\.lock|\.gemspec)\z/, "label" => "gem changes" },
+                                                                  { "regex" => /db\/migrate.+\.rb\z/, "label" => "sql migration" }] } } }
   end
 
   before do

@@ -36,7 +36,7 @@ module CommitMonitorHandlers::Batch
 
     def check_line(line, patch)
       file_path = patch.delta.new_file[:path]
-      Settings.diff_content_checker.each do |offender, options|
+      Settings.diff_content_checker.offenses.each do |offender, options|
         next if options.except.try(:any?) { |except| file_path.start_with?(except) }
 
         regexp = options.type == :regexp ? Regexp.new(offender.to_s) : /\b#{Regexp.escape(offender.to_s)}\b/i

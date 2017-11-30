@@ -14,7 +14,6 @@ module CommitMonitorHandlers
 
       def perform(branch_id, commit, commit_details)
         return unless find_branch(branch_id, :pr)
-        return unless verify_branch_enabled
 
         @commit  = commit
         @message = commit_details["message"]

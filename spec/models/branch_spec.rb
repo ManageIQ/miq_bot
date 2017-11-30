@@ -168,4 +168,12 @@ describe Branch do
   it "#write_github_comment raises on non-pr branches" do
     expect { branch.write_github_comment("<test /> blah") }.to raise_error(ArgumentError)
   end
+
+  it "#fq_repo_name" do
+    expect(branch.fq_repo_name).to eq("test-user/test-repo")
+  end
+
+  it "#fq_branch_name" do
+    expect(branch.fq_branch_name).to eq("test-user/test-repo@test-branch")
+  end
 end

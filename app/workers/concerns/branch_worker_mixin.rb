@@ -1,18 +1,26 @@
 module BranchWorkerMixin
+  extend ActiveSupport::Concern
+  include SidekiqWorkerMixin
+
   attr_accessor :branch
 
-  delegate :fq_repo_name, :pr_number, :pr_title, :pr_title_tags, :merge_target, :to => :branch
+  delegate :fq_repo_name, :fq_branch_name, :pr_number, :pr_title, :pr_title_tags, :merge_target, :to => :branch
 
   def find_branch(branch_id, required_mode = nil)
     @branch ||= Branch.where(:id => branch_id).first
 
-    if @branch.nil?
+    if branch.nil?
       logger.warn("Branch #{branch_id} no longer exists.  Skipping.")
       return false
     end
 
-    if required_mode && @branch.mode != required_mode
-      logger.error("Branch #{branch_id} is not a #{required_mode} branch.  Skipping.")
+    if required_mode && branch.mode != required_mode
+      logger.error("Branch #{fq_branch_name} is not a #{required_mode} branch.  Skipping.")
+      return false
+    end
+
+    unless enabled_for?(branch.repo)
+      logger.error("Branch #{fq_branch_name} is not enabled.  Skipping.")
       return false
     end
 
@@ -31,17 +39,6 @@ module BranchWorkerMixin
     case commit_range.uniq.length
     when 1 then branch.commit_uri_to(commit_range.first)
     when 2 then branch.compare_uri_for(*commit_range)
-    end
-  end
-
-  def branch_enabled?
-    setting = self.class.name.split("::").last.underscore.to_sym
-    branch.enabled_for?(setting)
-  end
-
-  def verify_branch_enabled
-    branch_enabled?.tap do |enabled|
-      logger.warn("#{fq_repo_name} has not been enabled.  Skipping.") unless enabled
     end
   end
 

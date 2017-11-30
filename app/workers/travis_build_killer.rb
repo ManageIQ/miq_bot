@@ -11,31 +11,23 @@ class TravisBuildKiller
     if !first_unique_worker?
       logger.info "#{self.class} is already running, skipping"
     else
-      process_repo
+      process_repos
     end
   end
 
-  private
-
-  attr_accessor :repo
-
-  def process_repo
-    @repo = Repo.where(:name => "ManageIQ/manageiq").first
-    if @repo.nil?
-      logger.info "The ManageIQ/manageiq repo has not been defined.  Skipping."
-      return
-    end
-
-    kill_builds
+  def process_repos
+    enabled_repos.each { |repo| process_repo(repo) }
   end
 
-  def kill_builds
+  def process_repo(repo)
     repo.with_travis_service do |travis|
       pending_builds = travis.builds.take_while { |b| b.pending? || b.canceled? }.reject(&:canceled?)
       cancel_out_dated_builds(pending_builds)
       cancel_long_running_jobs(pending_builds)
     end
   end
+
+  private
 
   def cancel_out_dated_builds(pending_builds)
     out_dated_builds = pending_builds.group_by { |b| b.pull_request_number || b.branch_info }.flat_map { |_key, builds| builds[1..-1] }
