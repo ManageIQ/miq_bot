@@ -23,7 +23,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
   def process_branch
     @results = merged_linter_results
-    unless @results["files"].empty?
+    unless @results["files"].blank?
       diff_details = diff_details_for_merge
       @results     = RubocopResultsFilter.new(results, diff_details).filtered
     end
