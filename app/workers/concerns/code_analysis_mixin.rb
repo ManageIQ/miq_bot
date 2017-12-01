@@ -1,7 +1,7 @@
 module CodeAnalysisMixin
   def merged_linter_results
     results = run_all_linters
-    return if results.empty?
+    return {} if results.empty?
 
     new_results = results[0].dup
 
