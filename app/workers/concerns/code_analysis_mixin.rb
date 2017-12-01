@@ -1,21 +1,22 @@
 module CodeAnalysisMixin
   def merged_linter_results
-    results = run_all_linters
-    return {} if results.empty?
+    results = {
+      "files"   => [],
+      "summary" => {
+        "inspected_file_count" => 0,
+        "offense_count"        => 0,
+        "target_file_count"    => 0,
+      },
+    }
 
-    new_results = results[0].dup
-
-    results[1..-1].each do |result|
+    run_all_linters.each do |result|
       %w(offense_count target_file_count inspected_file_count).each do |m|
-        new_results['summary'][m] += result['summary'][m]
+        results['summary'][m] += result['summary'][m]
       end
-      new_results['files'] += result['files']
+      results['files'] += result['files']
     end
 
-    new_results ||= {}
-    new_results["files"] ||= []
-
-    new_results
+    results
   end
 
   def run_all_linters
