@@ -71,7 +71,10 @@ module Linter
     end
 
     def files_to_lint
-      @files_to_lint ||= branch.pull_request? ? filtered_files(diff_service.new_files) : branch.git_service.tip_files
+      @files_to_lint ||= begin
+        unfiltered_files = branch.pull_request? ? diff_service.new_files : branch.git_service.tip_files
+        filtered_files(unfiltered_files)
+      end
     end
 
     def run_linter(dir)
