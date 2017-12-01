@@ -22,13 +22,15 @@ module Linter
           return failed_linter_offenses("missing config files")
         else
           files += collected_files_to_lint(dir)
-          logger.info("#{log_header} Collected files #{files.inspect}")
+          logger.info("#{log_header} Collected #{files.length} files.")
+          logger.debug { "#{log_header} File list: #{files.inspect}"}
           run_linter(dir)
         end
       end
 
       offenses = parse_output(result.output)
-      logger.info("#{log_header} Completed run with offenses #{offenses.inspect}")
+      logger.info("#{log_header} Completed run with #{offenses.fetch_path('summary', 'offense_count')} offenses")
+      logger.debug { "#{log_header} Offenses: #{offenses.inspect}" }
       offenses
     end
 
