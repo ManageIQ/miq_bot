@@ -2,8 +2,6 @@ module Linter
   class Yaml < Base
     private
 
-    REGEX = /(?<filename>.*):(?<line>\d+):(?<column>\d+): \[(?<severity>.*)\] (?<message>.*) \((?<cop_name>.*)\)/
-
     def parse_output(output)
       lines = output.chomp.split("\n")
       parsed = lines.collect { |line| line_to_hash(line) }
@@ -41,15 +39,18 @@ module Linter
     end
 
     def line_to_hash(line)
-      match = REGEX.match(line)
+      filename, line, column, severity_message_cop = line.split(":", 4)
+      severity_message, cop = severity_message_cop.split(/ \((.*)\)\Z/)
+      severity, message = severity_message.match(/\[(.*)\] (.*)/).captures
+
       {
-        "filename" => match[:filename],
-        "severity" => match[:severity],
-        "message"  => match[:message],
-        "cop_name" => match[:cop_name],
+        "filename" => filename,
+        "severity" => severity,
+        "message"  => message,
+        "cop_name" => cop,
         "location" => {
-          "line"   => match[:line].to_i,
-          "column" => match[:column].to_i
+          "line"   => line.to_i,
+          "column" => column.to_i
         }
       }
     end
