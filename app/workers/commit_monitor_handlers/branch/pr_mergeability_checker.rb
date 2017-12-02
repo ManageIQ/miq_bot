@@ -1,6 +1,6 @@
 class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   include Sidekiq::Worker
-  sidekiq_options :queue => :miq_bot_glacial
+  sidekiq_options :queue => :miq_bot
 
   include BranchWorkerMixin
 
