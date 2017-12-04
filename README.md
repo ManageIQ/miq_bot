@@ -33,30 +33,30 @@ its own line, in the form `@miq-bot command params`.  Available commands are
 below.  Any command can also be pluralized, where sensible, or have the
 underscores replaced with hyphens.
 
-- **`add_label label1[, label2]`**  
+- **`add_label label1[, label2]`**
   Add one or more labels to an issue.  Multiple labels should be
   comma-separated.
 
   Example: `@miq-bot add_labels label1, label2`
 
-- **`remove_label label1[, label2]`**  
+- **`remove_label label1[, label2]`**
   Remove one or more labels to an issue. Multiple labels should be comma-separated.
 
   Example: `@miq-bot remove_label wontfix`
 
-- **`assign [@]user`**  
+- **`assign [@]user`**
   Assign the issue to the specified user.  The leading `@` for the
   user is optional.  The user must be in the Assignees list.
 
   Example: `@miq-bot assign @user`
 
-- **`set_milestone milestone_name`**  
+- **`set_milestone milestone_name`**
   Set the specified milestone on the issue. Do not wrap the
   milestone in quotes.
 
   Example: `@miq-bot set_milestone Sprint 27`
 
-- **`move_issue [organization_name/]repo_name`**  
+- **`move_issue [organization_name/]repo_name`**
   Moves the issue to the specified repo. The bot will open a new issue with
   your original title and description and close the current one. Useful for
   reorganizing issues opened on the core ManageIQ/manageiq repo to a more
@@ -68,7 +68,7 @@ underscores replaced with hyphens.
 
   Example: `@miq-bot move_issue manageiq-providers-amazon`
 
-- **`close_issue`**  
+- **`close_issue`**
   Closes the issue.
 
   * This command is restricted to members of the organization containing the issue.
@@ -150,13 +150,9 @@ underscores replaced with hyphens.
       username: "some-test-account"
       password: # account token goes here
 
-    # Optional; leave blank to disable
+    # Optional; See the section on enabling/disabling workers
     github_notification_monitor:
-      repo_names: ["miq-test/sandbox"]
-
-    # Optional; leave blank to disable
-    travis_event:
-      enabled_repos: ["miq-test/sandbox"]
+      included_repos: ["miq-test/sandbox"]
     ```
 
 10. You should now be able to run `foreman start` to start the services listed
@@ -183,3 +179,33 @@ To use these features:
 * Enter the url of the running Grafana instance in your local settings yaml
 
 Metrics tracking is optional and you should not need to do these extra steps to run miq_bot locally.
+
+### Enabling and Disabling workers
+
+By default, most workers are enabled for all repos (except for the MergeTargetTitler
+and the TravisBuildKiller, which are disabled for all repos), however if you would
+like to change which workers are enabled or disabled, the following configuration
+settings can be changed:
+
+```yaml
+worker_a:  # Will run in all repos
+
+worker_b:  # Will only run in the specified repos
+  included_repos:
+  - "org1/repo1"
+  - "org2/repo2"
+
+worker_c:  # Will run in all repos except the specified repos
+  excluded_repos:
+  - "org1/repo1"
+  - "org2/repo2"
+
+worker_d:  # Will raise an exception, since you should not specify both
+  included_repos:
+  - "org1/repo1"
+  excluded_repos:
+  - "org2/repo2"
+
+worker_e:  # Effectively disables the worker
+  included_repos: []
+```
