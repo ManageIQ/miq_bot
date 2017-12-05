@@ -1,3 +1,4 @@
+# rubocop:disable Style/NumericLiterals, Style/IndentArray
 require 'spec_helper'
 
 describe BugzillaService do
