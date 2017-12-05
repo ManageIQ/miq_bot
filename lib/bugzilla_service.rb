@@ -13,9 +13,6 @@ class BugzillaService
     resolved
   )
 
-  URL_REGEX = %r{https://bugzilla\.redhat\.com//?show_bug\.cgi\?id=(?<bug_id>\d+)}
-  MATCH_REGEX = /^((#{CLOSING_KEYWORDS.join("|")}):?)?\s*#{URL_REGEX}$/i
-
   def initialize
     service # initialize the service
   end
@@ -35,11 +32,26 @@ class BugzillaService
   end
 
   def self.ids_in_git_commit_message(message)
-    ids = []
+    search_in_message(message).collect { |bug| bug[:bug_id] }
+  end
+
+  def self.search_in_message(message)
+    return [] unless Settings.bugzilla_credentials.url
+
+    regex = match_regex
+
     message.each_line.collect do |line|
-      match = MATCH_REGEX.match(line)
-      ids << match[:bug_id].to_i if match
-    end
-    ids
+      match = regex.match(line)
+      match && Hash[match.names.zip(match.captures)].tap do |h|
+        h.symbolize_keys!
+        h[:bug_id]     &&= h[:bug_id].to_i
+        h[:resolution] &&= h[:resolution].downcase
+      end
+    end.compact
+  end
+
+  private_class_method def self.match_regex
+    url = Settings.bugzilla_credentials.url.to_s.chomp("/")
+    /\A((?<resolution>#{CLOSING_KEYWORDS.join("|")}):?)?\s*#{url}\/\/?(?:show_bug\.cgi\?id=)?(?<bug_id>\d+)\Z/i
   end
 end

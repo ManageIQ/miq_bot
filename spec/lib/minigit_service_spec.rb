@@ -5,6 +5,8 @@ describe MinigitService do
 
   before do
     allow_any_instance_of(described_class).to receive(:service).and_return(service)
+
+    stub_settings(:bugzilla_credentials => {:url => "https://bugzilla.redhat.com"})
   end
 
   def with_service
