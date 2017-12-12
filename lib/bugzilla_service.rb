@@ -41,7 +41,7 @@ class BugzillaService
     regex = match_regex
 
     message.each_line.collect do |line|
-      match = regex.match(line)
+      match = regex.match(line.strip)
       match && Hash[match.names.zip(match.captures)].tap do |h|
         h.symbolize_keys!
         h[:bug_id]     &&= h[:bug_id].to_i
