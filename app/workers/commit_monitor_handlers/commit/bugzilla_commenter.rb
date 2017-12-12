@@ -5,7 +5,6 @@ module CommitMonitorHandlers
       sidekiq_options :queue => :miq_bot
 
       include BranchWorkerMixin
-      include BugzillaWorkerCommon
 
       def self.handled_branch_modes
         [:regular]
@@ -19,28 +18,43 @@ module CommitMonitorHandlers
         @commit  = commit
         @message = commit_details["message"]
 
-        BugzillaService.ids_in_git_commit_message(message).each do |bug_id|
-          write_to_bugzilla(bug_id)
+        BugzillaService.search_in_message(message).each do |bug|
+          update_bugzilla_status(bug[:bug_id], bug[:resolution])
         end
       end
 
       private
 
-      def bugzilla_comment
+      def update_bugzilla_status(bug_id, resolution)
+        BugzillaService.call do |service|
+          service.with_bug(bug_id) do |bug|
+            break if bug.nil?
+
+            add_pr_comment(bug)
+            update_bug_status(bug) if resolution
+            bug.save
+          end
+        end
+      end
+
+      def add_pr_comment(bug)
+        logger.info "Adding comment to bug #{bug.id}."
+
         prefix     = "New commit detected on #{fq_repo_name}/#{branch.name}:"
         commit_uri = branch.commit_uri_to(commit)
         comment    = "#{prefix}\n#{commit_uri}\n\n#{message}"
-        comment
+
+        bug.add_comment(comment)
       end
 
-      def write_to_bugzilla(bug_id)
-        with_bug(bug_id) do |bug|
-          logger.info "Writing to bugzilla for bug id #{bug_id}"
-          bug.add_comment(bugzilla_comment)
-          bug.save
+      def update_bug_status(bug)
+        case bug.status
+        when "NEW", "ASSIGNED", "ON_DEV"
+          logger.info "Changing status of bug #{bug.id} to POST."
+          bug.status = "POST"
+        else
+          logger.info "Not changing status of bug #{bug.id} due to status of #{bug.status}"
         end
-      rescue BugNotFoundError
-        logger.error "Unable to find bug with id #{bug_id}."
       end
     end
   end
