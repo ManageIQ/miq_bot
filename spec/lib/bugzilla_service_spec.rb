@@ -236,13 +236,30 @@ EOF
     end
   end
 
+  describe "#find_bug" do
+    let(:bug) { double(ActiveBugzilla::Bug) }
+
+    it "without a product in settings" do
+      expect(ActiveBugzilla::Bug).to receive(:find).with(:product => nil, :id => 123456).and_return([bug])
+
+      with_service { |bz| expect(bz.find_bug(123456)).to eq(bug) }
+    end
+
+    it "with a product in settings" do
+      stub_settings(:bugzilla => {:product => "ManageIQ"})
+      expect(ActiveBugzilla::Bug).to receive(:find).with(:product => "ManageIQ", :id => 123456).and_return([bug])
+
+      with_service { |bz| expect(bz.find_bug(123456)).to eq(bug) }
+    end
+  end
+
   context "native bz methods" do
-    it "#query" do
+    it "#search" do
       expect(service).to receive(:search).with(:id => 123456)
       with_service { |bz| bz.search(:id => 123456) }
     end
 
-    it "#modify" do
+    it "#add_comment" do
       expect(service).to receive(:add_comment).with(123456, "Fixed")
       with_service { |bz| bz.add_comment(123456, "Fixed") }
     end
