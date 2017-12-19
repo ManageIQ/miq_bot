@@ -1,1 +1,66 @@
-{"metadata":{"rubocop_version":"0.46.0","ruby_engine":"ruby","ruby_version":"2.2.6","ruby_patchlevel":"396","ruby_platform":"x86_64-darwin15"},"files":[{"path":"spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_lines_not_in_the_diff/example.rb","offenses":[{"severity":"convention","message":"Freeze mutable objects assigned to constants.","cop_name":"Style/MutableConstant","corrected":false,"location":{"line":2,"column":10,"length":78}},{"severity":"convention","message":"Align the elements of a hash literal if they span more than one line.","cop_name":"Style/AlignHash","corrected":false,"location":{"line":3,"column":5,"length":16}},{"severity":"convention","message":"Align the elements of a hash literal if they span more than one line.","cop_name":"Style/AlignHash","corrected":false,"location":{"line":4,"column":5,"length":18}}]}],"summary":{"offense_count":3,"target_file_count":1,"inspected_file_count":1}}
+{
+  "metadata": {
+    "rubocop_version": "0.52.0",
+    "ruby_engine": "ruby",
+    "ruby_version": "2.3.3",
+    "ruby_patchlevel": "222",
+    "ruby_platform": "x86_64-darwin15"
+  },
+  "files": [
+    {
+      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_lines_not_in_the_diff/example.rb",
+      "offenses": [
+        {
+          "severity": "convention",
+          "message": "Freeze mutable objects assigned to constants.",
+          "cop_name": "Style/MutableConstant",
+          "corrected": false,
+          "location": {
+            "start_line": 2,
+            "start_column": 10,
+            "last_line": 6,
+            "last_column": 3,
+            "length": 78,
+            "line": 2,
+            "column": 10
+          }
+        },
+        {
+          "severity": "convention",
+          "message": "Align the elements of a hash literal if they span more than one line.",
+          "cop_name": "Layout/AlignHash",
+          "corrected": false,
+          "location": {
+            "start_line": 3,
+            "start_column": 5,
+            "last_line": 3,
+            "last_column": 20,
+            "length": 16,
+            "line": 3,
+            "column": 5
+          }
+        },
+        {
+          "severity": "convention",
+          "message": "Align the elements of a hash literal if they span more than one line.",
+          "cop_name": "Layout/AlignHash",
+          "corrected": false,
+          "location": {
+            "start_line": 4,
+            "start_column": 5,
+            "last_line": 4,
+            "last_column": 22,
+            "length": 18,
+            "line": 4,
+            "column": 5
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "offense_count": 3,
+    "target_file_count": 1,
+    "inspected_file_count": 1
+  }
+}

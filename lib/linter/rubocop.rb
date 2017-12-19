@@ -13,7 +13,7 @@ module Linter
     end
 
     def options
-      {:format => 'json'}
+      {:format => 'json', :no_display_cop_names => nil}
     end
 
     def filtered_files(files)
