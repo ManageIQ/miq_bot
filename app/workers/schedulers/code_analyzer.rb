@@ -11,7 +11,7 @@ module Schedulers
     def perform
       enabled_repos.each do |repo|
         repo.branches.regular_branches.pluck(:id).each do |branch_id|
-          CommitMonitorHandlers::Branch::CodeAnalyzer.perform_async(branch_id)
+          ::CodeAnalyzer.perform_async(branch_id)
         end
       end
     end
