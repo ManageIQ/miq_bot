@@ -1,15 +1,11 @@
 require 'rugged'
 
-class CommitMonitorHandlers::Branch::CodeAnalyzer
+class CodeAnalyzer
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot_glacial
 
   include BranchWorkerMixin
   include ::CodeAnalysisMixin
-
-  def self.handled_branch_modes
-    [:regular]
-  end
 
   def perform(branch_id)
     return unless find_branch(branch_id, :regular)
