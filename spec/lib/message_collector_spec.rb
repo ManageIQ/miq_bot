@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe GithubService::MessageBuilder do
-  let(:max) { described_class::COMMENT_BODY_MAX_SIZE }
+describe MessageCollector do
+  let(:max_size) { 1000 }
   let(:header) { "header stuff\n\n" }
   let(:continuation_header) { "continued...\n\n" }
-  subject { described_class.new(header, continuation_header) }
+  subject { described_class.new(max_size, header, continuation_header) }
 
   describe "#write / #comments" do
     it "with simple line" do
@@ -13,11 +13,11 @@ describe GithubService::MessageBuilder do
     end
 
     it "with a line that's too long" do
-      expect { subject.write("a" * max) }.to raise_error(ArgumentError)
+      expect { subject.write("a" * max_size) }.to raise_error(ArgumentError)
     end
 
     it "with a line that will warp to a new comment" do
-      line = "a" * (max - header.length)
+      line = "a" * (max_size - header.length)
       subject.write("a line")
       subject.write(line)
       expect(subject.comments).to eq [
@@ -34,11 +34,11 @@ describe GithubService::MessageBuilder do
     end
 
     it "with a line that's too long" do
-      expect { subject.write_lines(["a line", "a" * max]) }.to raise_error(ArgumentError)
+      expect { subject.write_lines(["a line", "a" * max_size]) }.to raise_error(ArgumentError)
     end
 
     it "with a line that will wrap to a new comment" do
-      line = "a" * (max - header.length)
+      line = "a" * (max_size - header.length)
       subject.write_lines(["a line", line])
       expect(subject.comments).to eq [
         "#{header}a line\n",
