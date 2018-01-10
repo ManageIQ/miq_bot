@@ -7,8 +7,8 @@ module GitService
       @branch = branch
     end
 
-    def content_at(path)
-      blob_at(path).try(:content)
+    def content_at(path, merged = false)
+      blob_at(path, merged).try(:content)
     end
 
     def diff(merge_target = nil)
@@ -85,8 +85,10 @@ module GitService
       "refs/remotes/origin/#{ref}"
     end
 
-    def blob_at(path) # Rugged::Blob object for a given file path on this branch
-      blob_data = tip_tree.path(path)
+    # Rugged::Blob object for a given file path on this branch
+    def blob_at(path, merged = false)
+      source = merged ? merge_tree : tip_tree
+      blob_data = source.path(path)
       blob = Rugged::Blob.lookup(rugged_repo, blob_data[:oid])
       blob.type == :blob ? blob : nil
     rescue Rugged::TreeError

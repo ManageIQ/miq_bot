@@ -45,15 +45,15 @@ module Linter
     end
 
     def collected_config_files(dir)
-      config_files.select { |path| extract_file(path, dir) }
+      config_files.select { |path| extract_file(path, dir, branch.pull_request?) }
     end
 
     def collected_files_to_lint(dir)
       files_to_lint.select { |path| extract_file(path, dir) }
     end
 
-    def extract_file(path, destination_dir)
-      content = branch_service.content_at(path)
+    def extract_file(path, destination_dir, merged = false)
+      content = branch_service.content_at(path, merged)
       return false unless content
 
       temp_file = File.join(destination_dir, path)
