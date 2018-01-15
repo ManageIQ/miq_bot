@@ -88,7 +88,7 @@ module Linter
       # rubocop exits 1 both when there are errors and when there are style issues.
       #   Instead of relying on just exit_status, we check if there is anything on stderr.
       return result if result.exit_status.zero? || result.error.blank?
-      return FailedLinterRun.new(failed_linter_offenses("#{self.class.name} STDERR: ```\n#{result.error}\n```")) if branch.pull_request?
+      return FailedLinterRun.new(failed_linter_offenses("#{self.class.name} STDERR:\n```\n#{result.error}\n```")) if branch.pull_request?
       raise result.error
     end
 
