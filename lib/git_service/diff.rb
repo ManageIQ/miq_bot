@@ -29,14 +29,12 @@ module GitService
       raw_diff.patches.each_with_object({}) do |patch, h|
         if new_file = patch.delta.new_file.try(:[], :path)
           additions = h.fetch_path(new_file, :additions) || 0
-          h.store_path(new_file, :additions, (additions += patch.additions))
+          h.store_path(new_file, :additions, (additions + patch.additions))
         end
         if old_file = patch.delta.old_file.try(:[], :path)
-          deletions = h.fetch_path(new_file, :deletions) || 0
-          h.store_path(new_file, :deletions, (deletions += patch.deletions))
+          deletions = h.fetch_path(old_file, :deletions) || 0
+          h.store_path(new_file, :deletions, (deletions + patch.deletions))
         end
-        changes = h.fetch_path(new_file, :changes) || 0
-        h.store_path(new_file, :changes, (changes += patch.changes))
       end
     end
 
