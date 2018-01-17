@@ -77,7 +77,6 @@ class CommitMonitor
 
   def process_branch
     logger.info "Processing #{repo.name}/#{branch.name}"
-    update_branch
 
     @new_commits, @all_commits = detect_commits
 
@@ -89,18 +88,12 @@ class CommitMonitor
     process_handlers
   end
 
-  def update_branch
-    return if branch.pull_request?
-    git.checkout(branch.name)
-    git.pull
-  end
-
   def detect_commits
     send("detect_commits_on_#{branch.mode}_branch")
   end
 
   def detect_commits_on_regular_branch
-    return git.new_commits(branch.last_commit), nil
+    return branch.git_service.commit_ids_since(branch.last_commit), nil
   end
 
   def detect_commits_on_pr_branch

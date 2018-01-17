@@ -61,6 +61,10 @@ module GitService
       list_files_in_tree(tip_tree.oid)
     end
 
+    def commit_ids_since(starting_point)
+      range_walker(starting_point).collect(&:oid).reverse
+    end
+
     private
 
     def list_files_in_tree(rugged_tree_oid, current_path = Pathname.new(""))
@@ -72,6 +76,12 @@ module GitService
         when :tree
           files.concat(list_files_in_tree(i[:oid], full_path))
         end
+      end
+    end
+
+    def range_walker(walk_start, walk_end = ref_name)
+      Rugged::Walker.new(rugged_repo).tap do |walker|
+        walker.push_range("#{walk_start}..#{walk_end}")
       end
     end
 
