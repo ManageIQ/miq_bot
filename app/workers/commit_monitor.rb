@@ -55,23 +55,21 @@ class CommitMonitor
 
   private
 
-  attr_reader :repo, :git, :branch, :new_commits, :all_commits, :statistics
+  attr_reader :repo, :branch, :new_commits, :all_commits, :statistics
 
   def process_repo(repo)
     @statistics = {}
 
     @repo = repo
-    repo.with_git_service do |git|
-      @git = git
+    repo.git_fetch
 
-      # Sort PR branches after regular branches
-      sorted_branches = repo.branches.sort_by { |b| b.pull_request? ? 1 : -1 }
+    # Sort PR branches after regular branches
+    sorted_branches = repo.branches.sort_by { |b| b.pull_request? ? 1 : -1 }
 
-      sorted_branches.each do |branch|
-        @new_commits_details = nil
-        @branch = branch
-        process_branch
-      end
+    sorted_branches.each do |branch|
+      @new_commits_details = nil
+      @branch = branch
+      process_branch
     end
   end
 
