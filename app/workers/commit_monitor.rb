@@ -118,7 +118,7 @@ class CommitMonitor
     @new_commits_details ||=
       new_commits.each_with_object({}) do |commit, h|
         h[commit] = {
-          "message" => git.commit_message(commit),
+          "message" => branch.git_service.commit_message(commit),
           "files"   => git.diff_file_names(commit)
         }
       end
