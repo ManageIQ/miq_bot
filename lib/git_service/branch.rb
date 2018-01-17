@@ -65,26 +65,8 @@ module GitService
       range_walker(starting_point).collect(&:oid).reverse
     end
 
-    def commit_message(ref)
-      commit = Rugged::Commit.lookup(rugged_repo, ref)
-      parents = commit.parent_oids
-      message = "commit #{commit.oid}\n"
-      message << "Merge: #{parents.join(" ")}\n" if parents.length > 1
-      message << "Author:     #{commit.author[:name]} <#{commit.author[:email]}>\n"
-      message << "AuthorDate: #{commit.author[:time].to_time.strftime("%c %z")}>\n"
-      message << "Commit:     #{commit.author[:name]} <#{commit.author[:email]}>\n"
-      message << "CommitDate: #{commit.author[:time].to_time.strftime("%c %z")}>\n"
-      message << "\n"
-      commit.message.each_line { |line| message << "    #{line}"}
-      message << "\n"
-      previous_commit = Rugged::Commit.lookup(rugged_repo, commit.parent_oids.first)
-      diff = previous_commit.diff(commit)
-      our_diff = Diff.new(diff)
-      our_diff.file_status.each do |file, stats|
-        message << " #{file} | #{stats[:changes]} #{"+" * stats[:additions]}#{"-" * stats[:deletions]}\n"
-      end
-      message << " #{our_diff.status_summary}"
-      message
+    def commit(commit_oid)
+      Commit.new(rugged_repo, commit_oid)
     end
 
     private
