@@ -31,7 +31,7 @@ module GitService
       message << "Commit:     #{rugged_commit.author[:name]} <#{rugged_commit.author[:email]}>\n"
       message << "CommitDate: #{rugged_commit.author[:time].to_time.strftime("%c %z")}>\n"
       message << "\n"
-      rugged_commit.message.each_line { |line| message << "    #{line}" }
+      message << rugged_commit.message.indent(4)
       message << "\n"
       diff.file_status.each do |file, stats|
         message << " #{file} | #{stats[:additions].to_i + stats[:deletions].to_i} #{"+" * stats[:additions]}#{"-" * stats[:deletions]}\n"
