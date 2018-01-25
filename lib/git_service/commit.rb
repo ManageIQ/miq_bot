@@ -34,7 +34,7 @@ module GitService
       message << rugged_commit.message.indent(4)
       message << "\n"
       diff.file_status.each do |file, stats|
-        message << " #{file} | #{stats[:additions].to_i + stats[:deletions].to_i} #{"+" * stats[:additions]}#{"-" * stats[:deletions]}\n"
+        message << " #{file} | #{stats[:additions].to_i + stats[:deletions].to_i} #{"+" if stats[:additions].positive?}#{"-" if stats[:deletions].positive?}\n"
       end
       message << " #{diff.status_summary}"
       message
