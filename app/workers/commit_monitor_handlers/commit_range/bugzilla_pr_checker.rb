@@ -1,5 +1,5 @@
 module CommitMonitorHandlers
-  module Commit
+  module CommitRange
     class BugzillaPrChecker
       include Sidekiq::Worker
       sidekiq_options :queue => :miq_bot
@@ -10,12 +10,15 @@ module CommitMonitorHandlers
         [:pr]
       end
 
-      def perform(branch_id, _commit, commit_details)
+      def perform(branch_id, new_commits)
         return unless find_branch(branch_id, :pr)
 
-        message = commit_details["message"]
+        bug_ids = new_commits.flat_map do |commit|
+          message = repo.git_service.commit(commit).full_message
+          BugzillaService.ids_in_git_commit_message(message)
+        end
 
-        BugzillaService.ids_in_git_commit_message(message).each do |bug_id|
+        bug_ids.uniq.each do |bug_id|
           update_bugzilla_status(bug_id)
         end
       end
