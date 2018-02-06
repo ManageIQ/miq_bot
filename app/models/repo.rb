@@ -146,6 +146,10 @@ class Repo < ActiveRecord::Base
     b.save!
   end
 
+  def git_service
+    GitService::Repo.new(self)
+  end
+
   private
 
   def extract_username_from_git_remote_url(url)

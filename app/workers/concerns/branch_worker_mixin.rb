@@ -4,7 +4,15 @@ module BranchWorkerMixin
 
   attr_accessor :branch
 
-  delegate :fq_repo_name, :fq_branch_name, :pr_number, :pr_title, :pr_title_tags, :merge_target, :to => :branch
+  delegate :repo,
+           :fq_repo_name,
+           :fq_branch_name,
+           :git_service,
+           :pr_number,
+           :pr_title,
+           :pr_title_tags,
+           :merge_target,
+           :to => :branch
 
   def find_branch(branch_id, required_mode = nil)
     @branch ||= Branch.where(:id => branch_id).first
@@ -19,7 +27,7 @@ module BranchWorkerMixin
       return false
     end
 
-    unless enabled_for?(branch.repo)
+    unless enabled_for?(repo)
       logger.error("Branch #{fq_branch_name} is not enabled.  Skipping.")
       return false
     end
@@ -43,12 +51,12 @@ module BranchWorkerMixin
   end
 
   def diff_details_for_merge
-    branch.repo.with_git_service do |git|
+    repo.with_git_service do |git|
       git.diff_details(branch.local_merge_target, commits.last)
     end
   end
 
   def diff_file_names
-    @diff_file_names ||= branch.git_service.diff.new_files
+    @diff_file_names ||= git_service.diff.new_files
   end
 end
