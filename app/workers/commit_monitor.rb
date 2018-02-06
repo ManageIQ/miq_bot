@@ -22,7 +22,7 @@ class CommitMonitor
   #   to check the new commits, but as a group, since newer commits may fix
   #   issues in prior commits.
   def self.commit_range_handlers
-    @commit_range_handlers ||= handlers_for(:commit_range)
+    @commit_range_handlers ||= handlers_for(:commit_range).select { |h| !h.respond_to?(:perform_batch_async) }
   end
 
   # branch handlers expect to handle an entire branch at once.
@@ -38,7 +38,7 @@ class CommitMonitor
   #
   # Example: A general commenter to GitHub for a number of issues
   def self.batch_handlers
-    @batch_handlers ||= handlers_for(:batch)
+    @batch_handlers ||= handlers_for(:commit_range).select { |h| h.respond_to?(:perform_batch_async) }
   end
 
   def perform
