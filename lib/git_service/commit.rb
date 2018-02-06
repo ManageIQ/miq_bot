@@ -27,9 +27,9 @@ module GitService
       message = "commit #{commit_oid}\n"
       message << "Merge: #{parent_oids.join(" ")}\n" if parent_oids.length > 1
       message << "Author:     #{rugged_commit.author[:name]} <#{rugged_commit.author[:email]}>\n"
-      message << "AuthorDate: #{rugged_commit.author[:time].to_time.strftime("%c %z")}>\n"
+      message << "AuthorDate: #{rugged_commit.author[:time].to_time.strftime("%c %z")}\n"
       message << "Commit:     #{rugged_commit.author[:name]} <#{rugged_commit.author[:email]}>\n"
-      message << "CommitDate: #{rugged_commit.author[:time].to_time.strftime("%c %z")}>\n"
+      message << "CommitDate: #{rugged_commit.author[:time].to_time.strftime("%c %z")}\n"
       message << "\n"
       message << rugged_commit.message.indent(4)
       message << "\n"
