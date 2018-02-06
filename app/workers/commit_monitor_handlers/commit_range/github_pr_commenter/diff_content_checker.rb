@@ -1,6 +1,6 @@
 require 'rugged'
 
-module CommitMonitorHandlers::Batch
+module CommitMonitorHandlers::CommitRange
   class GithubPrCommenter::DiffContentChecker
     include Sidekiq::Worker
     sidekiq_options :queue => :miq_bot

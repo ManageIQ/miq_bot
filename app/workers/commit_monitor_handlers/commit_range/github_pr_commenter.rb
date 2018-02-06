@@ -1,4 +1,4 @@
-module CommitMonitorHandlers::Batch
+module CommitMonitorHandlers::CommitRange
   class GithubPrCommenter
     include Sidekiq::Worker
     sidekiq_options :queue => :miq_bot_glacial
