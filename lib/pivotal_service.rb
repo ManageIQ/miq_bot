@@ -20,7 +20,7 @@ class PivotalService
 
   def self.ids_in_git_commit_message(message)
     ids = []
-    message.each_line.collect do |line|
+    message.each_line do |line|
       match = URL_REGEX.match(line)
       ids << match[:id].to_i if match
     end

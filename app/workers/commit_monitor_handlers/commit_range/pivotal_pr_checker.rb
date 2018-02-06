@@ -1,5 +1,5 @@
 module CommitMonitorHandlers
-  module Commit
+  module CommitRange
     class PivotalPrChecker
       include Sidekiq::Worker
       sidekiq_options :queue => :miq_bot
@@ -10,15 +10,15 @@ module CommitMonitorHandlers
         [:pr]
       end
 
-      attr_reader :commit, :message
-
-      def perform(branch_id, commit, commit_details)
+      def perform(branch_id, new_commits)
         return unless find_branch(branch_id, :pr)
 
-        @commit  = commit
-        @message = commit_details["message"]
+        story_ids = new_commits.flat_map do |commit|
+          message = repo.git_service.commit(commit).full_message
+          PivotalService.ids_in_git_commit_message(message)
+        end
 
-        PivotalService.ids_in_git_commit_message(message).each do |story_id|
+        story_ids.uniq.each do |story_id|
           update_pivotal_story(story_id)
         end
       end
