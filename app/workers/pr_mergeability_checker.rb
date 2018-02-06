@@ -1,4 +1,4 @@
-class CommitMonitorHandlers::Branch::PrMergeabilityChecker
+class PrMergeabilityChecker
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot
 
@@ -6,12 +6,9 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
 
   LABEL = "unmergeable".freeze
 
-  def self.handled_branch_modes
-    [:pr]
-  end
-
   def perform(branch_id)
     return unless find_branch(branch_id, :pr)
+    logger.info("Determining mergeability of PR #{branch.fq_pr_number}.")
 
     process_mergeability
   end
@@ -38,7 +35,7 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   end
 
   def write_to_github
-    logger.info("Updating PR #{branch.pr_number} with mergability comment.")
+    logger.info("Updating PR #{branch.fq_pr_number} with mergability comment.")
 
     GithubService.add_comment(
       fq_repo_name,
@@ -48,13 +45,13 @@ class CommitMonitorHandlers::Branch::PrMergeabilityChecker
   end
 
   def apply_label
-    logger.info("Updating PR #{branch.pr_number} with label #{LABEL.inspect}.")
+    logger.info("Updating PR #{branch.fq_pr_number} with label #{LABEL.inspect}.")
 
     GithubService.add_labels_to_an_issue(fq_repo_name, branch.pr_number, [LABEL])
   end
 
   def remove_label
-    logger.info("Updating PR #{branch.pr_number} my removing label #{LABEL.inspect}.")
+    logger.info("Updating PR #{branch.fq_pr_number} removing label #{LABEL.inspect}.")
     GithubService.remove_label(fq_repo_name, branch.pr_number, LABEL)
   rescue Octokit::NotFound
     # This label is not currently applied, skip

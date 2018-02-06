@@ -91,20 +91,38 @@ describe Repo do
     expect(repo.branch_names).to match_array([branch1.name, branch2.name])
   end
 
+  it "#regular_branches" do
+    repo.save!
+    _pr_branch      = create(:branch, :repo => repo, :pull_request => true)
+    regular_branch1 = create(:branch, :repo => repo, :pull_request => false)
+    regular_branch2 = create(:branch, :repo => repo, :pull_request => false)
+
+    expect(repo.regular_branches).to match_array([regular_branch1, regular_branch2])
+  end
+
+  it "#regular_branch_names" do
+    repo.save!
+    _pr_branch      = create(:branch, :repo => repo, :pull_request => true)
+    regular_branch1 = create(:branch, :repo => repo, :pull_request => false)
+    regular_branch2 = create(:branch, :repo => repo, :pull_request => false)
+
+    expect(repo.regular_branch_names).to match_array([regular_branch1.name, regular_branch2.name])
+  end
+
   it "#pr_branches" do
     repo.save!
-    pr_branch1     = create(:branch, :repo => repo, :pull_request => true)
-    pr_branch2     = create(:branch, :repo => repo, :pull_request => true)
-    _non_pr_branch = create(:branch, :repo => repo, :pull_request => false)
+    pr_branch1      = create(:branch, :repo => repo, :pull_request => true)
+    pr_branch2      = create(:branch, :repo => repo, :pull_request => true)
+    _regular_branch = create(:branch, :repo => repo, :pull_request => false)
 
     expect(repo.pr_branches).to match_array([pr_branch1, pr_branch2])
   end
 
   it "#pr_branch_names" do
     repo.save!
-    pr_branch1     = create(:branch, :repo => repo, :pull_request => true)
-    pr_branch2     = create(:branch, :repo => repo, :pull_request => true)
-    _non_pr_branch = create(:branch, :repo => repo, :pull_request => false)
+    pr_branch1      = create(:branch, :repo => repo, :pull_request => true)
+    pr_branch2      = create(:branch, :repo => repo, :pull_request => true)
+    _regular_branch = create(:branch, :repo => repo, :pull_request => false)
 
     expect(repo.pr_branch_names).to match_array([pr_branch1.name, pr_branch2.name])
   end

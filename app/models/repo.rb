@@ -62,15 +62,23 @@ class Repo < ActiveRecord::Base
   end
 
   def branch_names
-    branches.collect(&:name)
+    branches.pluck(:name)
+  end
+
+  def regular_branches
+    branches.regular_branches
+  end
+
+  def regular_branch_names
+    regular_branches.pluck(:name)
   end
 
   def pr_branches
-    branches.select(&:pull_request?)
+    branches.pr_branches
   end
 
   def pr_branch_names
-    pr_branches.collect(&:name)
+    pr_branches.pluck(:name)
   end
 
   # @param expected [Array<Hash>] The desired state of the PR branches.

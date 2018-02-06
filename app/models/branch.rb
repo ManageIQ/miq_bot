@@ -15,6 +15,7 @@ class Branch < ActiveRecord::Base
   after_initialize(:unless => :commit_uri) { self.commit_uri = self.class.github_commit_uri(repo.try(:name)) }
 
   scope :regular_branches, -> { where(:pull_request => [false, nil]) }
+  scope :pr_branches,      -> { where(:pull_request => true) }
 
   def self.with_branch_or_pr_number(n)
     n = MinigitService.pr_branch(n) if n.kind_of?(Fixnum)
@@ -63,6 +64,10 @@ class Branch < ActiveRecord::Base
 
   def pr_number
     MinigitService.pr_number(name) if pull_request?
+  end
+
+  def fq_pr_number
+    "#{fq_repo_name}##{pr_number}" if pull_request?
   end
 
   def pr_title_tags

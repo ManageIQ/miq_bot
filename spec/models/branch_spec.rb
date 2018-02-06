@@ -110,6 +110,19 @@ describe Branch do
     end
   end
 
+  context "#fq_pr_number" do
+    it "on pr branch" do
+      branch.name = "pr/133"
+      branch.pull_request = true
+
+      expect(branch.fq_pr_number).to eq "test-user/test-repo#133"
+    end
+
+    it "on regular branch" do
+      expect(branch.fq_pr_number).to be_nil
+    end
+  end
+
   describe "#pr_title_tags" do
     it "with a nil pr_title" do
       branch.pr_title = nil

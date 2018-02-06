@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CommitMonitorHandlers::Branch::PrMergeabilityChecker do
+describe PrMergeabilityChecker do
   before(:each) do
     stub_sidekiq_logger
   end
