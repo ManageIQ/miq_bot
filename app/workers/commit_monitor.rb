@@ -55,29 +55,26 @@ class CommitMonitor
 
   private
 
-  attr_reader :repo, :git, :branch, :new_commits, :all_commits, :statistics
+  attr_reader :repo, :branch, :new_commits, :all_commits, :statistics
 
   def process_repo(repo)
     @statistics = {}
 
     @repo = repo
-    repo.with_git_service do |git|
-      @git = git
+    repo.git_fetch
 
-      # Sort PR branches after regular branches
-      sorted_branches = repo.branches.sort_by { |b| b.pull_request? ? 1 : -1 }
+    # Sort PR branches after regular branches
+    sorted_branches = repo.branches.sort_by { |b| b.pull_request? ? 1 : -1 }
 
-      sorted_branches.each do |branch|
-        @new_commits_details = nil
-        @branch = branch
-        process_branch
-      end
+    sorted_branches.each do |branch|
+      @new_commits_details = nil
+      @branch = branch
+      process_branch
     end
   end
 
   def process_branch
     logger.info "Processing #{repo.name}/#{branch.name}"
-    update_branch
 
     @new_commits, @all_commits = detect_commits
 
@@ -89,22 +86,16 @@ class CommitMonitor
     process_handlers
   end
 
-  def update_branch
-    return if branch.pull_request?
-    git.checkout(branch.name)
-    git.pull
-  end
-
   def detect_commits
     send("detect_commits_on_#{branch.mode}_branch")
   end
 
   def detect_commits_on_regular_branch
-    return git.new_commits(branch.last_commit), nil
+    return branch.git_service.commit_ids_since(branch.last_commit), nil
   end
 
   def detect_commits_on_pr_branch
-    all        = git.new_commits(git.merge_base(branch.name, branch.local_merge_target), branch.name)
+    all        = branch.git_service.commit_ids_since(branch.git_service.merge_base)
     comparison = compare_commits_list(branch.commits_list, all)
     return comparison[:right_only], all
   end
@@ -124,9 +115,10 @@ class CommitMonitor
   def new_commits_details
     @new_commits_details ||=
       new_commits.each_with_object({}) do |commit, h|
+        git_commit = branch.git_service.commit(commit)
         h[commit] = {
-          "message" => git.commit_message(commit),
-          "files"   => git.diff_file_names(commit)
+          "message" => git_commit.full_message,
+          "files"   => git_commit.diff.file_status.keys
         }
       end
   end
