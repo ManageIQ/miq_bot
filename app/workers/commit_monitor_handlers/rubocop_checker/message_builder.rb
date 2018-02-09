@@ -1,7 +1,7 @@
 require 'rubocop'
 require 'haml_lint'
 
-class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
+class CommitMonitorHandlers::RubocopChecker::MessageBuilder
   include BranchWorkerMixin
 
   def initialize(results, branch)

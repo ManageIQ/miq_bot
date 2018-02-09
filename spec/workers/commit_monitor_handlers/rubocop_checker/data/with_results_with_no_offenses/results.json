@@ -8,7 +8,7 @@
   },
   "files": [
     {
-      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_with_no_offenses/no_offenses.rb",
+      "path": "spec/workers/commit_monitor_handlers/rubocop_checker/data/with_results_with_no_offenses/no_offenses.rb",
       "offenses": [
 
       ]

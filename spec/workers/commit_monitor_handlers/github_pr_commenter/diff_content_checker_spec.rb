@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffContentChecker do
+describe CommitMonitorHandlers::GithubPrCommenter::DiffContentChecker do
   let(:batch_entry)        { BatchEntry.create!(:job => BatchJob.create!) }
   let(:branch)             { create(:pr_branch) }
   let(:content_1)          { "def a(variable)" }

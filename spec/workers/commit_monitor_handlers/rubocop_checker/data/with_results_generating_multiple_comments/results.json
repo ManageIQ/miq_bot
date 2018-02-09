@@ -8,7 +8,7 @@
   },
   "files": [
     {
-      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_generating_multiple_comments/lots_of_issues.rb",
+      "path": "spec/workers/commit_monitor_handlers/rubocop_checker/data/with_results_generating_multiple_comments/lots_of_issues.rb",
       "offenses": [
         {
           "severity": "convention",

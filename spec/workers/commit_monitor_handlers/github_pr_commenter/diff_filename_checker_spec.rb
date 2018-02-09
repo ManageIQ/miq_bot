@@ -1,4 +1,4 @@
-describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffFilenameChecker do
+describe CommitMonitorHandlers::GithubPrCommenter::DiffFilenameChecker do
   let(:batch_entry) { BatchEntry.create!(:job => BatchJob.create!) }
   let(:branch)      { create(:pr_branch) }
   let(:git_service) { double("GitService", :diff => double("RuggedDiff", :new_files => new_files)) }

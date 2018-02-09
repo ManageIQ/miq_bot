@@ -8,7 +8,7 @@
   },
   "files": [
     {
-      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_with_offenses/coding_convention.rb",
+      "path": "spec/workers/commit_monitor_handlers/rubocop_checker/data/with_results_with_offenses/coding_convention.rb",
       "offenses": [
         {
           "severity": "convention",
@@ -43,13 +43,13 @@
       ]
     },
     {
-      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_with_offenses/no_offenses.rb",
+      "path": "spec/workers/commit_monitor_handlers/rubocop_checker/data/with_results_with_offenses/no_offenses.rb",
       "offenses": [
 
       ]
     },
     {
-      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_with_offenses/ruby_syntax_error.rb",
+      "path": "spec/workers/commit_monitor_handlers/rubocop_checker/data/with_results_with_offenses/ruby_syntax_error.rb",
       "offenses": [
         {
           "severity": "error",
@@ -69,7 +69,7 @@
       ]
     },
     {
-      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_with_offenses/ruby_warning.rb",
+      "path": "spec/workers/commit_monitor_handlers/rubocop_checker/data/with_results_with_offenses/ruby_warning.rb",
       "offenses": [
         {
           "severity": "warning",

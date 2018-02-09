@@ -1,4 +1,4 @@
-describe CommitMonitorHandlers::CommitRange::PathBasedLabeler do
+describe CommitMonitorHandlers::PathBasedLabeler do
   subject(:labeler) { described_class.new }
 
   let(:branch)         { create(:pr_branch) }

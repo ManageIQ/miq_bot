@@ -8,7 +8,7 @@
   },
   "files": [
     {
-      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_lines_not_in_the_diff/example.rb",
+      "path": "spec/workers/commit_monitor_handlers/rubocop_checker/data/with_lines_not_in_the_diff/example.rb",
       "offenses": [
         {
           "severity": "convention",

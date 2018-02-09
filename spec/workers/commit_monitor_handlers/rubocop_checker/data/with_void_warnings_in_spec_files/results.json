@@ -8,7 +8,7 @@
   },
   "files": [
     {
-      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_void_warnings_in_spec_files/non_spec_file_with_void_warning.rb",
+      "path": "spec/workers/commit_monitor_handlers/rubocop_checker/data/with_void_warnings_in_spec_files/non_spec_file_with_void_warning.rb",
       "offenses": [
         {
           "severity": "warning",
@@ -28,7 +28,7 @@
       ]
     },
     {
-      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_void_warnings_in_spec_files/spec/non_spec_file_in_spec_dir_with_void_warning.rb",
+      "path": "spec/workers/commit_monitor_handlers/rubocop_checker/data/with_void_warnings_in_spec_files/spec/non_spec_file_in_spec_dir_with_void_warning.rb",
       "offenses": [
         {
           "severity": "warning",
@@ -48,7 +48,7 @@
       ]
     },
     {
-      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_void_warnings_in_spec_files/spec/spec_file_with_void_warning_spec.rb",
+      "path": "spec/workers/commit_monitor_handlers/rubocop_checker/data/with_void_warnings_in_spec_files/spec/spec_file_with_void_warning_spec.rb",
       "offenses": [
         {
           "severity": "warning",

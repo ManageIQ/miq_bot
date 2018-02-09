@@ -8,7 +8,7 @@
   },
   "files": [
     {
-      "path": "spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_haml_file_using_haml-lint/example.haml",
+      "path": "spec/workers/commit_monitor_handlers/rubocop_checker/data/with_haml_file_using_haml-lint/example.haml",
       "offenses": [
         {
           "severity": "error",

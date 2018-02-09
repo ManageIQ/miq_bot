@@ -1,4 +1,4 @@
-class CommitMonitorHandlers::CommitRange::PathBasedLabeler
+class CommitMonitorHandlers::PathBasedLabeler
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot
 

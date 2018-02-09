@@ -1,4 +1,4 @@
-class CommitMonitorHandlers::CommitRange::BranchMergeabilityChecker
+class CommitMonitorHandlers::BranchMergeabilityChecker
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot
 

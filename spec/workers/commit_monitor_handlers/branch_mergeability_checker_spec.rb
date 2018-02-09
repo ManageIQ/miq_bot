@@ -1,4 +1,4 @@
-describe CommitMonitorHandlers::CommitRange::BranchMergeabilityChecker do
+describe CommitMonitorHandlers::BranchMergeabilityChecker do
   let!(:branch)     { create(:branch) }
   let!(:pr_branch)  { create(:pr_branch, :repo => branch.repo, :merge_target => branch.name) }
   let!(:pr_branch2) { create(:pr_branch, :repo => branch.repo) }
