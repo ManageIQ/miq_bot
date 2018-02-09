@@ -1,5 +1,3 @@
-require 'yaml'
-
 class CommitMonitor
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot_glacial, :retry => false
@@ -9,36 +7,20 @@ class CommitMonitor
 
   include SidekiqWorkerMixin
 
-  # commit handlers expect to handle a specific commit at a time.
-  #
-  # Example: A commit message checker that will check for URLs and act upon them.
-  def self.commit_handlers
-    @commit_handlers ||= handlers_for(:commit)
+  def self.handlers
+    @handlers ||= begin
+      workers_path = Rails.root.join("app/workers")
+      Dir.glob(workers_path.join("commit_monitor_handlers/*.rb")).collect do |f|
+        path = Pathname.new(f).relative_path_from(workers_path).to_s
+        path.chomp(".rb").classify.constantize
+      end
+    end
   end
 
-  # commit_range handlers expect to handle a range of commits as a group.
-  #
-  # Example: A style/syntax/warning checker on a PR branch, where we only want
-  #   to check the new commits, but as a group, since newer commits may fix
-  #   issues in prior commits.
-  def self.commit_range_handlers
-    @commit_range_handlers ||= handlers_for(:commit_range).select { |h| !h.respond_to?(:perform_batch_async) }
-  end
-
-  # branch handlers expect to handle an entire branch at once.
-  #
-  # Example: A PR branch mergability tester to see if the entire branch can be
-  #   merged or not.
-  def self.branch_handlers
-    @branch_handlers ||= handlers_for(:branch)
-  end
-
-  # batch handlers expect to handle a batch of workers at once and will need
-  #   a wider range of information
-  #
-  # Example: A general commenter to GitHub for a number of issues
-  def self.batch_handlers
-    @batch_handlers ||= handlers_for(:commit_range).select { |h| h.respond_to?(:perform_batch_async) }
+  def self.handlers_for(branch)
+    handlers.select do |h|
+      h.handled_branch_modes.include?(branch.mode) && h.enabled_for?(branch.repo)
+    end
   end
 
   def perform
@@ -55,11 +37,9 @@ class CommitMonitor
 
   private
 
-  attr_reader :repo, :branch, :new_commits, :all_commits, :statistics
+  attr_reader :repo, :branch, :new_commits, :all_commits
 
   def process_repo(repo)
-    @statistics = {}
-
     @repo = repo
     repo.git_fetch
 
@@ -67,7 +47,6 @@ class CommitMonitor
     sorted_branches = repo.branches.sort_by { |b| b.pull_request? ? 1 : -1 }
 
     sorted_branches.each do |branch|
-      @new_commits_details = nil
       @branch = branch
       process_branch
     end
@@ -77,8 +56,6 @@ class CommitMonitor
     logger.info "Processing #{repo.name}/#{branch.name}"
 
     @new_commits, @all_commits = detect_commits
-
-    statistics[branch.name] = {:new_commits => new_commits} unless branch.pull_request?
 
     logger.info "Detected new commits #{new_commits}" if new_commits.any?
 
@@ -112,17 +89,6 @@ class CommitMonitor
     {:same => same, :left_only => left_only, :right_only => right_only}
   end
 
-  def new_commits_details
-    @new_commits_details ||=
-      new_commits.each_with_object({}) do |commit, h|
-        git_commit = branch.git_service.commit(commit)
-        h[commit] = {
-          "message" => git_commit.full_message,
-          "files"   => git_commit.diff.file_status.keys
-        }
-      end
-  end
-
   def save_branch_record
     attrs = {:last_checked_on => Time.now.utc}
     attrs[:last_commit] = new_commits.last if new_commits.any?
@@ -135,102 +101,10 @@ class CommitMonitor
     branch.update_columns(attrs)
   end
 
-  #
-  # Handler processing methods
-  #
-
-  def self.handlers_for(type)
-    workers_path = Rails.root.join("app/workers")
-    Dir.glob(workers_path.join("commit_monitor_handlers/#{type}/*.rb")).collect do |f|
-      path = Pathname.new(f).relative_path_from(workers_path).to_s
-      path.chomp(".rb").classify.constantize
-    end
-  end
-  private_class_method(:handlers_for)
-
-  def filter_handlers(handlers)
-    handlers.select do |h|
-      h.handled_branch_modes.include?(branch.mode) && h.enabled_for?(repo)
-    end
-  end
-
-  def commit_handlers
-    filter_handlers(self.class.commit_handlers)
-  end
-
-  def commit_range_handlers
-    filter_handlers(self.class.commit_range_handlers)
-  end
-
-  def branch_handlers
-    filter_handlers(self.class.branch_handlers)
-  end
-
-  def batch_handlers
-    filter_handlers(self.class.batch_handlers)
-  end
-
   def process_handlers
-    process_commit_handlers       if process_commit_handlers?
-    process_commit_range_handlers if process_commit_range_handlers?
-    process_branch_handlers       if process_branch_handlers?
-    process_batch_handlers        if process_batch_handlers?
-  end
-
-  def process_commit_handlers?
-    commit_handlers.any? && new_commits.any?
-  end
-
-  def process_commit_range_handlers?
-    commit_range_handlers.any? && new_commits.any?
-  end
-
-  def process_branch_handlers?
-    branch_handlers.any? && send("process_#{branch.mode}_branch_handlers?")
-  end
-
-  def process_batch_handlers?
-    batch_handlers.any? && new_commits.any?
-  end
-
-  def process_pr_branch_handlers?
-    parent_branch_new_commits = statistics.fetch_path("master", :new_commits)
-    new_commits.any? || parent_branch_new_commits.any?
-  end
-
-  def process_regular_branch_handlers?
-    new_commits.any?
-  end
-
-  def process_commit_handlers
-    new_commits_details.each do |commit, details|
-      commit_handlers.each do |h|
-        logger.info("Queueing #{h.name.split("::").last} for commit #{commit} on branch #{branch.name}")
-        h.perform_async(branch.id, commit, details)
-      end
-    end
-  end
-
-  def process_commit_range_handlers
-    commit_range = [new_commits.first, new_commits.last].uniq.join("..")
-
-    commit_range_handlers.each do |h|
-      logger.info("Queueing #{h.name.split("::").last} for commit range #{commit_range} on branch #{branch.name}")
-      h.perform_async(branch.id, new_commits)
-    end
-  end
-
-  def process_branch_handlers
-    branch_handlers.each do |h|
-      logger.info("Queueing #{h.name.split("::").last} for branch #{branch.name}")
-      h.perform_async(branch.id)
-    end
-  end
-
-  def process_batch_handlers
-    batch_handlers.each do |h|
-      logger.info("Queueing #{h.name} for branch #{branch.name}")
-      h.perform_batch_async(branch.id, new_commits_details)
+    self.class.handlers_for(branch).each do |handler|
+      method = handler.respond_to?(:perform_batch_async) ? :perform_batch_async : :perform_async
+      handler.public_send(method, branch.id, new_commits)
     end
   end
 end
