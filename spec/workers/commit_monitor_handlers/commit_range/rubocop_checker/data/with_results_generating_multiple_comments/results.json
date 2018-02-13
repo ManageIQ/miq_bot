@@ -16,15 +16,7 @@
           "cop_name": "Style/MutableConstant",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 2,
-            "start_column": 10,
-            "last_line": 197,
-            "last_column": 3,
-            "length": 4456,
-            "line": 2,
-            "column": 10
-          }
+          "line": 2
         },
         {
           "severity": "convention",
@@ -32,15 +24,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 3,
-            "start_column": 5,
-            "last_line": 3,
-            "last_column": 20,
-            "length": 16,
-            "line": 3,
-            "column": 5
-          }
+          "line": 3
         },
         {
           "severity": "convention",
@@ -48,15 +32,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 4,
-            "start_column": 5,
-            "last_line": 4,
-            "last_column": 18,
-            "length": 14,
-            "line": 4,
-            "column": 5
-          }
+          "line": 4
         },
         {
           "severity": "convention",
@@ -64,15 +40,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 5,
-            "start_column": 5,
-            "last_line": 5,
-            "last_column": 18,
-            "length": 14,
-            "line": 5,
-            "column": 5
-          }
+          "line": 5
         },
         {
           "severity": "convention",
@@ -80,15 +48,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 6,
-            "start_column": 5,
-            "last_line": 6,
-            "last_column": 15,
-            "length": 11,
-            "line": 6,
-            "column": 5
-          }
+          "line": 6
         },
         {
           "severity": "convention",
@@ -96,15 +56,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 7,
-            "start_column": 5,
-            "last_line": 7,
-            "last_column": 25,
-            "length": 21,
-            "line": 7,
-            "column": 5
-          }
+          "line": 7
         },
         {
           "severity": "convention",
@@ -112,15 +64,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 8,
-            "start_column": 5,
-            "last_line": 8,
-            "last_column": 31,
-            "length": 27,
-            "line": 8,
-            "column": 5
-          }
+          "line": 8
         },
         {
           "severity": "convention",
@@ -128,15 +72,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 9,
-            "start_column": 5,
-            "last_line": 9,
-            "last_column": 24,
-            "length": 20,
-            "line": 9,
-            "column": 5
-          }
+          "line": 9
         },
         {
           "severity": "convention",
@@ -144,15 +80,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 10,
-            "start_column": 5,
-            "last_line": 10,
-            "last_column": 17,
-            "length": 13,
-            "line": 10,
-            "column": 5
-          }
+          "line": 10
         },
         {
           "severity": "convention",
@@ -160,15 +88,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 11,
-            "start_column": 5,
-            "last_line": 11,
-            "last_column": 18,
-            "length": 14,
-            "line": 11,
-            "column": 5
-          }
+          "line": 11
         },
         {
           "severity": "convention",
@@ -176,15 +96,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 12,
-            "start_column": 5,
-            "last_line": 12,
-            "last_column": 18,
-            "length": 14,
-            "line": 12,
-            "column": 5
-          }
+          "line": 12
         },
         {
           "severity": "convention",
@@ -192,15 +104,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 13,
-            "start_column": 5,
-            "last_line": 13,
-            "last_column": 26,
-            "length": 22,
-            "line": 13,
-            "column": 5
-          }
+          "line": 13
         },
         {
           "severity": "convention",
@@ -208,15 +112,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 14,
-            "start_column": 5,
-            "last_line": 14,
-            "last_column": 20,
-            "length": 16,
-            "line": 14,
-            "column": 5
-          }
+          "line": 14
         },
         {
           "severity": "convention",
@@ -224,15 +120,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 15,
-            "start_column": 5,
-            "last_line": 15,
-            "last_column": 15,
-            "length": 11,
-            "line": 15,
-            "column": 5
-          }
+          "line": 15
         },
         {
           "severity": "convention",
@@ -240,15 +128,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 16,
-            "start_column": 5,
-            "last_line": 16,
-            "last_column": 16,
-            "length": 12,
-            "line": 16,
-            "column": 5
-          }
+          "line": 16
         },
         {
           "severity": "convention",
@@ -256,15 +136,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 17,
-            "start_column": 5,
-            "last_line": 17,
-            "last_column": 25,
-            "length": 21,
-            "line": 17,
-            "column": 5
-          }
+          "line": 17
         },
         {
           "severity": "convention",
@@ -272,15 +144,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 18,
-            "start_column": 5,
-            "last_line": 18,
-            "last_column": 19,
-            "length": 15,
-            "line": 18,
-            "column": 5
-          }
+          "line": 18
         },
         {
           "severity": "convention",
@@ -288,15 +152,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 19,
-            "start_column": 5,
-            "last_line": 19,
-            "last_column": 22,
-            "length": 18,
-            "line": 19,
-            "column": 5
-          }
+          "line": 19
         },
         {
           "severity": "convention",
@@ -304,15 +160,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 20,
-            "start_column": 5,
-            "last_line": 20,
-            "last_column": 22,
-            "length": 18,
-            "line": 20,
-            "column": 5
-          }
+          "line": 20
         },
         {
           "severity": "convention",
@@ -320,15 +168,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 21,
-            "start_column": 5,
-            "last_line": 21,
-            "last_column": 20,
-            "length": 16,
-            "line": 21,
-            "column": 5
-          }
+          "line": 21
         },
         {
           "severity": "convention",
@@ -336,15 +176,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 22,
-            "start_column": 5,
-            "last_line": 22,
-            "last_column": 22,
-            "length": 18,
-            "line": 22,
-            "column": 5
-          }
+          "line": 22
         },
         {
           "severity": "convention",
@@ -352,15 +184,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 23,
-            "start_column": 5,
-            "last_line": 23,
-            "last_column": 17,
-            "length": 13,
-            "line": 23,
-            "column": 5
-          }
+          "line": 23
         },
         {
           "severity": "convention",
@@ -368,15 +192,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 24,
-            "start_column": 5,
-            "last_line": 24,
-            "last_column": 20,
-            "length": 16,
-            "line": 24,
-            "column": 5
-          }
+          "line": 24
         },
         {
           "severity": "convention",
@@ -384,15 +200,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 25,
-            "start_column": 5,
-            "last_line": 25,
-            "last_column": 21,
-            "length": 17,
-            "line": 25,
-            "column": 5
-          }
+          "line": 25
         },
         {
           "severity": "convention",
@@ -400,15 +208,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 26,
-            "start_column": 5,
-            "last_line": 26,
-            "last_column": 18,
-            "length": 14,
-            "line": 26,
-            "column": 5
-          }
+          "line": 26
         },
         {
           "severity": "convention",
@@ -416,15 +216,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 27,
-            "start_column": 5,
-            "last_line": 27,
-            "last_column": 17,
-            "length": 13,
-            "line": 27,
-            "column": 5
-          }
+          "line": 27
         },
         {
           "severity": "convention",
@@ -432,15 +224,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 28,
-            "start_column": 5,
-            "last_line": 28,
-            "last_column": 16,
-            "length": 12,
-            "line": 28,
-            "column": 5
-          }
+          "line": 28
         },
         {
           "severity": "convention",
@@ -448,15 +232,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 29,
-            "start_column": 5,
-            "last_line": 29,
-            "last_column": 30,
-            "length": 26,
-            "line": 29,
-            "column": 5
-          }
+          "line": 29
         },
         {
           "severity": "convention",
@@ -464,15 +240,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 30,
-            "start_column": 5,
-            "last_line": 30,
-            "last_column": 29,
-            "length": 25,
-            "line": 30,
-            "column": 5
-          }
+          "line": 30
         },
         {
           "severity": "convention",
@@ -480,15 +248,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 31,
-            "start_column": 5,
-            "last_line": 31,
-            "last_column": 29,
-            "length": 25,
-            "line": 31,
-            "column": 5
-          }
+          "line": 31
         },
         {
           "severity": "convention",
@@ -496,15 +256,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 32,
-            "start_column": 5,
-            "last_line": 32,
-            "last_column": 26,
-            "length": 22,
-            "line": 32,
-            "column": 5
-          }
+          "line": 32
         },
         {
           "severity": "convention",
@@ -512,15 +264,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 33,
-            "start_column": 5,
-            "last_line": 33,
-            "last_column": 20,
-            "length": 16,
-            "line": 33,
-            "column": 5
-          }
+          "line": 33
         },
         {
           "severity": "convention",
@@ -528,15 +272,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 34,
-            "start_column": 5,
-            "last_line": 34,
-            "last_column": 17,
-            "length": 13,
-            "line": 34,
-            "column": 5
-          }
+          "line": 34
         },
         {
           "severity": "convention",
@@ -544,15 +280,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 35,
-            "start_column": 5,
-            "last_line": 35,
-            "last_column": 21,
-            "length": 17,
-            "line": 35,
-            "column": 5
-          }
+          "line": 35
         },
         {
           "severity": "convention",
@@ -560,15 +288,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 36,
-            "start_column": 5,
-            "last_line": 36,
-            "last_column": 23,
-            "length": 19,
-            "line": 36,
-            "column": 5
-          }
+          "line": 36
         },
         {
           "severity": "convention",
@@ -576,15 +296,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 37,
-            "start_column": 5,
-            "last_line": 37,
-            "last_column": 21,
-            "length": 17,
-            "line": 37,
-            "column": 5
-          }
+          "line": 37
         },
         {
           "severity": "convention",
@@ -592,15 +304,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 38,
-            "start_column": 5,
-            "last_line": 38,
-            "last_column": 25,
-            "length": 21,
-            "line": 38,
-            "column": 5
-          }
+          "line": 38
         },
         {
           "severity": "convention",
@@ -608,15 +312,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 39,
-            "start_column": 5,
-            "last_line": 39,
-            "last_column": 21,
-            "length": 17,
-            "line": 39,
-            "column": 5
-          }
+          "line": 39
         },
         {
           "severity": "convention",
@@ -624,15 +320,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 40,
-            "start_column": 5,
-            "last_line": 40,
-            "last_column": 18,
-            "length": 14,
-            "line": 40,
-            "column": 5
-          }
+          "line": 40
         },
         {
           "severity": "convention",
@@ -640,15 +328,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 41,
-            "start_column": 5,
-            "last_line": 41,
-            "last_column": 21,
-            "length": 17,
-            "line": 41,
-            "column": 5
-          }
+          "line": 41
         },
         {
           "severity": "convention",
@@ -656,15 +336,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 42,
-            "start_column": 5,
-            "last_line": 42,
-            "last_column": 19,
-            "length": 15,
-            "line": 42,
-            "column": 5
-          }
+          "line": 42
         },
         {
           "severity": "convention",
@@ -672,15 +344,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 43,
-            "start_column": 5,
-            "last_line": 43,
-            "last_column": 17,
-            "length": 13,
-            "line": 43,
-            "column": 5
-          }
+          "line": 43
         },
         {
           "severity": "convention",
@@ -688,15 +352,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 44,
-            "start_column": 5,
-            "last_line": 44,
-            "last_column": 25,
-            "length": 21,
-            "line": 44,
-            "column": 5
-          }
+          "line": 44
         },
         {
           "severity": "convention",
@@ -704,15 +360,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 45,
-            "start_column": 5,
-            "last_line": 45,
-            "last_column": 21,
-            "length": 17,
-            "line": 45,
-            "column": 5
-          }
+          "line": 45
         },
         {
           "severity": "convention",
@@ -720,15 +368,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 46,
-            "start_column": 5,
-            "last_line": 46,
-            "last_column": 21,
-            "length": 17,
-            "line": 46,
-            "column": 5
-          }
+          "line": 46
         },
         {
           "severity": "convention",
@@ -736,15 +376,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 47,
-            "start_column": 5,
-            "last_line": 47,
-            "last_column": 22,
-            "length": 18,
-            "line": 47,
-            "column": 5
-          }
+          "line": 47
         },
         {
           "severity": "convention",
@@ -752,15 +384,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 48,
-            "start_column": 5,
-            "last_line": 48,
-            "last_column": 17,
-            "length": 13,
-            "line": 48,
-            "column": 5
-          }
+          "line": 48
         },
         {
           "severity": "convention",
@@ -768,15 +392,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 49,
-            "start_column": 5,
-            "last_line": 49,
-            "last_column": 22,
-            "length": 18,
-            "line": 49,
-            "column": 5
-          }
+          "line": 49
         },
         {
           "severity": "convention",
@@ -784,15 +400,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 50,
-            "start_column": 5,
-            "last_line": 50,
-            "last_column": 24,
-            "length": 20,
-            "line": 50,
-            "column": 5
-          }
+          "line": 50
         },
         {
           "severity": "convention",
@@ -800,15 +408,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 51,
-            "start_column": 5,
-            "last_line": 51,
-            "last_column": 24,
-            "length": 20,
-            "line": 51,
-            "column": 5
-          }
+          "line": 51
         },
         {
           "severity": "convention",
@@ -816,15 +416,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 52,
-            "start_column": 5,
-            "last_line": 52,
-            "last_column": 22,
-            "length": 18,
-            "line": 52,
-            "column": 5
-          }
+          "line": 52
         },
         {
           "severity": "convention",
@@ -832,15 +424,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 53,
-            "start_column": 5,
-            "last_line": 53,
-            "last_column": 26,
-            "length": 22,
-            "line": 53,
-            "column": 5
-          }
+          "line": 53
         },
         {
           "severity": "convention",
@@ -848,15 +432,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 54,
-            "start_column": 5,
-            "last_line": 54,
-            "last_column": 21,
-            "length": 17,
-            "line": 54,
-            "column": 5
-          }
+          "line": 54
         },
         {
           "severity": "convention",
@@ -864,15 +440,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 55,
-            "start_column": 5,
-            "last_line": 55,
-            "last_column": 15,
-            "length": 11,
-            "line": 55,
-            "column": 5
-          }
+          "line": 55
         },
         {
           "severity": "convention",
@@ -880,15 +448,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 56,
-            "start_column": 5,
-            "last_line": 56,
-            "last_column": 14,
-            "length": 10,
-            "line": 56,
-            "column": 5
-          }
+          "line": 56
         },
         {
           "severity": "convention",
@@ -896,15 +456,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 57,
-            "start_column": 5,
-            "last_line": 57,
-            "last_column": 18,
-            "length": 14,
-            "line": 57,
-            "column": 5
-          }
+          "line": 57
         },
         {
           "severity": "convention",
@@ -912,15 +464,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 58,
-            "start_column": 5,
-            "last_line": 58,
-            "last_column": 16,
-            "length": 12,
-            "line": 58,
-            "column": 5
-          }
+          "line": 58
         },
         {
           "severity": "convention",
@@ -928,15 +472,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 59,
-            "start_column": 5,
-            "last_line": 59,
-            "last_column": 20,
-            "length": 16,
-            "line": 59,
-            "column": 5
-          }
+          "line": 59
         },
         {
           "severity": "convention",
@@ -944,15 +480,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 60,
-            "start_column": 5,
-            "last_line": 60,
-            "last_column": 21,
-            "length": 17,
-            "line": 60,
-            "column": 5
-          }
+          "line": 60
         },
         {
           "severity": "convention",
@@ -960,15 +488,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 61,
-            "start_column": 5,
-            "last_line": 61,
-            "last_column": 18,
-            "length": 14,
-            "line": 61,
-            "column": 5
-          }
+          "line": 61
         },
         {
           "severity": "convention",
@@ -976,15 +496,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 62,
-            "start_column": 5,
-            "last_line": 62,
-            "last_column": 19,
-            "length": 15,
-            "line": 62,
-            "column": 5
-          }
+          "line": 62
         },
         {
           "severity": "convention",
@@ -992,15 +504,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 63,
-            "start_column": 5,
-            "last_line": 63,
-            "last_column": 23,
-            "length": 19,
-            "line": 63,
-            "column": 5
-          }
+          "line": 63
         },
         {
           "severity": "convention",
@@ -1008,15 +512,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 64,
-            "start_column": 5,
-            "last_line": 64,
-            "last_column": 16,
-            "length": 12,
-            "line": 64,
-            "column": 5
-          }
+          "line": 64
         },
         {
           "severity": "convention",
@@ -1024,15 +520,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 65,
-            "start_column": 5,
-            "last_line": 65,
-            "last_column": 23,
-            "length": 19,
-            "line": 65,
-            "column": 5
-          }
+          "line": 65
         },
         {
           "severity": "convention",
@@ -1040,15 +528,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 66,
-            "start_column": 5,
-            "last_line": 66,
-            "last_column": 33,
-            "length": 29,
-            "line": 66,
-            "column": 5
-          }
+          "line": 66
         },
         {
           "severity": "convention",
@@ -1056,15 +536,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 67,
-            "start_column": 5,
-            "last_line": 67,
-            "last_column": 24,
-            "length": 20,
-            "line": 67,
-            "column": 5
-          }
+          "line": 67
         },
         {
           "severity": "convention",
@@ -1072,15 +544,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 68,
-            "start_column": 5,
-            "last_line": 68,
-            "last_column": 19,
-            "length": 15,
-            "line": 68,
-            "column": 5
-          }
+          "line": 68
         },
         {
           "severity": "convention",
@@ -1088,15 +552,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 69,
-            "start_column": 5,
-            "last_line": 69,
-            "last_column": 16,
-            "length": 12,
-            "line": 69,
-            "column": 5
-          }
+          "line": 69
         },
         {
           "severity": "convention",
@@ -1104,15 +560,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 70,
-            "start_column": 5,
-            "last_line": 70,
-            "last_column": 16,
-            "length": 12,
-            "line": 70,
-            "column": 5
-          }
+          "line": 70
         },
         {
           "severity": "convention",
@@ -1120,15 +568,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 71,
-            "start_column": 5,
-            "last_line": 71,
-            "last_column": 16,
-            "length": 12,
-            "line": 71,
-            "column": 5
-          }
+          "line": 71
         },
         {
           "severity": "convention",
@@ -1136,15 +576,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 72,
-            "start_column": 5,
-            "last_line": 72,
-            "last_column": 24,
-            "length": 20,
-            "line": 72,
-            "column": 5
-          }
+          "line": 72
         },
         {
           "severity": "convention",
@@ -1152,15 +584,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 73,
-            "start_column": 5,
-            "last_line": 73,
-            "last_column": 17,
-            "length": 13,
-            "line": 73,
-            "column": 5
-          }
+          "line": 73
         },
         {
           "severity": "convention",
@@ -1168,15 +592,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 74,
-            "start_column": 5,
-            "last_line": 74,
-            "last_column": 16,
-            "length": 12,
-            "line": 74,
-            "column": 5
-          }
+          "line": 74
         },
         {
           "severity": "convention",
@@ -1184,15 +600,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 75,
-            "start_column": 5,
-            "last_line": 75,
-            "last_column": 16,
-            "length": 12,
-            "line": 75,
-            "column": 5
-          }
+          "line": 75
         },
         {
           "severity": "convention",
@@ -1200,15 +608,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 76,
-            "start_column": 5,
-            "last_line": 76,
-            "last_column": 24,
-            "length": 20,
-            "line": 76,
-            "column": 5
-          }
+          "line": 76
         },
         {
           "severity": "convention",
@@ -1216,15 +616,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 77,
-            "start_column": 5,
-            "last_line": 77,
-            "last_column": 26,
-            "length": 22,
-            "line": 77,
-            "column": 5
-          }
+          "line": 77
         },
         {
           "severity": "convention",
@@ -1232,15 +624,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 78,
-            "start_column": 5,
-            "last_line": 78,
-            "last_column": 23,
-            "length": 19,
-            "line": 78,
-            "column": 5
-          }
+          "line": 78
         },
         {
           "severity": "convention",
@@ -1248,15 +632,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 79,
-            "start_column": 5,
-            "last_line": 79,
-            "last_column": 27,
-            "length": 23,
-            "line": 79,
-            "column": 5
-          }
+          "line": 79
         },
         {
           "severity": "convention",
@@ -1264,15 +640,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 80,
-            "start_column": 5,
-            "last_line": 80,
-            "last_column": 22,
-            "length": 18,
-            "line": 80,
-            "column": 5
-          }
+          "line": 80
         },
         {
           "severity": "convention",
@@ -1280,15 +648,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 81,
-            "start_column": 5,
-            "last_line": 81,
-            "last_column": 22,
-            "length": 18,
-            "line": 81,
-            "column": 5
-          }
+          "line": 81
         },
         {
           "severity": "convention",
@@ -1296,15 +656,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 82,
-            "start_column": 5,
-            "last_line": 82,
-            "last_column": 31,
-            "length": 27,
-            "line": 82,
-            "column": 5
-          }
+          "line": 82
         },
         {
           "severity": "convention",
@@ -1312,15 +664,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 83,
-            "start_column": 5,
-            "last_line": 83,
-            "last_column": 24,
-            "length": 20,
-            "line": 83,
-            "column": 5
-          }
+          "line": 83
         },
         {
           "severity": "convention",
@@ -1328,15 +672,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 84,
-            "start_column": 5,
-            "last_line": 84,
-            "last_column": 15,
-            "length": 11,
-            "line": 84,
-            "column": 5
-          }
+          "line": 84
         },
         {
           "severity": "convention",
@@ -1344,15 +680,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 85,
-            "start_column": 5,
-            "last_line": 85,
-            "last_column": 15,
-            "length": 11,
-            "line": 85,
-            "column": 5
-          }
+          "line": 85
         },
         {
           "severity": "convention",
@@ -1360,15 +688,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 86,
-            "start_column": 5,
-            "last_line": 86,
-            "last_column": 22,
-            "length": 18,
-            "line": 86,
-            "column": 5
-          }
+          "line": 86
         },
         {
           "severity": "convention",
@@ -1376,15 +696,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 87,
-            "start_column": 5,
-            "last_line": 87,
-            "last_column": 23,
-            "length": 19,
-            "line": 87,
-            "column": 5
-          }
+          "line": 87
         },
         {
           "severity": "convention",
@@ -1392,15 +704,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 88,
-            "start_column": 5,
-            "last_line": 88,
-            "last_column": 20,
-            "length": 16,
-            "line": 88,
-            "column": 5
-          }
+          "line": 88
         },
         {
           "severity": "convention",
@@ -1408,15 +712,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 89,
-            "start_column": 5,
-            "last_line": 89,
-            "last_column": 17,
-            "length": 13,
-            "line": 89,
-            "column": 5
-          }
+          "line": 89
         },
         {
           "severity": "convention",
@@ -1424,15 +720,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 90,
-            "start_column": 5,
-            "last_line": 90,
-            "last_column": 23,
-            "length": 19,
-            "line": 90,
-            "column": 5
-          }
+          "line": 90
         },
         {
           "severity": "convention",
@@ -1440,15 +728,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 91,
-            "start_column": 5,
-            "last_line": 91,
-            "last_column": 17,
-            "length": 13,
-            "line": 91,
-            "column": 5
-          }
+          "line": 91
         },
         {
           "severity": "convention",
@@ -1456,15 +736,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 92,
-            "start_column": 5,
-            "last_line": 92,
-            "last_column": 22,
-            "length": 18,
-            "line": 92,
-            "column": 5
-          }
+          "line": 92
         },
         {
           "severity": "convention",
@@ -1472,15 +744,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 93,
-            "start_column": 5,
-            "last_line": 93,
-            "last_column": 22,
-            "length": 18,
-            "line": 93,
-            "column": 5
-          }
+          "line": 93
         },
         {
           "severity": "convention",
@@ -1488,15 +752,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 94,
-            "start_column": 5,
-            "last_line": 94,
-            "last_column": 22,
-            "length": 18,
-            "line": 94,
-            "column": 5
-          }
+          "line": 94
         },
         {
           "severity": "convention",
@@ -1504,15 +760,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 95,
-            "start_column": 5,
-            "last_line": 95,
-            "last_column": 18,
-            "length": 14,
-            "line": 95,
-            "column": 5
-          }
+          "line": 95
         },
         {
           "severity": "convention",
@@ -1520,15 +768,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 96,
-            "start_column": 5,
-            "last_line": 96,
-            "last_column": 26,
-            "length": 22,
-            "line": 96,
-            "column": 5
-          }
+          "line": 96
         },
         {
           "severity": "convention",
@@ -1536,15 +776,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 97,
-            "start_column": 5,
-            "last_line": 97,
-            "last_column": 30,
-            "length": 26,
-            "line": 97,
-            "column": 5
-          }
+          "line": 97
         },
         {
           "severity": "convention",
@@ -1552,15 +784,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 98,
-            "start_column": 5,
-            "last_line": 98,
-            "last_column": 21,
-            "length": 17,
-            "line": 98,
-            "column": 5
-          }
+          "line": 98
         },
         {
           "severity": "convention",
@@ -1568,15 +792,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 99,
-            "start_column": 5,
-            "last_line": 99,
-            "last_column": 18,
-            "length": 14,
-            "line": 99,
-            "column": 5
-          }
+          "line": 99
         },
         {
           "severity": "convention",
@@ -1584,15 +800,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 100,
-            "start_column": 5,
-            "last_line": 100,
-            "last_column": 20,
-            "length": 16,
-            "line": 100,
-            "column": 5
-          }
+          "line": 100
         },
         {
           "severity": "warning",
@@ -1600,15 +808,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 100,
-            "start_column": 5,
-            "last_line": 100,
-            "last_column": 11,
-            "length": 7,
-            "line": 100,
-            "column": 5
-          }
+          "line": 100
         },
         {
           "severity": "convention",
@@ -1616,15 +816,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 101,
-            "start_column": 5,
-            "last_line": 101,
-            "last_column": 18,
-            "length": 14,
-            "line": 101,
-            "column": 5
-          }
+          "line": 101
         },
         {
           "severity": "warning",
@@ -1632,15 +824,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 101,
-            "start_column": 5,
-            "last_line": 101,
-            "last_column": 11,
-            "length": 7,
-            "line": 101,
-            "column": 5
-          }
+          "line": 101
         },
         {
           "severity": "convention",
@@ -1648,15 +832,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 102,
-            "start_column": 5,
-            "last_line": 102,
-            "last_column": 18,
-            "length": 14,
-            "line": 102,
-            "column": 5
-          }
+          "line": 102
         },
         {
           "severity": "warning",
@@ -1664,15 +840,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 102,
-            "start_column": 5,
-            "last_line": 102,
-            "last_column": 11,
-            "length": 7,
-            "line": 102,
-            "column": 5
-          }
+          "line": 102
         },
         {
           "severity": "convention",
@@ -1680,15 +848,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 103,
-            "start_column": 5,
-            "last_line": 103,
-            "last_column": 15,
-            "length": 11,
-            "line": 103,
-            "column": 5
-          }
+          "line": 103
         },
         {
           "severity": "warning",
@@ -1696,15 +856,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 103,
-            "start_column": 5,
-            "last_line": 103,
-            "last_column": 9,
-            "length": 5,
-            "line": 103,
-            "column": 5
-          }
+          "line": 103
         },
         {
           "severity": "convention",
@@ -1712,15 +864,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 104,
-            "start_column": 5,
-            "last_line": 104,
-            "last_column": 25,
-            "length": 21,
-            "line": 104,
-            "column": 5
-          }
+          "line": 104
         },
         {
           "severity": "warning",
@@ -1728,15 +872,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 104,
-            "start_column": 5,
-            "last_line": 104,
-            "last_column": 10,
-            "length": 6,
-            "line": 104,
-            "column": 5
-          }
+          "line": 104
         },
         {
           "severity": "convention",
@@ -1744,15 +880,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 105,
-            "start_column": 5,
-            "last_line": 105,
-            "last_column": 31,
-            "length": 27,
-            "line": 105,
-            "column": 5
-          }
+          "line": 105
         },
         {
           "severity": "warning",
@@ -1760,15 +888,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 105,
-            "start_column": 5,
-            "last_line": 105,
-            "last_column": 17,
-            "length": 13,
-            "line": 105,
-            "column": 5
-          }
+          "line": 105
         },
         {
           "severity": "convention",
@@ -1776,15 +896,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 106,
-            "start_column": 5,
-            "last_line": 106,
-            "last_column": 24,
-            "length": 20,
-            "line": 106,
-            "column": 5
-          }
+          "line": 106
         },
         {
           "severity": "warning",
@@ -1792,15 +904,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 106,
-            "start_column": 5,
-            "last_line": 106,
-            "last_column": 16,
-            "length": 12,
-            "line": 106,
-            "column": 5
-          }
+          "line": 106
         },
         {
           "severity": "convention",
@@ -1808,15 +912,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 107,
-            "start_column": 5,
-            "last_line": 107,
-            "last_column": 17,
-            "length": 13,
-            "line": 107,
-            "column": 5
-          }
+          "line": 107
         },
         {
           "severity": "warning",
@@ -1824,15 +920,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 107,
-            "start_column": 5,
-            "last_line": 107,
-            "last_column": 10,
-            "length": 6,
-            "line": 107,
-            "column": 5
-          }
+          "line": 107
         },
         {
           "severity": "convention",
@@ -1840,15 +928,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 108,
-            "start_column": 5,
-            "last_line": 108,
-            "last_column": 18,
-            "length": 14,
-            "line": 108,
-            "column": 5
-          }
+          "line": 108
         },
         {
           "severity": "warning",
@@ -1856,15 +936,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 108,
-            "start_column": 5,
-            "last_line": 108,
-            "last_column": 9,
-            "length": 5,
-            "line": 108,
-            "column": 5
-          }
+          "line": 108
         },
         {
           "severity": "convention",
@@ -1872,15 +944,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 109,
-            "start_column": 5,
-            "last_line": 109,
-            "last_column": 18,
-            "length": 14,
-            "line": 109,
-            "column": 5
-          }
+          "line": 109
         },
         {
           "severity": "warning",
@@ -1888,15 +952,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 109,
-            "start_column": 5,
-            "last_line": 109,
-            "last_column": 11,
-            "length": 7,
-            "line": 109,
-            "column": 5
-          }
+          "line": 109
         },
         {
           "severity": "convention",
@@ -1904,15 +960,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 110,
-            "start_column": 5,
-            "last_line": 110,
-            "last_column": 26,
-            "length": 22,
-            "line": 110,
-            "column": 5
-          }
+          "line": 110
         },
         {
           "severity": "warning",
@@ -1920,15 +968,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 110,
-            "start_column": 5,
-            "last_line": 110,
-            "last_column": 15,
-            "length": 11,
-            "line": 110,
-            "column": 5
-          }
+          "line": 110
         },
         {
           "severity": "convention",
@@ -1936,15 +976,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 111,
-            "start_column": 5,
-            "last_line": 111,
-            "last_column": 20,
-            "length": 16,
-            "line": 111,
-            "column": 5
-          }
+          "line": 111
         },
         {
           "severity": "warning",
@@ -1952,15 +984,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 111,
-            "start_column": 5,
-            "last_line": 111,
-            "last_column": 13,
-            "length": 9,
-            "line": 111,
-            "column": 5
-          }
+          "line": 111
         },
         {
           "severity": "convention",
@@ -1968,15 +992,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 112,
-            "start_column": 5,
-            "last_line": 112,
-            "last_column": 15,
-            "length": 11,
-            "line": 112,
-            "column": 5
-          }
+          "line": 112
         },
         {
           "severity": "warning",
@@ -1984,15 +1000,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 112,
-            "start_column": 5,
-            "last_line": 112,
-            "last_column": 9,
-            "length": 5,
-            "line": 112,
-            "column": 5
-          }
+          "line": 112
         },
         {
           "severity": "convention",
@@ -2000,15 +1008,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 113,
-            "start_column": 5,
-            "last_line": 113,
-            "last_column": 16,
-            "length": 12,
-            "line": 113,
-            "column": 5
-          }
+          "line": 113
         },
         {
           "severity": "warning",
@@ -2016,15 +1016,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 113,
-            "start_column": 5,
-            "last_line": 113,
-            "last_column": 8,
-            "length": 4,
-            "line": 113,
-            "column": 5
-          }
+          "line": 113
         },
         {
           "severity": "convention",
@@ -2032,15 +1024,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 114,
-            "start_column": 5,
-            "last_line": 114,
-            "last_column": 25,
-            "length": 21,
-            "line": 114,
-            "column": 5
-          }
+          "line": 114
         },
         {
           "severity": "warning",
@@ -2048,15 +1032,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 114,
-            "start_column": 5,
-            "last_line": 114,
-            "last_column": 10,
-            "length": 6,
-            "line": 114,
-            "column": 5
-          }
+          "line": 114
         },
         {
           "severity": "convention",
@@ -2064,15 +1040,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 115,
-            "start_column": 5,
-            "last_line": 115,
-            "last_column": 19,
-            "length": 15,
-            "line": 115,
-            "column": 5
-          }
+          "line": 115
         },
         {
           "severity": "warning",
@@ -2080,15 +1048,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 115,
-            "start_column": 5,
-            "last_line": 115,
-            "last_column": 9,
-            "length": 5,
-            "line": 115,
-            "column": 5
-          }
+          "line": 115
         },
         {
           "severity": "convention",
@@ -2096,15 +1056,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 116,
-            "start_column": 5,
-            "last_line": 116,
-            "last_column": 22,
-            "length": 18,
-            "line": 116,
-            "column": 5
-          }
+          "line": 116
         },
         {
           "severity": "warning",
@@ -2112,15 +1064,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 116,
-            "start_column": 5,
-            "last_line": 116,
-            "last_column": 12,
-            "length": 8,
-            "line": 116,
-            "column": 5
-          }
+          "line": 116
         },
         {
           "severity": "convention",
@@ -2128,15 +1072,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 117,
-            "start_column": 5,
-            "last_line": 117,
-            "last_column": 22,
-            "length": 18,
-            "line": 117,
-            "column": 5
-          }
+          "line": 117
         },
         {
           "severity": "warning",
@@ -2144,15 +1080,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 117,
-            "start_column": 5,
-            "last_line": 117,
-            "last_column": 12,
-            "length": 8,
-            "line": 117,
-            "column": 5
-          }
+          "line": 117
         },
         {
           "severity": "convention",
@@ -2160,15 +1088,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 118,
-            "start_column": 5,
-            "last_line": 118,
-            "last_column": 20,
-            "length": 16,
-            "line": 118,
-            "column": 5
-          }
+          "line": 118
         },
         {
           "severity": "warning",
@@ -2176,15 +1096,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 118,
-            "start_column": 5,
-            "last_line": 118,
-            "last_column": 12,
-            "length": 8,
-            "line": 118,
-            "column": 5
-          }
+          "line": 118
         },
         {
           "severity": "convention",
@@ -2192,15 +1104,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 119,
-            "start_column": 5,
-            "last_line": 119,
-            "last_column": 22,
-            "length": 18,
-            "line": 119,
-            "column": 5
-          }
+          "line": 119
         },
         {
           "severity": "warning",
@@ -2208,15 +1112,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 119,
-            "start_column": 5,
-            "last_line": 119,
-            "last_column": 10,
-            "length": 6,
-            "line": 119,
-            "column": 5
-          }
+          "line": 119
         },
         {
           "severity": "convention",
@@ -2224,15 +1120,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 120,
-            "start_column": 5,
-            "last_line": 120,
-            "last_column": 17,
-            "length": 13,
-            "line": 120,
-            "column": 5
-          }
+          "line": 120
         },
         {
           "severity": "warning",
@@ -2240,15 +1128,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 120,
-            "start_column": 5,
-            "last_line": 120,
-            "last_column": 9,
-            "length": 5,
-            "line": 120,
-            "column": 5
-          }
+          "line": 120
         },
         {
           "severity": "convention",
@@ -2256,15 +1136,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 121,
-            "start_column": 5,
-            "last_line": 121,
-            "last_column": 20,
-            "length": 16,
-            "line": 121,
-            "column": 5
-          }
+          "line": 121
         },
         {
           "severity": "warning",
@@ -2272,15 +1144,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 121,
-            "start_column": 5,
-            "last_line": 121,
-            "last_column": 10,
-            "length": 6,
-            "line": 121,
-            "column": 5
-          }
+          "line": 121
         },
         {
           "severity": "convention",
@@ -2288,15 +1152,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 122,
-            "start_column": 5,
-            "last_line": 122,
-            "last_column": 21,
-            "length": 17,
-            "line": 122,
-            "column": 5
-          }
+          "line": 122
         },
         {
           "severity": "warning",
@@ -2304,15 +1160,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 122,
-            "start_column": 5,
-            "last_line": 122,
-            "last_column": 8,
-            "length": 4,
-            "line": 122,
-            "column": 5
-          }
+          "line": 122
         },
         {
           "severity": "convention",
@@ -2320,15 +1168,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 123,
-            "start_column": 5,
-            "last_line": 123,
-            "last_column": 18,
-            "length": 14,
-            "line": 123,
-            "column": 5
-          }
+          "line": 123
         },
         {
           "severity": "warning",
@@ -2336,15 +1176,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 123,
-            "start_column": 5,
-            "last_line": 123,
-            "last_column": 9,
-            "length": 5,
-            "line": 123,
-            "column": 5
-          }
+          "line": 123
         },
         {
           "severity": "convention",
@@ -2352,15 +1184,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 124,
-            "start_column": 5,
-            "last_line": 124,
-            "last_column": 17,
-            "length": 13,
-            "line": 124,
-            "column": 5
-          }
+          "line": 124
         },
         {
           "severity": "warning",
@@ -2368,15 +1192,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 124,
-            "start_column": 5,
-            "last_line": 124,
-            "last_column": 11,
-            "length": 7,
-            "line": 124,
-            "column": 5
-          }
+          "line": 124
         },
         {
           "severity": "convention",
@@ -2384,15 +1200,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 125,
-            "start_column": 5,
-            "last_line": 125,
-            "last_column": 16,
-            "length": 12,
-            "line": 125,
-            "column": 5
-          }
+          "line": 125
         },
         {
           "severity": "warning",
@@ -2400,15 +1208,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 125,
-            "start_column": 5,
-            "last_line": 125,
-            "last_column": 8,
-            "length": 4,
-            "line": 125,
-            "column": 5
-          }
+          "line": 125
         },
         {
           "severity": "convention",
@@ -2416,15 +1216,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 126,
-            "start_column": 5,
-            "last_line": 126,
-            "last_column": 30,
-            "length": 26,
-            "line": 126,
-            "column": 5
-          }
+          "line": 126
         },
         {
           "severity": "warning",
@@ -2432,15 +1224,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 126,
-            "start_column": 5,
-            "last_line": 126,
-            "last_column": 16,
-            "length": 12,
-            "line": 126,
-            "column": 5
-          }
+          "line": 126
         },
         {
           "severity": "convention",
@@ -2448,15 +1232,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 127,
-            "start_column": 5,
-            "last_line": 127,
-            "last_column": 29,
-            "length": 25,
-            "line": 127,
-            "column": 5
-          }
+          "line": 127
         },
         {
           "severity": "warning",
@@ -2464,15 +1240,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 127,
-            "start_column": 5,
-            "last_line": 127,
-            "last_column": 16,
-            "length": 12,
-            "line": 127,
-            "column": 5
-          }
+          "line": 127
         },
         {
           "severity": "convention",
@@ -2480,15 +1248,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 128,
-            "start_column": 5,
-            "last_line": 128,
-            "last_column": 29,
-            "length": 25,
-            "line": 128,
-            "column": 5
-          }
+          "line": 128
         },
         {
           "severity": "warning",
@@ -2496,15 +1256,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 128,
-            "start_column": 5,
-            "last_line": 128,
-            "last_column": 15,
-            "length": 11,
-            "line": 128,
-            "column": 5
-          }
+          "line": 128
         },
         {
           "severity": "convention",
@@ -2512,15 +1264,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 129,
-            "start_column": 5,
-            "last_line": 129,
-            "last_column": 26,
-            "length": 22,
-            "line": 129,
-            "column": 5
-          }
+          "line": 129
         },
         {
           "severity": "warning",
@@ -2528,15 +1272,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 129,
-            "start_column": 5,
-            "last_line": 129,
-            "last_column": 16,
-            "length": 12,
-            "line": 129,
-            "column": 5
-          }
+          "line": 129
         },
         {
           "severity": "convention",
@@ -2544,15 +1280,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 130,
-            "start_column": 5,
-            "last_line": 130,
-            "last_column": 20,
-            "length": 16,
-            "line": 130,
-            "column": 5
-          }
+          "line": 130
         },
         {
           "severity": "warning",
@@ -2560,15 +1288,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 130,
-            "start_column": 5,
-            "last_line": 130,
-            "last_column": 12,
-            "length": 8,
-            "line": 130,
-            "column": 5
-          }
+          "line": 130
         },
         {
           "severity": "convention",
@@ -2576,15 +1296,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 131,
-            "start_column": 5,
-            "last_line": 131,
-            "last_column": 17,
-            "length": 13,
-            "line": 131,
-            "column": 5
-          }
+          "line": 131
         },
         {
           "severity": "warning",
@@ -2592,15 +1304,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 131,
-            "start_column": 5,
-            "last_line": 131,
-            "last_column": 10,
-            "length": 6,
-            "line": 131,
-            "column": 5
-          }
+          "line": 131
         },
         {
           "severity": "convention",
@@ -2608,15 +1312,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 132,
-            "start_column": 5,
-            "last_line": 132,
-            "last_column": 21,
-            "length": 17,
-            "line": 132,
-            "column": 5
-          }
+          "line": 132
         },
         {
           "severity": "warning",
@@ -2624,15 +1320,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 132,
-            "start_column": 5,
-            "last_line": 132,
-            "last_column": 9,
-            "length": 5,
-            "line": 132,
-            "column": 5
-          }
+          "line": 132
         },
         {
           "severity": "convention",
@@ -2640,15 +1328,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 133,
-            "start_column": 5,
-            "last_line": 133,
-            "last_column": 23,
-            "length": 19,
-            "line": 133,
-            "column": 5
-          }
+          "line": 133
         },
         {
           "severity": "warning",
@@ -2656,15 +1336,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 133,
-            "start_column": 5,
-            "last_line": 133,
-            "last_column": 14,
-            "length": 10,
-            "line": 133,
-            "column": 5
-          }
+          "line": 133
         },
         {
           "severity": "convention",
@@ -2672,15 +1344,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 134,
-            "start_column": 5,
-            "last_line": 134,
-            "last_column": 21,
-            "length": 17,
-            "line": 134,
-            "column": 5
-          }
+          "line": 134
         },
         {
           "severity": "warning",
@@ -2688,15 +1352,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 134,
-            "start_column": 5,
-            "last_line": 134,
-            "last_column": 11,
-            "length": 7,
-            "line": 134,
-            "column": 5
-          }
+          "line": 134
         },
         {
           "severity": "convention",
@@ -2704,15 +1360,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 135,
-            "start_column": 5,
-            "last_line": 135,
-            "last_column": 25,
-            "length": 21,
-            "line": 135,
-            "column": 5
-          }
+          "line": 135
         },
         {
           "severity": "warning",
@@ -2720,15 +1368,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 135,
-            "start_column": 5,
-            "last_line": 135,
-            "last_column": 12,
-            "length": 8,
-            "line": 135,
-            "column": 5
-          }
+          "line": 135
         },
         {
           "severity": "convention",
@@ -2736,15 +1376,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 136,
-            "start_column": 5,
-            "last_line": 136,
-            "last_column": 21,
-            "length": 17,
-            "line": 136,
-            "column": 5
-          }
+          "line": 136
         },
         {
           "severity": "warning",
@@ -2752,15 +1384,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 136,
-            "start_column": 5,
-            "last_line": 136,
-            "last_column": 15,
-            "length": 11,
-            "line": 136,
-            "column": 5
-          }
+          "line": 136
         },
         {
           "severity": "convention",
@@ -2768,15 +1392,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 137,
-            "start_column": 5,
-            "last_line": 137,
-            "last_column": 18,
-            "length": 14,
-            "line": 137,
-            "column": 5
-          }
+          "line": 137
         },
         {
           "severity": "warning",
@@ -2784,15 +1400,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 137,
-            "start_column": 5,
-            "last_line": 137,
-            "last_column": 10,
-            "length": 6,
-            "line": 137,
-            "column": 5
-          }
+          "line": 137
         },
         {
           "severity": "convention",
@@ -2800,15 +1408,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 138,
-            "start_column": 5,
-            "last_line": 138,
-            "last_column": 21,
-            "length": 17,
-            "line": 138,
-            "column": 5
-          }
+          "line": 138
         },
         {
           "severity": "warning",
@@ -2816,15 +1416,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 138,
-            "start_column": 5,
-            "last_line": 138,
-            "last_column": 10,
-            "length": 6,
-            "line": 138,
-            "column": 5
-          }
+          "line": 138
         },
         {
           "severity": "convention",
@@ -2832,15 +1424,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 139,
-            "start_column": 5,
-            "last_line": 139,
-            "last_column": 19,
-            "length": 15,
-            "line": 139,
-            "column": 5
-          }
+          "line": 139
         },
         {
           "severity": "warning",
@@ -2848,15 +1432,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 139,
-            "start_column": 5,
-            "last_line": 139,
-            "last_column": 13,
-            "length": 9,
-            "line": 139,
-            "column": 5
-          }
+          "line": 139
         },
         {
           "severity": "convention",
@@ -2864,15 +1440,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 140,
-            "start_column": 5,
-            "last_line": 140,
-            "last_column": 17,
-            "length": 13,
-            "line": 140,
-            "column": 5
-          }
+          "line": 140
         },
         {
           "severity": "warning",
@@ -2880,15 +1448,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 140,
-            "start_column": 5,
-            "last_line": 140,
-            "last_column": 8,
-            "length": 4,
-            "line": 140,
-            "column": 5
-          }
+          "line": 140
         },
         {
           "severity": "convention",
@@ -2896,15 +1456,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 141,
-            "start_column": 5,
-            "last_line": 141,
-            "last_column": 25,
-            "length": 21,
-            "line": 141,
-            "column": 5
-          }
+          "line": 141
         },
         {
           "severity": "warning",
@@ -2912,15 +1464,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 141,
-            "start_column": 5,
-            "last_line": 141,
-            "last_column": 14,
-            "length": 10,
-            "line": 141,
-            "column": 5
-          }
+          "line": 141
         },
         {
           "severity": "convention",
@@ -2928,15 +1472,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 142,
-            "start_column": 5,
-            "last_line": 142,
-            "last_column": 21,
-            "length": 17,
-            "line": 142,
-            "column": 5
-          }
+          "line": 142
         },
         {
           "severity": "warning",
@@ -2944,15 +1480,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 142,
-            "start_column": 5,
-            "last_line": 142,
-            "last_column": 13,
-            "length": 9,
-            "line": 142,
-            "column": 5
-          }
+          "line": 142
         },
         {
           "severity": "convention",
@@ -2960,15 +1488,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 143,
-            "start_column": 5,
-            "last_line": 143,
-            "last_column": 21,
-            "length": 17,
-            "line": 143,
-            "column": 5
-          }
+          "line": 143
         },
         {
           "severity": "warning",
@@ -2976,15 +1496,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 143,
-            "start_column": 5,
-            "last_line": 143,
-            "last_column": 10,
-            "length": 6,
-            "line": 143,
-            "column": 5
-          }
+          "line": 143
         },
         {
           "severity": "convention",
@@ -2992,15 +1504,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 144,
-            "start_column": 5,
-            "last_line": 144,
-            "last_column": 22,
-            "length": 18,
-            "line": 144,
-            "column": 5
-          }
+          "line": 144
         },
         {
           "severity": "warning",
@@ -3008,15 +1512,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 144,
-            "start_column": 5,
-            "last_line": 144,
-            "last_column": 13,
-            "length": 9,
-            "line": 144,
-            "column": 5
-          }
+          "line": 144
         },
         {
           "severity": "convention",
@@ -3024,15 +1520,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 145,
-            "start_column": 5,
-            "last_line": 145,
-            "last_column": 17,
-            "length": 13,
-            "line": 145,
-            "column": 5
-          }
+          "line": 145
         },
         {
           "severity": "warning",
@@ -3040,15 +1528,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 145,
-            "start_column": 5,
-            "last_line": 145,
-            "last_column": 11,
-            "length": 7,
-            "line": 145,
-            "column": 5
-          }
+          "line": 145
         },
         {
           "severity": "convention",
@@ -3056,15 +1536,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 146,
-            "start_column": 5,
-            "last_line": 146,
-            "last_column": 22,
-            "length": 18,
-            "line": 146,
-            "column": 5
-          }
+          "line": 146
         },
         {
           "severity": "warning",
@@ -3072,15 +1544,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 146,
-            "start_column": 5,
-            "last_line": 146,
-            "last_column": 14,
-            "length": 10,
-            "line": 146,
-            "column": 5
-          }
+          "line": 146
         },
         {
           "severity": "convention",
@@ -3088,15 +1552,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 147,
-            "start_column": 5,
-            "last_line": 147,
-            "last_column": 24,
-            "length": 20,
-            "line": 147,
-            "column": 5
-          }
+          "line": 147
         },
         {
           "severity": "warning",
@@ -3104,15 +1560,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 147,
-            "start_column": 5,
-            "last_line": 147,
-            "last_column": 10,
-            "length": 6,
-            "line": 147,
-            "column": 5
-          }
+          "line": 147
         },
         {
           "severity": "convention",
@@ -3120,15 +1568,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 148,
-            "start_column": 5,
-            "last_line": 148,
-            "last_column": 24,
-            "length": 20,
-            "line": 148,
-            "column": 5
-          }
+          "line": 148
         },
         {
           "severity": "warning",
@@ -3136,15 +1576,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 148,
-            "start_column": 5,
-            "last_line": 148,
-            "last_column": 16,
-            "length": 12,
-            "line": 148,
-            "column": 5
-          }
+          "line": 148
         },
         {
           "severity": "convention",
@@ -3152,15 +1584,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 149,
-            "start_column": 5,
-            "last_line": 149,
-            "last_column": 22,
-            "length": 18,
-            "line": 149,
-            "column": 5
-          }
+          "line": 149
         },
         {
           "severity": "warning",
@@ -3168,15 +1592,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 149,
-            "start_column": 5,
-            "last_line": 149,
-            "last_column": 10,
-            "length": 6,
-            "line": 149,
-            "column": 5
-          }
+          "line": 149
         },
         {
           "severity": "convention",
@@ -3184,15 +1600,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 150,
-            "start_column": 5,
-            "last_line": 150,
-            "last_column": 26,
-            "length": 22,
-            "line": 150,
-            "column": 5
-          }
+          "line": 150
         },
         {
           "severity": "warning",
@@ -3200,15 +1608,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 150,
-            "start_column": 5,
-            "last_line": 150,
-            "last_column": 14,
-            "length": 10,
-            "line": 150,
-            "column": 5
-          }
+          "line": 150
         },
         {
           "severity": "convention",
@@ -3216,15 +1616,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 151,
-            "start_column": 5,
-            "last_line": 151,
-            "last_column": 21,
-            "length": 17,
-            "line": 151,
-            "column": 5
-          }
+          "line": 151
         },
         {
           "severity": "warning",
@@ -3232,15 +1624,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 151,
-            "start_column": 5,
-            "last_line": 151,
-            "last_column": 14,
-            "length": 10,
-            "line": 151,
-            "column": 5
-          }
+          "line": 151
         },
         {
           "severity": "convention",
@@ -3248,15 +1632,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 152,
-            "start_column": 5,
-            "last_line": 152,
-            "last_column": 15,
-            "length": 11,
-            "line": 152,
-            "column": 5
-          }
+          "line": 152
         },
         {
           "severity": "warning",
@@ -3264,15 +1640,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 152,
-            "start_column": 5,
-            "last_line": 152,
-            "last_column": 9,
-            "length": 5,
-            "line": 152,
-            "column": 5
-          }
+          "line": 152
         },
         {
           "severity": "convention",
@@ -3280,15 +1648,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 153,
-            "start_column": 5,
-            "last_line": 153,
-            "last_column": 14,
-            "length": 10,
-            "line": 153,
-            "column": 5
-          }
+          "line": 153
         },
         {
           "severity": "warning",
@@ -3296,15 +1656,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 153,
-            "start_column": 5,
-            "last_line": 153,
-            "last_column": 8,
-            "length": 4,
-            "line": 153,
-            "column": 5
-          }
+          "line": 153
         },
         {
           "severity": "convention",
@@ -3312,15 +1664,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 154,
-            "start_column": 5,
-            "last_line": 154,
-            "last_column": 18,
-            "length": 14,
-            "line": 154,
-            "column": 5
-          }
+          "line": 154
         },
         {
           "severity": "warning",
@@ -3328,15 +1672,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 154,
-            "start_column": 5,
-            "last_line": 154,
-            "last_column": 12,
-            "length": 8,
-            "line": 154,
-            "column": 5
-          }
+          "line": 154
         },
         {
           "severity": "convention",
@@ -3344,15 +1680,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 155,
-            "start_column": 5,
-            "last_line": 155,
-            "last_column": 16,
-            "length": 12,
-            "line": 155,
-            "column": 5
-          }
+          "line": 155
         },
         {
           "severity": "warning",
@@ -3360,15 +1688,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 155,
-            "start_column": 5,
-            "last_line": 155,
-            "last_column": 8,
-            "length": 4,
-            "line": 155,
-            "column": 5
-          }
+          "line": 155
         },
         {
           "severity": "convention",
@@ -3376,15 +1696,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 156,
-            "start_column": 5,
-            "last_line": 156,
-            "last_column": 20,
-            "length": 16,
-            "line": 156,
-            "column": 5
-          }
+          "line": 156
         },
         {
           "severity": "warning",
@@ -3392,15 +1704,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 156,
-            "start_column": 5,
-            "last_line": 156,
-            "last_column": 10,
-            "length": 6,
-            "line": 156,
-            "column": 5
-          }
+          "line": 156
         },
         {
           "severity": "convention",
@@ -3408,15 +1712,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 157,
-            "start_column": 5,
-            "last_line": 157,
-            "last_column": 21,
-            "length": 17,
-            "line": 157,
-            "column": 5
-          }
+          "line": 157
         },
         {
           "severity": "warning",
@@ -3424,15 +1720,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 157,
-            "start_column": 5,
-            "last_line": 157,
-            "last_column": 12,
-            "length": 8,
-            "line": 157,
-            "column": 5
-          }
+          "line": 157
         },
         {
           "severity": "convention",
@@ -3440,15 +1728,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 158,
-            "start_column": 5,
-            "last_line": 158,
-            "last_column": 18,
-            "length": 14,
-            "line": 158,
-            "column": 5
-          }
+          "line": 158
         },
         {
           "severity": "warning",
@@ -3456,15 +1736,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 158,
-            "start_column": 5,
-            "last_line": 158,
-            "last_column": 11,
-            "length": 7,
-            "line": 158,
-            "column": 5
-          }
+          "line": 158
         },
         {
           "severity": "convention",
@@ -3472,15 +1744,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 159,
-            "start_column": 5,
-            "last_line": 159,
-            "last_column": 19,
-            "length": 15,
-            "line": 159,
-            "column": 5
-          }
+          "line": 159
         },
         {
           "severity": "warning",
@@ -3488,15 +1752,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 159,
-            "start_column": 5,
-            "last_line": 159,
-            "last_column": 9,
-            "length": 5,
-            "line": 159,
-            "column": 5
-          }
+          "line": 159
         },
         {
           "severity": "convention",
@@ -3504,15 +1760,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 160,
-            "start_column": 5,
-            "last_line": 160,
-            "last_column": 23,
-            "length": 19,
-            "line": 160,
-            "column": 5
-          }
+          "line": 160
         },
         {
           "severity": "warning",
@@ -3520,15 +1768,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 160,
-            "start_column": 5,
-            "last_line": 160,
-            "last_column": 14,
-            "length": 10,
-            "line": 160,
-            "column": 5
-          }
+          "line": 160
         },
         {
           "severity": "convention",
@@ -3536,15 +1776,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 161,
-            "start_column": 5,
-            "last_line": 161,
-            "last_column": 16,
-            "length": 12,
-            "line": 161,
-            "column": 5
-          }
+          "line": 161
         },
         {
           "severity": "warning",
@@ -3552,15 +1784,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 161,
-            "start_column": 5,
-            "last_line": 161,
-            "last_column": 8,
-            "length": 4,
-            "line": 161,
-            "column": 5
-          }
+          "line": 161
         },
         {
           "severity": "convention",
@@ -3568,15 +1792,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 162,
-            "start_column": 5,
-            "last_line": 162,
-            "last_column": 23,
-            "length": 19,
-            "line": 162,
-            "column": 5
-          }
+          "line": 162
         },
         {
           "severity": "warning",
@@ -3584,15 +1800,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 162,
-            "start_column": 5,
-            "last_line": 162,
-            "last_column": 10,
-            "length": 6,
-            "line": 162,
-            "column": 5
-          }
+          "line": 162
         },
         {
           "severity": "convention",
@@ -3600,15 +1808,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 163,
-            "start_column": 5,
-            "last_line": 163,
-            "last_column": 33,
-            "length": 29,
-            "line": 163,
-            "column": 5
-          }
+          "line": 163
         },
         {
           "severity": "warning",
@@ -3616,15 +1816,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 163,
-            "start_column": 5,
-            "last_line": 163,
-            "last_column": 21,
-            "length": 17,
-            "line": 163,
-            "column": 5
-          }
+          "line": 163
         },
         {
           "severity": "convention",
@@ -3632,15 +1824,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 164,
-            "start_column": 5,
-            "last_line": 164,
-            "last_column": 24,
-            "length": 20,
-            "line": 164,
-            "column": 5
-          }
+          "line": 164
         },
         {
           "severity": "warning",
@@ -3648,15 +1832,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 164,
-            "start_column": 5,
-            "last_line": 164,
-            "last_column": 14,
-            "length": 10,
-            "line": 164,
-            "column": 5
-          }
+          "line": 164
         },
         {
           "severity": "convention",
@@ -3664,15 +1840,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 165,
-            "start_column": 5,
-            "last_line": 165,
-            "last_column": 19,
-            "length": 15,
-            "line": 165,
-            "column": 5
-          }
+          "line": 165
         },
         {
           "severity": "warning",
@@ -3680,15 +1848,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 165,
-            "start_column": 5,
-            "last_line": 165,
-            "last_column": 12,
-            "length": 8,
-            "line": 165,
-            "column": 5
-          }
+          "line": 165
         },
         {
           "severity": "convention",
@@ -3696,15 +1856,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 166,
-            "start_column": 5,
-            "last_line": 166,
-            "last_column": 16,
-            "length": 12,
-            "line": 166,
-            "column": 5
-          }
+          "line": 166
         },
         {
           "severity": "warning",
@@ -3712,15 +1864,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 166,
-            "start_column": 5,
-            "last_line": 166,
-            "last_column": 9,
-            "length": 5,
-            "line": 166,
-            "column": 5
-          }
+          "line": 166
         },
         {
           "severity": "convention",
@@ -3728,15 +1872,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 167,
-            "start_column": 5,
-            "last_line": 167,
-            "last_column": 16,
-            "length": 12,
-            "line": 167,
-            "column": 5
-          }
+          "line": 167
         },
         {
           "severity": "warning",
@@ -3744,15 +1880,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 167,
-            "start_column": 5,
-            "last_line": 167,
-            "last_column": 9,
-            "length": 5,
-            "line": 167,
-            "column": 5
-          }
+          "line": 167
         },
         {
           "severity": "convention",
@@ -3760,15 +1888,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 168,
-            "start_column": 5,
-            "last_line": 168,
-            "last_column": 16,
-            "length": 12,
-            "line": 168,
-            "column": 5
-          }
+          "line": 168
         },
         {
           "severity": "warning",
@@ -3776,15 +1896,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 168,
-            "start_column": 5,
-            "last_line": 168,
-            "last_column": 9,
-            "length": 5,
-            "line": 168,
-            "column": 5
-          }
+          "line": 168
         },
         {
           "severity": "convention",
@@ -3792,15 +1904,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 169,
-            "start_column": 5,
-            "last_line": 169,
-            "last_column": 24,
-            "length": 20,
-            "line": 169,
-            "column": 5
-          }
+          "line": 169
         },
         {
           "severity": "warning",
@@ -3808,15 +1912,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 169,
-            "start_column": 5,
-            "last_line": 169,
-            "last_column": 16,
-            "length": 12,
-            "line": 169,
-            "column": 5
-          }
+          "line": 169
         },
         {
           "severity": "convention",
@@ -3824,15 +1920,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 170,
-            "start_column": 5,
-            "last_line": 170,
-            "last_column": 17,
-            "length": 13,
-            "line": 170,
-            "column": 5
-          }
+          "line": 170
         },
         {
           "severity": "warning",
@@ -3840,15 +1928,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 170,
-            "start_column": 5,
-            "last_line": 170,
-            "last_column": 10,
-            "length": 6,
-            "line": 170,
-            "column": 5
-          }
+          "line": 170
         },
         {
           "severity": "convention",
@@ -3856,15 +1936,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 171,
-            "start_column": 5,
-            "last_line": 171,
-            "last_column": 16,
-            "length": 12,
-            "line": 171,
-            "column": 5
-          }
+          "line": 171
         },
         {
           "severity": "warning",
@@ -3872,15 +1944,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 171,
-            "start_column": 5,
-            "last_line": 171,
-            "last_column": 9,
-            "length": 5,
-            "line": 171,
-            "column": 5
-          }
+          "line": 171
         },
         {
           "severity": "convention",
@@ -3888,15 +1952,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 172,
-            "start_column": 5,
-            "last_line": 172,
-            "last_column": 16,
-            "length": 12,
-            "line": 172,
-            "column": 5
-          }
+          "line": 172
         },
         {
           "severity": "warning",
@@ -3904,15 +1960,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 172,
-            "start_column": 5,
-            "last_line": 172,
-            "last_column": 9,
-            "length": 5,
-            "line": 172,
-            "column": 5
-          }
+          "line": 172
         },
         {
           "severity": "convention",
@@ -3920,15 +1968,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 173,
-            "start_column": 5,
-            "last_line": 173,
-            "last_column": 24,
-            "length": 20,
-            "line": 173,
-            "column": 5
-          }
+          "line": 173
         },
         {
           "severity": "warning",
@@ -3936,15 +1976,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 173,
-            "start_column": 5,
-            "last_line": 173,
-            "last_column": 7,
-            "length": 3,
-            "line": 173,
-            "column": 5
-          }
+          "line": 173
         },
         {
           "severity": "convention",
@@ -3952,15 +1984,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 174,
-            "start_column": 5,
-            "last_line": 174,
-            "last_column": 26,
-            "length": 22,
-            "line": 174,
-            "column": 5
-          }
+          "line": 174
         },
         {
           "severity": "warning",
@@ -3968,15 +1992,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 174,
-            "start_column": 5,
-            "last_line": 174,
-            "last_column": 19,
-            "length": 15,
-            "line": 174,
-            "column": 5
-          }
+          "line": 174
         },
         {
           "severity": "convention",
@@ -3984,15 +2000,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 175,
-            "start_column": 5,
-            "last_line": 175,
-            "last_column": 23,
-            "length": 19,
-            "line": 175,
-            "column": 5
-          }
+          "line": 175
         },
         {
           "severity": "warning",
@@ -4000,15 +2008,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 175,
-            "start_column": 5,
-            "last_line": 175,
-            "last_column": 11,
-            "length": 7,
-            "line": 175,
-            "column": 5
-          }
+          "line": 175
         },
         {
           "severity": "convention",
@@ -4016,15 +2016,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 176,
-            "start_column": 5,
-            "last_line": 176,
-            "last_column": 27,
-            "length": 23,
-            "line": 176,
-            "column": 5
-          }
+          "line": 176
         },
         {
           "severity": "warning",
@@ -4032,15 +2024,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 176,
-            "start_column": 5,
-            "last_line": 176,
-            "last_column": 14,
-            "length": 10,
-            "line": 176,
-            "column": 5
-          }
+          "line": 176
         },
         {
           "severity": "convention",
@@ -4048,15 +2032,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 177,
-            "start_column": 5,
-            "last_line": 177,
-            "last_column": 22,
-            "length": 18,
-            "line": 177,
-            "column": 5
-          }
+          "line": 177
         },
         {
           "severity": "warning",
@@ -4064,15 +2040,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 177,
-            "start_column": 5,
-            "last_line": 177,
-            "last_column": 15,
-            "length": 11,
-            "line": 177,
-            "column": 5
-          }
+          "line": 177
         },
         {
           "severity": "convention",
@@ -4080,15 +2048,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 178,
-            "start_column": 5,
-            "last_line": 178,
-            "last_column": 22,
-            "length": 18,
-            "line": 178,
-            "column": 5
-          }
+          "line": 178
         },
         {
           "severity": "warning",
@@ -4096,15 +2056,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 178,
-            "start_column": 5,
-            "last_line": 178,
-            "last_column": 9,
-            "length": 5,
-            "line": 178,
-            "column": 5
-          }
+          "line": 178
         },
         {
           "severity": "convention",
@@ -4112,15 +2064,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 179,
-            "start_column": 5,
-            "last_line": 179,
-            "last_column": 31,
-            "length": 27,
-            "line": 179,
-            "column": 5
-          }
+          "line": 179
         },
         {
           "severity": "warning",
@@ -4128,15 +2072,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 179,
-            "start_column": 5,
-            "last_line": 179,
-            "last_column": 15,
-            "length": 11,
-            "line": 179,
-            "column": 5
-          }
+          "line": 179
         },
         {
           "severity": "convention",
@@ -4144,15 +2080,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 180,
-            "start_column": 5,
-            "last_line": 180,
-            "last_column": 24,
-            "length": 20,
-            "line": 180,
-            "column": 5
-          }
+          "line": 180
         },
         {
           "severity": "warning",
@@ -4160,15 +2088,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 180,
-            "start_column": 5,
-            "last_line": 180,
-            "last_column": 18,
-            "length": 14,
-            "line": 180,
-            "column": 5
-          }
+          "line": 180
         },
         {
           "severity": "convention",
@@ -4176,15 +2096,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 181,
-            "start_column": 5,
-            "last_line": 181,
-            "last_column": 15,
-            "length": 11,
-            "line": 181,
-            "column": 5
-          }
+          "line": 181
         },
         {
           "severity": "warning",
@@ -4192,15 +2104,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 181,
-            "start_column": 5,
-            "last_line": 181,
-            "last_column": 8,
-            "length": 4,
-            "line": 181,
-            "column": 5
-          }
+          "line": 181
         },
         {
           "severity": "convention",
@@ -4208,15 +2112,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 182,
-            "start_column": 5,
-            "last_line": 182,
-            "last_column": 15,
-            "length": 11,
-            "line": 182,
-            "column": 5
-          }
+          "line": 182
         },
         {
           "severity": "warning",
@@ -4224,15 +2120,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 182,
-            "start_column": 5,
-            "last_line": 182,
-            "last_column": 9,
-            "length": 5,
-            "line": 182,
-            "column": 5
-          }
+          "line": 182
         },
         {
           "severity": "convention",
@@ -4240,15 +2128,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 183,
-            "start_column": 5,
-            "last_line": 183,
-            "last_column": 22,
-            "length": 18,
-            "line": 183,
-            "column": 5
-          }
+          "line": 183
         },
         {
           "severity": "warning",
@@ -4256,15 +2136,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 183,
-            "start_column": 5,
-            "last_line": 183,
-            "last_column": 8,
-            "length": 4,
-            "line": 183,
-            "column": 5
-          }
+          "line": 183
         },
         {
           "severity": "convention",
@@ -4272,15 +2144,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 184,
-            "start_column": 5,
-            "last_line": 184,
-            "last_column": 23,
-            "length": 19,
-            "line": 184,
-            "column": 5
-          }
+          "line": 184
         },
         {
           "severity": "warning",
@@ -4288,15 +2152,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 184,
-            "start_column": 5,
-            "last_line": 184,
-            "last_column": 12,
-            "length": 8,
-            "line": 184,
-            "column": 5
-          }
+          "line": 184
         },
         {
           "severity": "convention",
@@ -4304,15 +2160,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 185,
-            "start_column": 5,
-            "last_line": 185,
-            "last_column": 20,
-            "length": 16,
-            "line": 185,
-            "column": 5
-          }
+          "line": 185
         },
         {
           "severity": "warning",
@@ -4320,15 +2168,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 185,
-            "start_column": 5,
-            "last_line": 185,
-            "last_column": 13,
-            "length": 9,
-            "line": 185,
-            "column": 5
-          }
+          "line": 185
         },
         {
           "severity": "convention",
@@ -4336,15 +2176,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 186,
-            "start_column": 5,
-            "last_line": 186,
-            "last_column": 17,
-            "length": 13,
-            "line": 186,
-            "column": 5
-          }
+          "line": 186
         },
         {
           "severity": "warning",
@@ -4352,15 +2184,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 186,
-            "start_column": 5,
-            "last_line": 186,
-            "last_column": 8,
-            "length": 4,
-            "line": 186,
-            "column": 5
-          }
+          "line": 186
         },
         {
           "severity": "convention",
@@ -4368,15 +2192,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 187,
-            "start_column": 5,
-            "last_line": 187,
-            "last_column": 23,
-            "length": 19,
-            "line": 187,
-            "column": 5
-          }
+          "line": 187
         },
         {
           "severity": "warning",
@@ -4384,15 +2200,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 187,
-            "start_column": 5,
-            "last_line": 187,
-            "last_column": 16,
-            "length": 12,
-            "line": 187,
-            "column": 5
-          }
+          "line": 187
         },
         {
           "severity": "convention",
@@ -4400,15 +2208,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 188,
-            "start_column": 5,
-            "last_line": 188,
-            "last_column": 17,
-            "length": 13,
-            "line": 188,
-            "column": 5
-          }
+          "line": 188
         },
         {
           "severity": "warning",
@@ -4416,15 +2216,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 188,
-            "start_column": 5,
-            "last_line": 188,
-            "last_column": 9,
-            "length": 5,
-            "line": 188,
-            "column": 5
-          }
+          "line": 188
         },
         {
           "severity": "convention",
@@ -4432,15 +2224,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 189,
-            "start_column": 5,
-            "last_line": 189,
-            "last_column": 22,
-            "length": 18,
-            "line": 189,
-            "column": 5
-          }
+          "line": 189
         },
         {
           "severity": "warning",
@@ -4448,15 +2232,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 189,
-            "start_column": 5,
-            "last_line": 189,
-            "last_column": 10,
-            "length": 6,
-            "line": 189,
-            "column": 5
-          }
+          "line": 189
         },
         {
           "severity": "convention",
@@ -4464,15 +2240,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 190,
-            "start_column": 5,
-            "last_line": 190,
-            "last_column": 22,
-            "length": 18,
-            "line": 190,
-            "column": 5
-          }
+          "line": 190
         },
         {
           "severity": "warning",
@@ -4480,15 +2248,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 190,
-            "start_column": 5,
-            "last_line": 190,
-            "last_column": 14,
-            "length": 10,
-            "line": 190,
-            "column": 5
-          }
+          "line": 190
         },
         {
           "severity": "convention",
@@ -4496,15 +2256,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 191,
-            "start_column": 5,
-            "last_line": 191,
-            "last_column": 22,
-            "length": 18,
-            "line": 191,
-            "column": 5
-          }
+          "line": 191
         },
         {
           "severity": "warning",
@@ -4512,15 +2264,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 191,
-            "start_column": 5,
-            "last_line": 191,
-            "last_column": 15,
-            "length": 11,
-            "line": 191,
-            "column": 5
-          }
+          "line": 191
         },
         {
           "severity": "convention",
@@ -4528,15 +2272,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 192,
-            "start_column": 5,
-            "last_line": 192,
-            "last_column": 18,
-            "length": 14,
-            "line": 192,
-            "column": 5
-          }
+          "line": 192
         },
         {
           "severity": "warning",
@@ -4544,15 +2280,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 192,
-            "start_column": 5,
-            "last_line": 192,
-            "last_column": 9,
-            "length": 5,
-            "line": 192,
-            "column": 5
-          }
+          "line": 192
         },
         {
           "severity": "convention",
@@ -4560,15 +2288,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 193,
-            "start_column": 5,
-            "last_line": 193,
-            "last_column": 26,
-            "length": 22,
-            "line": 193,
-            "column": 5
-          }
+          "line": 193
         },
         {
           "severity": "warning",
@@ -4576,15 +2296,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 193,
-            "start_column": 5,
-            "last_line": 193,
-            "last_column": 11,
-            "length": 7,
-            "line": 193,
-            "column": 5
-          }
+          "line": 193
         },
         {
           "severity": "convention",
@@ -4592,15 +2304,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 194,
-            "start_column": 5,
-            "last_line": 194,
-            "last_column": 30,
-            "length": 26,
-            "line": 194,
-            "column": 5
-          }
+          "line": 194
         },
         {
           "severity": "warning",
@@ -4608,15 +2312,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 194,
-            "start_column": 5,
-            "last_line": 194,
-            "last_column": 17,
-            "length": 13,
-            "line": 194,
-            "column": 5
-          }
+          "line": 194
         },
         {
           "severity": "convention",
@@ -4624,15 +2320,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 195,
-            "start_column": 5,
-            "last_line": 195,
-            "last_column": 21,
-            "length": 17,
-            "line": 195,
-            "column": 5
-          }
+          "line": 195
         },
         {
           "severity": "warning",
@@ -4640,15 +2328,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 195,
-            "start_column": 5,
-            "last_line": 195,
-            "last_column": 15,
-            "length": 11,
-            "line": 195,
-            "column": 5
-          }
+          "line": 195
         },
         {
           "severity": "convention",
@@ -4656,15 +2336,7 @@
           "cop_name": "Layout/HashAlignment",
           "corrected": false,
           "correctable": true,
-          "location": {
-            "start_line": 196,
-            "start_column": 5,
-            "last_line": 196,
-            "last_column": 18,
-            "length": 14,
-            "line": 196,
-            "column": 5
-          }
+          "line": 196
         },
         {
           "severity": "warning",
@@ -4672,15 +2344,7 @@
           "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
           "correctable": false,
-          "location": {
-            "start_line": 196,
-            "start_column": 5,
-            "last_line": 196,
-            "last_column": 8,
-            "length": 4,
-            "line": 196,
-            "column": 5
-          }
+          "line": 196
         }
       ]
     }

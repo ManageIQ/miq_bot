@@ -78,7 +78,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
           SEVERITY_MAP[o["severity"]],
           format_message(o),
           f["path"],
-          format_locator(f, o)
+          format_line(f, o)
         )
       end
     end.flatten
@@ -96,20 +96,11 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     COP_URIS[cop_name] || cop_name
   end
 
-  def format_locator(file, offense)
-    [format_line(file, offense), format_column(offense)].compact.join(", ").presence
-  end
-
   def format_line(file, offense)
-    line = offense.fetch_path("location", "line")
+    line = offense.fetch_path("line")
     return nil unless line
     uri = File.join(line_uri, "blob", commits.last, file["path"]) << "#L#{line}"
     "[Line #{line}](#{uri})"
-  end
-
-  def format_column(offense)
-    column = offense.fetch_path("location", "column")
-    column && "Col #{column}"
   end
 
   # TODO: Don't reuse the commit_uri.  This should probably be its own URI.

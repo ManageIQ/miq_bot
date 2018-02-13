@@ -50,6 +50,11 @@ gem 'octokit', '~> 4.8.0', :require => false
 gem 'faraday', '~> 0.9.2'
 gem 'faraday-http-cache', '~> 2.0.0'
 
+gem 'pronto', '~> 0.9.5',          :require => false
+gem 'pronto-haml', '~> 0.9.0',     :require => false
+gem 'pronto-rubocop',              :require => false
+gem 'pronto-yamllint',             :require => false
+
 group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
