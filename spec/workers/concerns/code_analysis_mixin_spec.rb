@@ -1,5 +1,4 @@
 describe CodeAnalysisMixin do
-  let(:example_rubocop_result) { {"metadata"=>{"rubocop_version"=>"0.47.1", "ruby_engine"=>"ruby", "ruby_version"=>"2.3.3", "ruby_patchlevel"=>"222", "ruby_platform"=>"x86_64-linux"}, "files"=>[{"path"=>"app/helpers/application_helper/button/mixins/discovery_mixin.rb", "offenses"=>[]}, {"path"=>"app/helpers/application_helper/button/button_new_discover.rb", "offenses"=>[{"severity"=>"warning", "message"=>"Method `ApplicationHelper::Button::ButtonNewDiscover#visible?` is defined at both /tmp/d20171201-9050-1m4n90/app/helpers/application_helper/button/button_new_discover.rb:5 and /tmp/d20171201-9050-1m4n90/app/helpers/application_helper/button/button_new_discover.rb:9.", "cop_name"=>"Lint/DuplicateMethods", "corrected"=>nil, "location"=>{"line"=>9, "column"=>3, "length"=>3}}]}], "summary"=>{"offense_count"=>1, "target_file_count"=>2, "inspected_file_count"=>2}} }
   let(:test_class) do
     Class.new do
       include CodeAnalysisMixin
@@ -8,34 +7,122 @@ describe CodeAnalysisMixin do
   end
   subject { test_class.new }
 
-  context "#merged_linter_results" do
+  describe "#merged_linter_results" do
     it "should always return a hash with a 'files' and 'summary' key, even with no cops running" do
-      expect(Linter::Rubocop).to receive(:new).and_return(double(:run => nil))
-      expect(Linter::Haml).to receive(:new).and_return(double(:run => nil))
-      expect(Linter::Yaml).to receive(:new).and_return(double(:run => nil))
+      allow(subject).to receive(:pronto_result).and_return([])
+      expect(subject.merged_linter_results).to eq("files" => [], "summary" => {"inspected_file_count" => 0, "offense_count" => 0, "target_file_count" => 0})
+    end
+  end
 
-      expect(subject.merged_linter_results).to eq("files"=>[], "summary"=>{"inspected_file_count"=>0, "offense_count"=>0, "target_file_count"=>0})
+  describe "#run_all_linters" do
+    let(:item_rubocop) { double("RuCo object", :runner => item_runner_ruco, :path => "RuCo filepath.rb", :level => "RuCo warning-text", :msg => item_msg, :line => item_line) }
+    let(:item_haml)    { double("haml object", :runner => item_runner_haml, :path => "haml filepath.rb", :level => "haml warning-text", :msg => item_msg, :line => item_line) }
+    let(:item_yaml)    { double("yaml object", :runner => item_runner_yaml, :path => "yaml filepath.rb", :level => "yaml warning-text", :msg => item_msg, :line => item_line) }
+
+    let(:item_runner_ruco)  { double("runner object", :name => "Pronto::Rubocop") }
+    let(:item_runner_haml)  { double("runner object", :name => "Pronto::Haml") }
+    let(:item_runner_yaml)  { double("runner object", :name => "Pronto::Yaml") }
+
+    let(:item_msg)  { double("msg object", :msg => "message-text", :line => item_line) }
+    let(:item_line) { double("line object", :position => 1, :length => 2) }
+
+    before do
+      allow(subject).to receive(:pronto_result).and_return(input)
     end
 
-    it "merges together with one result" do
-      expect(Linter::Rubocop).to receive(:new).and_return(double(:run => example_rubocop_result))
-      expect(Linter::Haml).to receive(:new).and_return(double(:run => nil))
-      expect(Linter::Yaml).to receive(:new).and_return(double(:run => nil))
+    context "input is array of pronto messages" do
+      let(:input) { [item_rubocop, item_haml, item_yaml] }
 
-      expect(subject.merged_linter_results).to eq(
-        "files" => example_rubocop_result["files"],
-        "summary" => {"inspected_file_count"=>2, "offense_count"=>1, "target_file_count"=>2}
-      )
-    end
-
-    it "merges together with one result" do
-      expect(Linter::Rubocop).to receive(:new).and_return(double(:run => example_rubocop_result))
-      expect(Linter::Haml).to receive(:new).and_return(double(:run => example_rubocop_result))
-      expect(Linter::Yaml).to receive(:new).and_return(double(:run => nil))
-
-      results = subject.merged_linter_results
-      expect(results["files"]).to include(*example_rubocop_result["files"])
-      expect(results["summary"]).to eq("inspected_file_count"=>4, "offense_count"=>2, "target_file_count"=>4)
+      it "returns a hash created from an array of \'Pronto::Message\'s" do
+        expect(subject.run_all_linters).to eq(
+          [
+            {
+              "files"    =>
+                            [
+                              {
+                                "path"     => item_rubocop.path,
+                                "offenses" =>
+                                              [
+                                                {
+                                                  "severity"  => item_rubocop.level,
+                                                  "message"   => item_rubocop.msg,
+                                                  "cop_name"  => item_rubocop.runner,
+                                                  "corrected" => false,
+                                                  "location"  => {
+                                                    "line"   => item_msg.line.position,
+                                                    "column" => 0,
+                                                    "length" => item_msg.line.length,
+                                                  }
+                                                },
+                                              ]
+                              }
+                            ],
+              "summary"  =>
+                            {
+                              "offense_count"        => input.group_by(&:runner).values[0].count,
+                              "target_file_count"    => input.group_by(&:runner).values[0].group_by(&:path).count,
+                              "inspected_file_count" => 0
+                            }
+            },
+            {
+              "files"   =>
+                           [
+                             {
+                               "path"     => item_haml.path,
+                               "offenses" =>
+                                             [
+                                               {
+                                                 "severity"  => item_haml.level,
+                                                 "message"   => item_haml.msg,
+                                                 "cop_name"  => item_haml.runner,
+                                                 "corrected" => false,
+                                                 "location"  => {
+                                                   "line"   => item_msg.line.position,
+                                                   "column" => 0,
+                                                   "length" => item_msg.line.length,
+                                                 }
+                                               },
+                                             ]
+                             }
+                           ],
+              "summary" =>
+                           {
+                             "offense_count"        => input.group_by(&:runner).values[1].count,
+                             "target_file_count"    => input.group_by(&:runner).values[1].group_by(&:path).count,
+                             "inspected_file_count" => 0
+                           }
+            },
+            {
+              "files"   =>
+                           [
+                             {
+                               "path"     => item_yaml.path,
+                               "offenses" =>
+                                             [
+                                               {
+                                                 "severity"  => item_yaml.level,
+                                                 "message"   => item_yaml.msg,
+                                                 "cop_name"  => item_yaml.runner,
+                                                 "corrected" => false,
+                                                 "location"  => {
+                                                   "line"   => item_msg.line.position,
+                                                   "column" => 0,
+                                                   "length" => item_msg.line.length,
+                                                 }
+                                               },
+                                             ]
+                             }
+                           ],
+              "summary" =>
+                           {
+                             "offense_count"        => input.group_by(&:runner).values[2].count,
+                             "target_file_count"    => input.group_by(&:runner).values[2].group_by(&:path).count,
+                             "inspected_file_count" => 0
+                           }
+            }
+          ]
+        ) # expect END
+      end
     end
   end
 end

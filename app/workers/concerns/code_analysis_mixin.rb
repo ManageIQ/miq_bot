@@ -1,3 +1,15 @@
+require 'pronto/runners'
+require 'pronto/rubocop'
+require 'pronto/yamllint'
+require 'pronto/haml'
+require 'pronto/git/repository'
+require 'pronto/git/patches'
+require 'pronto/git/patch'
+require 'pronto/git/line'
+
+require 'fileutils'
+require 'tmpdir'
+
 module CodeAnalysisMixin
   def merged_linter_results
     results = {
@@ -19,11 +31,55 @@ module CodeAnalysisMixin
     results
   end
 
+  # run linters via pronto and return the pronto result
+  def pronto_result
+    p_result = nil
+
+    # temporary solution for: download repo, obtain changes, get pronto result about changes
+    Dir.mktmpdir do |dir|
+      FileUtils.copy_entry(@branch.repo.path.to_s, dir)
+      repo = Pronto::Git::Repository.new(dir)
+      rg = repo.instance_variable_get(:@repo)
+      rg.fetch('origin', @branch.name.sub(/^prs/, 'pull'))
+      rg.checkout('FETCH_HEAD')
+      rg.reset('HEAD', :hard)
+      patches = repo.diff(@branch.merge_target)
+      p_result = Pronto::Runners.new.run(patches)
+    end
+
+    p_result
+  end
+
   def run_all_linters
-    unmerged_results = []
-    unmerged_results << Linter::Rubocop.new(branch).run
-    unmerged_results << Linter::Haml.new(branch).run
-    unmerged_results << Linter::Yaml.new(branch).run
-    unmerged_results.tap(&:compact!)
+    pronto_result.group_by(&:runner).values.map do |linted| # group by linter
+      output = {}
+
+      output["files"] = linted.group_by(&:path).map do |path, value| # group by file in linter
+        {
+          "path"     => path,
+          "offenses" => value.map do |msg| # put offenses of file in linter into an array
+            {
+              "severity"  => msg.level.to_s,
+              "message"   => msg.msg,
+              "cop_name"  => msg.runner,
+              "corrected" => false,
+              "location"  => {
+                "line"   => msg.line.position,
+                "column" => 0, # TODO: value cannot be obtained from Pronto::Message
+                "length" => msg.line.length,
+              }
+            }
+          end
+        }
+      end
+
+      output["summary"] = {
+        "offense_count"        => output["files"].sum { |item| item['offenses'].length },
+        "target_file_count"    => output["files"].length,
+        "inspected_file_count" => 0 # TODO: value cannot be obtained from the result of `pronto_result` method
+      }
+
+      output
+    end
   end
 end
