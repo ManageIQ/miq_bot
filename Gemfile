@@ -47,7 +47,7 @@ gem 'travis',         '~> 1.7.6'
 
 gem 'awesome_spawn',        '>= 1.4.1'
 gem 'default_value_for'
-gem 'haml_lint',            '~> 0.20.0', :require => false
+gem 'haml_lint',            '~> 0.27.0', :require => false
 gem 'more_core_extensions', '~> 2.0.0',  :require => 'more_core_extensions/all'
 gem 'rubocop',              '~> 0.52.0', :require => false
 gem 'rugged',                            :require => false
@@ -55,6 +55,11 @@ gem 'rugged',                            :require => false
 gem 'octokit', '~> 4.8.0', :require => false
 gem 'faraday', '~> 0.9.1'
 gem 'faraday-http-cache', '~> 2.0.0'
+
+gem 'pronto', '~> 0.9.5',          :require => false
+gem 'pronto-haml', '~> 0.9.0',     :require => false
+gem 'pronto-rubocop',              :require => false
+gem 'pronto-yamllint',             :require => false
 
 group :development, :test do
   gem 'rspec'
