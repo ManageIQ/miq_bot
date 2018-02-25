@@ -24,7 +24,7 @@ describe CodeAnalysisMixin do
     let(:item_runner_yaml)  { double("runner object", :name => "Pronto::Yaml") }
 
     let(:item_msg)  { double("msg object", :msg => "message-text", :line => item_line) }
-    let(:item_line) { double("line object", :position => 1, :length => 2) }
+    let(:item_line) { double("line object", :position => 1) }
 
     before do
       allow(subject).to receive(:pronto_result).and_return(input)
@@ -48,11 +48,7 @@ describe CodeAnalysisMixin do
                                                   "message"   => item_rubocop.msg,
                                                   "cop_name"  => item_rubocop.runner,
                                                   "corrected" => false,
-                                                  "location"  => {
-                                                    "line"   => item_msg.line.position,
-                                                    "column" => 0,
-                                                    "length" => item_msg.line.length,
-                                                  }
+                                                  "line"      => item_msg.line.position
                                                 },
                                               ]
                               }
@@ -76,11 +72,7 @@ describe CodeAnalysisMixin do
                                                  "message"   => item_haml.msg,
                                                  "cop_name"  => item_haml.runner,
                                                  "corrected" => false,
-                                                 "location"  => {
-                                                   "line"   => item_msg.line.position,
-                                                   "column" => 0,
-                                                   "length" => item_msg.line.length,
-                                                 }
+                                                 "line"      => item_msg.line.position
                                                },
                                              ]
                              }
@@ -104,11 +96,7 @@ describe CodeAnalysisMixin do
                                                  "message"   => item_yaml.msg,
                                                  "cop_name"  => item_yaml.runner,
                                                  "corrected" => false,
-                                                 "location"  => {
-                                                   "line"   => item_msg.line.position,
-                                                   "column" => 0,
-                                                   "length" => item_msg.line.length,
-                                                 }
+                                                 "line"      => item_msg.line.position
                                                },
                                              ]
                              }

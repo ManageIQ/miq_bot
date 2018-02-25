@@ -15,30 +15,14 @@
           "message": "Align the elements of a hash literal if they span more than one line.",
           "cop_name": "Layout/AlignHash",
           "corrected": false,
-          "location": {
-            "start_line": 3,
-            "start_column": 5,
-            "last_line": 3,
-            "last_column": 20,
-            "length": 16,
-            "line": 3,
-            "column": 5
-          }
+          "line": 3
         },
         {
           "severity": "convention",
           "message": "Align the elements of a hash literal if they span more than one line.",
           "cop_name": "Layout/AlignHash",
           "corrected": false,
-          "location": {
-            "start_line": 4,
-            "start_column": 5,
-            "last_line": 4,
-            "last_column": 22,
-            "length": 18,
-            "line": 4,
-            "column": 5
-          }
+          "line": 4
         }
       ]
     },
@@ -56,15 +40,7 @@
           "message": "unexpected token kEND\n(Using Ruby 2.3 parser; configure using `TargetRubyVersion` parameter, under `AllCops`)",
           "cop_name": "Lint/Syntax",
           "corrected": false,
-          "location": {
-            "start_line": 3,
-            "start_column": 1,
-            "last_line": 3,
-            "last_column": 3,
-            "length": 3,
-            "line": 3,
-            "column": 1
-          }
+          "line": 3
         }
       ]
     },
@@ -76,15 +52,7 @@
           "message": "Useless assignment to variable - `unused_variable`.",
           "cop_name": "Lint/UselessAssignment",
           "corrected": false,
-          "location": {
-            "start_line": 3,
-            "start_column": 5,
-            "last_line": 3,
-            "last_column": 19,
-            "length": 15,
-            "line": 3,
-            "column": 5
-          }
+          "line": 3
         }
       ]
     }

@@ -63,11 +63,7 @@ module CodeAnalysisMixin
               "message"   => msg.msg,
               "cop_name"  => msg.runner,
               "corrected" => false,
-              "location"  => {
-                "line"   => msg.line.position,
-                "column" => 0, # TODO: value cannot be obtained from Pronto::Message
-                "length" => msg.line.length,
-              }
+              "line"      => msg.line.position
             }
           end
         }
