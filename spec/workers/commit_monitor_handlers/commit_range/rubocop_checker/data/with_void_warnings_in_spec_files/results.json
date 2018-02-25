@@ -15,15 +15,7 @@
           "message": "Operator `==` used in void context.",
           "cop_name": "Lint/Void",
           "corrected": false,
-          "location": {
-            "start_line": 2,
-            "start_column": 13,
-            "last_line": 2,
-            "last_column": 14,
-            "length": 2,
-            "line": 2,
-            "column": 13
-          }
+          "line": 2
         }
       ]
     },
@@ -35,15 +27,7 @@
           "message": "Operator `==` used in void context.",
           "cop_name": "Lint/Void",
           "corrected": false,
-          "location": {
-            "start_line": 2,
-            "start_column": 13,
-            "last_line": 2,
-            "last_column": 14,
-            "length": 2,
-            "line": 2,
-            "column": 13
-          }
+          "line": 2
         }
       ]
     },
@@ -55,15 +39,7 @@
           "message": "Operator `==` used in void context.",
           "cop_name": "Lint/Void",
           "corrected": false,
-          "location": {
-            "start_line": 3,
-            "start_column": 14,
-            "last_line": 3,
-            "last_column": 15,
-            "length": 2,
-            "line": 3,
-            "column": 14
-          }
+          "line": 3
         }
       ]
     }

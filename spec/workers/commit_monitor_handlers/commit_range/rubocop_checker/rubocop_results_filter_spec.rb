@@ -15,7 +15,7 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::RubocopResultsFilte
 
       expect(filtered["files"].length).to eq(1)
       expect(filtered["files"][0]["offenses"].length).to eq(1)
-      expect(filtered["files"][0]["offenses"][0]["location"]["line"]).to eq(4)
+      expect(filtered["files"][0]["offenses"][0]["line"]).to eq(4)
 
       expect(filtered["summary"]["offense_count"]).to eq(1)
     end
@@ -47,7 +47,7 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::RubocopResultsFilte
 
       expect(filtered["files"].length).to eq(1)
       expect(filtered["files"][0]["offenses"].length).to eq(1)
-      expect(filtered["files"][0]["offenses"][0]["location"]["line"]).to eq(3)
+      expect(filtered["files"][0]["offenses"][0]["line"]).to eq(3)
 
       expect(filtered["summary"]["offense_count"]).to eq(1)
     end

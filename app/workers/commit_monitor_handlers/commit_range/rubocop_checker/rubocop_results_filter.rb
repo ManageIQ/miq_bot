@@ -26,7 +26,7 @@ module CommitMonitorHandlers
           @results["files"].each do |f|
             f["offenses"].select! do |o|
               o["severity"].in?(%w(error fatal)) ||
-                @diff_details[f["path"]].include?(o["location"]["line"])
+                @diff_details[f["path"]].include?(o["line"])
             end
           end
         end

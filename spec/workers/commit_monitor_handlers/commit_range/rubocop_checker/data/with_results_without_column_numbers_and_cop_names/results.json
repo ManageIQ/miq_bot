@@ -13,9 +13,7 @@
         {
           "severity": "warning",
           "message": "The - symbol should have one space separating it from code",
-          "location": {
-            "line": 2
-          },
+          "line": 2,
           "linter_name": "SpaceBeforeScript"
         }
       ]

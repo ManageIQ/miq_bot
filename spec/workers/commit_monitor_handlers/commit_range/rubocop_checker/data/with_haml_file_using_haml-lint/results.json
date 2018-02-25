@@ -13,9 +13,7 @@
         {
           "severity": "error",
           "message": "You don't need to use \"- end\" in Haml. Un-indent to close a block:\n- if foo?\n  %strong Foo!\n- else\n  Not foo.\n%p This line is un-indented, so it isn't part of the \"if\" block",
-          "location": {
-            "line": 3
-          }
+          "line": 3
         }
       ]
     }

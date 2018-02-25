@@ -15,45 +15,21 @@
           "message": "Freeze mutable objects assigned to constants.",
           "cop_name": "Style/MutableConstant",
           "corrected": false,
-          "location": {
-            "start_line": 2,
-            "start_column": 10,
-            "last_line": 6,
-            "last_column": 3,
-            "length": 78,
-            "line": 2,
-            "column": 10
-          }
+          "line": 2
         },
         {
           "severity": "convention",
           "message": "Align the elements of a hash literal if they span more than one line.",
           "cop_name": "Layout/AlignHash",
           "corrected": false,
-          "location": {
-            "start_line": 3,
-            "start_column": 5,
-            "last_line": 3,
-            "last_column": 20,
-            "length": 16,
-            "line": 3,
-            "column": 5
-          }
+          "line": 3
         },
         {
           "severity": "convention",
           "message": "Align the elements of a hash literal if they span more than one line.",
           "cop_name": "Layout/AlignHash",
           "corrected": false,
-          "location": {
-            "start_line": 4,
-            "start_column": 5,
-            "last_line": 4,
-            "last_column": 22,
-            "length": 18,
-            "line": 4,
-            "column": 5
-          }
+          "line": 4
         }
       ]
     }
