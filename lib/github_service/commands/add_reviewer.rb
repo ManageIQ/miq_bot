@@ -1,15 +1,15 @@
 module GithubService
   module Commands
-    class Assign < Base
+    class AddReviewer < Base
       private
 
       def _execute(issuer:, value:)
         user = value.strip.delete('@')
 
         if valid_assignee?(user)
-          issue.assign(user)
+          issue.review(user)
         else
-          issue.add_comment("@#{issuer} '#{user}' is an invalid assignee, ignoring...")
+          issue.add_comment("@#{issuer} '#{user}' is an invalid reviewer, ignoring...")
         end
       end
     end
