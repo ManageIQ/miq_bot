@@ -46,7 +46,6 @@
   ],
   "summary": {
     "offense_count": 3,
-    "target_file_count": 3,
-    "inspected_file_count": 3
+    "target_file_count": 3
   }
 }

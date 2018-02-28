@@ -10,7 +10,7 @@ describe CodeAnalysisMixin do
   describe "#merged_linter_results" do
     it "should always return a hash with a 'files' and 'summary' key, even with no cops running" do
       allow(subject).to receive(:pronto_result).and_return([])
-      expect(subject.merged_linter_results).to eq("files" => [], "summary" => {"inspected_file_count" => 0, "offense_count" => 0, "target_file_count" => 0})
+      expect(subject.merged_linter_results).to eq("files" => [], "summary" => {"offense_count" => 0, "target_file_count" => 0})
     end
   end
 
@@ -55,9 +55,8 @@ describe CodeAnalysisMixin do
                             ],
               "summary"  =>
                             {
-                              "offense_count"        => input.group_by(&:runner).values[0].count,
-                              "target_file_count"    => input.group_by(&:runner).values[0].group_by(&:path).count,
-                              "inspected_file_count" => 0
+                              "offense_count"     => input.group_by(&:runner).values[0].count,
+                              "target_file_count" => input.group_by(&:runner).values[0].group_by(&:path).count
                             }
             },
             {
@@ -79,9 +78,8 @@ describe CodeAnalysisMixin do
                            ],
               "summary" =>
                            {
-                             "offense_count"        => input.group_by(&:runner).values[1].count,
-                             "target_file_count"    => input.group_by(&:runner).values[1].group_by(&:path).count,
-                             "inspected_file_count" => 0
+                             "offense_count"     => input.group_by(&:runner).values[1].count,
+                             "target_file_count" => input.group_by(&:runner).values[1].group_by(&:path).count
                            }
             },
             {
@@ -103,9 +101,8 @@ describe CodeAnalysisMixin do
                            ],
               "summary" =>
                            {
-                             "offense_count"        => input.group_by(&:runner).values[2].count,
-                             "target_file_count"    => input.group_by(&:runner).values[2].group_by(&:path).count,
-                             "inspected_file_count" => 0
+                             "offense_count"     => input.group_by(&:runner).values[2].count,
+                             "target_file_count" => input.group_by(&:runner).values[2].group_by(&:path).count
                            }
             }
           ]

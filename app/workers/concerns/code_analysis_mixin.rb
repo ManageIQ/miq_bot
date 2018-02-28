@@ -15,14 +15,13 @@ module CodeAnalysisMixin
     results = {
       "files"   => [],
       "summary" => {
-        "inspected_file_count" => 0,
-        "offense_count"        => 0,
-        "target_file_count"    => 0,
+        "offense_count"     => 0,
+        "target_file_count" => 0,
       },
     }
 
     run_all_linters.each do |result|
-      %w(offense_count target_file_count inspected_file_count).each do |m|
+      %w(offense_count target_file_count).each do |m|
         results['summary'][m] += result['summary'][m]
       end
       results['files'] += result['files']
@@ -70,9 +69,8 @@ module CodeAnalysisMixin
       end
 
       output["summary"] = {
-        "offense_count"        => output["files"].sum { |item| item['offenses'].length },
-        "target_file_count"    => output["files"].length,
-        "inspected_file_count" => 0 # TODO: value cannot be obtained from the result of `pronto_result` method
+        "offense_count"     => output["files"].sum { |item| item['offenses'].length },
+        "target_file_count" => output["files"].length,
       }
 
       output
