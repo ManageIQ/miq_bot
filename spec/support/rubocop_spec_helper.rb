@@ -4,7 +4,7 @@ def rubocop_results
     rubocop = JSON.parse(`rubocop --format=json --no-display-cop-names #{rubocop_check_path}`)
     hamllint = JSON.parse(`haml-lint --reporter=json #{rubocop_check_path}`)
 
-    %w(offense_count target_file_count inspected_file_count).each do |m|
+    %w(offense_count target_file_count).each do |m|
       rubocop['summary'][m] += hamllint['summary'][m]
     end
     rubocop['files'] += hamllint['files']
