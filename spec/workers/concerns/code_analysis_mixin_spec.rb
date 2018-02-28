@@ -10,7 +10,7 @@ describe CodeAnalysisMixin do
   describe "#merged_linter_results" do
     it "should always return a hash with a 'files' and 'summary' key, even with no cops running" do
       allow(subject).to receive(:pronto_result).and_return([])
-      expect(subject.merged_linter_results).to eq("files" => [], "summary" => {"inspected_file_count" => 0, "offense_count" => 0, "target_file_count" => 0})
+      expect(subject.merged_linter_results).to eq("files" => [], "summary" => {"offense_count" => 0, "target_file_count" => 0})
     end
   end
 
@@ -37,7 +37,7 @@ describe CodeAnalysisMixin do
         expect(subject.run_all_linters).to eq(
           [
             {
-              "files"    => [
+              "files"   => [
                 {
                   "path"     => item_rubocop.path,
                   "offenses" => [
@@ -46,15 +46,14 @@ describe CodeAnalysisMixin do
                       "message"   => item_rubocop.msg,
                       "cop_name"  => item_rubocop.runner,
                       "corrected" => false,
-                      "line"   => item_msg.line.position
+                      "line"      => item_msg.line.position
                     },
                   ]
                 }
               ],
-              "summary"  => {
-                "offense_count"        => input.group_by(&:runner).values[0].count,
-                "target_file_count"    => input.group_by(&:runner).values[0].group_by(&:path).count,
-                "inspected_file_count" => 0
+              "summary" => {
+                "offense_count"     => input.group_by(&:runner).values[0].count,
+                "target_file_count" => input.group_by(&:runner).values[0].group_by(&:path).count
               }
             },
             {
@@ -67,15 +66,14 @@ describe CodeAnalysisMixin do
                       "message"   => item_haml.msg,
                       "cop_name"  => item_haml.runner,
                       "corrected" => false,
-                      "line"   => item_msg.line.position
+                      "line"      => item_msg.line.position
                     },
                   ]
                 }
               ],
               "summary" => {
-                "offense_count"        => input.group_by(&:runner).values[1].count,
-                "target_file_count"    => input.group_by(&:runner).values[1].group_by(&:path).count,
-                "inspected_file_count" => 0
+                "offense_count"     => input.group_by(&:runner).values[1].count,
+                "target_file_count" => input.group_by(&:runner).values[1].group_by(&:path).count
               }
             },
             {
@@ -88,15 +86,14 @@ describe CodeAnalysisMixin do
                       "message"   => item_yaml.msg,
                       "cop_name"  => item_yaml.runner,
                       "corrected" => false,
-                      "line"   => item_msg.line.position
+                      "line"      => item_msg.line.position
                     },
                   ]
                 }
               ],
               "summary" => {
-                "offense_count"        => input.group_by(&:runner).values[2].count,
-                "target_file_count"    => input.group_by(&:runner).values[2].group_by(&:path).count,
-                "inspected_file_count" => 0
+                "offense_count"     => input.group_by(&:runner).values[2].count,
+                "target_file_count" => input.group_by(&:runner).values[2].group_by(&:path).count
               }
             }
           ]

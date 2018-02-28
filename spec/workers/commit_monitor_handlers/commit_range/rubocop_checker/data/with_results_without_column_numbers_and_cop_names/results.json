@@ -21,7 +21,6 @@
   ],
   "summary": {
     "offense_count": 1,
-    "target_file_count": 1,
-    "inspected_file_count": 1
+    "target_file_count": 1
   }
 }
