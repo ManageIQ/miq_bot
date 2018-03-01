@@ -10,7 +10,7 @@ module GithubService
       GithubService.update_issue(fq_repo_name, number, "assignee" => user)
     end
 
-    def review(user)
+    def add_reviewer(user)
       GithubService.request_pull_request_review(fq_repo_name, number, [user]) if pull_request?
     end
 

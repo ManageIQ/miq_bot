@@ -7,7 +7,7 @@ module GithubService
         user = value.strip.delete('@')
 
         if valid_assignee?(user)
-          issue.review(user)
+          issue.add_reviewer(user)
         else
           issue.add_comment("@#{issuer} '#{user}' is an invalid reviewer, ignoring...")
         end
