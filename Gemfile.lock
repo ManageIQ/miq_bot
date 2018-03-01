@@ -176,7 +176,7 @@ GEM
     net-http-pipeline (1.0.1)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
-    octokit (4.6.2)
+    octokit (4.8.0)
       sawyer (~> 0.8.0, >= 0.5.3)
     parallel (1.12.1)
     parser (2.4.0.2)
@@ -374,7 +374,7 @@ DEPENDENCIES
   listen
   minigit (~> 0.0.4)
   more_core_extensions (~> 2.0.0)
-  octokit (~> 4.6.0)
+  octokit (~> 4.8.0)
   pg
   rails (~> 4.2.4)
   rspec

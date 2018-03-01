@@ -54,6 +54,14 @@ module GithubService
         end
       end
 
+      def valid_assignee?(user)
+        # First reload the cache if it's an invalid assignee
+        GithubService.refresh_assignees(issue.fq_repo_name) unless GithubService.valid_assignee?(issue.fq_repo_name, user)
+
+        # Then see if it's *still* invalid
+        GithubService.valid_assignee?(issue.fq_repo_name, user)
+      end
+
       VALID_RESTRICTIONS = [:organization].freeze
 
       module CommandMethods

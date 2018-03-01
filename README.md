@@ -50,6 +50,12 @@ underscores replaced with hyphens.
 
   Example: `@miq-bot assign @user`
 
+- **`add_reviewer [@]user`**
+  Request for pull request review the specified user. The leading `@` for the
+  user is optional. The user must be in the Assignees list.
+
+  Example: `@miq-bot add_reviewer @user`
+
 - **`set_milestone milestone_name`**
   Set the specified milestone on the issue. Do not wrap the
   milestone in quotes.
