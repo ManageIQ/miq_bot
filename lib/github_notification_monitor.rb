@@ -6,12 +6,13 @@ class GithubNotificationMonitor
     normalized.chop! if normalized.end_with?("s") # Support singular or plural
     h[normalized]    if h.key?(normalized)
   end.merge(
-    "add_label"     => :add_labels,
-    "remove_label"  => :remove_labels,
-    "rm_label"      => :remove_labels,
-    "assign"        => :assign,
-    "add_reviewer"  => :add_reviewer,
-    "set_milestone" => :set_milestone
+    "add_label"       => :add_labels,
+    "remove_label"    => :remove_labels,
+    "rm_label"        => :remove_labels,
+    "assign"          => :assign,
+    "add_reviewer"    => :add_reviewer,
+    "remove_reviewer" => :remove_reviewer,
+    "set_milestone"   => :set_milestone
   ).freeze
 
   def initialize(fq_repo_name)

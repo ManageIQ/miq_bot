@@ -56,6 +56,12 @@ underscores replaced with hyphens.
 
   Example: `@miq-bot add_reviewer @user`
 
+- **`remove_reviewer [@]user`**
+  Remove a request for pull request review from the specified user. The leading `@` for the
+  user is optional. The user must be in the Assignees list.
+
+  Example: `@miq-bot remove_reviewer @user`
+
 - **`set_milestone milestone_name`**
   Set the specified milestone on the issue. Do not wrap the
   milestone in quotes.
