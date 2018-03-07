@@ -39,9 +39,16 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker
 
   def replace_rubocop_comments
     logger.info("Updating PR #{pr_number} with rubocop comment.")
-    GithubService.replace_comments(fq_repo_name, pr_number, rubocop_comments) do |old_comment|
-      rubocop_comment?(old_comment)
-    end
+
+    type = if results["files"].none? { |f| f["offenses"].any? } # zero offenses - green status
+             :zero
+           elsif results["files"].any? { |f| f["offenses"].any? { |o| o["severity"] == "error" || o["severity"] == "fatal" } } # catastrophic offense(s) - red status
+             :bomb
+           else # informative offenses excluding catastrophic offense(s) - green status
+             :warn
+           end
+
+    GithubService.replace_comments(fq_repo_name, pr_number, rubocop_comments, type, commits.last) { |old_comment| rubocop_comment?(old_comment) }
   end
 
   def rubocop_comment?(comment)
