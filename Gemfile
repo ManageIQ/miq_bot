@@ -42,6 +42,7 @@ gem 'slim'
 # Services gems
 gem 'active_bugzilla'
 gem 'minigit',        '~> 0.0.4'
+gem 'ruby-gitter'
 gem 'tracker_api',    '~> 1.6'
 gem 'travis',         '~> 1.7.6'
 

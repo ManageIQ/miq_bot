@@ -135,9 +135,12 @@ GEM
       rubocop (>= 0.47.0)
       sysexits (~> 1.1)
     hashdiff (0.3.6)
+    hashie (3.5.7)
     highline (1.7.8)
     hike (1.2.3)
     hitimes (1.2.6)
+    httparty (0.16.1)
+      multi_xml (>= 0.5.2)
     i18n (0.8.6)
     ice_cube (0.14.0)
     ice_nine (0.11.2)
@@ -171,6 +174,7 @@ GEM
     more_core_extensions (2.0.0)
       activesupport (> 3.2)
     multi_json (1.12.2)
+    multi_xml (0.6.0)
     multipart-post (2.0.0)
     net-http-persistent (2.9.4)
     net-http-pipeline (1.0.1)
@@ -258,6 +262,9 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
+    ruby-gitter (0.1.0)
+      hashie
+      httparty
     ruby-progressbar (1.9.0)
     ruby_dep (1.5.0)
     rugged (0.26.0)
@@ -380,6 +387,7 @@ DEPENDENCIES
   rspec
   rspec-rails
   rubocop (~> 0.52.0)
+  ruby-gitter
   rugged
   sass-rails (~> 4.0.0)
   sidekiq (~> 4.1.1)

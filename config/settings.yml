@@ -13,6 +13,10 @@ influxdb_credentials:
 pivotal_credentials:
   token:
 
+travis_monitor:
+  gitter_token:
+  branches: []
+
 # General settings
 bugzilla:
   product:

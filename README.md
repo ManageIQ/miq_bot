@@ -215,3 +215,25 @@ worker_d:  # Will raise an exception, since you should not specify both
 worker_e:  # Effectively disables the worker
   included_repos: []
 ```
+
+### Branch notification via Gitter
+
+This feature writes a message notifying Gitter room members on about the status of
+specified branch in a specified repository to a specified Gitter room. The notification
+is set if the branch is broken or fixed. The specifications must be added to configuration
+file.
+
+```yaml
+travis_monitor:
+  gitter_token: "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTt"
+  branches:
+    - repo: "owner/name"
+      branch: "name"
+      gitter_room: "owner/name"
+    - repo: "owner/name"
+      branch: "name"
+      gitter_room: "owner/name"
+    - repo: "owner/name"
+      branch: "name"
+      gitter_room: "owner/name"
+```
