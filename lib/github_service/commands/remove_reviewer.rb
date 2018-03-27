@@ -8,7 +8,13 @@ module GithubService
 
         if valid_assignee?(user)
           if requested_reviewers.include?(user)
-            issue.remove_reviewer(user)
+            # FIXME: waiting for merge of https://github.com/octokit/octokit.rb/pull/990
+            begin
+              issue.remove_reviewer(user)
+            rescue NoMethodError
+              issue.add_comment("@#{issuer} `remove_reviewer [@]user` is currently not working, waiting for merge"\
+                                " of [dependent pull request](https://github.com/octokit/octokit.rb/pull/990)!")
+            end
           else
             issue.add_comment("@#{issuer} '#{user}' is not in the list of requested reviewers, ignoring...")
           end
