@@ -19,7 +19,7 @@ module GithubService
 
       # returns an array of user logins who were requested for a pull request review
       def requested_reviewers
-        GithubService.pull_request_review_requests(fq_repo_name, number).users.map(&:login)
+        GithubService.pull_request_review_requests(issue.fq_repo_name, issue.number).users.map(&:login)
       end
     end
   end
