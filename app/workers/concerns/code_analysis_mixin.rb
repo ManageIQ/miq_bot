@@ -1,7 +1,5 @@
 require 'pronto/runners'
-require 'pronto/rubocop'
-require 'pronto/yamllint'
-require 'pronto/haml'
+require 'pronto/gem_names'
 require 'pronto/git/repository'
 require 'pronto/git/patches'
 require 'pronto/git/patch'
@@ -32,6 +30,8 @@ module CodeAnalysisMixin
 
   # run linters via pronto and return the pronto result
   def pronto_result
+    Pronto::GemNames.new.to_a.each { |gem_name| require "pronto/#{gem_name}" }
+
     p_result = nil
 
     # temporary solution for: download repo, obtain changes, get pronto result about changes
