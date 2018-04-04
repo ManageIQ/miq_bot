@@ -18,9 +18,10 @@ The ManageIQ bot is the ManageIQ team's helper to automate various developer pro
   - Detection of changes to a product's Gemfile, and setting a label.
 - GitHub pull request monitoring
   - Label and comment on a PR when it becomes unmergeable.
-  - Run [Rubocop](https://github.com/bbatsov/rubocop) and
-    [haml-lint](https://github.com/brigade/haml-lint) against a PR diff and
-    comment on any offenses found.
+  - Run [Rubocop](https://github.com/bbatsov/rubocop),
+    [haml-lint](https://github.com/brigade/haml-lint) and
+    [yamllint](https://yamllint.readthedocs.io/en/stable/index.html)
+    against a PR diff and comment on any offenses found.
 - Travis monitoring
   - Detecting stalled builds and automatically restarting them.
 
