@@ -37,27 +37,27 @@ describe CodeAnalysisMixin do
         expect(subject.run_all_linters).to eq(
           [
             {
-              "files"    =>
-                            [
-                              {
-                                "path"     => item_rubocop.path,
-                                "offenses" =>
-                                              [
-                                                {
-                                                  "severity"  => item_rubocop.level,
-                                                  "message"   => item_rubocop.msg,
-                                                  "cop_name"  => item_rubocop.runner,
-                                                  "corrected" => false,
-                                                  "line"      => item_msg.line.position
-                                                },
-                                              ]
-                              }
-                            ],
-              "summary"  =>
-                            {
-                              "offense_count"     => input.group_by(&:runner).values[0].count,
-                              "target_file_count" => input.group_by(&:runner).values[0].group_by(&:path).count
-                            }
+              "files"   =>
+                           [
+                             {
+                               "path"     => item_rubocop.path,
+                               "offenses" =>
+                                             [
+                                               {
+                                                 "severity"  => item_rubocop.level,
+                                                 "message"   => item_rubocop.msg,
+                                                 "cop_name"  => item_rubocop.runner,
+                                                 "corrected" => false,
+                                                 "line"      => item_msg.line.position
+                                               },
+                                             ]
+                             }
+                           ],
+              "summary" =>
+                           {
+                             "offense_count"     => input.group_by(&:runner).values[0].count,
+                             "target_file_count" => input.group_by(&:runner).values[0].group_by(&:path).count
+                           }
             },
             {
               "files"   =>
