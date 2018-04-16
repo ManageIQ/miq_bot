@@ -52,9 +52,10 @@ underscores replaced with hyphens.
 
 - **`add_reviewer [@]user`**
   Request for pull request review the specified user. The leading `@` for the
-  user is optional. The user must be in the Assignees list.
+  user is optional. The users must be separated by a comma and they must be
+  in the Assignees list.
 
-  Example: `@miq-bot add_reviewer @user`
+  Example: `@miq-bot add_reviewer @user1[, @user2]`
 
 - **`remove_reviewer [@]user`**
   Remove a request for pull request review from the specified user. The leading `@` for the

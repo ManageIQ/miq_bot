@@ -18,7 +18,15 @@ RSpec.describe GithubService::Commands::AddReviewer do
     let(:command_value) { "good_user" }
 
     it "review request that user" do
-      expect(issue).to receive(:add_reviewer).with("good_user")
+      expect(issue).to receive(:add_reviewer).with(["good_user"])
+    end
+  end
+
+  context "with a valid users" do
+    let(:command_value) { "good_user, good_user" }
+
+    it "review request that user" do
+      expect(issue).to receive(:add_reviewer).with(%w(good_user good_user))
     end
   end
 
@@ -27,7 +35,16 @@ RSpec.describe GithubService::Commands::AddReviewer do
 
     it "does not review request, reports failure" do
       expect(issue).not_to receive(:add_reviewer)
-      expect(issue).to receive(:add_comment).with("@#{command_issuer} 'bad_user' is an invalid reviewer, ignoring...")
+      expect(issue).to receive(:add_comment).with("@#{command_issuer} Cannot add the following reviewer because they are not recognized: bad_user")
+    end
+  end
+
+  context "with an invalid users" do
+    let(:command_value) { "bad_user, bad_user" }
+
+    it "does not review request, reports failure" do
+      expect(issue).not_to receive(:add_reviewer)
+      expect(issue).to receive(:add_comment).with("@#{command_issuer} Cannot add the following reviewers because they are not recognized: bad_user, bad_user")
     end
   end
 end

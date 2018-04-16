@@ -4,12 +4,18 @@ module GithubService
       private
 
       def _execute(issuer:, value:)
-        user = value.strip.delete('@')
+        users = value.strip.delete('@').split(/\s*,\s*/)
 
-        if valid_assignee?(user)
-          issue.add_reviewer(user)
-        else
-          issue.add_comment("@#{issuer} '#{user}' is an invalid reviewer, ignoring...")
+        valid_users, invalid_users = users.partition { |u| valid_assignee?(u) }
+
+        if valid_users.any?
+          issue.add_reviewer(valid_users)
+        end
+
+        if invalid_users.any?
+          message = "@#{issuer} Cannot add the following #{"reviewer".pluralize(invalid_users.size)} because they are not recognized: "
+          message << invalid_users.join(", ")
+          issue.add_comment(message)
         end
       end
     end
