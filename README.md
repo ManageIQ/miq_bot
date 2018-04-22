@@ -50,6 +50,13 @@ underscores replaced with hyphens.
 
   Example: `@miq-bot assign @user`
 
+- **`unassign [@]user`**
+  Unassign the issue or pull request to the specified user(s). The leading `@` for the
+  user is optional. The user(s) must be assigned to the issue or pull request and they
+  must be comma separated.
+
+  Example: `@miq-bot unassign @user1[, @user2]`
+
 - **`add_reviewer [@]user`**
   Request for pull request review the specified user. The leading `@` for the
   user is optional. The user must be in the Assignees list.
