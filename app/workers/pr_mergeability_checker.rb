@@ -19,6 +19,10 @@ class PrMergeabilityChecker
     "<pr-mergeability-checker />"
   end
 
+  def unmergeable_comment
+    "#{tag}This pull request is not mergeable. Please rebase and repush."
+  end
+
   def process_mergeability
     was_mergeable       = branch.mergeable?
     currently_mergeable = branch.git_service.mergeable?
@@ -27,11 +31,20 @@ class PrMergeabilityChecker
       write_to_github
       apply_label
     elsif !was_mergeable && currently_mergeable
+      remove_comments
       remove_label
     end
 
     # Update columns directly to avoid collisions wrt the serialized column issue
     branch.update_columns(:mergeable => currently_mergeable)
+  end
+
+  def remove_comments
+    comment_ids = GithubService.issue_comments(fq_repo_name, branch.pr_number).select do |com|
+      com.user.login == Settings.github_credentials.username && com.body.start_with?(tag)
+    end.map(&:id)
+
+    GithubService.delete_comments(fq_repo_name, comment_ids)
   end
 
   def write_to_github
@@ -40,7 +53,7 @@ class PrMergeabilityChecker
     GithubService.add_comment(
       fq_repo_name,
       branch.pr_number,
-      "#{tag}This pull request is not mergeable.  Please rebase and repush."
+      unmergeable_comment
     )
   end
 
