@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.2.4'
+gem 'rails', '~>4.2.11'
 
 # Use PostgreSQL as the database for Active Record
-gem 'pg'
+gem 'pg', '~>0.21'
 
 # InfluxDB for Github rate limit tracking
 gem 'influxdb', '~>0.3.13'
@@ -55,6 +55,8 @@ gem 'rugged',                            :require => false
 gem 'octokit', '~> 4.8.0', :require => false
 gem 'faraday', '~> 0.9.1'
 gem 'faraday-http-cache', '~> 2.0.0'
+
+gem 'xmlrpc'
 
 group :development, :test do
   gem 'rspec'
