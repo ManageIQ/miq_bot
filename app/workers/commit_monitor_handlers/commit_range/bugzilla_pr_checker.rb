@@ -32,7 +32,6 @@ module CommitMonitorHandlers
 
             add_pr_comment(bug)
             update_bug_status(bug)
-            bug.save
           end
         end
       end
@@ -53,8 +52,8 @@ module CommitMonitorHandlers
       end
 
       def bug_has_pr_uri_comment?(bug)
-        bug.comments.any? do |c|
-          c.text.include?(@branch.github_pr_uri)
+        bug.comments.any? do |comment_text|
+          comment_text.include?(@branch.github_pr_uri)
         end
       end
 
@@ -63,6 +62,7 @@ module CommitMonitorHandlers
         when "NEW", "ASSIGNED"
           logger.info "Changing status of bug #{bug.id} to ON_DEV."
           bug.status = "ON_DEV"
+          bug.save
         else
           logger.info "Not changing status of bug #{bug.id} due to status of #{bug.status}"
         end
