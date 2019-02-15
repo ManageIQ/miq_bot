@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.2.4'
+gem 'rails', '~> 5.2.2'
 
 # Use PostgreSQL as the database for Active Record
 gem 'pg'
@@ -10,13 +10,13 @@ gem 'pg'
 gem 'influxdb', '~>0.3.13'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails', '~> 5.0.7'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 4.2.2'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', :platforms => :ruby
@@ -34,7 +34,7 @@ gem 'config'
 gem 'listen'
 
 # Sidekiq specific gems
-gem 'sidekiq', '~> 4.1.1'
+gem 'sidekiq', '~> 5.2.5'
 gem 'sidetiq', '~> 0.7.0'
 gem 'sinatra', :require => false
 gem 'slim'
@@ -46,7 +46,7 @@ gem 'travis',         '~> 1.7.6'
 
 gem 'awesome_spawn',        '>= 1.4.1'
 gem 'default_value_for',    '>= 3.1.0'
-gem 'haml_lint',            '~> 0.20.0', :require => false
+gem 'haml_lint',            '~> 0.28.0', :require => false
 gem 'more_core_extensions', '~> 2.0.0',  :require => 'more_core_extensions/all'
 gem 'rubocop',              '~> 0.69.0', :require => false
 gem 'rubocop-performance',  '~> 1.3',    :require => false
