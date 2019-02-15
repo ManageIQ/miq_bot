@@ -1,4 +1,4 @@
-class CreateCommitMonitorBranches < ActiveRecord::Migration
+class CreateCommitMonitorBranches < ActiveRecord::Migration[5.1]
   def change
     create_table :commit_monitor_branches do |t|
       t.string :name
