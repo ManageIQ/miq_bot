@@ -1,4 +1,4 @@
-class CreateBatchTables < ActiveRecord::Migration
+class CreateBatchTables < ActiveRecord::Migration[5.1]
   def change
     create_table :batch_jobs do |t|
       t.timestamps

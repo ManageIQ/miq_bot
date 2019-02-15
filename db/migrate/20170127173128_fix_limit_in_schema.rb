@@ -1,4 +1,4 @@
-class FixLimitInSchema < ActiveRecord::Migration
+class FixLimitInSchema < ActiveRecord::Migration[5.1]
   def up
     change_column :batch_entries, :state, :string, :limit => 255
     change_column :batch_jobs, :on_complete_class, :string, :limit => 255
