@@ -2,14 +2,19 @@
 require 'spec_helper'
 
 describe BugzillaService do
-  let(:service) { double("bugzilla service") }
-
-  before do
-    allow_any_instance_of(described_class).to receive(:service).and_return(service)
+  # Clear service settings
+  after do
+    BugzillaService.instance_variable_set(:@product, nil)
+    BugzillaService.instance_variable_set(:@credentials, nil)
   end
 
   def with_service
     described_class.call { |bz| yield bz }
+  end
+
+  def stub_credentials(credentials)
+    stub_settings(credentials)
+    BugzillaService.credentials = Settings.bugzilla_credentials
   end
 
   def commit_message(body)
@@ -26,8 +31,6 @@ CommitDate: Mon Nov 13 14:16:33 2017 -0500
  1 file changed, 5 insertions(+)
     EOF
   end
-
-  it_should_behave_like "ThreadsafeServiceMixin service"
 
   describe ".search_in_message" do
     before do
@@ -237,31 +240,158 @@ EOF
   end
 
   describe "#find_bug" do
-    let(:bug) { double(ActiveBugzilla::Bug) }
+    let(:bugzilla_auth) { { :username => "user", :password => "pass" } }
 
-    it "without a product in settings" do
-      expect(ActiveBugzilla::Bug).to receive(:find).with(:product => nil, :id => 123456).and_return([bug])
-
-      with_service { |bz| expect(bz.find_bug(123456)).to eq(bug) }
+    it "without a product in settings will raise an error" do
+      expect { BugzillaService.product = nil }.to raise_error(RuntimeError)
     end
 
-    it "with a product in settings" do
-      stub_settings(:bugzilla => {:product => "ManageIQ"})
-      expect(ActiveBugzilla::Bug).to receive(:find).with(:product => "ManageIQ", :id => 123456).and_return([bug])
+    it "with a product in settings makes the request" do
+      BugzillaService.product = "ManageIQ"
+      stub_credentials(:bugzilla_credentials => bugzilla_auth)
 
-      with_service { |bz| expect(bz.find_bug(123456)).to eq(bug) }
+      bugzilla_stubs = Faraday.new do |builder|
+        builder.adapter :test do |stub|
+          uri = "/rest/bug?id=123456&product=ManageIQ&include_fields=id,status"
+          stub.get(uri) do
+            [200, {}, '{"bugs": [{"id": 123456, "status": "POST"}]}']
+          end
+        end
+      end
+
+      BugzillaService.call do |bz|
+        expect(bz).to receive(:connection).and_return(bugzilla_stubs)
+
+        bug = bz.find_bug(123456)
+
+        expect(bug).to        be_kind_of(BugzillaService::Bug)
+        expect(bug.id).to     eq(123456)
+        expect(bug.status).to eq("POST")
+      end
     end
   end
 
-  context "native bz methods" do
-    it "#search" do
-      expect(service).to receive(:search).with(:id => 123456)
-      with_service { |bz| bz.search(:id => 123456) }
+  describe BugzillaService::Bug do
+    before do
+      bugzilla_auth = { :username => "user", :password => "pass" }
+      stub_credentials(:bugzilla_credentials => bugzilla_auth)
     end
 
-    it "#add_comment" do
-      expect(service).to receive(:add_comment).with(123456, "Fixed")
-      with_service { |bz| bz.add_comment(123456, "Fixed") }
+    describe "#comments" do
+      let(:comment_data) do
+        {
+          "bugs" => {
+            "123456" => {
+              "comments" => [
+                {"text" => "Comment 1"},
+                {"text" => "Comment 2"},
+                {"text" => "Comment 4... wait... what happened to 3!?"}
+              ]
+            }
+          }
+        }
+      end
+
+      def bugzilla_stubs(response_code = 200)
+        Faraday.new do |builder|
+          builder.adapter :test do |stub|
+            stub.get("/rest/bug/123456/comment") do
+              if response_code == 200
+                [200, {}, comment_data.to_json]
+              else
+                [404, {}, '']
+              end
+            end
+          end
+        end
+      end
+
+      it "returns an empty array if the request was not 200" do
+        BugzillaService.call do |bz|
+          expect(bz).to receive(:connection).and_return(bugzilla_stubs(404))
+          bug = BugzillaService::Bug.new(bz, 123456, "DOES_NOT_MATTER")
+          expect(bug.comments).to eq([])
+        end
+      end
+
+      it "returns just the text of the comments for a Bug" do
+        BugzillaService.call do |bz|
+          expect(bz).to receive(:connection).and_return(bugzilla_stubs)
+
+          bug      = BugzillaService::Bug.new(bz, 123456, "DOES_NOT_MATTER")
+          comments = bug.comments
+
+          expect(comments.size).to   eq(3)
+          expect(comments.first).to  eq("Comment 1")
+          expect(comments.last).to   eq("Comment 4... wait... what happened to 3!?")
+        end
+      end
+    end
+
+    describe "#add_comment" do
+      def bugzilla_stubs(response_code = 200)
+        Faraday.new do |builder|
+          builder.adapter :test do |stub|
+            payload = { "comment" => "It matters!"}.to_json
+            headers = { "Content-Type" => "application/json" }
+            stub.post("/rest/bug/123456/comment", payload, headers) do
+              [response_code, {}, '']
+            end
+          end
+        end
+      end
+
+      it "returns true when the comment is created successfully" do
+        BugzillaService.call do |bz|
+          expect(bz).to receive(:connection).and_return(bugzilla_stubs)
+
+          bug = BugzillaService::Bug.new(bz, 123456, "DOES_NOT_MATTER")
+          expect(bug.add_comment("It matters!")).to eq(true)
+        end
+      end
+
+      it "returns false when the adding comment fails" do
+        BugzillaService.call do |bz|
+          expect(bz).to receive(:connection).and_return(bugzilla_stubs(500))
+
+          bug = BugzillaService::Bug.new(bz, 123456, "DOES_NOT_MATTER")
+          expect(bug.add_comment("It matters!")).to eq(false)
+        end
+      end
+    end
+
+    describe "#save" do
+      def bugzilla_stubs(response_code = 200)
+        Faraday.new do |builder|
+          builder.adapter :test do |stub|
+            payload = { "ids" => [123456], "status" => "POST" }.to_json
+            headers = { "Content-Type" => "application/json" }
+            stub.put("/rest/bug/123456", payload, headers) do
+              [response_code, {}, '']
+            end
+          end
+        end
+      end
+
+      it "returns true when the update succeeds" do
+        BugzillaService.call do |bz|
+          expect(bz).to receive(:connection).and_return(bugzilla_stubs)
+
+          bug = BugzillaService::Bug.new(bz, 123456, "ON_DEV")
+          bug.status = "POST"
+          expect(bug.save).to eq(true)
+        end
+      end
+
+      it "returns false when the update fails" do
+        BugzillaService.call do |bz|
+          expect(bz).to receive(:connection).and_return(bugzilla_stubs(500))
+
+          bug        = BugzillaService::Bug.new(bz, 123456, "ON_DEV")
+          bug.status = "POST"
+          expect(bug.save).to eq(false)
+        end
+      end
     end
   end
 end
