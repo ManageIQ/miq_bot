@@ -42,7 +42,7 @@ RSpec.configure do |config|
 
   config.expect_with(:rspec) { |c| c.syntax = [:should, :expect] }
 
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   config.before do
     allow_any_instance_of(MinigitService).to receive(:service)
