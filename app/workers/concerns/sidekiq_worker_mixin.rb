@@ -64,7 +64,7 @@ module SidekiqWorkerMixin
     #
 
     def sidekiq_queue
-      sidekiq_options unless sidekiq_options_hash? # init the sidekiq_options_hash
+      sidekiq_options unless get_sidekiq_options # init the sidekiq_options_hash
       sidekiq_options_hash["queue"]
     end
 
