@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'rails_helper'
 
 RSpec.describe StaleIssueMarker do
   let(:subject)      { described_class.new }

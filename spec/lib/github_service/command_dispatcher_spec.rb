@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe GithubService::CommandDispatcher do
   subject(:command_dispatcher) { described_class.new(issue) }

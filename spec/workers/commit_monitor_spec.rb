@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe CommitMonitor do
   context "#compare_commits_list (private)" do

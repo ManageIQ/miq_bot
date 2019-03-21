@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe GithubService::Commands::RemoveReviewer do
   subject { described_class.new(issue) }
