@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe MessageCollector do
   let(:max_size) { 1000 }

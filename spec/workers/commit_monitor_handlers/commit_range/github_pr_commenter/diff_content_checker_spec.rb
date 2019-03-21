@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffContentChecker do
   let(:batch_entry)        { BatchEntry.create!(:job => BatchJob.create!) }
