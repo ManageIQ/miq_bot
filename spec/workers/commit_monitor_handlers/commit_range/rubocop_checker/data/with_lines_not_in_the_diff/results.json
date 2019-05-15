@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "rubocop_version": "0.52.0",
+    "rubocop_version": "0.69.0",
     "ruby_engine": "ruby",
     "ruby_version": "2.3.3",
     "ruby_patchlevel": "222",
