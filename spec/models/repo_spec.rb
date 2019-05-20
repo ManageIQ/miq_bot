@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe Repo do
   let(:repo) { build(:repo) }
 

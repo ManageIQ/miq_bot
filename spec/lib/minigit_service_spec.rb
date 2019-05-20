@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe MinigitService do
   let(:service) { double("git service") }
 

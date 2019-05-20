@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe BatchEntryWorkerMixin do
   subject do
     Class.new do

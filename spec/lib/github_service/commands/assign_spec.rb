@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe GithubService::Commands::Assign do
   subject { described_class.new(issue) }
   let(:issue) { double(:fq_repo_name => "foo/bar") }

@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe CommitMonitorHandlers::CommitRange::RubocopChecker::RubocopResultsFilter do
   describe "#filtered" do
     subject { described_class.new(rubocop_results, @diff_details) }

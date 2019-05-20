@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffContentChecker do
   let(:batch_entry)        { BatchEntry.create!(:job => BatchJob.create!) }
   let(:branch)             { create(:pr_branch) }

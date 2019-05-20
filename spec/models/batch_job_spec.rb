@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe BatchJob do
   it ".perform_async" do
     workers    = (1..3).collect { |i| spy("WorkerClass#{i}") }
