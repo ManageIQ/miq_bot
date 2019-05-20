@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe BatchJobWorkerMixin do
   let(:includer_class) do
     Class.new do

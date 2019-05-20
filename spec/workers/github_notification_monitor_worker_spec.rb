@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe GithubNotificationMonitorWorker do
   before  { stub_sidekiq_logger(described_class) }
   subject { described_class.new }

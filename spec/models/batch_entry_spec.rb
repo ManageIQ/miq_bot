@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe BatchEntry do
   include_examples "state predicates", :succeeded?,
                    nil         => false,

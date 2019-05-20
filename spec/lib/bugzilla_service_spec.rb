@@ -1,5 +1,4 @@
 # rubocop:disable Style/NumericLiterals, Layout/IndentArray
-require 'rails_helper'
 
 describe BugzillaService do
   # Clear service settings

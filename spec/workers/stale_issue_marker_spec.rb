@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe StaleIssueMarker do
   let(:subject)      { described_class.new }
   let(:stale_date)   { 6.months.ago }
