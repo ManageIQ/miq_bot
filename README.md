@@ -63,6 +63,16 @@ underscores replaced with hyphens.
 
   Example: `@miq-bot remove_reviewer @user`
 
+- **`run-tests [<repos-to-test>] [including <gem-repos>]`**
+  Test pull request against specified repos of the form [org/]repo[@ref|#pr].
+
+  * repos-to-test arg is a comma-separated list of repos
+  * gem-repos is a set of gem repos
+  * only works on PRs, and will fail on issues
+  * is only executable by the PR author or any member of the ManageIQ org
+
+  Example: `@miq-bot run-tests manageiq-ui-classic`
+
 - **`set_milestone milestone_name`**
   Set the specified milestone on the issue. Do not wrap the
   milestone in quotes.
