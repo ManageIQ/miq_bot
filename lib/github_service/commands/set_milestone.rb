@@ -3,7 +3,7 @@ module GithubService
     class SetMilestone < Base
       private
 
-      def _execute(issuer:, value:)
+      def _execute(issuer:, value:, **_)
         milestone = value.strip
 
         if valid_milestone?(milestone)

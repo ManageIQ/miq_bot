@@ -43,8 +43,9 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
-    backports (3.8.0)
+    backports (3.15.0)
     builder (3.2.3)
+    byebug (11.0.1)
     celluloid (0.17.3)
       celluloid-essentials
       celluloid-extras
@@ -92,7 +93,7 @@ GEM
     dotenv (0.7.0)
     equalizer (0.0.11)
     erubis (2.7.0)
-    ethon (0.10.1)
+    ethon (0.12.0)
       ffi (>= 1.3.0)
     eventmachine (1.2.5)
     excon (0.59.0)
@@ -106,9 +107,9 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday-http-cache (2.0.0)
       faraday (~> 0.8)
-    faraday_middleware (0.12.2)
+    faraday_middleware (0.13.1)
       faraday (>= 0.7.4, < 1.0)
-    ffi (1.9.18)
+    ffi (1.11.1)
     foreman (0.64.0)
       dotenv (~> 0.7.0)
       thor (>= 0.13.6)
@@ -129,7 +130,7 @@ GEM
       rubocop (>= 0.47.0)
       sysexits (~> 1.1)
     hashdiff (0.3.6)
-    highline (1.7.8)
+    highline (1.7.10)
     hike (1.2.3)
     hitimes (1.2.6)
     i18n (0.8.6)
@@ -142,7 +143,7 @@ GEM
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
-    json (2.1.0)
+    json (2.2.0)
     launchy (2.4.3)
       addressable (~> 2.3)
     libv8 (3.16.14.19)
@@ -155,7 +156,7 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.6)
       mime-types (>= 1.16, < 4)
-    method_source (0.9.0)
+    method_source (0.9.2)
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
@@ -165,8 +166,8 @@ GEM
     minitest (5.10.3)
     more_core_extensions (2.0.0)
       activesupport (> 3.2)
-    multi_json (1.12.2)
-    multipart-post (2.0.0)
+    multi_json (1.13.1)
+    multipart-post (2.1.1)
     net-http-persistent (2.9.4)
     net-http-pipeline (1.0.1)
     nokogiri (1.8.1)
@@ -177,10 +178,19 @@ GEM
     parser (2.6.3.0)
       ast (~> 2.4.0)
     pg (0.21.0)
-    pry (0.9.12.6)
-      coderay (~> 1.0)
-      method_source (~> 0.8)
-      slop (~> 3.4)
+    pry (0.12.2)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
+    pry-byebug (3.7.0)
+      byebug (~> 11.0)
+      pry (~> 0.10)
+    pry-doc (1.0.0)
+      pry (~> 0.11)
+      yard (~> 0.9.11)
+    pry-rails (0.3.9)
+      pry (>= 0.10.4)
+    pry-theme (1.3.0)
+      coderay (~> 1.1)
     pusher-client (0.6.2)
       json
       websocket (~> 1.0)
@@ -283,7 +293,6 @@ GEM
     slim (3.0.8)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 1.3.3, < 2.1)
-    slop (3.6.0)
     sprockets (2.12.4)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -318,15 +327,13 @@ GEM
       multi_json
       representable
       virtus
-    travis (1.7.7)
-      addressable (~> 2.3)
+    travis (1.8.10)
       backports
       faraday (~> 0.9)
       faraday_middleware (~> 0.9, >= 0.9.1)
       gh (~> 0.13)
       highline (~> 1.6)
       launchy (~> 2.1)
-      pry (~> 0.9, < 0.10)
       pusher-client (~> 0.4)
       typhoeus (~> 0.6, >= 0.6.8)
     turbolinks (5.0.1)
@@ -349,10 +356,12 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
-    websocket (1.2.4)
+    websocket (1.2.8)
+    yard (0.9.20)
 
 PLATFORMS
   ruby
+  x86_64-darwin-17
   x86_64-darwin-18
 
 DEPENDENCIES
@@ -372,6 +381,11 @@ DEPENDENCIES
   more_core_extensions (~> 2.0.0)
   octokit (~> 4.8.0)
   pg
+  pry
+  pry-byebug
+  pry-doc
+  pry-rails
+  pry-theme
   rails (~> 4.2.4)
   rspec
   rspec-rails
@@ -387,10 +401,10 @@ DEPENDENCIES
   thin
   timecop
   tracker_api (~> 1.6)
-  travis (~> 1.7.6)
+  travis
   turbolinks
   uglifier (>= 1.3.0)
   webmock
 
 BUNDLED WITH
-   1.16.6
+   1.17.3

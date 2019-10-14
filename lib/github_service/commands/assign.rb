@@ -3,7 +3,7 @@ module GithubService
     class Assign < Base
       private
 
-      def _execute(issuer:, value:)
+      def _execute(issuer:, value:, **_)
         user = value.strip.delete('@')
 
         if valid_assignee?(user)

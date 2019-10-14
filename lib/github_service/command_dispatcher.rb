@@ -33,7 +33,7 @@ module GithubService
 
         if command_class.present?
           Rails.logger.info("Dispatching '#{command}' to #{command_class} on issue ##{issue.number} | issuer: #{issuer}, value: #{command_value}")
-          command_class.new(issue).execute!(:issuer => issuer, :value => command_value)
+          command_class.new(issue).execute!(:issuer => issuer, :command => command, :value => command_value)
         else
           message = <<-EOMSG
 @#{issuer} unrecognized command '#{command}', ignoring...

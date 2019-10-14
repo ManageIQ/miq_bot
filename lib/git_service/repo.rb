@@ -8,6 +8,11 @@ module GitService
       GitService::Commit.new(rugged_repo, sha)
     end
 
+    def create_branch(name, from)
+      rugged_repo.create_branch(name, from)
+      GitService::Branch.new(::Branch.new(:repo => repo, :name => name))
+    end
+
     private
 
     def rugged_repo

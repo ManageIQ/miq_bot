@@ -5,7 +5,7 @@ module GithubService
 
       private
 
-      def _execute(issuer:, value:)
+      def _execute(issuer:, value:, **_)
         if issue.pull_request? && issuer != issue.author
           issue.add_comment("@#{issuer} Only @#{issue.author} or a committer can close this pull request.")
         else

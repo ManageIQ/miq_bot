@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+plugin 'bundler-inject'
+require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.2.4'
 
@@ -42,7 +45,7 @@ gem 'slim'
 # Services gems
 gem 'minigit',        '~> 0.0.4'
 gem 'tracker_api',    '~> 1.6'
-gem 'travis',         '~> 1.7.6'
+gem 'travis'
 
 gem 'awesome_spawn',        '>= 1.4.1'
 gem 'default_value_for',    '>= 3.1.0'

@@ -23,14 +23,15 @@ module GithubService
       # Subclasses of Commands::Base should implement #_execute with
       # the following keyword arguments:
       #
-      # issuer - The username of the user that issued the command
-      # value -  The value of the command given
+      # issuer  - The username of the user that issued the command
+      # command - The command given
+      # value   - The value of the command given
       #
       # No callers should ever use _execute directly, using execute! instead.
       #
-      def execute!(issuer:, value:)
+      def execute!(issuer:, command:, value:)
         if user_permitted?(issuer)
-          _execute(:issuer => issuer, :value => value)
+          _execute(:issuer => issuer, :command => command, :value => value)
         end
       end
 

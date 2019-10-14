@@ -3,7 +3,7 @@ module GithubService
     class AddLabel < Base
       private
 
-      def _execute(issuer:, value:)
+      def _execute(issuer:, value:, **_)
         valid, invalid = extract_label_names(value)
 
         if invalid.any?

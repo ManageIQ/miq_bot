@@ -6,6 +6,10 @@ module GithubService
 
     WIP_REGEX = /^(?:\s*\[wip\])+/i
 
+    def as_pull_request
+      Issue.new(GithubService.pull_request(fq_repo_name, number))
+    end
+
     def assign(user)
       GithubService.update_issue(fq_repo_name, number, "assignee" => user)
     end

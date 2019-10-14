@@ -69,6 +69,27 @@ module GitService
       Commit.new(rugged_repo, commit_oid)
     end
 
+    def create_commit(file_contents)
+      index = Rugged::Index.new
+      index.read
+
+      # oid = repo.write("This is a blob.", :blob)
+      # index = repo.index
+      # index.read_tree(repo.head.target.tree)
+      # index.add(:path => "README.md", :oid => oid, :mode => 0100644)
+
+      # options = {}
+      # options[:tree] = index.write_tree(repo)
+
+      # options[:author] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
+      # options[:committer] = { :email => "testuser@github.com", :name => 'Test Author', :time => Time.now }
+      # options[:message] ||= "Making a commit via Rugged!"
+      # options[:parents] = repo.empty? ? [] : [ repo.head.target ].compact
+      # options[:update_ref] = 'HEAD'
+
+      # Rugged::Commit.create(repo, options)
+    end
+
     private
 
     def list_files_in_tree(rugged_tree_oid, current_path = Pathname.new(""))

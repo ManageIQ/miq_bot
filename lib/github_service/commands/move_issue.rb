@@ -5,7 +5,7 @@ module GithubService
 
       private
 
-      def _execute(issuer:, value:)
+      def _execute(issuer:, value:, **_)
         @dest_organization_name, @dest_repo_name = value.split("/", 2).unshift(issue.organization_name).last(2)
         @dest_fq_repo_name = "#{@dest_organization_name}/#{@dest_repo_name}"
 
