@@ -9,6 +9,7 @@ class GithubNotificationMonitor
     "add_label"       => :add_labels,
     "remove_label"    => :remove_labels,
     "rm_label"        => :remove_labels,
+    "run_test"        => :run_tests,
     "assign"          => :assign,
     "add_reviewer"    => :add_reviewer,
     "remove_reviewer" => :remove_reviewer,

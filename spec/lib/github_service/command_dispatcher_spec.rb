@@ -66,5 +66,27 @@ RSpec.describe GithubService::CommandDispatcher do
           .with(:issuer => command_issuer, :value => "question")
       end
     end
+
+    context "when 'run_tests' command is given" do
+      let(:text) { "@#{bot_name} run_tests manageiq-ui-classic" }
+      let(:command_class) { double }
+
+      it "dispatches to RunTests" do
+        expect(GithubService::Commands::RunTests).to receive(:new).and_return(command_class)
+        expect(command_class).to receive(:execute!)
+          .with(:issuer => command_issuer, :command => "run_tests", :value => "manageiq-ui-classic")
+      end
+    end
+
+    context "when 'run_tests' command is given" do
+      let(:text) { "@#{bot_name} run_tests manageiq-ui-classic,manageiq-api" }
+      let(:command_class) { double }
+
+      it "dispatches to RunTests" do
+        expect(GithubService::Commands::RunTests).to receive(:new).and_return(command_class)
+        expect(command_class).to receive(:execute!)
+          .with(:issuer => command_issuer, :command => "run_tests", :value => "manageiq-ui-classic,manageiq-api")
+      end
+    end
   end
 end
