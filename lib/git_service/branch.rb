@@ -54,7 +54,7 @@ module GitService
     end
 
     def target_for_reference(reference) # Rugged::Commit for a given refname i.e. "refs/remotes/origin/master"
-      rugged_repo.references[reference].target
+      rugged_repo.references["refs/remotes/origin/master"].target
     end
 
     def tip_files
