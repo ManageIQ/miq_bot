@@ -1,0 +1,6 @@
+#!/usr/local/env ruby
+
+APP_PATH = File.expand_path('../../config/application',  __FILE__)
+require_relative '../config/boot'
+
+GITTER_BOT.start

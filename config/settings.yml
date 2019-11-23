@@ -6,6 +6,8 @@ bugzilla_credentials:
 github_credentials:
   username:
   password:
+gitter_credentials:
+  token:
 influxdb_credentials:
   database:
   username:
@@ -16,6 +18,8 @@ pivotal_credentials:
 # General settings
 bugzilla:
   product:
+gitter:
+  channels: # array
 grafana:
   url:
 
