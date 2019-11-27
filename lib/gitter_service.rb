@@ -161,7 +161,40 @@ class Gitter
     end
   end
 
-  # A "cinch-like" gitter bot that will
+  module AuthHandshake
+    module_function
+
+    # Add the auth needed by Gitter's bayeux protocol
+    #
+    # Basically, we just add a `"ext" => { "token" => "MY_TOKEN"}` to the
+    # message on a "/meta/handshake" request to authenticate with gitter.
+    #
+    # See the following as reference:
+    #
+    #   - https://github.com/gitterHQ/gitter-faye-client/blob/391345d6/gitter-faye.js#L10-L17
+    #   - https://gitlab.com/gitlab-org/gitter/webapp/blob/3cfaa1fb/server/web/bayeux/authenticator.js#L53-60
+    #
+    # NVL:  Took me fricken forever to figure this out...
+    #
+    def outgoing message, env, pipe
+      if message["channel"] == "/meta/handshake"
+        message["ext"] = {"token" => Service.credentials[:token]}
+      end
+
+      pipe.call message
+    end
+
+    # Implement if we want to validate a success clause or not
+    #
+    # See:
+    #
+    #   https://github.com/gitterHQ/gitter-faye-client/blob/391345d6/gitter-faye.js#L19-L26
+    #
+    # def incoming message, env, pipe
+    # end
+  end
+
+  # A "cinch-like" gitter bot that will respond to messages we give it
   class Bot
     class << self
       attr_reader :websocket_url
@@ -211,7 +244,7 @@ class Gitter
 
       EM.run do
         client = Faye::Client.new(self.class.websocket_url)
-        client.set_header "Authorization", "Bearer #{Service.credentials[:token]}"
+        client.add_extension AuthHandshake
 
         channel_subscriptions.each do |endpoint|
           puts "subscribing to #{endpoint}..."
