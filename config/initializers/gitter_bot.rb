@@ -8,5 +8,16 @@ if Settings.gitter_credentials && !Rails.env.test?
 
   GITTER_BOT = Gitter::Bot.new do
     channels Settings.gitter.channels
+
+    on "hello" do
+      reply %w[Hello! Hi! Welcome!].sample
+    end
+
+    on "debug" do
+      send_message <<~DEBUG
+        **CMD**: `#{msg_cmd}`
+        **ARGS**: `#{msg_args}`
+      DEBUG
+    end
   end
 end

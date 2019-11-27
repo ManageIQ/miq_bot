@@ -48,6 +48,10 @@ class Gitter
         self.user["id"]
       end
 
+      def user_handle
+        "@#{self.user["username"]}"
+      end
+
       def get_room_id(room_key)
         return room_key               if joined_rooms.values.include?(room_key)
         return joined_rooms[room_key] if joined_rooms.has_key?(room_key)
@@ -211,6 +215,7 @@ class Gitter
     attr_reader :channel_endpoints
 
     def initialize(&block)
+      @message_handlers = []
       dsl_eval(&block) if block_given?
     end
 
@@ -225,7 +230,7 @@ class Gitter
         endpoint = "/api/v1/rooms/#{room_id}/chatMessages"
 
         @channel_endpoints ||= []
-        @channel_endpoints  << endpoint
+        @channel_endpoints  << [endpoint, room_id]
       end
     end
 
@@ -235,7 +240,7 @@ class Gitter
 
     def on(message, &block)
       raise ArgumentError, "Must provide a block to `.on'" unless block_given?
-      dsl_eval(&block)
+      @message_handlers << MessageHandler.new(message, &block)
     end
 
     # See https://faye.jcoglan.com/ruby/clients.html
@@ -246,10 +251,10 @@ class Gitter
         client = Faye::Client.new(self.class.websocket_url)
         client.add_extension AuthHandshake
 
-        channel_subscriptions.each do |endpoint|
+        channel_subscriptions.each do |(endpoint, room_id)|
           puts "subscribing to #{endpoint}..."
           client.subscribe(endpoint) do |message|
-            puts message.inspect
+            handle message, room_id
           end
         end
       end
@@ -257,8 +262,121 @@ class Gitter
 
     private
 
+    def handle message, room_id
+      # Only respond to messages with text
+      msg_text = message.fetch("model", {})["text"].dup
+      return unless msg_text
+
+      # Only respond to messages starting with the bot name
+      return unless MessageContext.trim_bot_username msg_text
+
+      # Only repond to messages with a defined handler
+      handler, msg_cmd, msg_args = nil
+      handler = @message_handlers.detect { |h| h.match msg_text }
+      return unless handler
+
+      handler.respond_to message, msg_text, room_id
+    end
+
     def dsl_eval(&block)
       instance_eval(&block)
+    end
+
+    # A regexp/block pairing that is used to match a message, and the block it
+    # should respond with.
+    class MessageHandler
+      attr_reader :matcher, :block
+
+      def initialize msg_match, &block
+        @block = block
+        case msg_match
+        when String, Symbol
+          @matcher = /^#{msg_match.to_s}/
+        else
+          @matcher = msg_match
+        end
+      end
+
+      def match message
+        message =~ @matcher
+      end
+
+      # Create a message context to respond to the message from the user
+      def respond_to message, msg_text, room_id
+        matcher =~ msg_text
+
+        msg_cmd  = $&            # last match string
+        msg_args = $'.to_s.strip # string to right of match
+
+        context  = MessageContext.new room_id, message, self, msg_cmd, msg_args
+        context.call
+      end
+    end
+
+    # Message context for the matched message
+    #
+    # The block of an `on "msg" do ...` is executed in an instance (context) of
+    # MessageContext, which provides a DSL for some helper methods for
+    # responding to the message.
+    #
+    class MessageContext
+      attr_reader :handler, :room_id, :user_id, :raw_message, :msg_cmd, :msg_args
+
+      def self.trim_bot_username msg_text
+        msg_text.gsub! /^#{Gitter::Service.user_handle} */, ''
+      end
+
+      def initialize room_id, message, handler, msg_cmd, msg_args
+        @handler     = handler
+        @room_id     = room_id
+        @raw_message = message
+        @msg_cmd     = msg_cmd
+        @msg_args    = msg_args.split(" ")
+
+        if raw_message.fetch("model", {})["fromUser"]
+          @user_id  = raw_message["model"]["fromUser"]["id"]
+          @username = raw_message["model"]["fromUser"]["username"]
+        end
+      end
+
+      # Raw msg text from the socket
+      #
+      # still has bot's username, so most likely you want to work with #user_message
+      def msg_text
+        @msg_text ||= raw_message.fetch("model", {})["text"].to_s
+      end
+
+      def reply reply_message
+        Gitter::Service.send_message room_id, "#{username_handle} #{reply_message}"
+      end
+
+      # Send a generic message to the channel
+      def send_message message
+        Gitter::Service.send_message room_id, message
+      end
+
+      def username
+        @username ||= lookup_username
+      end
+
+      def username_handle
+        "@#{username}"
+      end
+
+      # Message that was sent to the bot from the user
+      def user_message
+        "#{msg_cmd} #{msg_args}"
+      end
+
+      def call
+        instance_eval(&handler.block)
+      end
+
+      private
+
+      def lookup_username
+        # TODO
+      end
     end
 
     class ChannelSubscription
