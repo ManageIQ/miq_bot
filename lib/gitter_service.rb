@@ -140,7 +140,6 @@ class Gitter
 
         yield req if block_given?
 
-        puts req.inspect
         req
       end
     end
@@ -152,10 +151,6 @@ class Gitter
     def put_post_block(path, payload)
       faraday_request_block(path) do |req|
         req.body = payload
-
-        puts "FROM put_post_block"
-        puts req.inspect
-        req
 
         yield req if block_given?
       end
