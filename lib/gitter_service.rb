@@ -62,7 +62,23 @@ class Gitter
   end
 
   class API
-    GITTER_URI = "https://api.gitter.im"
+    class << self
+      attr_reader :api_url
+
+      # The prefix for the API endpoints
+      #
+      # In development using a local gitter instance, it should be `/api/v1`,
+      # but in production it is just `/v1`
+      attr_accessor :api_prefix
+
+      def api_url=(api_url)
+        if api_url.present?
+          @api_url = api_url
+        else
+          raise "Please set a Gitter api_url in config/settings!"
+        end
+      end
+    end
 
     attr_reader :auth_token
 
@@ -71,27 +87,27 @@ class Gitter
     end
 
     def user
-      get "/v1/user"
+      get "#{api_prefix}/user"
     end
 
     def user_rooms
-      get "/v1/rooms"
+      get "#{api_prefix}/rooms"
     end
 
     def send_message(room_id, message)
       payload = { "text" => message }.to_json
-      post "/v1/rooms/#{room_id}/chatMessages", payload
+      post "#{api_prefix}/rooms/#{room_id}/chatMessages", payload
     end
 
     def unread_messages(user_id, room_id)
-      get "/v1/user/#{user_id}/rooms/#{room_id}/unreadItems"
+      get "#{api_prefix}/user/#{user_id}/rooms/#{room_id}/unreadItems"
     end
 
     def connection
       @connection ||= begin
         require 'faraday'
 
-        Faraday.new(:url => GITTER_URI) do |faraday|
+        Faraday.new(:url => self.class.api_url) do |faraday|
           # faraday.request(:url_encoded)
           faraday.adapter(Faraday.default_adapter)
         end
@@ -144,10 +160,26 @@ class Gitter
         yield req if block_given?
       end
     end
+
+    def api_prefix
+      self.class.api_prefix
+    end
   end
 
   # A "cinch-like" gitter bot that will
   class Bot
+    class << self
+      attr_reader :websocket_url
+
+      def websocket_url=(websocket_url)
+        if websocket_url.present?
+          @websocket_url = websocket_url
+        else
+          raise "Please set a Gitter websocket_url in config/settings!"
+        end
+      end
+    end
+
     attr_reader :channel_endpoints
 
     def initialize(&block)
@@ -155,6 +187,8 @@ class Gitter
     end
 
     # List of channels to watch
+    #
+    # Note:  the `api_prefix` isn't valid for this endpoint, and is always `/api/v1`
     def channels(channel_list)
       channel_list.each do |channel|
         room_id  = Service.get_room_id(channel)
@@ -181,8 +215,7 @@ class Gitter
       require 'eventmachine'
 
       EM.run do
-        client_uri = "https://ws.gitter.im/faye" # I think this is what we need to use...
-        client = Faye::Client.new(client_uri)
+        client = Faye::Client.new(self.class.websocket_url)
         client.set_header "Authorization", "Bearer #{Service.credentials[:token]}"
 
         channel_subscriptions.each do |endpoint|

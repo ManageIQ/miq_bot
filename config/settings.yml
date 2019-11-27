@@ -19,6 +19,8 @@ pivotal_credentials:
 bugzilla:
   product:
 gitter:
+  api_url: https://api.gitter.im
+  websocket_url: https://ws.gitter.im/bayeux
   channels: # array
 grafana:
   url:
