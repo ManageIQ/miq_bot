@@ -1,4 +1,4 @@
-if Settings.gitter_credentials and not Rails.env.test?
+if Settings.gitter_credentials && !Rails.env.test?
   require 'gitter_service'
 
   Gitter::Service.credentials = Settings.gitter_credentials
