@@ -45,13 +45,13 @@ RSpec.describe GithubService::Commands::RunTests do
         .to_return(:status => 404, :body => "", :headers => {})
 
       stub_request(:get, "https://api.github.com/repos/ManageIQ/manageiq-ui-classic")
-        .with(headers: {'Accept' => 'application/vnd.github.v3+json', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/json', 'User-Agent' => 'Octokit Ruby Gem 4.8.0'})
+        .with(headers: {'Accept' => 'application/vnd.github.v3+json', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type' => 'application/json', 'User-Agent' => 'Octokit Ruby Gem 4.8.0'})
         .to_return(:status => 200, :body => "", :headers => {})
 
       expect(described_class.new(issue).send(:extract_repo_names, "ManageIQ/foo, manageiq-ui-classic")).to eq([["manageiq-ui-classic"], ["ManageIQ/foo"]])
     end
 
-    it "should handle # or @" do
+    it "should handle # or @ but not both" do
       stub_request(:get, "https://api.github.com/repos/ManageIQ/manageiq")
         .with(headers: {'Accept' => 'application/vnd.github.v3+json', 'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type' => 'application/json', 'User-Agent' => 'Octokit Ruby Gem 4.8.0'})
         .to_return(:status => 200, :body => "", :headers => {})
