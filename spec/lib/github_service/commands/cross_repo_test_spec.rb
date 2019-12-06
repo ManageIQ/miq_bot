@@ -1,5 +1,76 @@
 require 'spec_helper'
 
+RSpec.shared_context "with stub cross_repo_tests", :with_stub_cross_repo do
+  require 'tmpdir'
+  require 'fileutils'
+
+  attr_reader :sandbox_dir, :cross_repo_remote, :cross_repo_clone
+
+  let(:suite_sandbox_dir) { Rails.root.join("spec", "tmp", "sandbox").to_s }
+  let(:travis_yml_path)   { File.join(cross_repo_clone, ".travis.yml") }
+
+  before do |example|
+    FileUtils.mkdir_p suite_sandbox_dir
+
+    # Generate a directory for this particular test
+    dir_name     = example.full_description.tr(':#', '-').tr(' ', '_')
+    @sandbox_dir = Dir.mktmpdir(dir_name, suite_sandbox_dir)
+
+    # Define the dir variables so they are accessible from the examples
+    @cross_repo_source = File.join(@sandbox_dir, "cross_repo-tests-source")
+    @cross_repo_remote = File.join(@sandbox_dir, "cross_repo-tests-remote")
+    @cross_repo_clone  = File.join(@sandbox_dir, "cross_repo-tests-cloned")
+
+    # Set the bot name
+    allow(described_class).to receive(:bot_name).and_return("rspec_bot")
+    # Set RunTest.test_repo_url to the tmp git dir we are creating
+    allow(described_class).to receive(:test_repo_url).and_return(@cross_repo_remote)
+    # Set RunTest.test_repo_name to the basename of @cross_repo_clone
+    allow(described_class).to receive(:test_repo_name).and_return(File.basename(@cross_repo_clone))
+    # Stub Repo::BASE_PATH so that RunTest.test_repo_clone_dir points to the
+    # top level of our suite sandbox dir.  The cloned repo will be will be
+    # placed into `@sandbox_dir` because of how the code parses the
+    # test_repo_url stubbed above.
+    stub_const("::Repo::BASE_PATH", suite_sandbox_dir)
+
+    default_travis_yaml_content = <<~YAML
+      dist: xenial
+      language: ruby
+      rvm:
+      - 2.5.5
+      cache:
+        bundler: true
+      addons:
+        postgresql: '10'
+        apt:
+          packages:
+          - libarchive-dev
+      script: bundle exec manageiq-cross_repo
+      matrix:
+        fast_finish: true
+      env:
+        global:
+        - REPOS=
+        matrix:
+        - TEST_REPO=manageiq
+    YAML
+
+    tmp_repo = GitRepoHelper::TmpRepo.generate @cross_repo_source do
+      add_file ".travis.yml", default_travis_yaml_content
+      commit "add .travis.yml"
+      tag "v1.0"
+    end
+
+    tmp_repo.create_remote "origin", @cross_repo_remote
+  end
+
+  # delete tmp repos dir
+  after do
+    FileUtils.remove_entry sandbox_dir unless ENV["DEBUG"]
+    described_class.instance_variable_set(:@test_repo_clone_dir, nil)
+  end
+end
+
 RSpec.describe GithubService::Commands::CrossRepoTest do
   subject { described_class.new(issue) }
 
