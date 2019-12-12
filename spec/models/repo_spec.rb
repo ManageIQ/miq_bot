@@ -25,6 +25,103 @@ describe Repo do
     expect(branch.last_commit).to eq("0123abcd")
   end
 
+  describe "clone synchronization callbacks" do
+    before { stub_const("#{described_class}::BASE_PATH", Pathname.new(Dir.mktmpdir)) }
+    after  { described_class::BASE_PATH.rmtree }
+
+    def create_clone(repo)
+      repo.path.mkpath
+      FileUtils.touch(repo.path.join(".keep"))
+      repo.save!
+      [repo.path, repo.path.parent]
+    end
+
+    describe "after_update :move_git_clone" do
+      it "when the org exists to the same org" do
+        path_was, org_path_was = create_clone(repo)
+
+        repo.update!(:name => "SomeUser/foo")
+
+        expect(repo.path.exist?).to    be true
+        expect(path_was.exist?).to     be false
+        expect(org_path_was.exist?).to be true
+      end
+
+      it "when the org exists to a new org" do
+        path_was, org_path_was = create_clone(repo)
+
+        repo.update!(:name => "foo/bar")
+
+        expect(repo.path.exist?).to    be true
+        expect(path_was.exist?).to     be false
+        expect(org_path_was.exist?).to be false
+      end
+
+      it "when the org is shared with another repo" do
+        path_was, org_path_was = create_clone(repo)
+        create_clone(build(:repo))
+
+        repo.update!(:name => "foo/bar")
+
+        expect(repo.path.exist?).to    be true
+        expect(path_was.exist?).to     be false
+        expect(org_path_was.exist?).to be true
+      end
+
+      it "when the org exists to a repo without an org" do
+        path_was, org_path_was = create_clone(repo)
+
+        repo.update!(:name => "foo")
+
+        expect(repo.path.exist?).to    be true
+        expect(path_was.exist?).to     be false
+        expect(org_path_was.exist?).to be false
+      end
+
+      it "when the org does not exist to a repo with an org" do
+        repo.name = "bar"
+        path_was, org_path_was = create_clone(repo)
+
+        repo.update!(:name => "foo/bar")
+
+        expect(repo.path.exist?).to    be true
+        expect(path_was.exist?).to     be false
+        expect(org_path_was.exist?).to be true # because that would be the REPO_PATH
+      end
+    end
+
+    describe "after_destroy :remove_git_clone" do
+      it "when the repo has an org" do
+        path_was, org_path_was = create_clone(repo)
+
+        repo.destroy
+
+        expect(path_was.exist?).to     be false
+        expect(org_path_was.exist?).to be false
+      end
+
+      it "when the org is shared with another repo" do
+        path_was, org_path_was = create_clone(repo)
+        create_clone(build(:repo))
+
+        repo.destroy
+
+        expect(path_was.exist?).to     be false
+        expect(org_path_was.exist?).to be true
+      end
+
+      it "when the repo does not have an org" do
+        repo.name = "foo"
+        path_was, org_path_was = create_clone(repo)
+
+        repo.destroy
+
+        expect(path_was.exist?).to     be false
+        expect(org_path_was.exist?).to be true # because that would be the REPO_PATH
+      end
+    end
+  end
+
   describe "#name_parts" do
     it "without an upstream user" do
       repo.name = "foo"
@@ -78,9 +175,33 @@ describe Repo do
     end
   end
 
+  it ".path" do
+    expect(described_class.path("foo/bar")).to eq Rails.root.join("repos", "foo", "bar")
+  end
+
   it "#path" do
-    expected = Rails.root.join("repos", repo.name)
-    expect(repo.path).to eq(expected)
+    expect(repo.path).to eq Rails.root.join("repos", repo.name)
+  end
+
+  describe ".org_path" do
+    it "when there is an org" do
+      expect(described_class.org_path("foo/bar")).to eq Rails.root.join("repos", "foo")
+    end
+
+    it "when there is not an org" do
+      expect(described_class.org_path("foo")).to be_nil
+    end
+  end
+
+  describe "#org_path" do
+    it "when there is an org" do
+      expect(repo.org_path).to eq Rails.root.join("repos", repo.name_parts.first)
+    end
+
+    it "when there is not an org" do
+      repo.name = "foo"
+      expect(repo.org_path).to be_nil
+    end
   end
 
   it "#branch_names" do
