@@ -5,6 +5,9 @@ class Repo < ActiveRecord::Base
 
   validates :name, :presence => true, :uniqueness => true
 
+  after_destroy :remove_git_clone
+  after_update  :move_git_clone
+
   def self.create_from_github!(name, url)
     create_and_clone!(name, url).tap(&:ensure_prs_refs)
   end
@@ -21,8 +24,21 @@ class Repo < ActiveRecord::Base
     end
   end
 
-  def path
+  def self.path(name)
     BASE_PATH.join(name)
+  end
+
+  def self.org_path(name)
+    parent = path(name).parent
+    parent == BASE_PATH ? nil : parent
+  end
+
+  def path
+    self.class.path(name)
+  end
+
+  def org_path
+    self.class.org_path(name)
   end
 
   def name_parts
@@ -162,5 +178,23 @@ class Repo < ActiveRecord::Base
 
   def extract_username_from_git_remote_url(url)
     url.start_with?("http") ? nil : url.match(/^.+?(?=@)/).to_s.presence
+  end
+
+  def move_git_clone
+    return unless name_changed?
+
+    path_was = self.class.path(name_was)
+    return unless path_was.exist?
+
+    org_path&.mkpath
+    FileUtils.mv(path_was, path)
+
+    org_path_was = self.class.org_path(name_was)
+    org_path_was.rmtree if org_path_was&.empty? # rubocop:disable Lint/SafeNavigationWithEmpty
+  end
+
+  def remove_git_clone
+    path.rmtree
+    org_path.rmtree if org_path&.empty? # rubocop:disable Lint/SafeNavigationWithEmpty
   end
 end
