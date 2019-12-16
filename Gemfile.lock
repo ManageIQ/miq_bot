@@ -353,6 +353,7 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-darwin-17
   x86_64-darwin-18
 
 DEPENDENCIES
@@ -393,4 +394,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.16.6
+   1.17.3
