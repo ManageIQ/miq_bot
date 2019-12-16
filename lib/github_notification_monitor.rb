@@ -10,6 +10,7 @@ class GithubNotificationMonitor
     "remove_label"    => :remove_labels,
     "rm_label"        => :remove_labels,
     "assign"          => :assign,
+    "unassign"        => :unassign,
     "add_reviewer"    => :add_reviewer,
     "remove_reviewer" => :remove_reviewer,
     "set_milestone"   => :set_milestone
