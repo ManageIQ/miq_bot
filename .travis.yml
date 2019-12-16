@@ -1,11 +1,13 @@
 language: ruby
-rvm: "2.3.1"
-sudo: false
+rvm: 2.5.5
 cache: bundler
 services:
+- postgresql
 - redis-server
+env:
+  global:
+  - DATABASE_URL="postgresql://postgres:@localhost:5432/miq_bot_test?encoding=utf8&pool=5&wait_timeout=5"
 before_install:
 - sudo pip install yamllint
 before_script:
-- cp config/database.tmpl.yml config/database.yml
 - bundle exec rake db:setup
