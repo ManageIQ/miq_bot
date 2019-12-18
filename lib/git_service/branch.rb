@@ -11,6 +11,28 @@ module GitService
       blob_at(path, merged).try(:content)
     end
 
+    def permission_for(path, merged = false)
+      git_perm = blob_data_for(path, merged).to_h[:filemode]
+
+      # Since git stores file permissions in a different format:
+      #
+      #   https://unix.stackexchange.com/a/450488
+      #
+      # Convert what we get from Rugged to something that will work with File
+      #
+      #   git_perm = 0o100755
+      #   git_perm.to_s(8)
+      #   #=> "100755"
+      #   _.[-3,3]
+      #   #=> "755"
+      #   _.to_i(8)
+      #   #=> 493
+      #   0o755
+      #   #=> 493
+      #
+      git_perm ? git_perm.to_s(8)[-3,3].to_i(8) : 0o644
+    end
+
     def diff(merge_target = nil)
       Diff.new(target_for_reference(merge_target_ref_name(merge_target)).diff(merge_tree))
     end
@@ -101,12 +123,15 @@ module GitService
 
     # Rugged::Blob object for a given file path on this branch
     def blob_at(path, merged = false)
-      source = merged ? merge_tree : tip_tree
-      blob_data = source.path(path)
-      blob = Rugged::Blob.lookup(rugged_repo, blob_data[:oid])
+      blob = Rugged::Blob.lookup(rugged_repo, blob_data_for(path, merged)[:oid])
       blob.type == :blob ? blob : nil
     rescue Rugged::TreeError
       nil
+    end
+
+    def blob_data_for(path, merged = false)
+      source = merged ? merge_tree : tip_tree
+      source.path(path)
     end
 
     def rugged_repo

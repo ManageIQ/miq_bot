@@ -56,9 +56,14 @@ module Linter
       content = branch_service.content_at(path, merged)
       return false unless content
 
+      perm      = branch_service.permission_for(path, merged)
       temp_file = File.join(destination_dir, path)
       FileUtils.mkdir_p(File.dirname(temp_file))
-      File.write(temp_file, content, :mode => "wb") # To prevent Encoding::UndefinedConversionError: "\xD0" from ASCII-8BIT to UTF-8
+
+      # Use "wb" to prevent Encoding::UndefinedConversionError: "\xD0" from
+      # ASCII-8BIT to UTF-8
+      File.write(temp_file, content, :mode => "wb", :perm => perm)
+
       true
     end
 
