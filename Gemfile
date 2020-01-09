@@ -39,7 +39,7 @@ gem 'slim'
 # Services gems
 gem 'minigit',        '~> 0.0.4'
 gem 'tracker_api',    '~> 1.6'
-gem 'travis',         '~> 1.7.6'
+gem 'travis',         '~> 1.8.10'
 
 gem 'awesome_spawn',        '>= 1.4.1'
 gem 'default_value_for',    '>= 3.1.0'
