@@ -37,6 +37,7 @@ gem 'sinatra', :require => false
 gem 'slim'
 
 # Services gems
+gem 'gitter-api',     '~> 0.1.0'
 gem 'minigit',        '~> 0.0.4'
 gem 'tracker_api',    '~> 1.6'
 gem 'travis',         '~> 1.8.10'
