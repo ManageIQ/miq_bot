@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2017_10_06_050814) do
+ActiveRecord::Schema.define(version: 2020_01_09_223351) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,8 @@ ActiveRecord::Schema.define(version: 2017_10_06_050814) do
     t.string "merge_target"
     t.string "pr_title"
     t.integer "linter_offense_count"
+    t.integer "travis_build_failure_id"
+    t.datetime "last_build_failure_notified_at"
   end
 
   create_table "repos", id: :serial, force: :cascade do |t|

@@ -99,4 +99,37 @@ class Branch < ActiveRecord::Base
   def git_service
     GitService::Branch.new(self)
   end
+
+  # Branch Failure
+
+  def notify_of_failure
+    if passing?
+      BuildFailureNotifier.new(self).report_passing
+      update(:last_build_failure_notified_at => nil, :travis_build_failure_id => nil)
+    elsif should_notify_of_failure?
+      update(:last_build_failure_notified_at => Time.zone.now)
+
+      BuildFailureNotifier.new(self).post_failure
+    end
+  end
+
+  def previously_failing?
+    !!travis_build_failure_id
+  end
+
+  def should_notify_of_failure?
+    last_build_failure_notified_at.nil? || last_build_failure_notified_at < 1.day.ago
+  end
+
+  # If we have reported a failure before and the branch is now green.
+  #
+  # The other advantage of checking `last_build_failure_notified_at.nil?` here
+  # is that we save a Travis API call, since we shouldn't be creating
+  # BuildFailure records without having found a build failure elsewhere (e.g.
+  # TravisBranchMonitor).
+  #
+  # New records will short circut before hitting `Travis::Repository.find`.
+  def passing?
+    !last_build_failure_notified_at.nil? && Travis::Repository.find(repo.name).branch(name).green?
+  end
 end
