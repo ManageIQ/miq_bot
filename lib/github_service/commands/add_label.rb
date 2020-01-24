@@ -8,14 +8,12 @@ module GithubService
         process_extracted_labels(valid, invalid)
 
         if invalid.any?
-          message = "@#{issuer} Cannot apply the following label#{"s" if invalid.length > 1} because they are not recognized: "
-          message << invalid.join(", ")
-          issue.add_comment(message)
+          issue.add_comment(invalid_label_message(issuer, invalid))
         end
 
         if valid.any?
           valid.reject! { |l| issue.applied_label?(l) }
-          issue.add_labels(valid)
+          issue.add_labels(valid) if valid.any?
         end
       end
 
@@ -43,6 +41,23 @@ module GithubService
         end
 
         [valid_labels, invalid_labels]
+      end
+
+      def invalid_label_message(issuer, invalid_labels)
+        message  = "@#{issuer} "
+        message << "Cannot apply the following label"
+        message << "s" if invalid_labels.length > 1
+        message << " because they are not recognized:\n"
+
+        labels = GithubService.labels(issue.fq_repo_name)
+        invalid_labels.each do |bad_label|
+          corrections   = DidYouMean::SpellChecker.new(:dictionary => labels).correct(bad_label)
+          possibilities = corrections.map { |l| "`#{l}`" }.join(", ")
+
+          message << "* `#{bad_label}` "
+          message << "(Did you mean? #{possibilities})" if corrections.any?
+        end
+        message
       end
     end
   end

@@ -33,6 +33,23 @@ RSpec.describe GithubService::Commands::AddLabel do
     it "corrects and adds the unapplied labels (if there is only one option)" do
       expect(issue).to receive(:add_labels).with(["wontfix"])
     end
+
+    context "with multiple options for misspellings" do
+      let(:labels) { %w[question wontfix wont-fix] }
+
+      it "does not add invalid labels" do
+        expect(issue).to receive(:add_comment)
+        expect(issue).not_to receive(:add_labels)
+      end
+
+      it "comments on error and provides corrections as options" do
+        err_comment = <<~ERR.chomp
+          @#{command_issuer} Cannot apply the following label because they are not recognized:
+          * `wont fix` (Did you mean? `wontfix`, `wont-fix`)
+        ERR
+        expect(issue).to receive(:add_comment).with(err_comment)
+      end
+    end
   end
 
   context "with invalid labels" do
