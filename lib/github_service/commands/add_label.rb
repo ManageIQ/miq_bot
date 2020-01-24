@@ -5,6 +5,7 @@ module GithubService
 
       def _execute(issuer:, value:)
         valid, invalid = extract_label_names(value)
+        process_extracted_labels(valid, invalid)
 
         if invalid.any?
           message = "@#{issuer} Cannot apply the following label#{"s" if invalid.length > 1} because they are not recognized: "
@@ -29,6 +30,19 @@ module GithubService
 
         # Then see if any are *still* invalid and split the list
         label_names.partition { |l| GithubService.valid_label?(issue.fq_repo_name, l) }
+      end
+
+      def process_extracted_labels(valid_labels, invalid_labels)
+        labels = GithubService.labels(issue.fq_repo_name)
+        invalid_labels.reject! do |label|
+          corrections = DidYouMean::SpellChecker.new(:dictionary => labels).correct(label)
+
+          if corrections.count == 1
+            valid_labels << corrections.first
+          end
+        end
+
+        [valid_labels, invalid_labels]
       end
     end
   end
