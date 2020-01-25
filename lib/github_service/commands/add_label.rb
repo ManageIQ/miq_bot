@@ -56,8 +56,9 @@ module GithubService
 
           message << "* `#{bad_label}` "
           message << "(Did you mean? #{possibilities})" if corrections.any?
+          message << "\n"
         end
-        message
+        message << "\nAll labels for `#{issue.fq_repo_name}`:  https://github.com/#{issue.fq_repo_name}/labels"
       end
     end
   end

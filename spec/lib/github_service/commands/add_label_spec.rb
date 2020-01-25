@@ -46,6 +46,8 @@ RSpec.describe GithubService::Commands::AddLabel do
         err_comment = <<~ERR.chomp
           @#{command_issuer} Cannot apply the following label because they are not recognized:
           * `wont fix` (Did you mean? `wontfix`, `wont-fix`)
+
+          All labels for `foo/bar`:  https://github.com/foo/bar/labels
         ERR
         expect(issue).to receive(:add_comment).with(err_comment)
       end
