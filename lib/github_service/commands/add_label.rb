@@ -65,4 +65,16 @@ module GithubService
 end
 
 # Travis HACK v2 (debugging)
+#
+#
+
+puts
+puts
+pp ENV
+puts
+puts
+pp RbConfig::CONFIG
+puts
+puts
+
 String.methosd
