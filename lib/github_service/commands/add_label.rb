@@ -1,3 +1,5 @@
+require 'did_you_mean' if ENV["TRAVIS"]
+
 module GithubService
   module Commands
     class AddLabel < Base
