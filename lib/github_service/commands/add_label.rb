@@ -1,5 +1,3 @@
-require 'did_you_mean' if ENV["TRAVIS"]
-
 module GithubService
   module Commands
     class AddLabel < Base
@@ -64,4 +62,10 @@ module GithubService
       end
     end
   end
+end
+
+# Travis HACK v2
+begin
+  String.methosd
+rescue NoMethodError
 end
