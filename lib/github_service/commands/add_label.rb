@@ -64,20 +64,17 @@ module GithubService
   end
 end
 
-# Travis HACK v2 (debugging)
-#
-#
-
-puts
-puts
-pp ENV
-puts
-puts
-pp RbConfig::CONFIG
-puts
-puts
-pp $LOAD_PATH
-puts
-puts
-
-String.methosd
+# HACK: Travis / `bundle install --path ...` compat
+begin
+  retry_require_dym = false
+  require 'did_you_mean'
+rescue LoadError => error
+  if retry_require_dym
+    raise error
+  else
+    $LOAD_PATH.push(*Dir[File.join(Gem.default_dir, "gems", "did_you_mean*", "lib")])
+    $LOAD_PATH.uniq!
+    retry_require_dym = true
+    retry
+  end
+end
