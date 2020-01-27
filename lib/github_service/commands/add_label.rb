@@ -64,8 +64,5 @@ module GithubService
   end
 end
 
-# Travis HACK v2
-begin
-  String.methosd
-rescue NoMethodError
-end
+# Travis HACK v2 (debugging)
+String.methosd
