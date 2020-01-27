@@ -76,5 +76,8 @@ puts
 pp RbConfig::CONFIG
 puts
 puts
+pp $LOAD_PATH
+puts
+puts
 
 String.methosd
