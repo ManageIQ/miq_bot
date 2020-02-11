@@ -5,16 +5,15 @@ module GithubService
 
       def _execute(issuer:, value:)
         valid, invalid = extract_label_names(value)
+        process_extracted_labels(valid, invalid)
 
         if invalid.any?
-          message = "@#{issuer} Cannot apply the following label#{"s" if invalid.length > 1} because they are not recognized: "
-          message << invalid.join(", ")
-          issue.add_comment(message)
+          issue.add_comment(invalid_label_message(issuer, invalid))
         end
 
         if valid.any?
           valid.reject! { |l| issue.applied_label?(l) }
-          issue.add_labels(valid)
+          issue.add_labels(valid) if valid.any?
         end
       end
 
@@ -30,6 +29,52 @@ module GithubService
         # Then see if any are *still* invalid and split the list
         label_names.partition { |l| GithubService.valid_label?(issue.fq_repo_name, l) }
       end
+
+      def process_extracted_labels(valid_labels, invalid_labels)
+        labels = GithubService.labels(issue.fq_repo_name)
+        invalid_labels.reject! do |label|
+          corrections = DidYouMean::SpellChecker.new(:dictionary => labels).correct(label)
+
+          if corrections.count == 1
+            valid_labels << corrections.first
+          end
+        end
+
+        [valid_labels, invalid_labels]
+      end
+
+      def invalid_label_message(issuer, invalid_labels)
+        message  = "@#{issuer} "
+        message << "Cannot apply the following label"
+        message << "s" if invalid_labels.length > 1
+        message << " because they are not recognized:\n"
+
+        labels = GithubService.labels(issue.fq_repo_name)
+        invalid_labels.each do |bad_label|
+          corrections   = DidYouMean::SpellChecker.new(:dictionary => labels).correct(bad_label)
+          possibilities = corrections.map { |l| "`#{l}`" }.join(", ")
+
+          message << "* `#{bad_label}` "
+          message << "(Did you mean? #{possibilities})" if corrections.any?
+          message << "\n"
+        end
+        message << "\nAll labels for `#{issue.fq_repo_name}`:  https://github.com/#{issue.fq_repo_name}/labels"
+      end
     end
+  end
+end
+
+# HACK: Travis / `bundle install --path ...` compat
+begin
+  retry_require_dym = false
+  require 'did_you_mean'
+rescue LoadError => error
+  if retry_require_dym
+    raise error
+  else
+    $LOAD_PATH.push(*Dir[File.join(Gem.default_dir, "gems", "did_you_mean*", "lib")])
+    $LOAD_PATH.uniq!
+    retry_require_dym = true
+    retry
   end
 end
