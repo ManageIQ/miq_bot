@@ -196,5 +196,6 @@ class Repo < ActiveRecord::Base
   def remove_git_clone
     path.rmtree
     org_path.rmtree if org_path&.empty? # rubocop:disable Lint/SafeNavigationWithEmpty
+  rescue Errno::ENOENT
   end
 end
