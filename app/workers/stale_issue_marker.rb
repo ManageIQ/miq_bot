@@ -23,49 +23,50 @@ Feel free to reopen this pull request if these changes are still valid.
 Thank you for all your contributions!
   EOS
 
-  attr_reader :fq_repo_name
-
-  def perform(fq_repo_name)
-    @fq_repo_name = fq_repo_name
-    raise "The label #{STALE_LABEL_NAME} does not exist on #{fq_repo_name}" unless GithubService.valid_label?(fq_repo_name, STALE_LABEL_NAME)
-
-    GithubService.issues(fq_repo_name, :state => :open, :sort => :updated, :direction => :asc).each do |issue|
-      pinned = (issue.labels & PINNED_LABELS).present?
-
-      if issue.updated_at < stale_date && !pinned
-        if issue.pull_request?
-          closable_prs << issue
-        else
-          stale_issues << issue
-        end
+  def perform
+    GithubService.search_issues(*search_args).each do |issue|
+      if issue.pull_request?
+        close_pr(issue)
+      else
+        mark_as_stale(issue)
       end
-    end
-
-    stale_issues.each do |issue|
-      next if issue.labels.include?(STALE_LABEL_NAME)
-      logger.info("[#{Time.now.utc}] - Marking issue #{fq_repo_name}##{issue.number} as stale")
-      issue.add_labels([STALE_LABEL_NAME])
-      issue.add_comment(STALE_ISSUE_MESSAGE)
-    end
-
-    closable_prs.each do |pr|
-      logger.info("[#{Time.now.utc}] - Closing stale PR #{fq_repo_name}##{pr.number}")
-      GithubService.close_pull_request(pr.fq_repo_name, pr.number)
-      pr.add_comment(CLOSABLE_PR_MESSAGE)
     end
   end
 
   private
 
+  def search_args
+    query  = "is:open archived:false update:<#{stale_date.strftime('%Y-%m-%d')}"
+    query << " #{PINNED_LABELS.map { |label| %(-label:"#{label}") }.join(" ")}"
+    query << " #{enabled_repo_names.map { |repo| %(repo:"#{repo}") }.join(" ")}"
+
+    [query, {:sort => :updated, :direction => :asc}]
+  end
+
   def stale_date
     @stale_date ||= 6.months.ago
   end
 
-  def stale_issues
-    @stale_issues ||= []
+  def validate_repo_has_stale_label(repo)
+    unless GithubService.valid_label?(repo, STALE_LABEL_NAME)
+      raise "The label #{STALE_LABEL_NAME} does not exist on #{repo}"
+    end
   end
 
-  def closable_prs
-    @closable_prs ||= []
+  def mark_as_stale(issue)
+    return if issue.labels.include?(STALE_LABEL_NAME)
+
+    validate_repo_has_stale_label(issue.fq_repo_name)
+
+    logger.info("[#{Time.now.utc}] - Marking issue #{issue.fq_repo_name}##{issue.number} as stale")
+    issue.add_labels([STALE_LABEL_NAME])
+    issue.add_comment(STALE_ISSUE_MESSAGE)
+  end
+
+  def close_pr(pull_request)
+    validate_repo_has_stale_label(pull_request.fq_repo_name)
+    logger.info("[#{Time.now.utc}] - Closing stale PR #{pull_request.fq_repo_name}##{pull_request.number}")
+    GithubService.close_pull_request(pull_request.fq_repo_name, pull_request.number)
+    pull_request.add_comment(CLOSABLE_PR_MESSAGE)
   end
 end

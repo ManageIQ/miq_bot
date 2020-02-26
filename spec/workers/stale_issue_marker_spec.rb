@@ -1,6 +1,8 @@
 require "spec_helper"
 
 RSpec.describe StaleIssueMarker do
+  let(:subject)      { described_class.new }
+  let(:stale_date)   { 6.months.ago }
   let(:fq_repo_name) { "foo/bar" }
 
   let(:already_stale_issue) do
@@ -30,52 +32,28 @@ RSpec.describe StaleIssueMarker do
            :labels        => [])
   end
 
-  let(:fresh_issue) do
-    double("fresh_issue",
-           :updated_at    => 2.months.ago,
-           :fq_repo_name  => fq_repo_name,
-           :number        => 5,
-           :pull_request? => false,
-           :labels        => ["bug"])
-  end
-
-  let(:fresh_pr) do
-    double("fresh_pr",
-           :updated_at    => 2.months.ago,
-           :fq_repo_name  => fq_repo_name,
-           :number        => 6,
-           :pull_request? => true,
-           :labels        => ["bug"])
-  end
-
-  let(:stale_but_pinned_issue) do
-    double("stale_but_pinned_issue",
-           :updated_at    => 9.months.ago,
-           :fq_repo_name  => fq_repo_name,
-           :number        => 1,
-           :pull_request? => true,
-           :labels        => %w(bug pinned))
-  end
-
   let(:issues) do
     [already_stale_issue,
      stale_issue,
-     stale_pr,
-     fresh_issue,
-     fresh_pr,
-     stale_but_pinned_issue]
+     stale_pr]
   end
 
+  let(:update_filter) { "update:<#{stale_date.strftime('%Y-%m-%d')}" }
+  let(:repo_filter)   { %(repo:"#{fq_repo_name}") }
+  let(:search_query)  { %(is:open archived:false #{update_filter} -label:"pinned" #{repo_filter}) }
+
   before do
-    allow(GithubService).to receive(:issues)
-      .with(fq_repo_name, :state => :open, :sort => :updated, :direction => :asc)
+    allow(described_class).to receive(:enabled_repo_names).and_return([fq_repo_name])
+    allow(subject).to receive(:stale_date).and_return(stale_date)
+    allow(GithubService).to receive(:search_issues)
+      .with(search_query, :sort => :updated, :direction => :asc)
       .and_return(issues)
     allow(GithubService).to receive(:valid_label?).with(fq_repo_name, "stale").and_return(true)
     allow(Sidekiq).to receive(:logger).and_return(double(:info => nil))
   end
 
   after do
-    described_class.new.perform(fq_repo_name)
+    subject.perform
   end
 
   it "closes stale PRs and marks stale issues, respecting pins and commenting accordingly" do
