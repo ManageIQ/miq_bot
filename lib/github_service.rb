@@ -42,6 +42,10 @@ module GithubService
     end
     alias issues list_issues
 
+    def search_issues(*args)
+      service.search_issues(*args).items.map { |issue| Issue.new(issue) }
+    end
+
     def issue_comments(*args)
       service.issue_comments(*args).map do |comment|
         IssueComment.new(comment)
