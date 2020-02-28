@@ -1,6 +1,8 @@
 module GithubService
   module Commands
     class AddReviewer < Base
+      alias_as 'request_review'
+
       private
 
       def _execute(issuer:, value:)
