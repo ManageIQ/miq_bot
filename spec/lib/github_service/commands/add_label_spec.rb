@@ -66,4 +66,18 @@ RSpec.describe GithubService::Commands::AddLabel do
       expect(issue).to receive(:add_comment).with(/Cannot apply the following label.*not recognized/)
     end
   end
+
+  context "un-assignable labels" do
+    let(:command_value) { "jansa/yes" }
+
+    before do
+      allow(issue).to receive(:applied_label?).with("jansa/yes?").and_return(false)
+      allow(GithubService).to receive(:valid_label?).with("foo/bar", command_value).and_return(true)
+    end
+
+    it "corrects the label to 'jansa/yes?'" do
+      expect(issue).to receive(:add_labels).with(["jansa/yes?"])
+      expect(issue).not_to receive(:add_comment)
+    end
+  end
 end
