@@ -31,16 +31,22 @@ module GithubService
       end
 
       def process_extracted_labels(valid_labels, invalid_labels)
-        labels = GithubService.labels(issue.fq_repo_name)
+        correct_invalid_labels(valid_labels, invalid_labels)
+
+        [valid_labels, invalid_labels]
+      end
+
+      def correct_invalid_labels(valid_labels, invalid_labels)
+        available_labels = GithubService.labels(issue.fq_repo_name)
+
         invalid_labels.reject! do |label|
-          corrections = DidYouMean::SpellChecker.new(:dictionary => labels).correct(label)
+          corrections = DidYouMean::SpellChecker.new(:dictionary => available_labels).correct(label)
 
           if corrections.count == 1
             valid_labels << corrections.first
           end
         end
 
-        [valid_labels, invalid_labels]
       end
 
       def invalid_label_message(issuer, invalid_labels)
