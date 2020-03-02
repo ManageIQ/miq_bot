@@ -43,5 +43,32 @@ RSpec.describe GithubService::Commands::RemoveLabel do
         expect(issue).not_to receive(:remove_label).with("wontfix")
       end
     end
+
+    context "with labels that are UNREMOVABLE" do
+      # An invalid situation, just testing in one go
+      let(:command_value) { "wontfix, jansa/no, jansa/yes, jansa/yes?" }
+
+      before do
+        %w[wontfix jansa/no jansa/yes jansa/yes?].each do |label|
+          allow(GithubService).to receive(:valid_label?).with("foo/bar", label).and_return(true)
+        end
+
+        expect(issue).to receive(:applied_label?).with("wontfix").and_return(true)
+        expect(issue).to receive(:applied_label?).with("jansa/yes?").and_return(true)
+
+        message = "@chessbyte Cannot remove the following labels since they require "              \
+                  "[triage team permissions](https://github.com/orgs/ManageIQ/teams/core-triage)" \
+                  ": jansa/no, jansa/yes"
+
+        expect(issue).to receive(:add_comment).with(message)
+      end
+
+      it "only removes the applied label" do
+        expect(issue).to     receive(:remove_label).with("wontfix")
+        expect(issue).not_to receive(:remove_label).with("jansa/no")
+        expect(issue).not_to receive(:remove_label).with("jansa/yes")
+        expect(issue).to     receive(:remove_label).with("jansa/yes?")
+      end
+    end
   end
 end

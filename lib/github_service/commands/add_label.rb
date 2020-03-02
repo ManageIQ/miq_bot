@@ -1,6 +1,10 @@
 module GithubService
   module Commands
     class AddLabel < Base
+      UNASSIGNABLE = {
+        "jansa/yes" => "jansa/yes?"
+      }.freeze
+
       private
 
       def _execute(issuer:, value:)
@@ -31,16 +35,28 @@ module GithubService
       end
 
       def process_extracted_labels(valid_labels, invalid_labels)
-        labels = GithubService.labels(issue.fq_repo_name)
+        correct_invalid_labels(valid_labels, invalid_labels)
+        handle_unassignable_labels(valid_labels)
+
+        [valid_labels, invalid_labels]
+      end
+
+      def correct_invalid_labels(valid_labels, invalid_labels)
+        available_labels = GithubService.labels(issue.fq_repo_name)
+
         invalid_labels.reject! do |label|
-          corrections = DidYouMean::SpellChecker.new(:dictionary => labels).correct(label)
+          corrections = DidYouMean::SpellChecker.new(:dictionary => available_labels).correct(label)
 
           if corrections.count == 1
             valid_labels << corrections.first
           end
         end
+      end
 
-        [valid_labels, invalid_labels]
+      def handle_unassignable_labels(valid_labels)
+        valid_labels.map! do |label|
+          UNASSIGNABLE.key?(label) ? UNASSIGNABLE[label] : label
+        end
       end
 
       def invalid_label_message(issuer, invalid_labels)
