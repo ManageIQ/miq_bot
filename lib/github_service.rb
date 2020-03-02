@@ -113,6 +113,21 @@ module GithubService
       assignees_cache.delete(fq_name)
     end
 
+    def username_lookup(username)
+      if username_lookup_cache.key?(username)
+        username_lookup_cache[username]
+      else
+        username_lookup_cache[username] ||= begin
+          case Net::HTTP.new("github.com", 443).tap { |h| h.use_ssl = true }.request_head("/#{username}")
+          when Net::HTTPNotFound then nil # invalid username
+          when Net::HTTPOK       then service.user(username)[:id]
+          else
+            raise "Error on GitHub with username lookup"
+          end
+        end
+      end
+    end
+
     private
 
     def service
@@ -149,6 +164,10 @@ module GithubService
 
     def assignees_cache
       @assignees_cache ||= {}
+    end
+
+    def username_lookup_cache
+      @username_lookup_cache ||= {}
     end
 
     def respond_to_missing?(method_name, include_private = false)
