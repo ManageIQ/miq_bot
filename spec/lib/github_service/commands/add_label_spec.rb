@@ -7,6 +7,15 @@ RSpec.describe GithubService::Commands::AddLabel do
   let(:command_issuer) { "chessbyte" }
   let(:command_value) { "question, wontfix" }
 
+  let(:miq_teams) do
+    [
+      {"id" => 1234, "name" => "commiters"},
+      {"id" => 2345, "name" => "core-triage"},
+      {"id" => 3456, "name" => "my-triage-team"},
+      {"id" => 4567, "name" => "UI"}
+    ]
+  end
+
   before do
     allow(issue).to receive(:applied_label?).with("question").and_return(true)
     allow(issue).to receive(:applied_label?).with("wontfix").and_return(false)
@@ -18,6 +27,11 @@ RSpec.describe GithubService::Commands::AddLabel do
   end
 
   after do
+    # unset class variables (weird ordering thanks to @chrisarcand...)
+    [:@triage_team_name, :@member_organization_name].each do |var|
+      IsTeamMember.remove_instance_variable(var) if IsTeamMember.instance_variable_defined?(var)
+    end
+
     subject.execute!(:issuer => command_issuer, :value => command_value)
   end
 
@@ -68,16 +82,59 @@ RSpec.describe GithubService::Commands::AddLabel do
   end
 
   context "un-assignable labels" do
-    let(:command_value) { "jansa/yes" }
+    let(:command_value)  { "jansa/yes" }
+    let(:triage_members) { [{"login" => "Fryguy"}] }
 
     before do
-      allow(issue).to receive(:applied_label?).with("jansa/yes?").and_return(false)
-      allow(GithubService).to receive(:valid_label?).with("foo/bar", command_value).and_return(true)
+      github_service_add_stub :url           => "/orgs/ManageIQ/teams?per_page=100",
+                              :response_body => miq_teams.to_json
+      github_service_add_stub :url           => "/teams/3456/members?per_page=100",
+                              :response_body => triage_members.to_json
     end
 
-    it "corrects the label to 'jansa/yes?'" do
-      expect(issue).to receive(:add_labels).with(["jansa/yes?"])
-      expect(issue).not_to receive(:add_comment)
+    context "without a triage team" do
+      before do
+        allow(issue).to receive(:applied_label?).with("jansa/yes?").and_return(false)
+        allow(GithubService).to receive(:valid_label?).with("foo/bar", command_value).and_return(true)
+      end
+
+      it "corrects the label to 'jansa/yes?'" do
+        expect(issue).to receive(:add_labels).with(["jansa/yes?"])
+        expect(issue).not_to receive(:add_comment)
+      end
+    end
+
+    context "with a non-triage user" do
+      before do
+        allow(issue).to receive(:applied_label?).with("jansa/yes?").and_return(false)
+        allow(GithubService).to receive(:valid_label?).with("foo/bar", command_value).and_return(true)
+        stub_settings(:member_organization_name => "ManageIQ", :triage_team_name => "my-triage-team")
+      end
+
+      it "applies the original label" do
+        expect(issue).to receive(:add_labels).with(["jansa/yes?"])
+        expect(issue).not_to receive(:add_comment)
+      end
+    end
+
+    context "with a triage user" do
+      let(:triage_members) do
+        [
+          {"login" => "Fryguy"},
+          {"login" => command_issuer}
+        ]
+      end
+
+      before do
+        allow(issue).to receive(:applied_label?).with("jansa/yes").and_return(false)
+        allow(GithubService).to receive(:valid_label?).with("foo/bar", command_value).and_return(true)
+        stub_settings(:member_organization_name => "ManageIQ", :triage_team_name => "my-triage-team")
+      end
+
+      it "applies the original label" do
+        expect(issue).to receive(:add_labels).with(["jansa/yes"])
+        expect(issue).not_to receive(:add_comment)
+      end
     end
   end
 end
