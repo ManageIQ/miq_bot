@@ -7,7 +7,7 @@ module CommitMonitorHandlers::CommitRange
     include BranchWorkerMixin
 
     def self.batch_workers
-      [DiffContentChecker, DiffFilenameChecker]
+      [DiffContentChecker, DiffFilenameChecker, CommitMetadataChecker]
     end
 
     def self.handled_branch_modes
