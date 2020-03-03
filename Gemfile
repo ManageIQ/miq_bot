@@ -56,6 +56,8 @@ gem 'octokit', '~> 4.8.0', :require => false
 gem 'faraday', '~> 0.9.1'
 gem 'faraday-http-cache', '~> 2.0.0'
 
+gem 'faye' # for gitter streams
+
 group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
