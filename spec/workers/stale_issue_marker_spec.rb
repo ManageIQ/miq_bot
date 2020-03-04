@@ -7,7 +7,7 @@ RSpec.describe StaleIssueMarker do
 
   let(:already_stale_issue) do
     double("already_stale_issue",
-           :updated_at    => 8.months.ago,
+           :updated_at    => 6.months.ago,
            :fq_repo_name  => fq_repo_name,
            :number        => 3,
            :pull_request? => false,
@@ -16,7 +16,7 @@ RSpec.describe StaleIssueMarker do
 
   let(:stale_issue) do
     double("stale_issue",
-           :updated_at    => 7.months.ago,
+           :updated_at    => 5.months.ago,
            :fq_repo_name  => fq_repo_name,
            :number        => 4,
            :pull_request? => false,
@@ -25,7 +25,7 @@ RSpec.describe StaleIssueMarker do
 
   let(:stale_pr) do
     double("stale_pr",
-           :updated_at    => 7.months.ago,
+           :updated_at    => 4.months.ago,
            :fq_repo_name  => fq_repo_name,
            :number        => 2,
            :pull_request? => true,

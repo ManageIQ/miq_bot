@@ -9,7 +9,7 @@ class StaleIssueMarker
 
   STALE_LABEL_NAME = 'stale'.freeze
   STALE_ISSUE_MESSAGE = <<-EOS.freeze
-This issue has been automatically marked as stale because it has not been updated for at least 6 months.
+This issue has been automatically marked as stale because it has not been updated for at least 3 months.
 
 If you can still reproduce this issue on the current release or on `master`, please reply with all of the information you have about it in order to keep the issue open.
 
@@ -23,6 +23,10 @@ Feel free to reopen this pull request if these changes are still valid.
 Thank you for all your contributions!
   EOS
 
+  # Triage logic:
+  #
+  # - Stale after 3 month of no activity
+  #
   def perform
     GithubService.search_issues(*search_args).each do |issue|
       if issue.pull_request?
@@ -44,7 +48,7 @@ Thank you for all your contributions!
   end
 
   def stale_date
-    @stale_date ||= 6.months.ago
+    @stale_date ||= 3.months.ago
   end
 
   def validate_repo_has_stale_label(repo)
