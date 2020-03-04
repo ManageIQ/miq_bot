@@ -28,23 +28,23 @@ Thank you for all your contributions!
   # - Stale after 3 month of no activity
   #
   def perform
-    GithubService.search_issues(*search_args).each do |issue|
+    handle_newly_stale_issues
+  end
+
+  private
+
+  def handle_newly_stale_issues
+    query  = "is:open archived:false update:<#{stale_date.strftime('%Y-%m-%d')}"
+    query << " #{PINNED_LABELS.map { |label| %(-label:"#{label}") }.join(" ")}"
+    query << " #{enabled_repo_names.map { |repo| %(repo:"#{repo}") }.join(" ")}"
+
+    GithubService.search_issues(query, {:sort => :updated, :direction => :asc}).each do |issue|
       if issue.pull_request?
         close_pr(issue)
       else
         mark_as_stale(issue)
       end
     end
-  end
-
-  private
-
-  def search_args
-    query  = "is:open archived:false update:<#{stale_date.strftime('%Y-%m-%d')}"
-    query << " #{PINNED_LABELS.map { |label| %(-label:"#{label}") }.join(" ")}"
-    query << " #{enabled_repo_names.map { |repo| %(repo:"#{repo}") }.join(" ")}"
-
-    [query, {:sort => :updated, :direction => :asc}]
   end
 
   def stale_date
