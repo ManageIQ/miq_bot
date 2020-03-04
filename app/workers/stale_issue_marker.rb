@@ -6,7 +6,8 @@ class StaleIssueMarker
 
   # If an issue/pr has any of these labels, it will not be marked as stale or closed
   PINNED_LABELS    = ['pinned'].freeze
-
+  UNMERGEABLE      = 'unmergeable'.freeze
+  SEARCH_SORTING   = {:sort => :updated, :direction => :asc}.freeze
   STALE_LABEL_NAME = 'stale'.freeze
   STALE_ISSUE_MESSAGE = <<-EOS.freeze
 This issue has been automatically marked as stale because it has not been updated for at least 3 months.
@@ -26,19 +27,21 @@ Thank you for all your contributions!
   # Triage logic:
   #
   # - Stale after 3 month of no activity
+  # - Stale and unmergeable should be closed (assume abandoned, can still be re-opened)
   #
   def perform
     handle_newly_stale_issues
+    handle_stale_and_unmergable_prs
   end
 
   private
 
   def handle_newly_stale_issues
     query  = "is:open archived:false update:<#{stale_date.strftime('%Y-%m-%d')}"
-    query << " #{PINNED_LABELS.map { |label| %(-label:"#{label}") }.join(" ")}"
-    query << " #{enabled_repo_names.map { |repo| %(repo:"#{repo}") }.join(" ")}"
+    query << enabled_repos_query_filter
+    query << unpinned_query_filter
 
-    GithubService.search_issues(query, {:sort => :updated, :direction => :asc}).each do |issue|
+    GithubService.search_issues(query, SEARCH_SORTING).each do |issue|
       if issue.pull_request?
         close_pr(issue)
       else
@@ -47,8 +50,25 @@ Thank you for all your contributions!
     end
   end
 
+  def handle_stale_and_unmergable_prs
+    query  = "is:open archived:false is:pr"
+    query << %( label:"#{STALE_LABEL_NAME}" label:"#{UNMERGEABLE}")
+    query << enabled_repos_query_filter
+    query << unpinned_query_filter
+
+    GithubService.search_issues(query, SEARCH_SORTING).each { |issue| close_pr(issue) }
+  end
+
   def stale_date
     @stale_date ||= 3.months.ago
+  end
+
+  def enabled_repos_query_filter
+    " #{enabled_repo_names.map { |repo| %(repo:"#{repo}") }.join(" ")}"
+  end
+
+  def unpinned_query_filter
+    " #{PINNED_LABELS.map { |label| %(-label:"#{label}") }.join(" ")}"
   end
 
   def validate_repo_has_stale_label(repo)
