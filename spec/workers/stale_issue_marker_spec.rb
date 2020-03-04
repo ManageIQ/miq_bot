@@ -1,44 +1,52 @@
 require "spec_helper"
 
 RSpec.describe StaleIssueMarker do
+  def create_stub_issue(name, data)
+    agent = GithubService.send(:service).agent
+    GithubService::Issue.new(Sawyer::Resource.new(agent, {:name => name}.merge(data)))
+  end
+
+  def labels(label_names)
+    label_names.map { |n| {:name => n} }
+  end
+
   let(:subject)      { described_class.new }
   let(:stale_date)   { 6.months.ago }
+  let(:repo_url)     { "https://api.github.com/repos/#{fq_repo_name}" }
   let(:fq_repo_name) { "foo/bar" }
 
   let(:already_stale_issue) do
-    double("already_stale_issue",
-           :updated_at    => 6.months.ago,
-           :fq_repo_name  => fq_repo_name,
-           :number        => 3,
-           :pull_request? => false,
-           :labels        => %w(stale bug))
+    create_stub_issue("already_stale_issue",
+                      :updated_at     => 6.months.ago,
+                      :repository_url => repo_url,
+                      :number         => 3,
+                      :labels         => labels(%w[stale bug]))
   end
 
   let(:stale_issue) do
-    double("stale_issue",
-           :updated_at    => 5.months.ago,
-           :fq_repo_name  => fq_repo_name,
-           :number        => 4,
-           :pull_request? => false,
-           :labels        => ["bug"])
+    create_stub_issue("stale_issue",
+                      :updated_at     => 5.months.ago,
+                      :repository_url => repo_url,
+                      :number         => 4,
+                      :labels         => labels(["bug"]))
   end
 
   let(:stale_pr) do
-    double("stale_pr",
-           :updated_at    => 4.months.ago,
-           :fq_repo_name  => fq_repo_name,
-           :number        => 2,
-           :pull_request? => true,
-           :labels        => [])
+    create_stub_issue("stale_pr",
+                      :updated_at     => 4.months.ago,
+                      :repository_url => repo_url,
+                      :number         => 2,
+                      :pull_request   => true,
+                      :labels         => [])
   end
 
   let(:stale_and_unmergable_pr) do
-    double("stale_and_unmergable_pr",
-           :updated_at    => 4.months.ago,
-           :fq_repo_name  => fq_repo_name,
-           :number        => 9001,
-           :pull_request? => true,
-           :labels        => ["stale", "unmergeable"])
+    create_stub_issue("stale_and_unmergable_pr",
+                      :updated_at     => 4.months.ago,
+                      :repository_url => repo_url,
+                      :number         => 9001,
+                      :pull_request   => true,
+                      :labels         => labels(["stale", "unmergeable"]))
   end
 
   let(:issues) do

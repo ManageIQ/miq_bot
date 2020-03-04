@@ -5,10 +5,8 @@ class StaleIssueMarker
   include SidekiqWorkerMixin
 
   # If an issue/pr has any of these labels, it will not be marked as stale or closed
-  PINNED_LABELS    = ['pinned'].freeze
-  UNMERGEABLE      = 'unmergeable'.freeze
-  SEARCH_SORTING   = {:sort => :updated, :direction => :asc}.freeze
-  STALE_LABEL_NAME = 'stale'.freeze
+  PINNED_LABELS       = ['pinned'].freeze
+  SEARCH_SORTING      = {:sort => :updated, :direction => :asc}.freeze
   STALE_ISSUE_MESSAGE = <<-EOS.freeze
 This issue has been automatically marked as stale because it has not been updated for at least 3 months.
 
@@ -52,7 +50,7 @@ Thank you for all your contributions!
 
   def handle_stale_and_unmergable_prs
     query  = "is:open archived:false is:pr"
-    query << %( label:"#{STALE_LABEL_NAME}" label:"#{UNMERGEABLE}")
+    query << %( label:"#{stale_label}" label:"#{unmergeable_label}")
     query << enabled_repos_query_filter
     query << unpinned_query_filter
 
@@ -61,6 +59,14 @@ Thank you for all your contributions!
 
   def stale_date
     @stale_date ||= 3.months.ago
+  end
+
+  def stale_label
+    GithubService::Issue::STALE_LABEL
+  end
+
+  def unmergeable_label
+    GithubService::Issue::UNMERGEABLE_LABEL
   end
 
   def enabled_repos_query_filter
@@ -72,18 +78,18 @@ Thank you for all your contributions!
   end
 
   def validate_repo_has_stale_label(repo)
-    unless GithubService.valid_label?(repo, STALE_LABEL_NAME)
-      raise "The label #{STALE_LABEL_NAME} does not exist on #{repo}"
+    unless GithubService.valid_label?(repo, stale_label)
+      raise "The label #{stale_label} does not exist on #{repo}"
     end
   end
 
   def mark_as_stale(issue)
-    return if issue.labels.include?(STALE_LABEL_NAME)
+    return if issue.stale?
 
     validate_repo_has_stale_label(issue.fq_repo_name)
 
     logger.info("[#{Time.now.utc}] - Marking issue #{issue.fq_repo_name}##{issue.number} as stale")
-    issue.add_labels([STALE_LABEL_NAME])
+    issue.add_labels([stale_label])
     issue.add_comment(STALE_ISSUE_MESSAGE)
   end
 
