@@ -15,7 +15,7 @@ If you can still reproduce this issue on the current release or on `master`, ple
 Thank you for all your contributions!
   EOS
   CLOSABLE_PR_MESSAGE = <<-EOS.freeze
-This pull request has been automatically closed because it has not been updated for at least 6 months.
+This pull request has been automatically closed because it has not been updated for at least 3 months.
 
 Feel free to reopen this pull request if these changes are still valid.
 
@@ -25,6 +25,7 @@ Thank you for all your contributions!
   # Triage logic:
   #
   # - Stale after 3 month of no activity
+  # - Close after stale and inactive for 3 more months
   # - Stale and unmergeable should be closed (assume abandoned, can still be re-opened)
   #
   def perform
@@ -40,7 +41,7 @@ Thank you for all your contributions!
     query << unpinned_query_filter
 
     GithubService.search_issues(query, SEARCH_SORTING).each do |issue|
-      if issue.pull_request?
+      if issue.stale?
         close_pr(issue)
       else
         mark_as_stale(issue)

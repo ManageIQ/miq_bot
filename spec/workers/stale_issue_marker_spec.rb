@@ -17,7 +17,7 @@ RSpec.describe StaleIssueMarker do
 
   let(:already_stale_issue) do
     create_stub_issue("already_stale_issue",
-                      :updated_at     => 6.months.ago,
+                      :updated_at     => 3.months.ago, # last update is from the bot
                       :repository_url => repo_url,
                       :number         => 3,
                       :labels         => labels(%w[stale bug]))
@@ -55,6 +55,7 @@ RSpec.describe StaleIssueMarker do
      stale_pr]
   end
 
+  let(:all_issues)        { issues + [stale_and_unmergable_pr] }
   let(:search_query)      { "#{issue_filter} #{update_filter} #{repo_filter} #{pinned_filter}" }
   let(:unmergeable_query) { "#{issue_filter} is:pr #{labels_filter} #{repo_filter} #{pinned_filter}" }
   let(:issue_filter)      { "is:open archived:false" }
@@ -81,29 +82,15 @@ RSpec.describe StaleIssueMarker do
   end
 
   it "closes stale PRs and marks stale issues, respecting pins and commenting accordingly" do
-    expect(stale_issue).to receive(:add_labels).with(["stale"])
-    expect(stale_issue).to receive(:add_comment).with(/This issue.*marked as stale/)
-
-    expect(GithubService).to receive(:close_pull_request).with(fq_repo_name, stale_pr.number)
-    expect(GithubService).to receive(:close_pull_request).with(fq_repo_name, stale_and_unmergable_pr.number)
-    expect(stale_pr).to receive(:add_comment).with(/This pull request.*closed/)
-    expect(stale_and_unmergable_pr).to receive(:add_comment).with(/This pull request.*closed/)
-
-    issues.each do |issue|
-      unless issue == stale_issue
+    all_issues.each do |issue|
+      if [already_stale_issue, stale_and_unmergable_pr].include?(issue)
+        expect(issue).to     receive(:add_comment).with(/This pull request.*closed/)
         expect(issue).to_not receive(:add_labels)
-      end
-    end
-
-    issues.each do |issue|
-      unless [stale_pr, stale_and_unmergable_pr].include?(issue)
+        expect(GithubService).to receive(:close_pull_request).with(fq_repo_name, issue.number)
+      else
+        expect(issue).to receive(:add_labels).with(["stale"])
+        expect(issue).to receive(:add_comment).with(/This issue.*marked as stale/)
         expect(GithubService).to_not receive(:close_pull_request).with(issue.number)
-      end
-    end
-
-    issues.each do |issue|
-      unless [stale_pr, stale_issue].include?(issue)
-        expect(issue).to_not receive(:add_comment)
       end
     end
   end
