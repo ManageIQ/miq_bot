@@ -73,6 +73,11 @@ module GithubService
       user.login
     end
 
+    # Either "issue" or "pull request"
+    def type
+      pull_request? ? "pull request" : "issue"
+    end
+
     def pull_request?
       respond_to?(:pull_request)
     end

@@ -5,22 +5,14 @@ class StaleIssueMarker
   include SidekiqWorkerMixin
 
   # If an issue/pr has any of these labels, it will not be marked as stale or closed
-  PINNED_LABELS       = ['pinned'].freeze
-  SEARCH_SORTING      = {:sort => :updated, :direction => :asc}.freeze
-  STALE_ISSUE_MESSAGE = <<-EOS.freeze
-This issue has been automatically marked as stale because it has not been updated for at least 3 months.
+  PINNED_LABELS  = ['pinned'].freeze
+  SEARCH_SORTING = {:sort => :updated, :direction => :asc}.freeze
+  COMMENT_FOOTER = <<~FOOTER.sub("ManageIQ\n", "ManageIQ ").strip!
+    Thank you for all your contributions!  More information about the ManageIQ
+    triage process can be found in [the traige process documentation][1].
 
-If you can still reproduce this issue on the current release or on `master`, please reply with all of the information you have about it in order to keep the issue open.
-
-Thank you for all your contributions!
-  EOS
-  CLOSABLE_PR_MESSAGE = <<-EOS.freeze
-This pull request has been automatically closed because it has not been updated for at least 3 months.
-
-Feel free to reopen this pull request if these changes are still valid.
-
-Thank you for all your contributions!
-  EOS
+    [1]: https://www.manageiq.org/docs/guides/triage_process
+  FOOTER
 
   # Triage logic:
   #
@@ -94,15 +86,37 @@ Thank you for all your contributions!
   def comment_as_stale(issue)
     mark_as_stale(issue)
 
+    message = "This #{issue.type} has been automatically marked as stale " \
+              "because it has not been updated for at least 3 months.\n\n"
+    if issue.pull_request?
+      message << "If these changes are still valid, please remove the "    \
+                 "`stale` label, make any changes requested by reviewers " \
+                 "(if any), and ensure that this issue is being looked "   \
+                 "at by the assigned/reviewer(s)\n\n"
+    else
+      message << "If you can still reproduce this issue on the current " \
+                 "release or on `master`, please reply with all of the " \
+                 "information you have about it in order to keep the "   \
+                 "issue open.\n\n"
+    end
+    message << COMMENT_FOOTER
+
     logger.info("[#{Time.now.utc}] - Marking issue #{issue.fq_repo_name}##{issue.number} as stale")
-    issue.add_comment(STALE_ISSUE_MESSAGE)
+    issue.add_comment(message)
   end
 
   def comment_and_close(issue)
     mark_as_stale(issue)
 
+    message  = "This #{issue.type} has been automatically closed because it " \
+               "has not been updated for at least 3 months.\n\n"
+    message << "Feel free to reopen this #{issue.type} if "
+    message << "these changes are still valid.\n\n" if issue.pull_request?
+    message << "this issue is still valid.\n\n"     unless issue.pull_request?
+    message << COMMENT_FOOTER
+
     logger.info("[#{Time.now.utc}] - Closing stale PR #{issue.fq_repo_name}##{issue.number}")
     GithubService.close_pull_request(issue.fq_repo_name, issue.number)
-    issue.add_comment(CLOSABLE_PR_MESSAGE)
+    issue.add_comment(message)
   end
 end
