@@ -42,7 +42,7 @@ Thank you for all your contributions!
 
     GithubService.search_issues(query, SEARCH_SORTING).each do |issue|
       if issue.stale?
-        close_pr(issue)
+        comment_and_close(issue)
       else
         mark_as_stale(issue)
       end
@@ -55,7 +55,7 @@ Thank you for all your contributions!
     query << enabled_repos_query_filter
     query << unpinned_query_filter
 
-    GithubService.search_issues(query, SEARCH_SORTING).each { |issue| close_pr(issue) }
+    GithubService.search_issues(query, SEARCH_SORTING).each { |issue| comment_and_close(issue) }
   end
 
   def stale_date
@@ -94,10 +94,10 @@ Thank you for all your contributions!
     issue.add_comment(STALE_ISSUE_MESSAGE)
   end
 
-  def close_pr(pull_request)
-    validate_repo_has_stale_label(pull_request.fq_repo_name)
-    logger.info("[#{Time.now.utc}] - Closing stale PR #{pull_request.fq_repo_name}##{pull_request.number}")
-    GithubService.close_pull_request(pull_request.fq_repo_name, pull_request.number)
-    pull_request.add_comment(CLOSABLE_PR_MESSAGE)
+  def comment_and_close(issue)
+    validate_repo_has_stale_label(issue.fq_repo_name)
+    logger.info("[#{Time.now.utc}] - Closing stale PR #{issue.fq_repo_name}##{issue.number}")
+    GithubService.close_pull_request(issue.fq_repo_name, issue.number)
+    issue.add_comment(CLOSABLE_PR_MESSAGE)
   end
 end
