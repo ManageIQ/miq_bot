@@ -81,6 +81,10 @@ module GithubService
       labels.include?(STALE_LABEL)
     end
 
+    def unmergeable?
+      labels.include?(UNMERGEABLE_LABEL)
+    end
+
     # Overrides Octokit response key
     # We manage this ourselves for the life of the issue object to avoid making
     # extra API calls.

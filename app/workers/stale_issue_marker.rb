@@ -41,10 +41,10 @@ Thank you for all your contributions!
     query << unpinned_query_filter
 
     GithubService.search_issues(query, SEARCH_SORTING).each do |issue|
-      if issue.stale?
+      if issue.stale? || issue.unmergeable?
         comment_and_close(issue)
       else
-        mark_as_stale(issue)
+        comment_as_stale(issue)
       end
     end
   end
@@ -88,14 +88,19 @@ Thank you for all your contributions!
     return if issue.stale?
 
     validate_repo_has_stale_label(issue.fq_repo_name)
+    issue.add_labels([stale_label])
+  end
+
+  def comment_as_stale(issue)
+    mark_as_stale(issue)
 
     logger.info("[#{Time.now.utc}] - Marking issue #{issue.fq_repo_name}##{issue.number} as stale")
-    issue.add_labels([stale_label])
     issue.add_comment(STALE_ISSUE_MESSAGE)
   end
 
   def comment_and_close(issue)
-    validate_repo_has_stale_label(issue.fq_repo_name)
+    mark_as_stale(issue)
+
     logger.info("[#{Time.now.utc}] - Closing stale PR #{issue.fq_repo_name}##{issue.number}")
     GithubService.close_pull_request(issue.fq_repo_name, issue.number)
     issue.add_comment(CLOSABLE_PR_MESSAGE)

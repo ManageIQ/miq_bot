@@ -49,10 +49,20 @@ RSpec.describe StaleIssueMarker do
                       :labels         => labels(["stale", "unmergeable"]))
   end
 
+  let(:old_unmergable_pr) do
+    create_stub_issue("old_unmergable_pr",
+                      :updated_at     => 4.months.ago,
+                      :repository_url => repo_url,
+                      :number         => 9001,
+                      :pull_request   => true,
+                      :labels         => labels(["unmergeable"]))
+  end
+
   let(:issues) do
     [already_stale_issue,
      stale_issue,
-     stale_pr]
+     stale_pr,
+     old_unmergable_pr]
   end
 
   let(:all_issues)        { issues + [stale_and_unmergable_pr] }
@@ -84,11 +94,15 @@ RSpec.describe StaleIssueMarker do
   it "closes stale PRs and marks stale issues, respecting pins and commenting accordingly" do
     all_issues.each do |issue|
       if [already_stale_issue, stale_and_unmergable_pr].include?(issue)
-        expect(issue).to     receive(:add_comment).with(/This pull request.*closed/)
         expect(issue).to_not receive(:add_labels)
-        expect(GithubService).to receive(:close_pull_request).with(fq_repo_name, issue.number)
       else
         expect(issue).to receive(:add_labels).with(["stale"])
+      end
+
+      if [already_stale_issue, stale_and_unmergable_pr, old_unmergable_pr].include?(issue)
+        expect(issue).to receive(:add_comment).with(/This pull request.*closed/)
+        expect(GithubService).to receive(:close_pull_request).with(fq_repo_name, issue.number)
+      else
         expect(issue).to receive(:add_comment).with(/This issue.*marked as stale/)
         expect(GithubService).to_not receive(:close_pull_request).with(issue.number)
       end
