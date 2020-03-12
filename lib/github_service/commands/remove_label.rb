@@ -3,8 +3,6 @@ module GithubService
     class RemoveLabel < Base
       include IsTeamMember
 
-      UNREMOVABLE = %w[jansa/yes jansa/no].freeze
-
       alias_as 'rm_label'
 
       private
@@ -40,7 +38,7 @@ module GithubService
 
       def process_extracted_labels(issuer, valid_labels, _invalid_labels, unremovable)
         unless triage_member?(issuer)
-          valid_labels.each { |label| unremovable << label if UNREMOVABLE.include?(label) }
+          valid_labels.each { |label| unremovable << label if Settings.labels.unremovable.include?(label) }
           unremovable.each  { |label| valid_labels.delete(label) }
         end
       end
