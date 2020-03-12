@@ -1,6 +1,8 @@
 module GithubService
   module Commands
     class RemoveLabel < Base
+      include IsTeamMember
+
       UNREMOVABLE = %w[jansa/yes jansa/no].freeze
 
       alias_as 'rm_label'
@@ -10,7 +12,7 @@ module GithubService
       def _execute(issuer:, value:)
         unremovable    = []
         valid, invalid = extract_label_names(value)
-        process_extracted_labels(valid, invalid, unremovable)
+        process_extracted_labels(issuer, valid, invalid, unremovable)
 
         if invalid.any?
           message = "@#{issuer} Cannot remove the following label#{"s" if invalid.length > 1} because they are not recognized: "
@@ -36,9 +38,11 @@ module GithubService
         validate_labels(label_names)
       end
 
-      def process_extracted_labels(valid_labels, _invalid_labels, unremovable)
-        valid_labels.each { |label| unremovable << label if UNREMOVABLE.include?(label) }
-        unremovable.each  { |label| valid_labels.delete(label) }
+      def process_extracted_labels(issuer, valid_labels, _invalid_labels, unremovable)
+        unless triage_member?(issuer)
+          valid_labels.each { |label| unremovable << label if UNREMOVABLE.include?(label) }
+          unremovable.each  { |label| valid_labels.delete(label) }
+        end
       end
 
       def validate_labels(label_names)

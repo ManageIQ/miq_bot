@@ -48,6 +48,8 @@ RSpec.configure do |config|
     allow_any_instance_of(MinigitService).to receive(:service)
       .and_raise("Live execution is not allowed in specs.  Use stubs/expectations on service instead.")
   end
+
+  config.after { Module.clear_all_cache_with_timeout }
 end
 
 WebMock.disable_net_connect!(:allow_localhost => true)

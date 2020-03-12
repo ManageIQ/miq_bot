@@ -163,8 +163,8 @@ GEM
     mini_portile2 (2.4.0)
     minigit (0.0.4)
     minitest (5.10.3)
-    more_core_extensions (2.0.0)
-      activesupport (> 3.2)
+    more_core_extensions (4.0.0)
+      activesupport
     multi_json (1.14.1)
     multipart-post (2.0.0)
     net-http-persistent (2.9.4)
@@ -370,7 +370,7 @@ DEPENDENCIES
   jquery-rails
   listen
   minigit (~> 0.0.4)
-  more_core_extensions (~> 2.0.0)
+  more_core_extensions (~> 4.0.0)
   octokit (~> 4.8.0)
   pg
   rails (~> 4.2.4)

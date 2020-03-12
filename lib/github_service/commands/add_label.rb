@@ -1,6 +1,8 @@
 module GithubService
   module Commands
     class AddLabel < Base
+      include IsTeamMember
+
       UNASSIGNABLE = {
         "jansa/yes" => "jansa/yes?"
       }.freeze
@@ -9,7 +11,7 @@ module GithubService
 
       def _execute(issuer:, value:)
         valid, invalid = extract_label_names(value)
-        process_extracted_labels(valid, invalid)
+        process_extracted_labels(issuer, valid, invalid)
 
         if invalid.any?
           issue.add_comment(invalid_label_message(issuer, invalid))
@@ -34,9 +36,9 @@ module GithubService
         label_names.partition { |l| GithubService.valid_label?(issue.fq_repo_name, l) }
       end
 
-      def process_extracted_labels(valid_labels, invalid_labels)
+      def process_extracted_labels(issuer, valid_labels, invalid_labels)
         correct_invalid_labels(valid_labels, invalid_labels)
-        handle_unassignable_labels(valid_labels)
+        handle_unassignable_labels(valid_labels) unless triage_member?(issuer)
 
         [valid_labels, invalid_labels]
       end

@@ -21,6 +21,7 @@ module MiqBot
     # config.i18n.default_locale = :de
 
     config.eager_load_paths << Rails.root.join("app/workers/concerns")
+    config.eager_load_paths << Rails.root.join("lib/github_service/concerns")
     config.eager_load_paths << Rails.root.join("lib")
 
     console do
