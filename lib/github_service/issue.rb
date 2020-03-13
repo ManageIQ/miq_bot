@@ -4,7 +4,9 @@ module GithubService
   class Issue < SimpleDelegator
     # https://developer.github.com/v3/issues
 
-    WIP_REGEX = /^(?:\s*\[wip\])+/i
+    STALE_LABEL       = 'stale'.freeze
+    UNMERGEABLE_LABEL = 'unmergeable'.freeze
+    WIP_REGEX         = /^(?:\s*\[wip\])+/i.freeze
 
     def assign(user)
       GithubService.update_issue(fq_repo_name, number, "assignee" => user)
@@ -71,8 +73,21 @@ module GithubService
       user.login
     end
 
+    # Either "issue" or "pull request"
+    def type
+      pull_request? ? "pull request" : "issue"
+    end
+
     def pull_request?
       respond_to?(:pull_request)
+    end
+
+    def stale?
+      labels.include?(STALE_LABEL)
+    end
+
+    def unmergeable?
+      labels.include?(UNMERGEABLE_LABEL)
     end
 
     # Overrides Octokit response key
