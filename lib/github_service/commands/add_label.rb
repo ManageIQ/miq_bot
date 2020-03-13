@@ -3,9 +3,9 @@ module GithubService
     class AddLabel < Base
       include IsTeamMember
 
-      UNASSIGNABLE = {
-        "jansa/yes" => "jansa/yes?"
-      }.freeze
+      def unassignable_labels
+        @unassignable_labels ||= Settings.labels.unassignable.to_h.stringify_keys
+      end
 
       private
 
@@ -57,7 +57,7 @@ module GithubService
 
       def handle_unassignable_labels(valid_labels)
         valid_labels.map! do |label|
-          UNASSIGNABLE.key?(label) ? UNASSIGNABLE[label] : label
+          unassignable_labels.key?(label) ? unassignable_labels[label] : label
         end
       end
 

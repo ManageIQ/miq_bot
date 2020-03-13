@@ -18,6 +18,9 @@ bugzilla:
   product:
 grafana:
   url:
+labels:
+  unassignable: {}
+  unremovable: []
 
 # Worker settings
 diff_content_checker:
