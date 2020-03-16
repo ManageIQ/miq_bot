@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe GithubNotificationMonitor do
   subject(:notification_monitor) { described_class.new(fq_repo_name) }
 

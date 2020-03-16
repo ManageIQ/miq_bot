@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe CommitMonitor do
   context "#compare_commits_list (private)" do
     let(:left)  { ["b35cfe137e193239d887a87182af971c6d1c7f07", "71eddc02941a4a8e08985202f49f8c88251b1bc1", "67b120c9ebf4467819fbfd329e06ad288621c53c"] }

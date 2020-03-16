@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe BatchJobMonitor do
   it "#perform_check" do
     BatchJob.create!

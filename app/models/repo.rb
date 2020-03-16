@@ -183,15 +183,15 @@ class Repo < ActiveRecord::Base
   end
 
   def move_git_clone
-    return unless name_changed?
+    return unless saved_change_to_name?
 
-    path_was = self.class.path(name_was)
+    path_was = self.class.path(previous_changes[:name].first)
     return unless path_was.exist?
 
     org_path&.mkpath
     FileUtils.mv(path_was, path)
 
-    org_path_was = self.class.org_path(name_was)
+    org_path_was = self.class.org_path(previous_changes[:name].first)
     org_path_was.rmtree if org_path_was&.empty? # rubocop:disable Lint/SafeNavigationWithEmpty
   end
 

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
   let(:branch) do
     Branch.new(

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 RSpec.describe GithubService::Commands::RemoveLabel do
   subject { described_class.new(issue) }
   let(:issue) { double(:fq_repo_name => "foo/bar") }

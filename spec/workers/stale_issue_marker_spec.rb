@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe StaleIssueMarker do
   def create_stub_issue(name, data)
     agent = GithubService.send(:service).agent

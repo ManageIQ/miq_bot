@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Branch do
   let(:last_commit) { "123abc" }
   let(:commit1)     { "234def" }

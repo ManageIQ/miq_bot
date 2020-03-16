@@ -1,4 +1,4 @@
-class ReplaceTimestampsWithLastCheckedOnAndLastChangedOnForCommitMonitorBranches < ActiveRecord::Migration
+class ReplaceTimestampsWithLastCheckedOnAndLastChangedOnForCommitMonitorBranches < ActiveRecord::Migration[5.1]
   class CommitMonitorBranch < ActiveRecord::Base
   end
 

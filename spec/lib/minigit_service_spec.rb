@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MinigitService do
   let(:service) { double("git service") }
 

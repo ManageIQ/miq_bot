@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe MessageCollector do
   let(:max_size) { 1000 }
   let(:header) { "header stuff\n\n" }

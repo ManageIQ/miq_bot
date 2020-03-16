@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe PrMergeabilityChecker do
   before(:each) do
     stub_sidekiq_logger
