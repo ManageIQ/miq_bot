@@ -1,6 +1,7 @@
 [Unit]
 Description=ManageIQ Bot rails server
-After=network-online.target
+PartOf=miq_bot.service
+After=miq_bot.service
 
 [Service]
 User=root
@@ -15,4 +16,4 @@ SyslogIdentifier=%n
 KillMode=process
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=miq_bot.service
