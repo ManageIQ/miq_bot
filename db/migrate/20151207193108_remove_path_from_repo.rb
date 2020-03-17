@@ -1,4 +1,4 @@
-class RemovePathFromRepo < ActiveRecord::Migration[5.1]
+class RemovePathFromRepo < ActiveRecord::Migration[4.2]
   def change
     remove_column :repos, :path, :string
   end

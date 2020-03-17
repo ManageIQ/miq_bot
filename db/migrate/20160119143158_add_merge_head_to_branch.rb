@@ -1,4 +1,4 @@
-class AddMergeHeadToBranch < ActiveRecord::Migration[5.1]
+class AddMergeHeadToBranch < ActiveRecord::Migration[4.2]
   class Branch < ActiveRecord::Base; end
 
   def up

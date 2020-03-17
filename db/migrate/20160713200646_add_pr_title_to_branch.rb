@@ -1,4 +1,4 @@
-class AddPrTitleToBranch < ActiveRecord::Migration[5.1]
+class AddPrTitleToBranch < ActiveRecord::Migration[4.2]
   def change
     add_column :branches, :pr_title, :string
   end

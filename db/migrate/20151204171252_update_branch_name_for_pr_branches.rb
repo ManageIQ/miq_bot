@@ -1,4 +1,4 @@
-class UpdateBranchNameForPrBranches < ActiveRecord::Migration[5.1]
+class UpdateBranchNameForPrBranches < ActiveRecord::Migration[4.2]
   class Branch < ActiveRecord::Base; end # Don't use the real model
 
   def up
