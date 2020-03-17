@@ -416,7 +416,7 @@ DEPENDENCIES
   config
   default_value_for (>= 3.1.0)
   factory_bot_rails
-  faraday (~> 0.9.1)
+  faraday (~> 0.9.2)
   faraday-http-cache (~> 2.0.0)
   foreman (~> 0.64.0)
   haml_lint (~> 0.28.0)
