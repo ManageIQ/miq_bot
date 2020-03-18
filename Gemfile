@@ -53,7 +53,7 @@ gem 'rubocop-performance',  '~> 1.3',    :require => false
 gem 'rugged',                            :require => false
 
 gem 'octokit', '~> 4.8.0', :require => false
-gem 'faraday', '~> 0.9.1'
+gem 'faraday', '~> 0.9.2'
 gem 'faraday-http-cache', '~> 2.0.0'
 
 group :development, :test do
