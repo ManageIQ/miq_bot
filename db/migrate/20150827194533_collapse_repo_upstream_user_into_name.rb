@@ -1,4 +1,4 @@
-class CollapseRepoUpstreamUserIntoName < ActiveRecord::Migration[5.1]
+class CollapseRepoUpstreamUserIntoName < ActiveRecord::Migration[4.2]
   class Repo < ActiveRecord::Base
   end
 
