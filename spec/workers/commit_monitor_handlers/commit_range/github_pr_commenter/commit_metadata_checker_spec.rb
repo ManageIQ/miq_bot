@@ -47,6 +47,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::CommitMetadataCh
         With this change, I made it so that by changing this:
 
             @database_records = Books.all
+            @database_records.to_a
 
         Avoids a N+1 on authors by adding an .includes call
 
@@ -58,11 +59,17 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::CommitMetadataCh
       COMMIT_MSG
     end
 
+    # Note:  `@dbrecords` in this message are all cases that will not get
+    # picked up as a username in this example.
     let(:commit_message_2) do
       <<~COMMIT_MSG
         fixes tests
 
         Forgot that we stubbed things...
+
+        `expect(@dbrecords).to ...` not `any_instance_of(ActiveRecord).to ...`
+
+        Assign it as a variable by doing `@dbrecords = %w[foo bar]`
 
         cc @Fryguy @NickLaMuro
       COMMIT_MSG
@@ -73,6 +80,8 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::CommitMetadataCh
         fixes moar tests
 
         I forget how to rebase... #dealWithIt @NickLaMura
+
+        Original commit by nicklamuro@example.com
       COMMIT_MSG
     end
 
