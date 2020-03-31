@@ -3,7 +3,7 @@ module Linter
     private
 
     def config_files
-      [".haml-lint.yml"]
+      [".haml-lint.yml"] + Linter::Rubocop::CONFIG_FILES
     end
 
     def linter_executable

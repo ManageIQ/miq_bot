@@ -2,10 +2,12 @@ require 'rubocop'
 
 module Linter
   class Rubocop < Base
+    CONFIG_FILES = %w[.rubocop.yml .rubocop_base.yml .rubocop_local.yml].freeze
+
     private
 
     def config_files
-      [".rubocop.yml", ".rubocop_base.yml", ".rubocop_local.yml"]
+      CONFIG_FILES
     end
 
     def linter_executable
