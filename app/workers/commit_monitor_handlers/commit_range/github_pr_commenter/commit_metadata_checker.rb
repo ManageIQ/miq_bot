@@ -32,9 +32,11 @@ module CommitMonitorHandlers::CommitRange
     #     "Username may only contain alphanumeric characters or single hyphens,
     #     and cannot begin or end with a hyphen."
     #
-    # For the beginning and and, we do a positive lookbehind at the beginning
-    # to get the `@`, and a positive lookhead at the end to confirm their is
-    # either a period or a whitespace following the "var" (instance_variable)
+    # To check for the start of a username we do a positive lookbehind to get
+    # the `@` (but only if it is surrounded by whitespace), and a positive
+    # lookhead at the end to confirm there is a whitespace char following the
+    # "var" (isn't an instance variable with a trailing `.`, has an `_`, or is
+    # actually an email address)
     #
     # Since there can't be underscores in Github usernames, this makes it so we
     # rule out partial matches of variables (@database_records having a
@@ -42,11 +44,11 @@ module CommitMonitorHandlers::CommitRange
     # without underscores (`@foobarbaz`).
     #
     USERNAME_REGEXP = /
-      (?<=@)          # must start with a '@' (don't capture)
+      (?<=^@|\s@)     # must start with a '@' (don't capture)
       [a-zA-Z0-9]     # first character must be alphanumeric
       [a-zA-Z0-9\-]*  # middle chars may be alphanumeric or hyphens
       [a-zA-Z0-9]     # last character must be alphanumeric
-      (?=[\.\s])      # allow only variables without "_" (not captured)
+      (?=[\s])        # allow only variables without "_" (not captured)
     /x.freeze
 
     def check_for_usernames_in(commit, message)
