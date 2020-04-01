@@ -39,6 +39,18 @@ module GitService
       rugged_commit.committer[:time].to_time.strftime("%c %z")
     end
 
+    def formatted_commit_stats
+      diff.file_status.map do |file, stats|
+        file_stats  = file.dup
+        file_stats << " | "
+        file_stats << (stats[:additions].to_i + stats[:deletions].to_i).to_s
+        file_stats << " "
+        file_stats << "+" if stats[:additions].positive?
+        file_stats << "-" if stats[:deletions].positive?
+        file_stats
+      end
+    end
+
     def full_message
       message = "commit #{commit_oid}\n"
       message << "Merge: #{parent_oids.join(" ")}\n" if parent_oids.length > 1
@@ -49,10 +61,8 @@ module GitService
       message << "\n"
       message << rugged_commit.message.indent(4)
       message << "\n"
-      diff.file_status.each do |file, stats|
-        message << " #{file} | #{stats[:additions].to_i + stats[:deletions].to_i} #{"+" if stats[:additions].positive?}#{"-" if stats[:deletions].positive?}\n"
-      end
-      message << " #{diff.status_summary}"
+      message << formatted_commit_stats.join("\n").indent(1)
+      message << "\n #{diff.status_summary}"
       message
     end
   end
