@@ -23,13 +23,21 @@ module GitService
       other_commit.diff(rugged_commit)
     end
 
+    def formatted_author
+      "#{rugged_commit.author[:name]} <#{rugged_commit.author[:email]}>"
+    end
+
+    def formatted_author_date
+      rugged_commit.author[:time].to_time.strftime("%c %z")
+    end
+
     def full_message
       message = "commit #{commit_oid}\n"
       message << "Merge: #{parent_oids.join(" ")}\n" if parent_oids.length > 1
-      message << "Author:     #{rugged_commit.author[:name]} <#{rugged_commit.author[:email]}>\n"
-      message << "AuthorDate: #{rugged_commit.author[:time].to_time.strftime("%c %z")}\n"
-      message << "Commit:     #{rugged_commit.author[:name]} <#{rugged_commit.author[:email]}>\n"
-      message << "CommitDate: #{rugged_commit.author[:time].to_time.strftime("%c %z")}\n"
+      message << "Author:     #{formatted_author}\n"
+      message << "AuthorDate: #{formatted_author_date}\n"
+      message << "Commit:     #{formatted_author}\n"
+      message << "CommitDate: #{formatted_author_date}\n"
       message << "\n"
       message << rugged_commit.message.indent(4)
       message << "\n"
