@@ -115,11 +115,7 @@ class CommitMonitor
   def new_commits_details
     @new_commits_details ||=
       new_commits.each_with_object({}) do |commit, h|
-        git_commit = branch.git_service.commit(commit)
-        h[commit] = {
-          "message" => git_commit.full_message,
-          "files"   => git_commit.diff.file_status.keys
-        }
+        h[commit] = branch.git_service.commit(commit).details_hash
       end
   end
 
