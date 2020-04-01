@@ -39,6 +39,11 @@ module GitService
       rugged_commit.committer[:time].to_time.strftime("%c %z")
     end
 
+    # Note:  really not needed, but keeps it consistent
+    def formatted_commit_message
+      rugged_commit.message
+    end
+
     def formatted_commit_stats
       diff.file_status.map do |file, stats|
         file_stats  = file.dup
@@ -59,7 +64,7 @@ module GitService
       message << "Commit:     #{formatted_committer}\n"
       message << "CommitDate: #{formatted_committer_date}\n"
       message << "\n"
-      message << rugged_commit.message.indent(4)
+      message << formatted_commit_message.indent(4)
       message << "\n"
       message << formatted_commit_stats.join("\n").indent(1)
       message << "\n #{diff.status_summary}"
