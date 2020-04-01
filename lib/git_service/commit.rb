@@ -31,13 +31,21 @@ module GitService
       rugged_commit.author[:time].to_time.strftime("%c %z")
     end
 
+    def formatted_committer
+      "#{rugged_commit.committer[:name]} <#{rugged_commit.committer[:email]}>"
+    end
+
+    def formatted_committer_date
+      rugged_commit.committer[:time].to_time.strftime("%c %z")
+    end
+
     def full_message
       message = "commit #{commit_oid}\n"
       message << "Merge: #{parent_oids.join(" ")}\n" if parent_oids.length > 1
       message << "Author:     #{formatted_author}\n"
       message << "AuthorDate: #{formatted_author_date}\n"
-      message << "Commit:     #{formatted_author}\n"
-      message << "CommitDate: #{formatted_author_date}\n"
+      message << "Commit:     #{formatted_committer}\n"
+      message << "CommitDate: #{formatted_committer_date}\n"
       message << "\n"
       message << rugged_commit.message.indent(4)
       message << "\n"
