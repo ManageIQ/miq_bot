@@ -70,5 +70,21 @@ module GitService
       message << "\n #{diff.status_summary}"
       message
     end
+
+    def details_hash
+      {
+        "sha"            => commit_oid,
+        "parent_oids"    => parent_oids,
+        "merge_commit?"  => parent_oids.length > 1,
+        "author"         => formatted_author,
+        "author_date"    => formatted_author_date,
+        "commit"         => formatted_committer,
+        "commit_date"    => formatted_committer_date,
+        "message"        => formatted_commit_message,
+        "files"          => diff.file_status.keys,
+        "stats"          => formatted_commit_stats,
+        "status_summary" => diff.status_summary
+      }
+    end
   end
 end
