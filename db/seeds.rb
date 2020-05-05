@@ -5,3 +5,5 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+require_relative 'seeds.local.rb' if File.exist?(File.expand_path('seeds.local.rb', __dir__))

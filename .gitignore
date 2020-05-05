@@ -38,3 +38,5 @@
 # Ignore local repos folder
 /repos
 
+# Ignore local seeds file
+db/seeds.local.rb
