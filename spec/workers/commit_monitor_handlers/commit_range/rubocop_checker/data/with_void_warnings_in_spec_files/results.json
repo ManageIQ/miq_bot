@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "rubocop_version": "0.69.0",
+    "rubocop_version": "0.82.0",
     "ruby_engine": "ruby",
-    "ruby_version": "2.3.3",
-    "ruby_patchlevel": "222",
-    "ruby_platform": "x86_64-darwin15"
+    "ruby_version": "2.6.6",
+    "ruby_patchlevel": "146",
+    "ruby_platform": "x86_64-darwin18"
   },
   "files": [
     {
@@ -15,6 +15,7 @@
           "message": "Operator `==` used in void context.",
           "cop_name": "Lint/Void",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 2,
             "start_column": 13,
@@ -35,6 +36,7 @@
           "message": "Operator `==` used in void context.",
           "cop_name": "Lint/Void",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 2,
             "start_column": 13,
@@ -55,6 +57,7 @@
           "message": "Operator `==` used in void context.",
           "cop_name": "Lint/Void",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 3,
             "start_column": 14,

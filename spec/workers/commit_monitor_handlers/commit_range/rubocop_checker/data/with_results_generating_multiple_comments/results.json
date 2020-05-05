@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "rubocop_version": "0.69.0",
+    "rubocop_version": "0.82.0",
     "ruby_engine": "ruby",
-    "ruby_version": "2.3.3",
-    "ruby_patchlevel": "222",
-    "ruby_platform": "x86_64-darwin15"
+    "ruby_version": "2.6.6",
+    "ruby_patchlevel": "146",
+    "ruby_platform": "x86_64-darwin18"
   },
   "files": [
     {
@@ -15,6 +15,7 @@
           "message": "Freeze mutable objects assigned to constants.",
           "cop_name": "Style/MutableConstant",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 2,
             "start_column": 10,
@@ -27,9 +28,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 3,
             "start_column": 5,
@@ -42,9 +44,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 4,
             "start_column": 5,
@@ -57,9 +60,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 5,
             "start_column": 5,
@@ -72,9 +76,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 6,
             "start_column": 5,
@@ -87,9 +92,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 7,
             "start_column": 5,
@@ -102,9 +108,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 8,
             "start_column": 5,
@@ -117,9 +124,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 9,
             "start_column": 5,
@@ -132,9 +140,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 10,
             "start_column": 5,
@@ -147,9 +156,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 11,
             "start_column": 5,
@@ -162,9 +172,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 12,
             "start_column": 5,
@@ -177,9 +188,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 13,
             "start_column": 5,
@@ -192,9 +204,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 14,
             "start_column": 5,
@@ -207,9 +220,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 15,
             "start_column": 5,
@@ -222,9 +236,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 16,
             "start_column": 5,
@@ -237,9 +252,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 17,
             "start_column": 5,
@@ -252,9 +268,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 18,
             "start_column": 5,
@@ -267,9 +284,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 19,
             "start_column": 5,
@@ -282,9 +300,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 20,
             "start_column": 5,
@@ -297,9 +316,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 21,
             "start_column": 5,
@@ -312,9 +332,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 22,
             "start_column": 5,
@@ -327,9 +348,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 23,
             "start_column": 5,
@@ -342,9 +364,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 24,
             "start_column": 5,
@@ -357,9 +380,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 25,
             "start_column": 5,
@@ -372,9 +396,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 26,
             "start_column": 5,
@@ -387,9 +412,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 27,
             "start_column": 5,
@@ -402,9 +428,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 28,
             "start_column": 5,
@@ -417,9 +444,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 29,
             "start_column": 5,
@@ -432,9 +460,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 30,
             "start_column": 5,
@@ -447,9 +476,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 31,
             "start_column": 5,
@@ -462,9 +492,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 32,
             "start_column": 5,
@@ -477,9 +508,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 33,
             "start_column": 5,
@@ -492,9 +524,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 34,
             "start_column": 5,
@@ -507,9 +540,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 35,
             "start_column": 5,
@@ -522,9 +556,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 36,
             "start_column": 5,
@@ -537,9 +572,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 37,
             "start_column": 5,
@@ -552,9 +588,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 38,
             "start_column": 5,
@@ -567,9 +604,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 39,
             "start_column": 5,
@@ -582,9 +620,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 40,
             "start_column": 5,
@@ -597,9 +636,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 41,
             "start_column": 5,
@@ -612,9 +652,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 42,
             "start_column": 5,
@@ -627,9 +668,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 43,
             "start_column": 5,
@@ -642,9 +684,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 44,
             "start_column": 5,
@@ -657,9 +700,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 45,
             "start_column": 5,
@@ -672,9 +716,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 46,
             "start_column": 5,
@@ -687,9 +732,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 47,
             "start_column": 5,
@@ -702,9 +748,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 48,
             "start_column": 5,
@@ -717,9 +764,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 49,
             "start_column": 5,
@@ -732,9 +780,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 50,
             "start_column": 5,
@@ -747,9 +796,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 51,
             "start_column": 5,
@@ -762,9 +812,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 52,
             "start_column": 5,
@@ -777,9 +828,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 53,
             "start_column": 5,
@@ -792,9 +844,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 54,
             "start_column": 5,
@@ -807,9 +860,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 55,
             "start_column": 5,
@@ -822,9 +876,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 56,
             "start_column": 5,
@@ -837,9 +892,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 57,
             "start_column": 5,
@@ -852,9 +908,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 58,
             "start_column": 5,
@@ -867,9 +924,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 59,
             "start_column": 5,
@@ -882,9 +940,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 60,
             "start_column": 5,
@@ -897,9 +956,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 61,
             "start_column": 5,
@@ -912,9 +972,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 62,
             "start_column": 5,
@@ -927,9 +988,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 63,
             "start_column": 5,
@@ -942,9 +1004,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 64,
             "start_column": 5,
@@ -957,9 +1020,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 65,
             "start_column": 5,
@@ -972,9 +1036,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 66,
             "start_column": 5,
@@ -987,9 +1052,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 67,
             "start_column": 5,
@@ -1002,9 +1068,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 68,
             "start_column": 5,
@@ -1017,9 +1084,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 69,
             "start_column": 5,
@@ -1032,9 +1100,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 70,
             "start_column": 5,
@@ -1047,9 +1116,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 71,
             "start_column": 5,
@@ -1062,9 +1132,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 72,
             "start_column": 5,
@@ -1077,9 +1148,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 73,
             "start_column": 5,
@@ -1092,9 +1164,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 74,
             "start_column": 5,
@@ -1107,9 +1180,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 75,
             "start_column": 5,
@@ -1122,9 +1196,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 76,
             "start_column": 5,
@@ -1137,9 +1212,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 77,
             "start_column": 5,
@@ -1152,9 +1228,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 78,
             "start_column": 5,
@@ -1167,9 +1244,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 79,
             "start_column": 5,
@@ -1182,9 +1260,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 80,
             "start_column": 5,
@@ -1197,9 +1276,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 81,
             "start_column": 5,
@@ -1212,9 +1292,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 82,
             "start_column": 5,
@@ -1227,9 +1308,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 83,
             "start_column": 5,
@@ -1242,9 +1324,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 84,
             "start_column": 5,
@@ -1257,9 +1340,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 85,
             "start_column": 5,
@@ -1272,9 +1356,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 86,
             "start_column": 5,
@@ -1287,9 +1372,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 87,
             "start_column": 5,
@@ -1302,9 +1388,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 88,
             "start_column": 5,
@@ -1317,9 +1404,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 89,
             "start_column": 5,
@@ -1332,9 +1420,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 90,
             "start_column": 5,
@@ -1347,9 +1436,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 91,
             "start_column": 5,
@@ -1362,9 +1452,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 92,
             "start_column": 5,
@@ -1377,9 +1468,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 93,
             "start_column": 5,
@@ -1392,9 +1484,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 94,
             "start_column": 5,
@@ -1407,9 +1500,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 95,
             "start_column": 5,
@@ -1422,9 +1516,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 96,
             "start_column": 5,
@@ -1437,9 +1532,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 97,
             "start_column": 5,
@@ -1452,9 +1548,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 98,
             "start_column": 5,
@@ -1467,9 +1564,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 99,
             "start_column": 5,
@@ -1482,9 +1580,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 100,
             "start_column": 5,
@@ -1498,8 +1597,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 100,
             "start_column": 5,
@@ -1512,9 +1612,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 101,
             "start_column": 5,
@@ -1528,8 +1629,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 101,
             "start_column": 5,
@@ -1542,9 +1644,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 102,
             "start_column": 5,
@@ -1558,8 +1661,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 102,
             "start_column": 5,
@@ -1572,9 +1676,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 103,
             "start_column": 5,
@@ -1588,8 +1693,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 103,
             "start_column": 5,
@@ -1602,9 +1708,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 104,
             "start_column": 5,
@@ -1618,8 +1725,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 104,
             "start_column": 5,
@@ -1632,9 +1740,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 105,
             "start_column": 5,
@@ -1648,8 +1757,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 105,
             "start_column": 5,
@@ -1662,9 +1772,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 106,
             "start_column": 5,
@@ -1678,8 +1789,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 106,
             "start_column": 5,
@@ -1692,9 +1804,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 107,
             "start_column": 5,
@@ -1708,8 +1821,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 107,
             "start_column": 5,
@@ -1722,9 +1836,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 108,
             "start_column": 5,
@@ -1738,8 +1853,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 108,
             "start_column": 5,
@@ -1752,9 +1868,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 109,
             "start_column": 5,
@@ -1768,8 +1885,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 109,
             "start_column": 5,
@@ -1782,9 +1900,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 110,
             "start_column": 5,
@@ -1798,8 +1917,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 110,
             "start_column": 5,
@@ -1812,9 +1932,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 111,
             "start_column": 5,
@@ -1828,8 +1949,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 111,
             "start_column": 5,
@@ -1842,9 +1964,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 112,
             "start_column": 5,
@@ -1858,8 +1981,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 112,
             "start_column": 5,
@@ -1872,9 +1996,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 113,
             "start_column": 5,
@@ -1888,8 +2013,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 113,
             "start_column": 5,
@@ -1902,9 +2028,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 114,
             "start_column": 5,
@@ -1918,8 +2045,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 114,
             "start_column": 5,
@@ -1932,9 +2060,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 115,
             "start_column": 5,
@@ -1948,8 +2077,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 115,
             "start_column": 5,
@@ -1962,9 +2092,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 116,
             "start_column": 5,
@@ -1978,8 +2109,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 116,
             "start_column": 5,
@@ -1992,9 +2124,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 117,
             "start_column": 5,
@@ -2008,8 +2141,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 117,
             "start_column": 5,
@@ -2022,9 +2156,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 118,
             "start_column": 5,
@@ -2038,8 +2173,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 118,
             "start_column": 5,
@@ -2052,9 +2188,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 119,
             "start_column": 5,
@@ -2068,8 +2205,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 119,
             "start_column": 5,
@@ -2082,9 +2220,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 120,
             "start_column": 5,
@@ -2098,8 +2237,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 120,
             "start_column": 5,
@@ -2112,9 +2252,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 121,
             "start_column": 5,
@@ -2128,8 +2269,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 121,
             "start_column": 5,
@@ -2142,9 +2284,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 122,
             "start_column": 5,
@@ -2158,8 +2301,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 122,
             "start_column": 5,
@@ -2172,9 +2316,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 123,
             "start_column": 5,
@@ -2188,8 +2333,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 123,
             "start_column": 5,
@@ -2202,9 +2348,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 124,
             "start_column": 5,
@@ -2218,8 +2365,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 124,
             "start_column": 5,
@@ -2232,9 +2380,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 125,
             "start_column": 5,
@@ -2248,8 +2397,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 125,
             "start_column": 5,
@@ -2262,9 +2412,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 126,
             "start_column": 5,
@@ -2278,8 +2429,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 126,
             "start_column": 5,
@@ -2292,9 +2444,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 127,
             "start_column": 5,
@@ -2308,8 +2461,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 127,
             "start_column": 5,
@@ -2322,9 +2476,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 128,
             "start_column": 5,
@@ -2338,8 +2493,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 128,
             "start_column": 5,
@@ -2352,9 +2508,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 129,
             "start_column": 5,
@@ -2368,8 +2525,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 129,
             "start_column": 5,
@@ -2382,9 +2540,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 130,
             "start_column": 5,
@@ -2398,8 +2557,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 130,
             "start_column": 5,
@@ -2412,9 +2572,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 131,
             "start_column": 5,
@@ -2428,8 +2589,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 131,
             "start_column": 5,
@@ -2442,9 +2604,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 132,
             "start_column": 5,
@@ -2458,8 +2621,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 132,
             "start_column": 5,
@@ -2472,9 +2636,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 133,
             "start_column": 5,
@@ -2488,8 +2653,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 133,
             "start_column": 5,
@@ -2502,9 +2668,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 134,
             "start_column": 5,
@@ -2518,8 +2685,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 134,
             "start_column": 5,
@@ -2532,9 +2700,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 135,
             "start_column": 5,
@@ -2548,8 +2717,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 135,
             "start_column": 5,
@@ -2562,9 +2732,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 136,
             "start_column": 5,
@@ -2578,8 +2749,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 136,
             "start_column": 5,
@@ -2592,9 +2764,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 137,
             "start_column": 5,
@@ -2608,8 +2781,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 137,
             "start_column": 5,
@@ -2622,9 +2796,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 138,
             "start_column": 5,
@@ -2638,8 +2813,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 138,
             "start_column": 5,
@@ -2652,9 +2828,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 139,
             "start_column": 5,
@@ -2668,8 +2845,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 139,
             "start_column": 5,
@@ -2682,9 +2860,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 140,
             "start_column": 5,
@@ -2698,8 +2877,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 140,
             "start_column": 5,
@@ -2712,9 +2892,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 141,
             "start_column": 5,
@@ -2728,8 +2909,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 141,
             "start_column": 5,
@@ -2742,9 +2924,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 142,
             "start_column": 5,
@@ -2758,8 +2941,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 142,
             "start_column": 5,
@@ -2772,9 +2956,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 143,
             "start_column": 5,
@@ -2788,8 +2973,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 143,
             "start_column": 5,
@@ -2802,9 +2988,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 144,
             "start_column": 5,
@@ -2818,8 +3005,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 144,
             "start_column": 5,
@@ -2832,9 +3020,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 145,
             "start_column": 5,
@@ -2848,8 +3037,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 145,
             "start_column": 5,
@@ -2862,9 +3052,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 146,
             "start_column": 5,
@@ -2878,8 +3069,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 146,
             "start_column": 5,
@@ -2892,9 +3084,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 147,
             "start_column": 5,
@@ -2908,8 +3101,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 147,
             "start_column": 5,
@@ -2922,9 +3116,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 148,
             "start_column": 5,
@@ -2938,8 +3133,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 148,
             "start_column": 5,
@@ -2952,9 +3148,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 149,
             "start_column": 5,
@@ -2968,8 +3165,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 149,
             "start_column": 5,
@@ -2982,9 +3180,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 150,
             "start_column": 5,
@@ -2998,8 +3197,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 150,
             "start_column": 5,
@@ -3012,9 +3212,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 151,
             "start_column": 5,
@@ -3028,8 +3229,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 151,
             "start_column": 5,
@@ -3042,9 +3244,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 152,
             "start_column": 5,
@@ -3058,8 +3261,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 152,
             "start_column": 5,
@@ -3072,9 +3276,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 153,
             "start_column": 5,
@@ -3088,8 +3293,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 153,
             "start_column": 5,
@@ -3102,9 +3308,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 154,
             "start_column": 5,
@@ -3118,8 +3325,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 154,
             "start_column": 5,
@@ -3132,9 +3340,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 155,
             "start_column": 5,
@@ -3148,8 +3357,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 155,
             "start_column": 5,
@@ -3162,9 +3372,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 156,
             "start_column": 5,
@@ -3178,8 +3389,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 156,
             "start_column": 5,
@@ -3192,9 +3404,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 157,
             "start_column": 5,
@@ -3208,8 +3421,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 157,
             "start_column": 5,
@@ -3222,9 +3436,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 158,
             "start_column": 5,
@@ -3238,8 +3453,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 158,
             "start_column": 5,
@@ -3252,9 +3468,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 159,
             "start_column": 5,
@@ -3268,8 +3485,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 159,
             "start_column": 5,
@@ -3282,9 +3500,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 160,
             "start_column": 5,
@@ -3298,8 +3517,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 160,
             "start_column": 5,
@@ -3312,9 +3532,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 161,
             "start_column": 5,
@@ -3328,8 +3549,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 161,
             "start_column": 5,
@@ -3342,9 +3564,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 162,
             "start_column": 5,
@@ -3358,8 +3581,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 162,
             "start_column": 5,
@@ -3372,9 +3596,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 163,
             "start_column": 5,
@@ -3388,8 +3613,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 163,
             "start_column": 5,
@@ -3402,9 +3628,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 164,
             "start_column": 5,
@@ -3418,8 +3645,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 164,
             "start_column": 5,
@@ -3432,9 +3660,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 165,
             "start_column": 5,
@@ -3448,8 +3677,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 165,
             "start_column": 5,
@@ -3462,9 +3692,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 166,
             "start_column": 5,
@@ -3478,8 +3709,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 166,
             "start_column": 5,
@@ -3492,9 +3724,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 167,
             "start_column": 5,
@@ -3508,8 +3741,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 167,
             "start_column": 5,
@@ -3522,9 +3756,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 168,
             "start_column": 5,
@@ -3538,8 +3773,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 168,
             "start_column": 5,
@@ -3552,9 +3788,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 169,
             "start_column": 5,
@@ -3568,8 +3805,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 169,
             "start_column": 5,
@@ -3582,9 +3820,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 170,
             "start_column": 5,
@@ -3598,8 +3837,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 170,
             "start_column": 5,
@@ -3612,9 +3852,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 171,
             "start_column": 5,
@@ -3628,8 +3869,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 171,
             "start_column": 5,
@@ -3642,9 +3884,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 172,
             "start_column": 5,
@@ -3658,8 +3901,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 172,
             "start_column": 5,
@@ -3672,9 +3916,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 173,
             "start_column": 5,
@@ -3688,8 +3933,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 173,
             "start_column": 5,
@@ -3702,9 +3948,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 174,
             "start_column": 5,
@@ -3718,8 +3965,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 174,
             "start_column": 5,
@@ -3732,9 +3980,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 175,
             "start_column": 5,
@@ -3748,8 +3997,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 175,
             "start_column": 5,
@@ -3762,9 +4012,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 176,
             "start_column": 5,
@@ -3778,8 +4029,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 176,
             "start_column": 5,
@@ -3792,9 +4044,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 177,
             "start_column": 5,
@@ -3808,8 +4061,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 177,
             "start_column": 5,
@@ -3822,9 +4076,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 178,
             "start_column": 5,
@@ -3838,8 +4093,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 178,
             "start_column": 5,
@@ -3852,9 +4108,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 179,
             "start_column": 5,
@@ -3868,8 +4125,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 179,
             "start_column": 5,
@@ -3882,9 +4140,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 180,
             "start_column": 5,
@@ -3898,8 +4157,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 180,
             "start_column": 5,
@@ -3912,9 +4172,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 181,
             "start_column": 5,
@@ -3928,8 +4189,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 181,
             "start_column": 5,
@@ -3942,9 +4204,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 182,
             "start_column": 5,
@@ -3958,8 +4221,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 182,
             "start_column": 5,
@@ -3972,9 +4236,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 183,
             "start_column": 5,
@@ -3988,8 +4253,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 183,
             "start_column": 5,
@@ -4002,9 +4268,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 184,
             "start_column": 5,
@@ -4018,8 +4285,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 184,
             "start_column": 5,
@@ -4032,9 +4300,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 185,
             "start_column": 5,
@@ -4048,8 +4317,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 185,
             "start_column": 5,
@@ -4062,9 +4332,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 186,
             "start_column": 5,
@@ -4078,8 +4349,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 186,
             "start_column": 5,
@@ -4092,9 +4364,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 187,
             "start_column": 5,
@@ -4108,8 +4381,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 187,
             "start_column": 5,
@@ -4122,9 +4396,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 188,
             "start_column": 5,
@@ -4138,8 +4413,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 188,
             "start_column": 5,
@@ -4152,9 +4428,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 189,
             "start_column": 5,
@@ -4168,8 +4445,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 189,
             "start_column": 5,
@@ -4182,9 +4460,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 190,
             "start_column": 5,
@@ -4198,8 +4477,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 190,
             "start_column": 5,
@@ -4212,9 +4492,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 191,
             "start_column": 5,
@@ -4228,8 +4509,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 191,
             "start_column": 5,
@@ -4242,9 +4524,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 192,
             "start_column": 5,
@@ -4258,8 +4541,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 192,
             "start_column": 5,
@@ -4272,9 +4556,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 193,
             "start_column": 5,
@@ -4288,8 +4573,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 193,
             "start_column": 5,
@@ -4302,9 +4588,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 194,
             "start_column": 5,
@@ -4318,8 +4605,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 194,
             "start_column": 5,
@@ -4332,9 +4620,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 195,
             "start_column": 5,
@@ -4348,8 +4637,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 195,
             "start_column": 5,
@@ -4362,9 +4652,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 196,
             "start_column": 5,
@@ -4378,8 +4669,9 @@
         {
           "severity": "warning",
           "message": "Duplicated key in hash literal.",
-          "cop_name": "Lint/DuplicatedKey",
+          "cop_name": "Lint/DuplicateHashKey",
           "corrected": false,
+          "correctable": false,
           "location": {
             "start_line": 196,
             "start_column": 5,
