@@ -14,7 +14,7 @@ module GitService
         fetch_options = {}
 
         username = extract_username_from_git_remote_url(remote.url)
-        fetch_options[:credentials] = Rugged::Credentials::SshKeyFromAgent.new(:username => username) if username
+        fetch_options[:credentials] = Credentials.from_ssh_agent(username) if username
 
         rugged_repo.fetch(remote.name, fetch_options)
       end
