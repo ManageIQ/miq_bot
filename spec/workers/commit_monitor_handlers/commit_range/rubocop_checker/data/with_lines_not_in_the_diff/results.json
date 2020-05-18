@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "rubocop_version": "0.69.0",
+    "rubocop_version": "0.82.0",
     "ruby_engine": "ruby",
-    "ruby_version": "2.3.3",
-    "ruby_patchlevel": "222",
-    "ruby_platform": "x86_64-darwin15"
+    "ruby_version": "2.6.6",
+    "ruby_patchlevel": "146",
+    "ruby_platform": "x86_64-darwin18"
   },
   "files": [
     {
@@ -15,6 +15,7 @@
           "message": "Freeze mutable objects assigned to constants.",
           "cop_name": "Style/MutableConstant",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 2,
             "start_column": 10,
@@ -27,9 +28,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 3,
             "start_column": 5,
@@ -42,9 +44,10 @@
         },
         {
           "severity": "convention",
-          "message": "Align the elements of a hash literal if they span more than one line.",
-          "cop_name": "Layout/AlignHash",
+          "message": "Align the keys and values of a hash literal if they span more than one line.",
+          "cop_name": "Layout/HashAlignment",
           "corrected": false,
+          "correctable": true,
           "location": {
             "start_line": 4,
             "start_column": 5,
