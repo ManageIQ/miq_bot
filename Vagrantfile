@@ -16,18 +16,12 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", inline: <<-SHELL.gsub(/^ {4}/, '')
-    dnf install -y make patch gcc gcc-c++ cmake libssh2-devel
-    dnf install -y nodejs python-pip postgresql postgresql-server postgresql-devel
+    dnf install -y automake bison zlib-devel libyaml-devel openssl-devel           \
+                   gdbm-devel readline-devel ncurses-devel libffi-devel            \
+                   make patch gcc gcc-c++ cmake libssh2-devel ruby-devel rpm-build \
+                   nodejs python-pip postgresql postgresql-server postgresql-devel
 
     pip install yamllint
-
-    curl -L https://github.com/postmodern/ruby-install/archive/v0.7.0.tar.gz > ruby-install-0.7.0.tar.gz
-    tar -xzvf ruby-install-0.7.0.tar.gz
-    cd ruby-install-0.7.0
-    make install
-    cd ..
-
-    ruby-install --system ruby-2.5.5
 
     cd /vagrant
     gem install bundler:1.17.3

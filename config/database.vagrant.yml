@@ -1,0 +1,20 @@
+---
+base: &base
+  adapter: postgresql
+  encoding: utf8
+  pool: 25
+  wait_timeout: 5
+
+development:
+  <<: *base
+  database: miq_bot_development
+
+production:
+  <<: *base
+  database: miq_bot_production
+
+test: &test
+  <<: *base
+  database: miq_bot_test
+  # Silence these: 'NOTICE:  CREATE TABLE will create...'
+  min_messages: warning
