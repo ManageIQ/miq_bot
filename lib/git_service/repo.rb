@@ -12,9 +12,11 @@ module GitService
       require 'rugged'
       rugged_repo.remotes.each do |remote|
         fetch_options = {}
+        username      = uri_for_remote(remote.url).user
+        hostname      = uri_for_remote(remote.url).hostname
+        credentials   = Credentials.find_for_user_and_host(username, hostname)
 
-        username = uri_for_remote(remote.url).user
-        fetch_options[:credentials] = Credentials.from_ssh_agent(username) if username
+        fetch_options[:credentials] = credentials if credentials
 
         rugged_repo.fetch(remote.name, fetch_options)
       end
