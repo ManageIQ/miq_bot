@@ -220,7 +220,7 @@ GEM
     octokit (4.8.0)
       sawyer (~> 0.8.0, >= 0.5.3)
     parallel (1.19.1)
-    parser (2.7.1.2)
+    parser (2.7.0.5)
       ast (~> 2.4.0)
     pg (1.2.2)
     pry (0.9.12.6)
