@@ -99,10 +99,10 @@ RSpec.describe StaleIssueMarker do
 
       if [already_stale_issue, stale_and_unmergable_pr, old_unmergable_pr].include?(issue)
         expect(issue).to receive(:add_comment).with(/This (pull request|issue).*closed/)
-        expect(GithubService).to receive(:close_pull_request).with(fq_repo_name, issue.number)
+        expect(GithubService).to receive(:close_issue).with(fq_repo_name, issue.number)
       else
         expect(issue).to receive(:add_comment).with(/This (pull request|issue).*marked as stale/)
-        expect(GithubService).to_not receive(:close_pull_request).with(issue.number)
+        expect(GithubService).to_not receive(:close_issue).with(issue.number)
       end
     end
   end

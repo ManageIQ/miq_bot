@@ -116,7 +116,7 @@ class StaleIssueMarker
     message << COMMENT_FOOTER
 
     logger.info("[#{Time.now.utc}] - Closing stale #{issue.type} #{issue.fq_repo_name}##{issue.number}")
-    GithubService.close_pull_request(issue.fq_repo_name, issue.number)
+    GithubService.close_issue(issue.fq_repo_name, issue.number)
     issue.add_comment(message)
   end
 end
