@@ -28,7 +28,7 @@ class StaleIssueMarker
   private
 
   def handle_newly_stale_issues
-    query  = "is:open archived:false update:<#{stale_date.strftime('%Y-%m-%d')}"
+    query  = "is:open archived:false updated:<#{stale_date.strftime('%Y-%m-%d')}"
     query << enabled_repos_query_filter
     query << unpinned_query_filter
 

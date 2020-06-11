@@ -67,7 +67,7 @@ RSpec.describe StaleIssueMarker do
   let(:search_query)      { "#{issue_filter} #{update_filter} #{repo_filter} #{pinned_filter}" }
   let(:unmergeable_query) { "#{issue_filter} is:pr #{labels_filter} #{repo_filter} #{pinned_filter}" }
   let(:issue_filter)      { "is:open archived:false" }
-  let(:update_filter)     { "update:<#{stale_date.strftime('%Y-%m-%d')}" }
+  let(:update_filter)     { "updated:<#{stale_date.strftime('%Y-%m-%d')}" }
   let(:repo_filter)       { %(repo:"#{fq_repo_name}") }
   let(:pinned_filter)     { %(-label:"pinned") }
   let(:labels_filter)     { %(label:"stale" label:"unmergeable") }
