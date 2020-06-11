@@ -9,7 +9,7 @@ class StaleIssueMarker
   SEARCH_SORTING = {:sort => :updated, :direction => :asc}.freeze
   COMMENT_FOOTER = <<~FOOTER.sub("ManageIQ\n", "ManageIQ ").strip!
     Thank you for all your contributions!  More information about the ManageIQ
-    triage process can be found in [the traige process documentation][1].
+    triage process can be found in [the triage process documentation][1].
 
     [1]: https://www.manageiq.org/docs/guides/triage_process
   FOOTER
