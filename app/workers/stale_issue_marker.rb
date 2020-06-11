@@ -9,7 +9,7 @@ class StaleIssueMarker
   SEARCH_SORTING = {:sort => :updated, :direction => :asc}.freeze
   COMMENT_FOOTER = <<~FOOTER.sub("ManageIQ\n", "ManageIQ ").strip!
     Thank you for all your contributions!  More information about the ManageIQ
-    triage process can be found in [the traige process documentation][1].
+    triage process can be found in [the triage process documentation][1].
 
     [1]: https://www.manageiq.org/docs/guides/triage_process
   FOOTER
@@ -115,8 +115,8 @@ class StaleIssueMarker
     message << "this issue is still valid.\n\n"     unless issue.pull_request?
     message << COMMENT_FOOTER
 
-    logger.info("[#{Time.now.utc}] - Closing stale PR #{issue.fq_repo_name}##{issue.number}")
-    GithubService.close_pull_request(issue.fq_repo_name, issue.number)
+    logger.info("[#{Time.now.utc}] - Closing stale #{issue.type} #{issue.fq_repo_name}##{issue.number}")
+    GithubService.close_issue(issue.fq_repo_name, issue.number)
     issue.add_comment(message)
   end
 end
