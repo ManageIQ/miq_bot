@@ -12,12 +12,6 @@ gem 'influxdb', '~>0.3.13'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0.7'
 
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.2.2'
-
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
