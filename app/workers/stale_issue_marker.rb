@@ -14,18 +14,26 @@ class StaleIssueMarker
     [1]: https://www.manageiq.org/docs/guides/triage_process
   FOOTER
 
+  def perform
+    if !first_unique_worker?
+      logger.info "#{self.class} is already running, skipping"
+    else
+      process_stale_issues
+    end
+  end
+
+  private
+
   # Triage logic:
   #
   # - Stale after 3 month of no activity
   # - Close after stale and inactive for 3 more months
   # - Stale and unmergeable should be closed (assume abandoned, can still be re-opened)
   #
-  def perform
+  def process_stale_issues
     handle_newly_stale_issues
     handle_stale_and_unmergable_prs
   end
-
-  private
 
   def handle_newly_stale_issues
     query  = "is:open archived:false updated:<#{stale_date.strftime('%Y-%m-%d')}"
