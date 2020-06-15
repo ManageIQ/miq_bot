@@ -83,6 +83,7 @@ RSpec.describe StaleIssueMarker do
       .and_return([stale_and_unmergable_pr])
     allow(GithubService).to receive(:valid_label?).with(fq_repo_name, "stale").and_return(true)
     allow(Sidekiq).to receive(:logger).and_return(double(:info => nil))
+    allow(subject).to receive(:first_unique_worker?).and_return(true)
   end
 
   after do
