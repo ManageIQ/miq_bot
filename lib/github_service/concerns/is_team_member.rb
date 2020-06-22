@@ -3,7 +3,7 @@ module IsTeamMember
     IsTeamMember.triage_team_members.include?(username)
   end
 
-  # List of usernames for the traige team
+  # List of usernames for the triage team
   #
   # Cache triage_team_members, and refresh cache every 24 hours
   #
