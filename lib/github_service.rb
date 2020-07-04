@@ -12,9 +12,33 @@ module GithubService
   #
   class << self
     def add_comments(fq_repo_name, issue_number, comments)
-      Array(comments).each do |comment|
+      Array(comments).map do |comment|
         add_comment(fq_repo_name, issue_number, comment)
       end
+    end
+
+    # https://octokit.github.io/octokit.rb/Octokit/Client/Statuses.html#create_status-instance_method
+    def add_status(fq_repo_name, commit_sha, comment_url, commit_state)
+      repo    = fq_repo_name
+      sha     = commit_sha
+      options = {
+        "context"    => Settings.github_credentials.username,
+        "target_url" => comment_url,
+      }
+
+      case commit_state
+      when :zero
+        state = "success"
+        options["description"] = "Everything looks fine."
+      when :warn
+        state = "success"
+        options["description"] = "Some offenses detected."
+      when :bomb
+        state = "error"
+        options["description"] = "Something went wrong."
+      end
+
+      create_status(repo, sha, state, options)
     end
 
     def delete_comments(fq_repo_name, comment_ids)
@@ -25,12 +49,17 @@ module GithubService
 
     # Deletes the issue comments found by the provided block, then creates new
     # issue comments from those provided.
-    def replace_comments(fq_repo_name, issue_number, new_comments)
+    def replace_comments(fq_repo_name, issue_number, new_comments, status = nil, commit_sha = nil)
       raise "no block given" unless block_given?
 
       to_delete = issue_comments(fq_repo_name, issue_number).select { |c| yield c }
       delete_comments(fq_repo_name, to_delete.map(&:id))
-      add_comments(fq_repo_name, issue_number, new_comments)
+      first_comment = add_comments(fq_repo_name, issue_number, new_comments).first
+
+      # add_status creates a commit status pointing to the first comment URL
+      if first_comment && status && commit_sha
+        add_status(fq_repo_name, commit_sha, first_comment["html_url"], status)
+      end
     end
 
     def issue(*args)
