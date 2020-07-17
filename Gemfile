@@ -32,6 +32,7 @@ gem 'slim'
 
 # Services gems
 gem 'minigit',        '~> 0.0.4'
+gem 'net-ssh',        '~> 4.2.0'
 gem 'tracker_api',    '~> 1.6'
 gem 'travis',         '~> 1.7.6'
 

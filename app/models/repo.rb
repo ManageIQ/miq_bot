@@ -145,20 +145,8 @@ class Repo < ActiveRecord::Base
     results
   end
 
-  # TODO: Move this to GitService::Repo
   def git_fetch
-    # TODO: Figure out why this doesn't work on the bot using rugged
-    with_git_service { |git| git.fetch }
-    # require 'rugged'
-    # rugged_repo = Rugged::Repository.new(path.to_s)
-    # rugged_repo.remotes.each do |remote|
-    #   fetch_options = {}
-
-    #   username = extract_username_from_git_remote_url(remote.url)
-    #   fetch_options[:credentials] = Rugged::Credentials::SshKeyFromAgent.new(:username => username) if username
-
-    #   rugged_repo.fetch(remote.name, fetch_options)
-    # end
+    git_service.git_fetch
   end
 
   def create_branch!(branch_name)
