@@ -1,0 +1,517 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: "bot"
+objects:
+### Grafana
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: grafana
+    labels:
+      app: bot
+  spec:
+    ports:
+    - name: grafana
+      port: 3000
+    selector:
+      name: grafana
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: grafana
+    labels:
+      app: bot
+  spec:
+    strategy:
+      type: Recreate
+    replicas: 1
+    selector:
+      matchLabels:
+        name: grafana
+    template:
+      metadata:
+        name: grafana
+        labels:
+          name: grafana
+      spec:
+        volumes:
+        - name: bot-grafana-volume
+          persistentVolumeClaim:
+            claimName: bot-grafana-pvc
+        initContainers:
+        - name: grafana-data-permission-fix
+          image: busybox
+          command: ["/bin/chmod","-R","777", "/var/lib/grafana"]
+          volumeMounts:
+          - name: bot-grafana-volume
+            mountPath: "/var/lib/grafana"
+        containers:
+        - name: grafana
+          image: "docker.io/grafana/grafana:6.6.2"
+          ports:
+          - containerPort: 3000
+          readinessProbe:
+            initialDelaySeconds: 60
+            tcpSocket:
+              port: 3000
+          volumeMounts:
+          - name: bot-grafana-volume
+            mountPath: "/var/lib/grafana"
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 500m
+            limits:
+              memory: 4Gi
+
+### Postgres
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: postgresql-configs
+    labels:
+      app: "bot"
+  data:
+    01_miq_overrides.conf: |
+      #------------------------------------------------------------------------------
+      # CONNECTIONS AND AUTHENTICATION
+      #------------------------------------------------------------------------------
+
+      tcp_keepalives_count = 9
+      tcp_keepalives_idle = 3
+      tcp_keepalives_interval = 75
+
+      #------------------------------------------------------------------------------
+      # RESOURCE USAGE (except WAL)
+      #------------------------------------------------------------------------------
+
+      max_worker_processes = 10
+
+      #------------------------------------------------------------------------------
+      # WRITE AHEAD LOG
+      #------------------------------------------------------------------------------
+
+      wal_level = 'logical'
+      wal_log_hints = on
+      wal_buffers = 16MB
+      checkpoint_completion_target = 0.9
+
+      #------------------------------------------------------------------------------
+      # REPLICATION
+      #------------------------------------------------------------------------------
+
+      max_wal_senders = 10
+      wal_sender_timeout = 0
+      max_replication_slots = 10
+      hot_standby = on
+
+      #------------------------------------------------------------------------------
+      # ERROR REPORTING AND LOGGING
+      #------------------------------------------------------------------------------
+
+      log_filename = 'postgresql.log'
+      log_rotation_age = 0
+      log_min_duration_statement = 5000
+      log_connections = on
+      log_disconnections = on
+      log_line_prefix = '%t:%r:%c:%u@%d:[%p]:'
+      log_lock_waits = on
+
+      #------------------------------------------------------------------------------
+      # AUTOVACUUM PARAMETERS
+      #------------------------------------------------------------------------------
+
+      log_autovacuum_min_duration = 0
+      autovacuum_naptime = 5min
+      autovacuum_vacuum_threshold = 500
+      autovacuum_analyze_threshold = 500
+      autovacuum_vacuum_scale_factor = 0.05
+
+      #------------------------------------------------------------------------------
+      # LOCK MANAGEMENT
+      #------------------------------------------------------------------------------
+
+      deadlock_timeout = 5s
+
+      #------------------------------------------------------------------------------
+      # VERSION/PLATFORM COMPATIBILITY
+      #------------------------------------------------------------------------------
+
+      escape_string_warning = off
+      standard_conforming_strings = off
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: postgresql
+    labels:
+      app: "bot"
+  spec:
+    ports:
+    - name: postgresql
+      port: 5432
+    selector:
+      name: postgresql
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: postgresql
+    labels:
+      app: "bot"
+  spec:
+    strategy:
+      type: Recreate
+    replicas: 1
+    selector:
+      matchLabels:
+        name: postgresql
+    template:
+      metadata:
+        name: postgresql
+        labels:
+          name: postgresql
+      spec:
+        volumes:
+        - name: pgdb-volume
+          persistentVolumeClaim:
+            claimName: bot-postgres-pvc
+        - name: pg-configs
+          configMap:
+            name: postgresql-configs
+        initContainers:
+        - name: pgsql-data-permission-fix
+          image: busybox
+          command: ["/bin/chmod","-R","777", "/var/lib/pgsql/data"]
+          volumeMounts:
+          - name: pgdb-volume
+            mountPath: "/var/lib/pgsql/data"
+        containers:
+        - name: postgresql
+          image: "docker.io/manageiq/postgresql:10"
+          ports:
+          - containerPort: 5432
+          readinessProbe:
+            initialDelaySeconds: 60
+            tcpSocket:
+              port: 5432
+          volumeMounts:
+          - name: pgdb-volume
+            mountPath: "/var/lib/pgsql/data"
+          - name: pg-configs
+            mountPath: "/opt/app-root/src/postgresql-cfg/"
+          env:
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: username
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: password
+          - name: POSTGRESQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: dbname
+          - name: POSTGRESQL_MAX_CONNECTIONS
+            value: '1000'
+          - name: POSTGRESQL_SHARED_BUFFERS
+            value: 1GB
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 500m
+            limits:
+              memory: 4Gi
+
+### Redis
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: redis
+    labels:
+      app: bot
+  spec:
+    ports:
+    - name: redis
+      port: 6379
+    selector:
+      name: redis
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: redis
+    labels:
+      app: bot
+  spec:
+    strategy:
+      type: Recreate
+    replicas: 1
+    selector:
+      matchLabels:
+        name: redis
+    template:
+      metadata:
+        name: redis
+        labels:
+          name: redis
+      spec:
+        volumes:
+        - name: bot-redis-volume
+          persistentVolumeClaim:
+            claimName: bot-redis-pvc
+        containers:
+        - name: redis
+          image: "docker.io/library/redis:5.0"
+          ports:
+          - containerPort: 6379
+          readinessProbe:
+            initialDelaySeconds: 60
+            tcpSocket:
+              port: 6379
+          volumeMounts:
+          - name: bot-redis-volume
+            mountPath: "/data"
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 500m
+            limits:
+              memory: 4Gi
+
+### Application
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ui
+    labels:
+      app: "bot"
+  spec:
+    ports:
+    - name: ui
+      port: 3000
+    selector:
+      name: ui
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: ui
+    labels:
+      app: "bot"
+  spec:
+    strategy:
+      type: Recreate
+    replicas: 1
+    selector:
+      matchLabels:
+        name: ui
+    template:
+      metadata:
+        name: ui
+        labels:
+          name: ui
+      spec:
+        volumes:
+        - name: bot-settings
+          configMap:
+            name: bot-settings
+        imagePullPolicy: Always
+        containers:
+        - name: ui
+          image: "docker.io/ManageIQ/miq_bot:v0.11.2"
+          ports:
+          - containerPort: 3000
+          readinessProbe:
+            initialDelaySeconds: 60
+            tcpSocket:
+              port: 3000
+          volumeMounts:
+          - name: bot-settings
+            mountPath: "/opt/miq_bot_config"
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 100m
+            limits:
+              memory: 2Gi
+          env:
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: password
+          - name: DATABASE_HOSTNAME
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: hostname
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: dbname
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: port
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: queue-worker-glacial
+    labels:
+      app: "bot"
+  spec:
+    strategy:
+      type: Recreate
+    replicas: 1
+    selector:
+      matchLabels:
+        name: queue-worker-glacial
+    template:
+      metadata:
+        name: queue-worker-glacial
+        labels:
+          name: queue-worker-glacial
+      spec:
+        volumes:
+        - name: bot-settings
+          configMap:
+            name: bot-settings
+        - name: bot-ssh
+          configMap:
+            name: bot-ssh
+        - name: bot-queue-worker-glacial-repos-volume
+          persistentVolumeClaim:
+            claimName: bot-queue-worker-glacial-repos-pvc
+        imagePullPolicy: Always
+        containers:
+        - name: queue-worker-glacial
+          image: "docker.io/bdunne/miq_bot:v0.11.2"
+          volumeMounts:
+          - name: bot-settings
+            mountPath: "/opt/miq_bot_config"
+          - name: bot-ssh
+            mountPath: "/root/ssh"
+          - name: bot-queue-worker-glacial-repos-volume
+            mountPath: "/opt/miq_bot/repos"
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 100m
+            limits:
+              memory: 2Gi
+          env:
+          - name: QUEUE_NAME
+            value: miq_bot_glacial
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: password
+          - name: DATABASE_HOSTNAME
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: hostname
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: dbname
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: port
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: queue-worker
+    labels:
+      app: "bot"
+  spec:
+    strategy:
+      type: Recreate
+    replicas: 1
+    selector:
+      matchLabels:
+        name: queue-worker
+    template:
+      metadata:
+        name: queue-worker
+        labels:
+          name: queue-worker
+      spec:
+        volumes:
+        - name: bot-settings
+          configMap:
+            name: bot-settings
+        - name: bot-ssh
+          configMap:
+            name: bot-ssh
+        - name: bot-notification-monitor-volume
+          persistentVolumeClaim:
+            claimName: bot-notification-monitor-pvc
+        - name: bot-queue-worker-repos-volume
+          persistentVolumeClaim:
+            claimName: bot-queue-worker-repos-pvc
+        imagePullPolicy: Always
+        containers:
+        - name: queue-worker
+          image: "docker.io/bdunne/miq_bot:v0.11.2"
+          volumeMounts:
+          - name: bot-settings
+            mountPath: "/opt/miq_bot_config"
+          - name: bot-ssh
+            mountPath: "/root/ssh"
+          - name: bot-notification-monitor-volume
+            mountPath: "/opt/miq_bot_data"
+          - name: bot-queue-worker-repos-volume
+            mountPath: "/opt/miq_bot/repos"
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 100m
+            limits:
+              memory: 2Gi
+          env:
+          - name: QUEUE_NAME
+            value: miq_bot
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: password
+          - name: DATABASE_HOSTNAME
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: hostname
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: dbname
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: port
