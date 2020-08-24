@@ -1,7 +1,6 @@
 #!/bin/bash
 
-export RAILS_ENV=production
-export PATH=/opt/miq_bot:$PATH
+source /usr/local/bin/container_env
 
 mkdir /root/.ssh
 cp /root/ssh/* /root/.ssh/
@@ -14,15 +13,6 @@ popd
 pushd /opt/miq_bot/config/initializers
   ln -s /opt/miq_bot_config/01_sidekiq_config.rb
 popd
-
-function urlescape() {
-  PAYLOAD="$1" ruby -rcgi -e "puts CGI.escape(ENV['PAYLOAD'])"
-}
-
-safeuser=$(urlescape ${DATABASE_USER})
-safepass=$(urlescape ${DATABASE_PASSWORD})
-
-export DATABASE_URL="postgresql://${safeuser}:${safepass}@${DATABASE_HOSTNAME}:${DATABASE_PORT}/${DATABASE_NAME}?encoding=utf8&pool=25&wait_timeout=5"
 
 [[ -n $QUEUE_NAME ]] && COMMAND="sidekiq -q $QUEUE_NAME"
 [[ -z $COMMAND ]] && COMMAND="rails server"
