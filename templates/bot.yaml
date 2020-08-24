@@ -365,80 +365,6 @@ objects:
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: queue-worker-glacial
-    labels:
-      app: "bot"
-  spec:
-    strategy:
-      type: Recreate
-    replicas: 1
-    selector:
-      matchLabels:
-        name: queue-worker-glacial
-    template:
-      metadata:
-        name: queue-worker-glacial
-        labels:
-          name: queue-worker-glacial
-      spec:
-        volumes:
-        - name: bot-settings
-          configMap:
-            name: bot-settings
-        - name: bot-ssh
-          configMap:
-            name: bot-ssh
-        - name: bot-queue-worker-glacial-repos-volume
-          persistentVolumeClaim:
-            claimName: bot-queue-worker-glacial-repos-pvc
-        imagePullPolicy: Always
-        containers:
-        - name: queue-worker-glacial
-          image: "docker.io/bdunne/miq_bot:v0.11.2"
-          volumeMounts:
-          - name: bot-settings
-            mountPath: "/opt/miq_bot_config"
-          - name: bot-ssh
-            mountPath: "/root/ssh"
-          - name: bot-queue-worker-glacial-repos-volume
-            mountPath: "/opt/miq_bot/repos"
-          resources:
-            requests:
-              memory: 500Mi
-              cpu: 100m
-            limits:
-              memory: 2Gi
-          env:
-          - name: QUEUE_NAME
-            value: miq_bot_glacial
-          - name: DATABASE_USER
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: username
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: password
-          - name: DATABASE_HOSTNAME
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: hostname
-          - name: DATABASE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: dbname
-          - name: DATABASE_PORT
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: port
-- apiVersion: apps/v1
-  kind: Deployment
-  metadata:
     name: queue-worker
     labels:
       app: "bot"
@@ -490,6 +416,49 @@ objects:
           env:
           - name: QUEUE_NAME
             value: miq_bot
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: username
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: password
+          - name: DATABASE_HOSTNAME
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: hostname
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: dbname
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secrets
+                key: port
+        - name: queue-worker-glacial
+          image: "docker.io/bdunne/miq_bot:v0.11.2"
+          volumeMounts:
+          - name: bot-settings
+            mountPath: "/opt/miq_bot_config"
+          - name: bot-ssh
+            mountPath: "/root/ssh"
+          - name: bot-queue-worker-repos-volume
+            mountPath: "/opt/miq_bot/repos"
+          resources:
+            requests:
+              memory: 500Mi
+              cpu: 100m
+            limits:
+              memory: 2Gi
+          env:
+          - name: QUEUE_NAME
+            value: miq_bot_glacial
           - name: DATABASE_USER
             valueFrom:
               secretKeyRef:
