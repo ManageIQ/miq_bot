@@ -1,0 +1,25 @@
+#!/bin/bash
+
+source /usr/local/bin/container_env
+
+mkdir /root/.ssh
+cp /root/ssh/* /root/.ssh/
+chown 600 /root/.ssh/miq-bot
+
+pushd /opt/miq_bot/config
+  ln -s /opt/miq_bot_config/settings.local.yml
+  ln -s /opt/miq_bot_data/github_notification_monitor.yml
+popd
+pushd /opt/miq_bot/config/initializers
+  ln -s /opt/miq_bot_config/01_sidekiq_config.rb
+popd
+
+[[ -n $QUEUE_NAME ]] && COMMAND="sidekiq -q $QUEUE_NAME"
+[[ -z $COMMAND ]] && COMMAND="rails server"
+
+cd /opt/miq_bot
+
+bundle exec rake db:create
+bundle exec rake db:migrate
+
+exec bundle exec ${COMMAND}
