@@ -32,21 +32,14 @@ module CodeAnalysisMixin
   def pronto_result
     Pronto::GemNames.new.to_a.each { |gem_name| require "pronto/#{gem_name}" }
 
-    p_result = nil
+    branch.repo.git_fetch
 
-    # temporary solution for: download repo, obtain changes, get pronto result about changes
-    Dir.mktmpdir do |dir|
-      FileUtils.copy_entry(@branch.repo.path.to_s, dir)
-      repo = Pronto::Git::Repository.new(dir)
-      rg = repo.instance_variable_get(:@repo)
-      rg.fetch('origin', @branch.name.sub(/^prs/, 'pull'))
-      rg.checkout('FETCH_HEAD')
-      rg.reset('HEAD', :hard)
-      patches = repo.diff(@branch.merge_target)
-      p_result = Pronto::Runners.new.run(patches)
-    end
+    git_service    = branch.git_service
+    merge_base     = git_service.merge_base
+    pronto_repo    = Pronto::Git::Repository.new(repo.path.to_s)
+    pronto_patches = Pronto::Git::Patches.new(pronto_repo, merge_base, git_service.diff.raw_diff)
 
-    p_result
+    Pronto::Runners.new.run(pronto_patches)
   end
 
   def run_all_linters

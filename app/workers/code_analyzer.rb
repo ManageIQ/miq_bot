@@ -9,6 +9,7 @@ class CodeAnalyzer
 
   def perform(branch_id)
     return unless find_branch(branch_id, :regular)
+    return unless branch.merge_target
 
     analyze
   end
