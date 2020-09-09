@@ -68,5 +68,31 @@ module CodeAnalysisMixin
 
       output
     end
+  rescue RuboCop::ValidationError => error
+    [failed_linter_offenses("#{self.class.name} STDERR:\n```\n#{error.message}\n```")]
+  end
+
+  def failed_linter_offenses(message)
+    git_service   = branch.git_service
+    files_to_lint = branch.pull_request? ? git_service.diff.new_files : git_service.tip_files
+    {
+      "files" => [
+        {
+          "path"     => "\\*\\*",
+          "offenses" => [
+            {
+              "severity" => "fatal",
+              "message"  => message,
+              "cop_name" => self.class.name.titleize
+            }
+          ]
+        }
+      ],
+      "summary" => {
+        "offense_count"        => 1,
+        "target_file_count"    => files_to_lint.length,
+        "inspected_file_count" => files_to_lint.length
+      }
+    }
   end
 end
