@@ -41,6 +41,7 @@ gem 'default_value_for',    '>= 3.1.0'
 gem 'haml',                 '~> 5.1',    :require => false # force newer version of haml
 gem 'haml_lint',            '~> 0.35.0', :require => false
 gem 'more_core_extensions', '~> 4.0.0',  :require => 'more_core_extensions/all'
+gem 'manageiq-style',                    :require => false
 gem 'rubocop',              '~> 0.82.0', :require => false
 gem 'rubocop-performance',               :require => false
 gem 'rubocop-rails',                     :require => false

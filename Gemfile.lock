@@ -196,6 +196,12 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
+    manageiq-style (1.1.0)
+      more_core_extensions
+      optimist
+      rubocop (~> 0.82.0)
+      rubocop-performance
+      rubocop-rails
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     method_source (0.9.2)
@@ -222,6 +228,7 @@ GEM
       mini_portile2 (~> 2.4.0)
     octokit (4.8.0)
       sawyer (~> 0.8.0, >= 0.5.3)
+    optimist (3.0.1)
     parallel (1.19.1)
     parser (2.7.1.3)
       ast (~> 2.4.0)
@@ -442,6 +449,7 @@ DEPENDENCIES
   influxdb (~> 0.3.13)
   jquery-rails
   listen
+  manageiq-style
   minigit (~> 0.0.4)
   more_core_extensions (~> 4.0.0)
   net-ssh (~> 4.2.0)
