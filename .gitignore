@@ -28,6 +28,7 @@
 /config/settings.local.yml
 /config/settings/*.local.yml
 /config/environments/*.local.yml
+/config/initializers/01_sidekiq_config.rb
 
 # Ignore development Procfile
 /Procfile
@@ -43,3 +44,6 @@ db/seeds.local.rb
 
 # Ignore vagrant configuration/runtime files
 .vagrant/
+
+# Ignore docker-compose .ssh dir
+.ssh/

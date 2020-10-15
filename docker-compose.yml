@@ -1,0 +1,71 @@
+version: "3.8"
+services:
+  web:
+    build:
+      context: .
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_NAME: miq_bot
+      DATABASE_HOSTNAME: db
+      DATABASE_USER: root
+      DATABASE_PASSWORD: smartvm
+      DATABASE_PORT: 5432
+      REDIS_URL: redis://redis:6379
+    image: app_image
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./.ssh:/root/ssh
+      - ./config:/opt/miq_bot_config
+  queue_worker:
+    depends_on:
+      - web
+    environment:
+      DATABASE_NAME: miq_bot
+      DATABASE_HOSTNAME: db
+      DATABASE_USER: root
+      DATABASE_PASSWORD: smartvm
+      DATABASE_PORT: 5432
+      QUEUE_NAME: miq_bot
+      REDIS_URL: redis://redis:6379
+    image: app_image
+    volumes:
+      - ./.ssh:/root/ssh
+      - ./config:/opt/miq_bot_config
+      - repos-volume:/opt/miq_bot/repos
+  queue_worker_glacial:
+    depends_on:
+      - web
+    environment:
+      DATABASE_NAME: miq_bot
+      DATABASE_HOSTNAME: db
+      DATABASE_USER: root
+      DATABASE_PASSWORD: smartvm
+      DATABASE_PORT: 5432
+      QUEUE_NAME: miq_bot_glacial
+      REDIS_URL: redis://redis:6379
+    image: app_image
+    volumes:
+      - ./.ssh:/root/ssh
+      - ./config:/opt/miq_bot_config
+      - repos-volume:/opt/miq_bot/repos
+  db:
+    image: manageiq/postgresql:10
+    environment:
+      POSTGRESQL_DATABASE: miq_bot
+      POSTGRESQL_USER: root
+      POSTGRESQL_PASSWORD: smartvm
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdb-volume:/var/lib/pgsql/data
+  redis:
+    image: redis:5.0
+    ports:
+      - "6379:6379"
+
+volumes:
+  pgdb-volume:
+  repos-volume:
