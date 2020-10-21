@@ -52,7 +52,7 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
     cd $APP_ROOT && \
     bundle install
 
-WORKDIR /opt/$APP_ROOT
+WORKDIR $APP_ROOT
 
 RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_x86_64 && \
     chmod +x /usr/bin/dumb-init
