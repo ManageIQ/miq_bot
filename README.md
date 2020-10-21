@@ -98,6 +98,15 @@ underscores replaced with hyphens.
 
   Example: `@miq-bot close_issue`
 
+- **`cross_repo_test test_repos* [including include_repos*]`**
+  Runs cross repo tests that include the current PR code base.
+
+  * This command is restricted to members of the organization containing the issue.
+  * Restricted use on pull requests.  This doesn't make sense to use on issues
+    since there is no code to run.
+
+  Example: `@miq-bot cross_repo_tests ManageIQ/manageiq#1234 including more_core_extensions@1234abcd`
+
 ## Development
 
 ### Prerequisites
