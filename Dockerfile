@@ -1,7 +1,7 @@
 FROM registry.access.redhat.com/ubi8/ubi:8.2
 MAINTAINER ManageIQ https://manageiq.org
 
-ARG REF=v0.11
+ARG REF=master
 
 ENV TERM=xterm \
     APP_ROOT=/opt/miq_bot
@@ -39,6 +39,7 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
       git \
       libcurl-devel \
       libffi-devel \
+      libssh2-devel \
       libxml2-devel \
       openssl \
       openssl-devel \
