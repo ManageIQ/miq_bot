@@ -45,7 +45,7 @@ gem 'more_core_extensions', '~> 4.0.0',  :require => 'more_core_extensions/all'
 gem 'rugged',                            :require => false
 
 gem 'octokit', '~> 4.8.0', :require => false
-gem 'faraday', '~> 0.9.2'
+gem 'faraday', '~> 1.0.0'
 gem 'faraday-http-cache', '~> 2.0.0'
 
 group :development, :test do
