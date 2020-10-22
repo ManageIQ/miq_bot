@@ -39,6 +39,7 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
       git \
       libcurl-devel \
       libffi-devel \
+      libssh2-devel \
       libxml2-devel \
       openssl \
       openssl-devel \
