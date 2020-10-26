@@ -192,7 +192,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       pull_request_data = {
         "base"  => "master",
         "head"  => subject.branch_name,
-        "title" => "[BOT] Cross repo test run",
+        "title" => "[BOT] Cross repo test for ManageIQ/bar#1234",
         "body"  => <<~PR_BODY
           From Pull Request:  ManageIQ/bar#1234
           For User:           @NickLaMuro
