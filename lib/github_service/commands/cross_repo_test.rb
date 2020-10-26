@@ -243,7 +243,7 @@ module GithubService
 
         GithubService.create_pull_request(fq_repo_name,
                                           "master", branch_name,
-                                          "[BOT] Cross repo test run", pr_desc)
+                                          "[BOT] Cross repo test for #{issue.fq_repo_name}##{issue.number}", pr_desc)
       end
 
       ##### Duplicate Git stuffs #####
