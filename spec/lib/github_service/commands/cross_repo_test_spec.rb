@@ -334,6 +334,15 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
           expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier]
         end
       end
+
+      context "with a test repo that contains a substring of a provider group" do
+        let(:command_value) { "manageiq-providers-azure_stack#1234, /providers including manageiq#1234" }
+
+        it "sets @test_repos and @repos" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-azure_stack#1234", "ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure"]
+          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier]
+        end
+      end
     end
 
     context "multiple repos and test repos" do

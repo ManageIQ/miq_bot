@@ -144,7 +144,7 @@ module GithubService
         @repos  << "#{issue.repo_name}##{issue.number}"
 
         repo_groups, @test_repos = @test_repos.partition { |repo_name| repo_name.start_with?("/") }
-        @test_repos += expand_repo_groups(repo_groups)
+        @test_repos |= expand_repo_groups(repo_groups)
 
         @test_repos.map! { |repo_name| normalize_repo_name(repo_name.strip) }
         @repos.map!      { |repo_name| normalize_repo_name(repo_name.strip) }
@@ -153,13 +153,16 @@ module GithubService
       end
 
       def expand_repo_groups(repo_groups)
-        # Expand out each group and prioritize any repos which were passed explicitly
-        # in the test_repos list by the user
+        # Expand out each repository group passed in and drop any which were
+        # passed in the test_repos list by the user by looking for the repo name
+        # in the test_repos list.  Typically an entry in this list will be a
+        # reference to a PR or a branch
         #
         # E.g. `cross-repo manageiq-providers-amazon#1234 /providers` should only
-        # include manageiq-providers-amazon#1234
+        # include manageiq-providers-amazon#1234 not both manageiq-providers-amazon#1234
+        # and manageiq-providers-amazon
         repo_groups.flat_map { |repo_group| expand_repo_group(repo_group) }
-                   .reject { |repo_name| @test_repos.any? { |test_repo| test_repo.include?(repo_name) } }
+                   .reject { |repo_name| @test_repos.any? { |test_repo| test_repo =~ /[\d+\/]*#{repo_name}[#@]/ } }
       end
 
       def expand_repo_group(repo_group)
