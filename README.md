@@ -106,6 +106,9 @@ underscores replaced with hyphens.
     since there is no code to run.
 
   Example: `@miq-bot cross_repo_tests ManageIQ/manageiq#1234 including more_core_extensions@1234abcd`
+  
+  Also accepts repository groups, e.g. `/providers`, `/core`, `/all`
+  Example: `@miq-bot cross_repo_tests ManageIQ/manageiq#1234, /providers including more_core_extensions@1234abcd
 
 ## Development
 
