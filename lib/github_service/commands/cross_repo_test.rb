@@ -279,7 +279,7 @@ module GithubService
         response = Net::HTTP.get_response(uri)
         return {} if response.code != 200
 
-        YAML.load(response.body).transform_values(&:keys)
+        YAML.safe_load(response.body, :aliases => true).transform_values(&:keys)
       end
       private_class_method :fetch_manageiq_release_repo_groups
 
