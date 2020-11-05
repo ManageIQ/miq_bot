@@ -75,6 +75,9 @@ module GithubService
 
       restrict_to :organization
 
+      # Cache the repo groups yaml file from https://github.com/ManageIQ/manageiq-release
+      cache_with_timeout(:repo_groups_hash, 60.minutes) { fetch_manageiq_release_repo_groups }
+
       def self.test_repo_url
         Settings.cross_repo_tests.url
       end
@@ -134,16 +137,38 @@ module GithubService
         @value = value
 
         @test_repos, @repos = value.split(/\s+including\s+/)
-                                   .map { |repo_list| repo_list.split(",") }
+                                   .map { |repo_list| repo_list.split(",").map(&:strip) }
 
         # Add the identifier for the PR for this comment to @repos here
         @repos ||= []
         @repos  << "#{issue.repo_name}##{issue.number}"
 
+        repo_groups, @test_repos = @test_repos.partition { |repo_name| repo_name.start_with?("/") }
+        @test_repos |= expand_repo_groups(repo_groups)
+
         @test_repos.map! { |repo_name| normalize_repo_name(repo_name.strip) }
         @repos.map!      { |repo_name| normalize_repo_name(repo_name.strip) }
 
         [@repos, @test_repos].each(&:uniq!)
+      end
+
+      def expand_repo_groups(repo_groups)
+        # Expand out each repository group passed in and drop any which were
+        # passed in the test_repos list by the user by looking for the repo name
+        # in the test_repos list.  Typically an entry in this list will be a
+        # reference to a PR or a branch
+        #
+        # E.g. `cross-repo manageiq-providers-amazon#1234 /providers` should only
+        # include manageiq-providers-amazon#1234 not both manageiq-providers-amazon#1234
+        # and manageiq-providers-amazon
+        repo_groups.flat_map { |repo_group| expand_repo_group(repo_group) }
+                   .reject { |repo_name| @test_repos.any? { |test_repo| test_repo =~ /[\d+\/]*#{repo_name}[#@]/ } }
+      end
+
+      def expand_repo_group(repo_group)
+        # repo_group is of the format "/providers"
+        key = repo_group.sub("/", "")
+        self.class.repo_groups_hash[key]
       end
 
       def normalize_repo_name(repo)
@@ -245,6 +270,18 @@ module GithubService
                                           "master", branch_name,
                                           "[BOT] Cross repo test for #{issue.fq_repo_name}##{issue.number}", pr_desc)
       end
+
+      def self.fetch_manageiq_release_repo_groups
+        require 'net/http'
+        require 'uri'
+
+        uri = URI.parse("https://raw.githubusercontent.com/ManageIQ/manageiq-release/master/config/repos.sets.yml")
+        response = Net::HTTP.get_response(uri)
+        return {} if response.code != 200
+
+        YAML.safe_load(response.body, :aliases => true).transform_values(&:keys)
+      end
+      private_class_method :fetch_manageiq_release_repo_groups
 
       ##### Duplicate Git stuffs #####
 

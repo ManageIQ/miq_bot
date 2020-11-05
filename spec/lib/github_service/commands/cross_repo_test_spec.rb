@@ -285,7 +285,9 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
   end
 
   describe "#parse_value (private)" do
+    let(:repo_groups_hash) { {} }
     before do
+      allow(described_class).to receive(:repo_groups_hash).and_return(repo_groups_hash)
       subject.send(:parse_value, command_value)
     end
 
@@ -300,6 +302,46 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       it "sets @test_repos and @repos" do
         expect(subject.test_repos).to eq ["ManageIQ/manageiq-ui-classic"]
         expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier]
+      end
+    end
+
+    context "with repo groups" do
+      let(:repo_groups_hash) { {"providers" => ["manageiq-providers-amazon", "manageiq-providers-azure"]} }
+
+      context "with just /providers group" do
+        let(:command_value) { "/providers" }
+
+        it "sets @test_repos and @repos" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure"]
+          expect(subject.repos).to      eq [issue_identifier]
+        end
+      end
+
+      context "with /providers group and including" do
+        let(:command_value) { "/providers including manageiq#1234" }
+
+        it "sets @test_repos and @repos" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure"]
+          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier]
+        end
+      end
+
+      context "with a test PR and a group" do
+        let(:command_value) { "manageiq-providers-amazon#1234, /providers including manageiq#1234" }
+
+        it "sets @test_repos and @repos" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon#1234", "ManageIQ/manageiq-providers-azure"]
+          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier]
+        end
+      end
+
+      context "with a test repo that contains a substring of a provider group" do
+        let(:command_value) { "manageiq-providers-azure_stack#1234, /providers including manageiq#1234" }
+
+        it "sets @test_repos and @repos" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-azure_stack#1234", "ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure"]
+          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier]
+        end
       end
     end
 
