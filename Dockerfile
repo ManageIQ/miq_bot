@@ -15,7 +15,8 @@ LABEL name="miq-bot" \
       io.k8s.description="ManageIQ Bot is a developer automation tool." \
       io.openshift.tags="ManageIQ,miq-bot"
 
-RUN dnf -y --disableplugin=subscription-manager install \
+RUN dnf config-manager --setopt=ubi-8-*.exclude=net-snmp*,dracut*,libcom_err*,python3-gobject*,redhat-release* --save && \
+    dnf -y --disableplugin=subscription-manager install \
       unzip \
       wget \
       http://mirror.centos.org/centos/8.2.2004/BaseOS/x86_64/os/Packages/centos-repos-8.2-2.2004.0.1.el8.x86_64.rpm \
