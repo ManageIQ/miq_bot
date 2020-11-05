@@ -24,7 +24,7 @@ RUN dnf config-manager --setopt=ubi-8-*.exclude=net-snmp*,dracut*,libcom_err*,py
       https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
     dnf -y --disableplugin=subscription-manager module enable nodejs:12 && \
     dnf -y --disableplugin=subscription-manager module enable ruby:2.6 && \
-    dnf -y --disableplugin=subscription-manager upgrade && \
+    dnf -y --disableplugin=subscription-manager upgrade --exclude=filesystem && \
     dnf clean all
 
 RUN wget https://github.com/ManageIQ/miq_bot/archive/$REF.zip && \
