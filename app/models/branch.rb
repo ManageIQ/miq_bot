@@ -17,6 +17,19 @@ class Branch < ActiveRecord::Base
   scope :regular_branches, -> { where(:pull_request => [false, nil]) }
   scope :pr_branches,      -> { where(:pull_request => true) }
 
+  def self.create_all_from_master(name)
+    Repo.all.each do |repo|
+      next if repo.branches.exists?(:name => name)
+
+      b = repo.branches.new(:name => name)
+      next unless b.git_service.exists?
+
+      b.last_commit = b.git_service.merge_base("master")
+      b.save!
+      puts "Created #{name} on #{repo.name}"
+    end
+  end
+
   def self.with_branch_or_pr_number(n)
     n = MinigitService.pr_branch(n) if n.kind_of?(Fixnum)
     where(:name => n)
