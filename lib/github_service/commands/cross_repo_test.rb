@@ -162,6 +162,7 @@ module GithubService
         # include manageiq-providers-amazon#1234 not both manageiq-providers-amazon#1234
         # and manageiq-providers-amazon
         repo_groups.flat_map { |repo_group| expand_repo_group(repo_group) }
+                   .compact
                    .reject { |repo_name| @test_repos.any? { |test_repo| test_repo =~ /[\d+\/]*#{repo_name}[#@]/ } }
       end
 
@@ -277,9 +278,12 @@ module GithubService
 
         uri = URI.parse("https://raw.githubusercontent.com/ManageIQ/manageiq-release/master/config/repos.sets.yml")
         response = Net::HTTP.get_response(uri)
-        return {} if response.code != 200
+        response.value
 
         YAML.safe_load(response.body, :aliases => true).transform_values(&:keys)
+      rescue => err
+        # If the get_response call fails return an empty hash
+        {}
       end
       private_class_method :fetch_manageiq_release_repo_groups
 
