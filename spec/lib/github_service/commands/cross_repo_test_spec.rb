@@ -388,4 +388,31 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       end
     end
   end
+
+  describe "repo_groups_hash" do
+    let(:net_http_response) { double("Net::HTTPResponse") }
+    before { expect(Net::HTTP).to receive(:get_response).and_return(net_http_response) }
+
+    it "loads simple yaml" do
+      yaml = "---\nall:\n  manageiq:\n"
+
+      allow(net_http_response).to receive(:value).and_return(nil)
+      allow(net_http_response).to receive(:body).and_return(yaml)
+
+      expect(described_class.repo_groups_hash).to eq({"all" => ["manageiq"]})
+    end
+
+    it "loads yaml aliases" do
+      yaml = "---\ncore: &core\n  manageiq:\nproviders: &providers\n  manageiq-providers-amazon:\nall:\n  <<: *core\n  <<: *providers\n"
+      allow(net_http_response).to receive(:value).and_return(nil)
+      allow(net_http_response).to receive(:body).and_return(yaml)
+
+      expect(described_class.repo_groups_hash["all"]).to include("manageiq", "manageiq-providers-amazon")
+    end
+
+    it "returns an empty hash on a Net::HTTP failure" do
+      allow(net_http_response).to receive(:value).and_raise(Net::HTTPServerException)
+      expect(described_class.repo_groups_hash).to eq({})
+    end
+  end
 end
