@@ -147,6 +147,9 @@ module GithubService
         # Add the identifier for the PR for this comment to repos
         @repos << "#{issue.repo_name}##{issue.number}"
 
+        # Add any test_repos that are branches or PRs to the repos list
+        @repos |= @test_repos.select { |repo| branch_or_pr?(repo) }
+
         # Clean up the lists
         @test_repos = @test_repos.map { |repo| normalize_repo_name(repo) }.sort.uniq
         @repos      = @repos.map      { |repo| normalize_repo_name(repo) }.sort.uniq
