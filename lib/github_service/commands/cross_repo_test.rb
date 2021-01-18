@@ -138,18 +138,20 @@ module GithubService
 
         @test_repos, @repos = value.split(/\s+including\s+/)
                                    .map { |repo_list| repo_list.split(",").map(&:strip) }
-
-        # Add the identifier for the PR for this comment to @repos here
         @repos ||= []
-        @repos  << "#{issue.repo_name}##{issue.number}"
 
-        repo_groups, @test_repos = @test_repos.partition { |repo_name| repo_name.start_with?("/") }
+        # Expand repo groups (e.g. /providers)
+        repo_groups, @test_repos = @test_repos.partition { |repo| repo.start_with?("/") }
         @test_repos |= expand_repo_groups(repo_groups)
 
-        @test_repos.map! { |repo_name| normalize_repo_name(repo_name.strip) }
-        @repos.map!      { |repo_name| normalize_repo_name(repo_name.strip) }
+        # Add the identifier for the PR for this comment to repos
+        @repos << "#{issue.repo_name}##{issue.number}"
 
-        [@repos, @test_repos].each(&:uniq!)
+        # Clean up the lists
+        @test_repos = @test_repos.map { |repo| normalize_repo_name(repo) }.sort.uniq
+        @repos      = @repos.map      { |repo| normalize_repo_name(repo) }.sort.uniq
+
+        [@repos, @test_repos]
       end
 
       def expand_repo_groups(repo_groups)
@@ -173,7 +175,12 @@ module GithubService
       end
 
       def normalize_repo_name(repo)
+        repo = repo.strip
         repo.include?("/") ? repo : "#{issue.organization_name}/#{repo}"
+      end
+
+      def branch_or_pr?(repo)
+        repo.include?("@") || repo.include?("#")
       end
 
       def valid?
