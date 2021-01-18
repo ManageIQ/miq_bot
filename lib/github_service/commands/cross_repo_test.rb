@@ -49,11 +49,6 @@ module GithubService
     #   -  - TEST_REPO=
     #   +  - TEST_REPO=ManageIQ/manageiq-api
     #   +  - TEST_REPO=ManageIQ/manageiq-ui-classic#5678
-    #
-    # TODO:  Handle the "self" case, where `manageiq` is also a TEST_REPO
-    #
-    # (maybe include a "self" helper as well?)
-    #
     class CrossRepoTest < Base
       # Reference to the branch we are creating off of origin/master
       attr_reader :branch_ref

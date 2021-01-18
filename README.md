@@ -99,15 +99,20 @@ underscores replaced with hyphens.
   Example: `@miq-bot close_issue`
 
 - **`cross_repo_test test_repos* [including include_repos*]`**
-  Runs cross repo tests that include the current PR code base.
+  Runs cross repo tests that include the current PR code base. A pull request will
+  be created in the [manageiq-cross_repo-tests repo](https://github.com/ManageIQ/manageiq-cross_repo-tests)
+  where each of the `test_repos` will be a separate entry in the test matrix. Those
+  tests will run in the context of all repos declared in `test_repos` +
+  `include_repos` + the PR itself.
 
   * This command is restricted to members of the organization containing the issue.
   * Restricted use on pull requests.  This doesn't make sense to use on issues
     since there is no code to run.
 
   Example: `@miq-bot cross_repo_tests ManageIQ/manageiq#1234 including more_core_extensions@1234abcd`
-  
+
   Also accepts repository groups, e.g. `/providers`, `/core`, `/all`
+
   Example: `@miq-bot cross_repo_tests ManageIQ/manageiq#1234, /providers including more_core_extensions@1234abcd
 
 ## Development
