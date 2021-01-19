@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ubi:8.2
+FROM registry.access.redhat.com/ubi8/ubi:8.3
 MAINTAINER ManageIQ https://manageiq.org
 
 ARG REF=master
@@ -19,8 +19,8 @@ RUN dnf config-manager --setopt=ubi-8-*.exclude=net-snmp*,dracut*,libcom_err*,py
     dnf -y --disableplugin=subscription-manager install \
       unzip \
       wget \
-      http://mirror.centos.org/centos/8.2.2004/BaseOS/x86_64/os/Packages/centos-repos-8.2-2.2004.0.1.el8.x86_64.rpm \
-      http://mirror.centos.org/centos/8.2.2004/BaseOS/x86_64/os/Packages/centos-gpg-keys-8.2-2.2004.0.1.el8.noarch.rpm \
+      http://mirror.centos.org/centos/8.3.2011/BaseOS/x86_64/os/Packages/centos-linux-repos-8-2.el8.noarch.rpm \
+      http://mirror.centos.org/centos/8.3.2011/BaseOS/x86_64/os/Packages/centos-gpg-keys-8-2.el8.noarch.rpm \
       https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
     dnf -y --disableplugin=subscription-manager module enable nodejs:12 && \
     dnf -y --disableplugin=subscription-manager module enable ruby:2.6 && \
