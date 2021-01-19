@@ -286,6 +286,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
 
   describe "#parse_value (private)" do
     let(:repo_groups_hash) { {} }
+
     before do
       allow(described_class).to receive(:repo_groups_hash).and_return(repo_groups_hash)
       subject.send(:parse_value, command_value)
@@ -296,12 +297,30 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       expect(subject.repos).to      eq [issue_identifier]
     end
 
-    context "with 'including' argument" do
-      let(:command_value) { "manageiq-ui-classic including manageiq#1234" }
+    context "without 'including' argument" do
+      let(:command_value) { "manageiq-ui-classic#1234, manageiq-api" }
 
       it "sets @test_repos and @repos" do
-        expect(subject.test_repos).to eq ["ManageIQ/manageiq-ui-classic"]
-        expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier]
+        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234"]
+        expect(subject.repos).to      eq ["ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
+      end
+    end
+
+    context "with 'including' argument" do
+      let(:command_value) { "manageiq-ui-classic#1234, manageiq-api including manageiq#2345" }
+
+      it "sets @test_repos and @repos" do
+        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234"]
+        expect(subject.repos).to      eq ["ManageIQ/manageiq#2345", "ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
+      end
+    end
+
+    context "with 'including' argument that is also listed as a test_repo" do
+      let(:command_value) { "manageiq-ui-classic#1234, manageiq-api including manageiq-ui-classic#1234" }
+
+      it "sets @test_repos and @repos" do
+        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234"]
+        expect(subject.repos).to      eq ["ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
       end
     end
 
@@ -322,7 +341,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
 
         it "sets @test_repos and @repos" do
           expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure"]
-          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier]
+          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier].sort
         end
       end
 
@@ -331,7 +350,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
 
         it "sets @test_repos and @repos" do
           expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon#1234", "ManageIQ/manageiq-providers-azure"]
-          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier]
+          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", "ManageIQ/manageiq-providers-amazon#1234", issue_identifier].sort
         end
       end
 
@@ -339,8 +358,8 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
         let(:command_value) { "manageiq-providers-azure_stack#1234, /providers including manageiq#1234" }
 
         it "sets @test_repos and @repos" do
-          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-azure_stack#1234", "ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure"]
-          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier]
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure", "ManageIQ/manageiq-providers-azure_stack#1234"]
+          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", "ManageIQ/manageiq-providers-azure_stack#1234", issue_identifier].sort
         end
       end
     end
@@ -357,7 +376,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
           Fryguy/more_core_extensions@feature
           ManageIQ/linux_admin#123
           #{issue_identifier}
-        ]
+        ].sort
       }
 
       context "with no spaces" do
