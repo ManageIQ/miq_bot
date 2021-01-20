@@ -47,6 +47,7 @@ module GithubService
     #   +  - REPOS=Fryguy/more_core_extensions@feature,Fryguy/linux_admin@feature,ManageIQ/manageiq#1234,manageiq-ui-classic#5678
     #      matrix:
     #   -  - TEST_REPO=
+    #   +  - TEST_REPO=ManageIQ/manageiq#1234
     #   +  - TEST_REPO=ManageIQ/manageiq-api
     #   +  - TEST_REPO=ManageIQ/manageiq-ui-classic#5678
     class CrossRepoTest < Base
@@ -139,8 +140,8 @@ module GithubService
         repo_groups, @test_repos = @test_repos.partition { |repo| repo.start_with?("/") }
         @test_repos |= expand_repo_groups(repo_groups)
 
-        # Add the identifier for the PR for this comment to repos
-        @repos << "#{issue.repo_name}##{issue.number}"
+        # Add the PR for this comment to the list of test repos
+        @test_repos << "#{issue.repo_name}##{issue.number}"
 
         # Add any test_repos that are branches or PRs to the repos list
         @repos |= @test_repos.select { |repo| branch_or_pr?(repo) }
