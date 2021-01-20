@@ -293,7 +293,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
     end
 
     it "sets @test_repos and @repos" do
-      expect(subject.test_repos).to eq ["ManageIQ/manageiq-ui-classic"]
+      expect(subject.test_repos).to eq ["ManageIQ/manageiq-ui-classic", issue_identifier].sort
       expect(subject.repos).to      eq [issue_identifier]
     end
 
@@ -301,7 +301,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       let(:command_value) { "manageiq-ui-classic#1234, manageiq-api" }
 
       it "sets @test_repos and @repos" do
-        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234"]
+        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
         expect(subject.repos).to      eq ["ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
       end
     end
@@ -310,7 +310,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       let(:command_value) { "manageiq-ui-classic#1234, manageiq-api including manageiq#2345" }
 
       it "sets @test_repos and @repos" do
-        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234"]
+        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
         expect(subject.repos).to      eq ["ManageIQ/manageiq#2345", "ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
       end
     end
@@ -319,7 +319,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       let(:command_value) { "manageiq-ui-classic#1234, manageiq-api including manageiq-ui-classic#1234" }
 
       it "sets @test_repos and @repos" do
-        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234"]
+        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
         expect(subject.repos).to      eq ["ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
       end
     end
@@ -331,7 +331,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
         let(:command_value) { "/providers" }
 
         it "sets @test_repos and @repos" do
-          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure"]
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure", issue_identifier].sort
           expect(subject.repos).to      eq [issue_identifier]
         end
       end
@@ -340,7 +340,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
         let(:command_value) { "/providers including manageiq#1234" }
 
         it "sets @test_repos and @repos" do
-          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure"]
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure", issue_identifier].sort
           expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier].sort
         end
       end
@@ -349,7 +349,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
         let(:command_value) { "manageiq-providers-amazon#1234, /providers including manageiq#1234" }
 
         it "sets @test_repos and @repos" do
-          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon#1234", "ManageIQ/manageiq-providers-azure"]
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon#1234", "ManageIQ/manageiq-providers-azure", issue_identifier].sort
           expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", "ManageIQ/manageiq-providers-amazon#1234", issue_identifier].sort
         end
       end
@@ -358,7 +358,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
         let(:command_value) { "manageiq-providers-azure_stack#1234, /providers including manageiq#1234" }
 
         it "sets @test_repos and @repos" do
-          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure", "ManageIQ/manageiq-providers-azure_stack#1234"]
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure", "ManageIQ/manageiq-providers-azure_stack#1234", issue_identifier].sort
           expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", "ManageIQ/manageiq-providers-azure_stack#1234", issue_identifier].sort
         end
       end
@@ -368,16 +368,12 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       let(:repos)         { %w[Fryguy/more_core_extensions@feature linux_admin#123] }
       let(:test_repos)    { %w[manageiq-api manageiq-ui-classic] }
 
-      let(:expected_test_repos) {
-        %w[ManageIQ/manageiq-api ManageIQ/manageiq-ui-classic]
-      }
-      let(:expected_repos) {
-        %W[
-          Fryguy/more_core_extensions@feature
-          ManageIQ/linux_admin#123
-          #{issue_identifier}
-        ].sort
-      }
+      let(:expected_test_repos) do
+        ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic", issue_identifier].sort
+      end
+      let(:expected_repos) do
+        ["Fryguy/more_core_extensions@feature", "ManageIQ/linux_admin#123", issue_identifier].sort
+      end
 
       context "with no spaces" do
         let(:command_value) { "#{test_repos.join(',')} including #{repos.join(',')}" }
@@ -402,8 +398,8 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       let(:command_value) { "ManageIQ/manageiq-api, manageiq-api including bar#1234" }
 
       it "de-dups" do
+        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", issue_identifier].sort
         expect(subject.repos).to      eq [issue_identifier]
-        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api"]
       end
     end
   end
