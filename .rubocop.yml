@@ -1,5 +1,4 @@
 inherit_gem:
-  manageiq-style: .rubocop_base.yml
+  manageiq-style: ".rubocop_base.yml"
 inherit_from:
-# put all local rubocop config into .rubocop_local.yml as it will be loaded by .rubocop_cc.yml as well
-- .rubocop_local.yml
+- ".rubocop_local.yml"
