@@ -43,3 +43,5 @@ EOMSG
     end
   end
 end
+
+# rubocop:enable Style/NumericLiterals

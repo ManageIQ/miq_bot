@@ -316,7 +316,7 @@ describe Repo do
     end
 
     it "handles pruning PR branches" do
-      pr_branch = create(:pr_branch, :repo => repo)
+      create(:pr_branch, :repo => repo)
 
       expect(repo).to receive(:git_fetch)
 

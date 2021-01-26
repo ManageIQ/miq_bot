@@ -287,7 +287,7 @@ module GithubService
         response.value
 
         YAML.safe_load(response.body, :aliases => true).transform_values(&:keys)
-      rescue => err
+      rescue
         # If the get_response call fails return an empty hash
         {}
       end
