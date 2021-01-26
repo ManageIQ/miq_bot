@@ -1,0 +1,3 @@
+AllCops:
+  Exclude:
+  - spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/**/*
