@@ -1,5 +1,3 @@
-require "thread"
-
 module ThreadsafeServiceMixin
   extend ActiveSupport::Concern
 
