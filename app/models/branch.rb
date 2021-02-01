@@ -31,7 +31,7 @@ class Branch < ActiveRecord::Base
   end
 
   def self.with_branch_or_pr_number(n)
-    n = MinigitService.pr_branch(n) if n.kind_of?(Fixnum)
+    n = MinigitService.pr_branch(n) if n.kind_of?(Integer)
     where(:name => n)
   end
 
