@@ -37,11 +37,13 @@ jobs:
     - name: Install dependencies
       env:
         DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/miq_bot_test?encoding=utf8&pool=5&wait_timeout=5"
+        RAILS_ENV: "test"
       run: |
-        bundle install
         pip install yamllint
+        bundle install
         bundle exec rake db:setup
     - name: Run tests
       env:
         DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/miq_bot_test?encoding=utf8&pool=5&wait_timeout=5"
+        RAILS_ENV: "test"
       run: bundle exec rake
