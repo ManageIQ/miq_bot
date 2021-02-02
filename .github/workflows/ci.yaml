@@ -1,0 +1,47 @@
+name: Github Actions
+
+on:
+  push:
+    branches:
+    - '**'
+  pull_request:
+    branches:
+    - '**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+        - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis
+        ports:
+        - 6379:6379
+        options: --entrypoint redis-server
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+        ruby-version: 2.6.3
+    - name: Install dependencies
+      env:
+        DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/miq_bot_test?encoding=utf8&pool=5&wait_timeout=5"
+      run: |
+        bundle install
+        pip install yamllint
+        bundle exec rake db:setup
+    - name: Run tests
+      env:
+        DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/miq_bot_test?encoding=utf8&pool=5&wait_timeout=5"
+      run: bundle exec rake
