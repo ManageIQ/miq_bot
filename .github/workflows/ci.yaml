@@ -7,17 +7,19 @@ on:
   pull_request:
     branches:
     - '**'
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:10.8
+        image: manageiq/postgresql:10
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+          POSTGRES_DATABASE: postgres
         ports:
         - 5432:5432
         # needed because the postgres container does not provide a healthcheck
