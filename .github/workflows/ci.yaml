@@ -42,7 +42,6 @@ jobs:
         pip install yamllint
         git config --global user.name "Your Name"
         git config --global user.email "youremail@example.com"
-        bundle install
         bundle exec rake db:setup
     - name: Run tests
       env:
