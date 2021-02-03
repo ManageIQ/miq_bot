@@ -15,7 +15,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     services:
       postgres:
         image: postgres:10.8
@@ -54,7 +54,7 @@ jobs:
         RAILS_ENV: "test"
       run: bundle exec rake
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
