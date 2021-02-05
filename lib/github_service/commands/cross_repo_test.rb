@@ -187,7 +187,10 @@ module GithubService
           .sort # Unadorned repo name will always sort before adorned repo names
           .uniq
           .slice_when { |a, b| bare_repo_name(a) != bare_repo_name(b) }
-          .map(&:last)
+          .map do |repos|
+            repos.shift if repos.size > 1 && bare_repo?(repos.first)
+            repos.size == 1 ? repos.first : repos
+          end
       end
 
       def bare_repo_name(repo)
@@ -198,13 +201,48 @@ module GithubService
         repo.match?(/[@#]/)
       end
 
+      def bare_repo?(repo)
+        !branch_or_pr?(repo)
+      end
+
       def valid?
-        unless issue.pull_request?
-          issue.add_comment("@#{issuer} 'cross-repo-test(s)' command is only valid on pull requests, ignoring...")
-          return false
+        validate_pull_request &&
+          validate_repo_names &&
+          validate_conflict_repos
+      end
+
+      def validate_pull_request
+        return true if issue.pull_request?
+
+        issue.add_comment("@#{issuer} 'cross-repo-test(s)' command is only valid on pull requests, ignoring...")
+        false
+      end
+
+      def validate_repo_names
+        invalid_repo_names = (@test_repos + @repos).select { |r| r.include?(" ") }.sort.uniq
+        return true if invalid_repo_names.empty?
+
+        message = "@#{issuer} 'cross-repo-test(s)' was given invalid repo names and cannot continue\n\n"
+        invalid_repo_names.each do |repo|
+          message << "* `#{repo}`\n"
         end
 
-        true
+        issue.add_comment(message)
+        false
+      end
+
+      def validate_conflict_repos
+        conflicts = (@test_repos + @repos).select { |r| r.kind_of?(Array) }.sort.uniq
+        return true if conflicts.empty?
+
+        message = "@#{issuer} 'cross-repo-test(s)' was given conflicting repo names and cannot continue\n\n"
+        conflicts.each do |repos|
+          pretty_repos = repos.map { |r| "`#{r}`" }.join(", ")
+          message << "* #{pretty_repos} conflict\n"
+        end
+
+        issue.add_comment(message)
+        false
       end
 
       ##### run_tests steps #####
