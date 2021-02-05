@@ -285,7 +285,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
   end
 
   describe "#parse_value (private)" do
-    let(:repo_groups_hash) { {} }
+    let(:repo_groups_hash) { {"providers" => ["manageiq-providers-amazon", "manageiq-providers-azure"]} }
 
     before do
       allow(described_class).to receive(:repo_groups_hash).and_return(repo_groups_hash)
@@ -325,8 +325,6 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
     end
 
     context "with repo groups" do
-      let(:repo_groups_hash) { {"providers" => ["manageiq-providers-amazon", "manageiq-providers-azure"]} }
-
       context "with just /providers group" do
         let(:command_value) { "/providers" }
 
@@ -395,11 +393,76 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
     end
 
     context "with duplicates" do
-      let(:command_value) { "ManageIQ/manageiq-api, manageiq-api including bar#1234" }
+      context "in the test repos with different normalizations" do
+        let(:command_value) { "ManageIQ/manageiq-api, manageiq-api" }
 
-      it "de-dups" do
-        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", issue_identifier].sort
-        expect(subject.repos).to      eq [issue_identifier]
+        it "de-dups" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", issue_identifier].sort
+          expect(subject.repos).to      eq [issue_identifier]
+        end
+      end
+
+      context "where the test repos has both a bare repo and a PR" do
+        let(:command_value) { "ManageIQ/manageiq-api#1234, manageiq-api" }
+
+        it "de-dups" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-api#1234", issue_identifier].sort
+          expect(subject.repos).to      eq ["ManageIQ/manageiq-api#1234", issue_identifier].sort
+        end
+      end
+
+      context "across the test repos and the included repos" do
+        let(:command_value) { "ManageIQ/manageiq-api including manageiq-api#1234" }
+
+        it "de-dups" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-api#1234", issue_identifier].sort
+          expect(subject.repos).to      eq ["ManageIQ/manageiq-api#1234", issue_identifier].sort
+        end
+      end
+
+      context "where the included repos has the PR itself" do
+        let(:command_value) { "ManageIQ/manageiq-api including bar#1234" }
+
+        it "de-dups" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", issue_identifier].sort
+          expect(subject.repos).to      eq [issue_identifier]
+        end
+      end
+
+      context "where the test repos has a bare repo of the PR itself" do
+        let(:command_value) { "ManageIQ/manageiq-api, bar" }
+
+        it "de-dups" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", issue_identifier].sort
+          expect(subject.repos).to      eq [issue_identifier].sort
+        end
+      end
+
+      context "where the test repos has a repo group that will collide with a bare repo" do
+        let(:command_value) { "/providers, manageiq-providers-amazon" }
+
+        it "de-dups" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon", "ManageIQ/manageiq-providers-azure", issue_identifier].sort
+          expect(subject.repos).to      eq [issue_identifier].sort
+        end
+      end
+
+      context "where the test repos has a repo group that will collide with a PR" do
+        let(:command_value) { "/providers, manageiq-providers-amazon#1234" }
+
+        it "de-dups" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon#1234", "ManageIQ/manageiq-providers-azure", issue_identifier].sort
+          expect(subject.repos).to      eq ["ManageIQ/manageiq-providers-amazon#1234", issue_identifier].sort
+        end
+      end
+
+      context "where the test repos has a repo group that will collide with an included repo" do
+        let(:command_value) { "/providers including manageiq-providers-amazon#1234" }
+
+        it "de-dups" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon#1234", "ManageIQ/manageiq-providers-azure", issue_identifier].sort
+          expect(subject.repos).to      eq ["ManageIQ/manageiq-providers-amazon#1234", issue_identifier].sort
+        end
       end
     end
   end

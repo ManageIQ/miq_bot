@@ -136,35 +136,33 @@ module GithubService
                                    .map { |repo_list| repo_list.split(",").map(&:strip) }
         @repos ||= []
 
-        # Expand repo groups (e.g. /providers)
-        repo_groups, @test_repos = @test_repos.partition { |repo| repo.start_with?("/") }
-        @test_repos |= expand_repo_groups(repo_groups)
+        # Ignore bare repos in include list
+        @repos.select! { |repo| branch_or_pr?(repo) }
 
-        # Add the PR for this comment to the list of test repos
+        # Expand repo groups (e.g. /providers) in the test repos
+        @test_repos = @test_repos.flat_map { |repo| repo_group?(repo) ? expand_repo_group(repo) : repo }.compact
+
+        # Add the PR for this comment to the test repos
         @test_repos << "#{issue.repo_name}##{issue.number}"
 
-        # Add any test_repos that are branches or PRs to the repos list
-        @repos |= @test_repos.select { |repo| branch_or_pr?(repo) }
+        # Normalize the repo names
+        @test_repos = normalize_repo_list(@test_repos)
+        @repos      = normalize_repo_list(@repos)
 
-        # Clean up the lists
-        @test_repos = @test_repos.map { |repo| normalize_repo_name(repo) }.sort.uniq
-        @repos      = @repos.map      { |repo| normalize_repo_name(repo) }.sort.uniq
+        # Ensure all test repos that are PRs/branches are included with other test repos
+        @repos += @test_repos.select { |repo| branch_or_pr?(repo) }
 
-        [@repos, @test_repos]
+        # Ensure that any PRs/branches in the included list override bare test repos
+        test_repos_bare = @test_repos.map { |repo| bare_repo_name(repo) }
+        @test_repos += @repos.select { |repo| test_repos_bare.include?(bare_repo_name(repo)) }
+
+        # Dedup the repo lists
+        @test_repos = dedup_repo_list(@test_repos)
+        @repos      = dedup_repo_list(@repos)
       end
 
-      def expand_repo_groups(repo_groups)
-        # Expand out each repository group passed in and drop any which were
-        # passed in the test_repos list by the user by looking for the repo name
-        # in the test_repos list.  Typically an entry in this list will be a
-        # reference to a PR or a branch
-        #
-        # E.g. `cross-repo manageiq-providers-amazon#1234 /providers` should only
-        # include manageiq-providers-amazon#1234 not both manageiq-providers-amazon#1234
-        # and manageiq-providers-amazon
-        repo_groups.flat_map { |repo_group| expand_repo_group(repo_group) }
-                   .compact
-                   .reject { |repo_name| @test_repos.any? { |test_repo| test_repo =~ /[\d+\/]*#{repo_name}[#@]/ } }
+      def repo_group?(repo)
+        repo.start_with?("/")
       end
 
       def expand_repo_group(repo_group)
@@ -173,13 +171,31 @@ module GithubService
         self.class.repo_groups_hash[key]
       end
 
+      def normalize_repo_list(repo_list)
+        repo_list.map { |repo| normalize_repo_name(repo) }
+      end
+
       def normalize_repo_name(repo)
         repo = repo.strip
         repo.include?("/") ? repo : "#{issue.organization_name}/#{repo}"
       end
 
+      # Deduplicates entries sharing the same bare repo name, prioritizing
+      #   PRs/branches over bare repo names.
+      def dedup_repo_list(repo_list)
+        repo_list
+          .sort # Unadorned repo name will always sort before adorned repo names
+          .uniq
+          .slice_when { |a, b| bare_repo_name(a) != bare_repo_name(b) }
+          .map(&:last)
+      end
+
+      def bare_repo_name(repo)
+        repo.split(/[@#]/, 2).first
+      end
+
       def branch_or_pr?(repo)
-        repo.include?("@") || repo.include?("#")
+        repo.match?(/[@#]/)
       end
 
       def valid?
