@@ -85,83 +85,214 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
   let(:member_check_url) { "/orgs/ManageIQ/members/#{command_issuer}" }
   let(:repo_check_url)   { "/orgs/ManageIQ/repos" }
 
-  before do
-    pr_fetch_response = single_pull_request_response(fq_repo_name, issue_id)
+  def stub_good_pr_check
+    clear_stubs_for!(:get, issue_url)
     github_service_add_stub :url           => issue_url,
-                            :response_body => pr_fetch_response
+                            :response_body => single_pull_request_response(fq_repo_name, issue_id)
+  end
 
+  def stub_good_member_check
+    clear_stubs_for!(:get, member_check_url)
     github_service_add_stub :url             => member_check_url,
                             :response_status => 204
   end
 
+  def stub_issue_comment(body)
+    github_service_add_stub :url           => comment_url,
+                            :method        => :post,
+                            :request_body  => {"body" => body}.to_json,
+                            :response_body => {"id" => 1234}.to_json
+  end
+
+  def stub_bad_pr_check
+    clear_stubs_for!(:get, issue_url)
+    github_service_add_stub :url           => issue_url,
+                            :response_body => single_issue_request_response(fq_repo_name, issue_id)
+  end
+
+  def stub_bad_member_check
+    clear_stubs_for!(:get, member_check_url)
+    github_service_add_stub :url             => member_check_url,
+                            :response_status => 404
+  end
+
+  before do
+    stub_good_pr_check
+    stub_good_member_check
+  end
+
   describe "#execute!" do
-    def run_execute!(valid: true, add_stubs: true)
-      if add_stubs
-        # if we are stubbing, determine the number of expections based on validity
-        #
-        # Basically, if it isn't valid, we should never hit `run_tests`,
-        # otherwise it is run only once.
-        run_number = valid ? 1 : 0
-        expect(subject).to receive(:run_tests).exactly(run_number).times
-      end
+    def assert_execute(valid: true)
+      expect(subject).to receive(:run_tests).exactly(valid ? 1 : 0).times
 
       subject.execute!(:issuer => command_issuer, :value => command_value)
+
+      github_service_stubs.verify_stubbed_calls
     end
 
-    it "runs tests when valid" do
-      run_execute!
+    it "is valid" do
+      assert_execute(:valid => true)
     end
 
-    context "with a non-member" do
-      let(:command_issuer)       { "non_member" }
-      let(:non_member_check_url) { "/orgs/ManageIQ/members/non_member" }
+    it "is invalid when not on a PR" do
+      stub_bad_pr_check
+      stub_issue_comment("@NickLaMuro 'cross-repo-test(s)' command is only valid on pull requests, ignoring...")
 
-      before do
-        clear_stubs_for!(:get, member_check_url)
-        clear_stubs_for!(:get, repo_check_url) # never reached
+      assert_execute(:valid => false)
+    end
 
-        # unsuccessful membership check for command_issuer
-        github_service_add_stub :url             => non_member_check_url,
-                                :response_status => 404
+    it "is invalid when called by a non-org member" do
+      stub_bad_member_check
+      stub_issue_comment("@NickLaMuro Only members of the ManageIQ organization may use this command.")
+
+      assert_execute(:valid => false)
+    end
+
+    describe "with invalid repo names" do
+      context "when someone forgets a comma in the test repo list" do
+        let(:command_value) { "manageiq-ui-classic manageiq-api" }
+
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
+
+            * `ManageIQ/manageiq-ui-classic manageiq-api`
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
       end
 
-      it "rejects the use of the command to non-members" do
-        comment_body = {
-          "body" => "@non_member Only members of the ManageIQ organization may use this command."
-        }.to_json
-        github_service_add_stub :url           => comment_url,
-                                :method        => :post,
-                                :request_body  => comment_body,
-                                :response_body => {"id" => 1234}.to_json
+      context "when someone forgets a comma in the included repo list" do
+        let(:command_value) { "manageiq-ui-classic including manageiq-api#1234 manageiq#1234" }
 
-        run_execute!(:valid => false)
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
 
-        github_service_stubs.verify_stubbed_calls
+            * `ManageIQ/manageiq-api#1234 manageiq#1234`
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
+      end
+
+      context "when someone forgets a comma in both the test repo list and included repo list" do
+        let(:command_value) { "manageiq-ui-classic manageiq-api including manageiq-api#1234 manageiq#1234" }
+
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
+
+            * `ManageIQ/manageiq-api#1234 manageiq#1234`
+            * `ManageIQ/manageiq-ui-classic manageiq-api`
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
+      end
+
+      context "when there's a typo on the including directive" do
+        let(:command_value) { "manageiq-ui-classic includes manageiq#1234" }
+
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
+
+            * `ManageIQ/manageiq-ui-classic includes manageiq#1234`
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
       end
     end
 
-    context "with an issue (not a PR)" do
-      before do
-        clear_stubs_for!(:get, issue_url)
-        clear_stubs_for!(:get, repo_check_url) # never reached
+    describe "with conflicting repo names" do
+      context "in the test repo list" do
+        let(:command_value) { "manageiq-ui-classic#1234, manageiq-ui-classic#2345" }
 
-        issue_fetch_response = single_issue_request_response(fq_repo_name, issue_id)
-        github_service_add_stub :url           => issue_url,
-                                :response_body => issue_fetch_response
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given conflicting repo names and cannot continue
+
+            * `ManageIQ/manageiq-ui-classic#1234`, `ManageIQ/manageiq-ui-classic#2345` conflict
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
       end
 
-      it "adds a comment informing the command is being ignored by the bot" do
-        comment_body = {
-          "body" => "@NickLaMuro 'cross-repo-test(s)' command is only valid on pull requests, ignoring..."
-        }.to_json
-        github_service_add_stub :url           => comment_url,
-                                :method        => :post,
-                                :request_body  => comment_body,
-                                :response_body => {"id" => 1234}.to_json
+      context "in the included repos list" do
+        let(:command_value) { "manageiq#1234 including manageiq-ui-classic#1234, manageiq-ui-classic#2345" }
 
-        run_execute!(:valid => false)
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given conflicting repo names and cannot continue
 
-        github_service_stubs.verify_stubbed_calls
+            * `ManageIQ/manageiq-ui-classic#1234`, `ManageIQ/manageiq-ui-classic#2345` conflict
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
+      end
+
+      context "across the test repo list and the included repos list" do
+        let(:command_value) { "manageiq-ui-classic#1234 including manageiq-ui-classic#2345" }
+
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given conflicting repo names and cannot continue
+
+            * `ManageIQ/manageiq-ui-classic#1234`, `ManageIQ/manageiq-ui-classic#2345` conflict
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
+      end
+
+      context "with multiple conflicts in test repos list" do
+        let(:command_value) { "manageiq-ui-classic#1234, manageiq-ui-classic#2345, manageiq-api#1234, manageiq-api#2345" }
+
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given conflicting repo names and cannot continue
+
+            * `ManageIQ/manageiq-api#1234`, `ManageIQ/manageiq-api#2345` conflict
+            * `ManageIQ/manageiq-ui-classic#1234`, `ManageIQ/manageiq-ui-classic#2345` conflict
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
+      end
+
+      context "with multiple conflicts in included repos list" do
+        let(:command_value) { "manageiq#1234 including manageiq-ui-classic#1234, manageiq-ui-classic#2345, manageiq-api#1234, manageiq-api#2345" }
+
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given conflicting repo names and cannot continue
+
+            * `ManageIQ/manageiq-api#1234`, `ManageIQ/manageiq-api#2345` conflict
+            * `ManageIQ/manageiq-ui-classic#1234`, `ManageIQ/manageiq-ui-classic#2345` conflict
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
+      end
+
+      context "with multiple conflicts across the test repo list and the included repos list" do
+        let(:command_value) { "manageiq-ui-classic#1234, manageiq-ui-classic#2345 including manageiq-api#1234, manageiq-api#2345" }
+
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given conflicting repo names and cannot continue
+
+            * `ManageIQ/manageiq-api#1234`, `ManageIQ/manageiq-api#2345` conflict
+            * `ManageIQ/manageiq-ui-classic#1234`, `ManageIQ/manageiq-ui-classic#2345` conflict
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
       end
     end
 
@@ -174,9 +305,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       # We also lock down by org, so we don't need to handle for this command
       # being abused.
       it "it is still valid" do
-        run_execute!(:valid => true)
-
-        github_service_stubs.verify_stubbed_calls
+        assert_execute(:valid => true)
       end
     end
   end
