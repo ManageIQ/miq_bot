@@ -250,6 +250,34 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
         end
       end
 
+      context "with the PR itself in the test repo list" do
+        let(:command_value) { "#2345" }
+
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given conflicting repo names and cannot continue
+
+            * `ManageIQ/bar#1234`, `ManageIQ/bar#2345` conflict
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
+      end
+
+      context "with the PR itself in the included repos list" do
+        let(:command_value) { "manageiq-ui-classic including #2345" }
+
+        it "is invalid" do
+          stub_issue_comment(<<~COMMENT)
+            @NickLaMuro 'cross-repo-test(s)' was given conflicting repo names and cannot continue
+
+            * `ManageIQ/bar#1234`, `ManageIQ/bar#2345` conflict
+          COMMENT
+
+          assert_execute(:valid => false)
+        end
+      end
+
       context "with multiple conflicts in test repos list" do
         let(:command_value) { "manageiq-ui-classic#1234, manageiq-ui-classic#2345, manageiq-api#1234, manageiq-api#2345" }
 

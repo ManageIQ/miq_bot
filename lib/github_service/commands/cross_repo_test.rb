@@ -177,7 +177,9 @@ module GithubService
 
       def normalize_repo_name(repo)
         repo = repo.strip
-        repo.include?("/") ? repo : "#{issue.organization_name}/#{repo}"
+        repo = "#{issue.repo_name}#{repo}" if repo.start_with?("#")
+        repo = "#{issue.organization_name}/#{repo}" unless repo.include?("/")
+        repo
       end
 
       # Deduplicates entries sharing the same bare repo name, prioritizing
