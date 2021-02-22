@@ -62,7 +62,7 @@ module GithubService
       end
 
       def invalid_label_message(issuer, invalid_labels)
-        message  = "@#{issuer} "
+        message  = issuer == GithubService.bot_name ? "" : "@#{issuer} "
         message << "Cannot apply the following label"
         message << "s" if invalid_labels.length > 1
         message << " because they are not recognized:\n"
