@@ -11,6 +11,10 @@ module GithubService
   # may already be well handled by Octokit itself.
   #
   class << self
+    def bot_name
+      Settings.github_credentials.username
+    end
+
     def add_comments(fq_repo_name, issue_number, comments)
       Array(comments).each do |comment|
         add_comment(fq_repo_name, issue_number, comment)
@@ -137,8 +141,8 @@ module GithubService
 
           unless Rails.env.test?
             Octokit.configure do |c|
-              c.login    = Settings.github_credentials.username
-              c.password = Settings.github_credentials.password
+              c.login         = bot_name
+              c.password      = Settings.github_credentials.password
               c.auto_paginate = true
 
               c.middleware = Faraday::RackBuilder.new do |builder|

@@ -52,7 +52,7 @@ Accepted commands are: #{self.class.registry.keys.join(", ")}
     end
 
     def bot_name
-      @bot_name ||= Settings.github_credentials.username
+      GithubService.bot_name
     end
   end
 end
