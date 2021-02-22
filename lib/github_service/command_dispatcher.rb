@@ -26,6 +26,7 @@ module GithubService
       lines.each do |line|
         match = command_regex.match(line.strip)
         next unless match
+        next if issuer == bot_name
 
         command       = match[:command]
         command_value = match[:command_value]
