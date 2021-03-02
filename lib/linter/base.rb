@@ -82,10 +82,14 @@ module Linter
       end
     end
 
+    def linter_env
+      []
+    end
+
     def run_linter(dir)
       logger.info("#{log_header} Executing linter...")
       require 'awesome_spawn'
-      result = AwesomeSpawn.run(linter_executable, :params => options, :chdir => dir)
+      result = AwesomeSpawn.run(linter_executable, :params => options, :chdir => dir, :env => linter_env)
       handle_linter_output(result)
     end
 
