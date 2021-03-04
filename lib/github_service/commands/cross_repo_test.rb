@@ -136,9 +136,6 @@ module GithubService
                                    .map { |repo_list| repo_list.split(",").map(&:strip) }
         @repos ||= []
 
-        # Ignore bare repos in include list
-        @repos.select! { |repo| branch_or_pr?(repo) }
-
         # Expand repo groups (e.g. /providers) in the test repos
         @test_repos = @test_repos.flat_map { |repo| repo_group?(repo) ? expand_repo_group(repo) : repo }.compact
 
@@ -148,6 +145,9 @@ module GithubService
         # Normalize the repo names
         @test_repos = normalize_repo_list(@test_repos)
         @repos      = normalize_repo_list(@repos)
+
+        # Ignore bare repos in include list
+        @repos.select! { |repo| branch_or_pr?(repo) }
 
         # Ensure all test repos that are PRs/branches are included with other test repos
         @repos += @test_repos.select { |repo| branch_or_pr?(repo) }
@@ -177,6 +177,7 @@ module GithubService
 
       def normalize_repo_name(repo)
         repo = repo.strip
+        repo = URI.parse(repo).path[1..].sub("/pull/", "#") if URI.regexp.match?(repo)
         repo = "#{issue.repo_name}#{repo}" if repo.start_with?("#")
         repo = "#{issue.organization_name}/#{repo}" unless repo.include?("/")
         repo
