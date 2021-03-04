@@ -519,6 +519,26 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       end
     end
 
+    context "with URLs" do
+      context "in a test repo" do
+        let(:command_value) { "https://github.com/ManageIQ/manageiq/pull/1234" }
+
+        it "sets @test_repos and @repos" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq#1234", issue_identifier].sort
+          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier].sort
+        end
+      end
+
+      context "in included repos" do
+        let(:command_value) { "manageiq-api including https://github.com/ManageIQ/manageiq/pull/1234" }
+
+        it "sets @test_repos and @repos" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", issue_identifier].sort
+          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier].sort
+        end
+      end
+    end
+
     context "multiple repos and test repos" do
       let(:repos)         { %w[Fryguy/more_core_extensions@feature linux_admin#123] }
       let(:test_repos)    { %w[manageiq-api manageiq-ui-classic] }
@@ -617,6 +637,33 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
         let(:command_value) { "/providers including manageiq-providers-amazon#1234" }
 
         it "de-dups" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon#1234", "ManageIQ/manageiq-providers-azure", issue_identifier].sort
+          expect(subject.repos).to      eq ["ManageIQ/manageiq-providers-amazon#1234", issue_identifier].sort
+        end
+      end
+
+      context "where the test repos has a URL that will collide with a PR" do
+        let(:command_value) { "manageiq#1234, https://github.com/ManageIQ/manageiq/pull/1234" }
+
+        it "sets @test_repos and @repos" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq#1234", issue_identifier].sort
+          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier].sort
+        end
+      end
+
+      context "where the test repos has a URL that will collide with an included repo" do
+        let(:command_value) { "https://github.com/ManageIQ/manageiq/pull/1234 including manageiq#1234" }
+
+        it "sets @test_repos and @repos" do
+          expect(subject.test_repos).to eq ["ManageIQ/manageiq#1234", issue_identifier].sort
+          expect(subject.repos).to      eq ["ManageIQ/manageiq#1234", issue_identifier].sort
+        end
+      end
+
+      context "where the test repos has a URL that will collide with a repo group" do
+        let(:command_value) { "https://github.com/ManageIQ/manageiq-providers-amazon/pull/1234, /providers" }
+
+        it "sets @test_repos and @repos" do
           expect(subject.test_repos).to eq ["ManageIQ/manageiq-providers-amazon#1234", "ManageIQ/manageiq-providers-azure", issue_identifier].sort
           expect(subject.repos).to      eq ["ManageIQ/manageiq-providers-amazon#1234", issue_identifier].sort
         end
