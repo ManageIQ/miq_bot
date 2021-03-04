@@ -10,6 +10,11 @@ module Linter
       'haml-lint *'
     end
 
+    def linter_env
+      parser_stub_path = Rails.root.join("vendor", "stubs").to_s
+      {"RUBYOPT" => "-I #{parser_stub_path}"}
+    end
+
     def options
       {:reporter => 'json'}
     end
