@@ -41,6 +41,7 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
       postgresql-devel \
       ruby \
       ruby-devel \
+      shared-mime-info \
       sqlite-devel \
       yamllint && \
       dnf clean all && \
