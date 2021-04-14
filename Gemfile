@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.2'
+gem 'rails', '~> 5.2.5'
 
 # Use PostgreSQL as the database for Active Record
 gem 'pg'
@@ -42,6 +42,7 @@ gem 'haml',                 '~> 5.1',    :require => false # force newer version
 gem 'haml_lint',            '~> 0.35.0', :require => false
 gem 'manageiq-style',                    :require => false
 gem 'more_core_extensions', '~> 4.0.0',  :require => 'more_core_extensions/all'
+gem 'sync',                              :require => false # required by more_core_extensions
 gem 'rugged',                            :require => false
 
 gem 'octokit', '~> 4.8.0', :require => false
