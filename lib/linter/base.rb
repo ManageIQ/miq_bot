@@ -83,7 +83,7 @@ module Linter
     end
 
     def linter_env
-      []
+      {}
     end
 
     def run_linter(dir)
