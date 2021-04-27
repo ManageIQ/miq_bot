@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "rubocop_version": "0.82.0",
+    "rubocop_version": "1.13.0",
     "ruby_engine": "ruby",
-    "ruby_version": "2.6.6",
-    "ruby_patchlevel": "146",
-    "ruby_platform": "x86_64-darwin18"
+    "ruby_version": "2.7.2",
+    "ruby_patchlevel": "137",
+    "ruby_platform": "x86_64-darwin19"
   },
   "files": [
     {
@@ -55,17 +55,17 @@
       "offenses": [
         {
           "severity": "error",
-          "message": "unexpected token kEND\n(Using Ruby 2.5 parser; configure using `TargetRubyVersion` parameter, under `AllCops`)",
+          "message": "unexpected token kEND\n(Using Ruby 2.6 parser; configure using `TargetRubyVersion` parameter, under `AllCops`)",
           "cop_name": "Lint/Syntax",
           "corrected": false,
           "correctable": false,
           "location": {
-            "start_line": 3,
+            "start_line": 6,
             "start_column": 1,
-            "last_line": 3,
+            "last_line": 6,
             "last_column": 3,
             "length": 3,
-            "line": 3,
+            "line": 6,
             "column": 1
           }
         }

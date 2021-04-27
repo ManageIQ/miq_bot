@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "rubocop_version": "0.82.0",
+    "rubocop_version": "1.13.0",
     "ruby_engine": "ruby",
-    "ruby_version": "2.6.6",
-    "ruby_patchlevel": "146",
-    "ruby_platform": "x86_64-darwin18"
+    "ruby_version": "2.7.2",
+    "ruby_patchlevel": "137",
+    "ruby_platform": "x86_64-darwin19"
   },
   "files": [
     {
