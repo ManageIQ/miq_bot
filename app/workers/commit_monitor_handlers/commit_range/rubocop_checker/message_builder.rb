@@ -30,7 +30,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
 
   COP_DOCUMENTATION_URI = File.join("http://rubydoc.info/gems/rubocop", RuboCop::Version.version)
   COP_URIS =
-    RuboCop::Cop::Cop.subclasses.each_with_object({}) do |cop, h|
+    RuboCop::Cop::Base.descendants.each_with_object({}) do |cop, h|
       cop_name_parts = cop.name.split("::")
       cop_name = cop_name_parts[2..-1].join("/")
       cop_uri  = File.join(COP_DOCUMENTATION_URI, cop_name_parts)

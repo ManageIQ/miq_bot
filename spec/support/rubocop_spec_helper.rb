@@ -1,7 +1,7 @@
 def rubocop_results
   # To regenerate the results.json files, just delete them
   unless File.exist?(rubocop_json_file)
-    rubocop = JSON.parse(`rubocop --format=json --no-display-cop-names #{rubocop_check_path}`)
+    rubocop = JSON.parse(`rubocop --config #{rubocop_check_config} --format=json --no-display-cop-names #{rubocop_check_path}`)
     hamllint = JSON.parse(`haml-lint --reporter=json #{rubocop_check_path}`)
 
     %w(offense_count target_file_count inspected_file_count).each do |m|
@@ -11,6 +11,10 @@ def rubocop_results
     File.write(rubocop_json_file, JSON.pretty_generate(rubocop))
   end
   JSON.parse(File.read(rubocop_json_file))
+end
+
+def rubocop_check_config
+  rubocop_check_path.join("..", ".rubocop.yml").expand_path
 end
 
 def rubocop_json_file
