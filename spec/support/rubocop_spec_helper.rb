@@ -37,6 +37,10 @@ def rubocop_version
   RuboCop::Version.version
 end
 
+def rubocop_version_short
+  RuboCop::Version.document_version
+end
+
 def hamllint_version
   HamlLint::VERSION
 end

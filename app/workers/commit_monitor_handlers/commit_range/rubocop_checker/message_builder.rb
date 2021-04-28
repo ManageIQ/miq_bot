@@ -28,14 +28,17 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     "refactor"   => :low,
   ).freeze
 
-  COP_DOCUMENTATION_URI = File.join("http://rubydoc.info/gems/rubocop", RuboCop::Version.version)
-  COP_URIS =
-    RuboCop::Cop::Base.descendants.each_with_object({}) do |cop, h|
-      cop_name_parts = cop.name.split("::")
-      cop_name = cop_name_parts[2..-1].join("/")
-      cop_uri  = File.join(COP_DOCUMENTATION_URI, cop_name_parts)
-      h[cop_name] = "[#{cop_name}](#{cop_uri})"
-    end.freeze
+  COP_URIS = RuboCop::Cop::Base.descendants.each_with_object({}) do |cop, h|
+    next unless cop.documentation_url
+
+    version = RuboCop::Version.document_version
+
+    url = URI(cop.documentation_url)
+    url_path_parts = url.path.split("/")
+    url.path = url_path_parts.insert(2, version).join("/") unless url_path_parts[2] == version
+
+    h[cop.cop_name] = "[#{cop.cop_name}](#{url})"
+  end.freeze
 
   def tag
     "<rubocop />"
