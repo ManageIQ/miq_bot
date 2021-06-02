@@ -55,6 +55,7 @@ end
 # rubocop:disable Style/StderrPuts
 
 namespace :production do
+  desc "Set the local kubernetes context to the production context"
   task :set_context do # rubocop:disable Rails/RakeEnvironment
     context   = "do-nyc1-miq-prod"
     name      = "miq-prod"
@@ -97,9 +98,10 @@ namespace :production do
     puts "Restarting the queue-worker pod...Complete"
   end
 
-  desc "Open a console in production"
-  task :console => :set_context do
-    exit 1 unless Kubernetes.console("ui", "/bin/bash -c \"source container-assets/container_env; bash\"")
+  desc "Open a console in production (deployment defaults to 'queue-worker')"
+  task :console, [:deployment] => :set_context do |_t, args|
+    deployment = args[:deployment] || "queue-worker"
+    exit 1 unless Kubernetes.console(deployment, "/bin/bash -c \"source container-assets/container_env; bash\"")
   end
 end
 
