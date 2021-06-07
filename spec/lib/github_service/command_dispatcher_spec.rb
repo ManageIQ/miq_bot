@@ -31,6 +31,15 @@ RSpec.describe GithubService::CommandDispatcher do
         expect(command_class).to receive(:execute!)
           .with(:issuer => command_issuer, :value => "chrisarcand")
       end
+
+      context "if the bot is the target" do
+        let(:command_issuer) { bot_name }
+
+        it "does nothing" do
+          expect(GithubService::Commands::Assign).to receive(:new).never
+          expect(command_class).to receive(:execute!).never
+        end
+      end
     end
 
     context "when 'add_labels' command is given" do

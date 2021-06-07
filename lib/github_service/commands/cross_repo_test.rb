@@ -92,7 +92,7 @@ module GithubService
       end
 
       def self.bot_name
-        Settings.github_credentials.username
+        GithubService.bot_name
       end
 
       def self.bot_email

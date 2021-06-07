@@ -74,8 +74,23 @@ RSpec.describe GithubService::Commands::AddLabel do
     end
 
     it "does not add invalid labels and comments on error" do
+      issuer = "@#{command_issuer}"
+
       expect(issue).not_to receive(:add_labels)
-      expect(issue).to receive(:add_comment).with(/Cannot apply the following label.*not recognized/)
+      expect(issue).to receive(:add_comment).with(/^#{issuer} Cannot apply the following label.*not recognized/)
+    end
+
+    context "with the bot as the issuer" do
+      let(:command_issuer) { "test-bot" }
+
+      before do
+        allow(Settings).to receive(:github_credentials).and_return(double(:username => command_issuer))
+      end
+
+      it "does not add invalid labels and comments on error" do
+        expect(issue).to receive(:add_labels).never
+        expect(issue).to receive(:add_comment).with(/^Cannot apply the following label.*not recognized/)
+      end
     end
   end
 
