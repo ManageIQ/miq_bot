@@ -20,8 +20,8 @@ RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/dow
 
 RUN dnf config-manager --setopt=ubi-8-*.exclude=net-snmp*,dracut*,libcom_err*,python3-gobject*,redhat-release* --save && \
     dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install \
-      http://mirror.centos.org/centos/8.3.2011/BaseOS/x86_64/os/Packages/centos-linux-repos-8-2.el8.noarch.rpm \
-      http://mirror.centos.org/centos/8.3.2011/BaseOS/x86_64/os/Packages/centos-gpg-keys-8-2.el8.noarch.rpm \
+      http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/centos-stream-repos-8-2.el8.noarch.rpm \
+      http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/centos-gpg-keys-8-2.el8.noarch.rpm \
       https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
     dnf -y --disableplugin=subscription-manager module enable nodejs:12 && \
     dnf -y --disableplugin=subscription-manager module enable ruby:2.6 && \
