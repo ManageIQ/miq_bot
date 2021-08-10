@@ -148,6 +148,14 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       assert_execute(:valid => false)
     end
 
+    context "with no input" do
+      let(:command_value) { "" }
+
+      it "is valid" do
+        assert_execute(:valid => true)
+      end
+    end
+
     describe "with invalid repo names" do
       context "when someone forgets a comma in the test repo list" do
         let(:command_value) { "manageiq-ui-classic manageiq-api" }
@@ -460,6 +468,15 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       it "sets @test_repos and @repos" do
         expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
         expect(subject.repos).to      eq ["ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
+      end
+    end
+
+    context "without any args" do
+      let(:command_value) { "" }
+
+      it "sets @test_repos and @repos" do
+        expect(subject.test_repos).to eq [issue_identifier].sort
+        expect(subject.repos).to      eq [issue_identifier].sort
       end
     end
 
