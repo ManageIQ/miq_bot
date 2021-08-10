@@ -137,7 +137,7 @@ module GithubService
         @repos ||= []
 
         # Expand repo groups (e.g. /providers) in the test repos
-        @test_repos = @test_repos.flat_map { |repo| repo_group?(repo) ? expand_repo_group(repo) : repo }.compact
+        @test_repos = (@test_repos || []).flat_map { |repo| repo_group?(repo) ? expand_repo_group(repo) : repo }.compact
 
         # Add the PR for this comment to the test repos
         @test_repos << "#{issue.repo_name}##{issue.number}"
