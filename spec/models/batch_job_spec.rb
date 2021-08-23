@@ -85,8 +85,9 @@ describe BatchJob do
 
   describe "#check_complete" do
     it "when destroyed by another checker" do
-      job = described_class.create!.tap(&:destroy)
+      job = described_class.new
 
+      allow(job).to receive(:reload).and_raise(ActiveRecord::RecordNotFound)
       expect(job).to_not receive(:finalize!)
 
       job.check_complete
