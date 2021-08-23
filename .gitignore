@@ -30,6 +30,9 @@
 /config/settings/*.local.yml
 /config/environments/*.local.yml
 
+# Ignore Gemfile.lock
+/Gemfile.lock
+
 # Ignore development Procfile
 /Procfile
 
