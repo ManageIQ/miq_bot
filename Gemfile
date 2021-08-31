@@ -25,6 +25,7 @@ gem 'config'
 gem 'listen'
 
 # Sidekiq specific gems
+gem 'celluloid', '~> 0.17.4', :require => false
 gem 'sidekiq', '~> 5.2.5'
 gem 'sidetiq', '~> 0.7.0'
 gem 'sinatra', :require => false

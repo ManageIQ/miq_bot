@@ -85,9 +85,11 @@ describe BatchJob do
 
   describe "#check_complete" do
     it "when destroyed by another checker" do
-      job = described_class.create!.tap(&:destroy)
+      job = described_class.create!
 
       expect(job).to_not receive(:finalize!)
+
+      job.destroy
 
       job.check_complete
     end
