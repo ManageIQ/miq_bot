@@ -44,6 +44,7 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
       shared-mime-info \
       sqlite-devel \
       yamllint && \
+      dnf -y update libarchive && \
       dnf clean all && \
       rm -rf /var/cache/dnf
 
