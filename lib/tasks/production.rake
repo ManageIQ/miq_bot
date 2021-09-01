@@ -99,6 +99,17 @@ namespace :production do
     puts
   end
 
+  desc "Restart all production pods"
+  task :restart => :set_context do
+    puts "Restarting the queue-worker pod..."
+    exit 1 unless Kubernetes.restart_deployment_pods("queue-worker")
+    puts "Restarting the queue-worker pod...Complete"
+
+    puts "Restarting the ui pod..."
+    exit 1 unless Kubernetes.restart_deployment_pods("ui")
+    puts "Restarting the ui pod...Complete"
+  end
+
   desc "Edit the bot settings in production"
   task :edit_settings => :set_context do
     exit 1 unless Kubernetes.edit_config_map("bot-settings")
