@@ -39,12 +39,22 @@ module Kubernetes
     `kubectl get pods -l name=#{deployment} --output jsonpath={.items..metadata.name}`.chomp
   end
 
+  def self.pod_from_container(container)
+    `kubectl get pods -o json | jq -r '.items[] | select(.spec.containers[].name == "#{container}") | .metadata.name'`.chomp
+  end
+
   def self.restart_deployment_pods(deployment)
     system("kubectl delete pod #{pod_from_deployment(deployment)}")
   end
 
   def self.console(deployment, cmd = "/bin/bash")
     system("kubectl exec --stdin --tty #{pod_from_deployment(deployment)} -- #{cmd}")
+  end
+
+  def self.tail_log(container)
+    system("kubectl logs -f #{pod_from_container(container)} #{container}")
+  rescue Interrupt
+    true
   end
 
   def self.update_deployment_image(deployment, image)
@@ -102,6 +112,12 @@ namespace :production do
   task :console, [:deployment] => :set_context do |_t, args|
     deployment = args[:deployment] || "queue-worker"
     exit 1 unless Kubernetes.console(deployment, "/bin/bash -c \"source container-assets/container_env; bash\"")
+  end
+
+  desc "Tail container logs in production (container defaults to 'queue-worker')"
+  task :logs, [:container] => :set_context do |_t, args|
+    container = args[:container] || "queue-worker"
+    exit 1 unless Kubernetes.tail_log(container)
   end
 end
 
