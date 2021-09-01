@@ -6,8 +6,6 @@ influxdb_credentials:
   database:
   username:
   password:
-pivotal_credentials:
-  token:
 
 # General settings
 grafana:
