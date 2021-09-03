@@ -1,8 +1,4 @@
 # Service credentials
-bugzilla_credentials:
-  url:
-  username:
-  password:
 github_credentials:
   username:
   password:
@@ -14,8 +10,6 @@ pivotal_credentials:
   token:
 
 # General settings
-bugzilla:
-  product:
 grafana:
   url:
 labels:

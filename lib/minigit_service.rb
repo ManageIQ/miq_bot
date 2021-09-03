@@ -32,10 +32,6 @@ class MinigitService
     end
   end
 
-  def bugzilla_ids(ref)
-    BugzillaService.ids_in_git_commit_message(commit_message(ref))
-  end
-
   def new_commits(since_commit, ref = "HEAD")
     rev_list({:reverse => true}, "#{since_commit}..#{ref}").split("\n")
   end
