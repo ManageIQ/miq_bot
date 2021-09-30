@@ -1,4 +1,5 @@
 require 'rubocop'
+require 'rubocop-rails'
 require 'haml_lint'
 
 class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
@@ -29,14 +30,23 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   ).freeze
 
   COP_URIS = RuboCop::Cop::Base.descendants.each_with_object({}) do |cop, h|
-    next unless cop.documentation_url
+    plugin, version = nil
 
-    version = RuboCop::Version.document_version
+    case cop.department
+    when :Rails
+      plugin  = "rubocop-rails"
+      version = RuboCop::Rails::Version.document_version
+    else
+      plugin  = "rubocop"
+      version = RuboCop::Version.document_version
+    end
 
-    url = URI(cop.documentation_url)
-    url_path_parts = url.path.split("/")
-    url.path = url_path_parts.insert(2, version).join("/") unless url_path_parts[2] == version
+    url               = URI(RuboCop::Cop::Documentation.url_for(cop))
+    url_path_parts    = url.path.split("/")
+    url_path_parts[1] = plugin
+    url_path_parts.insert(2, version) unless url_path_parts[2] == version
 
+    url.path        = url_path_parts.join("/")
     h[cop.cop_name] = "[#{cop.cop_name}](#{url})"
   end.freeze
 
