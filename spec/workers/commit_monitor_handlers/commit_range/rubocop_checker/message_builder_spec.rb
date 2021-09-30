@@ -19,11 +19,14 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
       expect(subject.length).to eq 1
       expect(subject.first).to  eq <<-EOMSG
 <rubocop />Checked commits https://github.com/some_user/some_repo/compare/1ec36efd33279f79f8ddcf12984bb2aa48f3fbd6~...8942a195a0bfa69ceb82c020c60565408cb46d3e with ruby #{RUBY_VERSION}, rubocop #{rubocop_version}, haml-lint #{hamllint_version}, and yamllint #{yamllint_version}
-4 files checked, 4 offenses detected
+5 files checked, 5 offenses detected
 
 **spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/coding_convention.rb**
 - [ ] :exclamation: - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/coding_convention.rb#L3), Col 5 - [Layout/HashAlignment](https://docs.rubocop.org/rubocop/#{rubocop_version_short}/cops_layout.html#layouthashalignment) - Align the keys and values of a hash literal if they span more than one line.
 - [ ] :exclamation: - [Line 4](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/coding_convention.rb#L4), Col 5 - [Layout/HashAlignment](https://docs.rubocop.org/rubocop/#{rubocop_version_short}/cops_layout.html#layouthashalignment) - Align the keys and values of a hash literal if they span more than one line.
+
+**spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_with_offenses/rails.rb**
+- [ ] :exclamation: - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_with_offenses/rails.rb#L3), Col 5 - [Rails/DynamicFindBy](https://docs.rubocop.org/rubocop-rails/#{rubocop_rails_version_short}/cops_rails.html#railsdynamicfindby) - Use `find_by` instead of dynamic `find_by_name`.
 
 **spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_syntax_error.rb**
 - [ ] :bomb: :boom: :fire: :fire_engine: - [Line 6](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_syntax_error.rb#L6), Col 1 - [Lint/Syntax](https://docs.rubocop.org/rubocop/#{rubocop_version_short}/cops_lint.html#lintsyntax) - unexpected token kEND
