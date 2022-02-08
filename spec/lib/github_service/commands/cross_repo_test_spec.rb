@@ -6,8 +6,8 @@ RSpec.shared_context "with stub cross_repo_tests", :with_stub_cross_repo do
 
   attr_reader :sandbox_dir, :cross_repo_remote, :cross_repo_clone
 
-  let(:suite_sandbox_dir) { Rails.root.join("spec", "tmp", "sandbox").to_s }
-  let(:travis_yml_path)   { File.join(cross_repo_clone, ".travis.yml") }
+  let(:suite_sandbox_dir)        { Rails.root.join("spec", "tmp", "sandbox").to_s }
+  let(:github_workflow_yml_path) { File.join(cross_repo_clone, ".github/workflow/ci.yaml") }
 
   before do |example|
     FileUtils.mkdir_p suite_sandbox_dir
@@ -33,31 +33,22 @@ RSpec.shared_context "with stub cross_repo_tests", :with_stub_cross_repo do
     # test_repo_url stubbed above.
     stub_const("::Repo::BASE_PATH", Pathname.new(suite_sandbox_dir))
 
-    default_travis_yaml_content = <<~YAML
-      dist: xenial
-      language: ruby
-      rvm:
-      - 2.5.5
-      cache:
-        bundler: true
-      addons:
-        postgresql: '10'
-        apt:
-          packages:
-          - libarchive-dev
-      script: bundle exec manageiq-cross_repo
-      matrix:
-        fast_finish: true
-      env:
-        global:
-        - REPOS=
-        matrix:
-        - TEST_REPO=manageiq
+    default_github_workflow_yaml_content = <<~YAML
+      name: Cross Repo Tests
+
+      on: [push, pull_request]
+
+      jobs:
+        manageiq:
+          uses: agrare/manageiq-cross_repo/.github/workflows/manageiq_cross_repo.yaml@github_actions
+          with:
+            test-repo: ManageIQ/manageiq@master
+            repos: ManageIQ/manageiq@master
     YAML
 
     tmp_repo = GitRepoHelper::TmpRepo.generate @cross_repo_source do
-      add_file ".travis.yml", default_travis_yaml_content
-      commit "add .travis.yml"
+      add_file ".github/workflows/ci.yaml", default_github_workflow_yaml_content
+      commit "add .github/workflows/ci.yaml"
       tag "v1.0"
     end
 
@@ -378,7 +369,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
 
     it "clones the repo as a bare repo" do
       expect(Dir.exist?(cross_repo_clone)).to be_truthy
-      expect(File.exist?(travis_yml_path)).to be_falsey
+      expect(File.exist?(github_workflow_yml_path)).to be_falsey
     end
 
     it "creates a new branch (stays on master)" do
@@ -389,14 +380,20 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       expect(repo.head.name.sub(/^refs\/heads\//, '')).to eq "master"
     end
 
-    it "updates the .travis.yml" do
-      repo               = subject.rugged_repo
-      branch             = repo.branches["origin/#{subject.branch_name}"]
-      travis_yml_content = repo.blob_at(branch.target.oid, ".travis.yml").content
-      content            = YAML.safe_load(travis_yml_content)
+    it "updates the .github/workflows/ci.yaml" do
+      repo                        = subject.rugged_repo
+      branch                      = repo.branches["origin/#{subject.branch_name}"]
+      github_workflow_yml_content = repo.blob_at(branch.target.oid, ".github/workflows/ci.yaml").content
+      content                     = YAML.safe_load(github_workflow_yml_content)
 
-      expect(content["env"]["global"]).to eq ["REPOS=repo1,repo2"]
-      expect(content["env"]["matrix"]).to eq ["TEST_REPO=foo", "TEST_REPO=bar"]
+      expect(content["jobs"].count).to eq(2)
+      expect(content["jobs"].keys).to match_array(["foo", "bar"])
+
+      expect(content["jobs"]["foo"]["with"]["test-repo"]).to eq("foo")
+      expect(content["jobs"]["bar"]["with"]["test-repo"]).to eq("bar")
+
+      expect(content["jobs"]["foo"]["with"]["repos"]).to eq("repo1,repo2")
+      expect(content["jobs"]["bar"]["with"]["repos"]).to eq("repo1,repo2")
     end
 
     it "commits the changes" do
@@ -408,7 +405,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       expect(commit.committer[:name]).to  eq("rspec_bot")
       expect(commit.committer[:email]).to eq("no_bot_email@example.com")
 
-      commit_content = repo.blob_at(commit.oid, ".travis.yml").content
+      commit_content = repo.blob_at(commit.oid, ".github/workflows/ci.yaml").content
 
       expect(commit.message).to eq <<~MSG
         Running tests for NickLaMuro
@@ -416,9 +413,9 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
         From Pull Request:  ManageIQ/bar#1234
       MSG
 
-      expect(commit_content).to include "- REPOS=repo1,repo2"
-      expect(commit_content).to include "- TEST_REPO=foo"
-      expect(commit_content).to include "- TEST_REPO=bar"
+      expect(commit_content).to include "repos: repo1,repo2"
+      expect(commit_content).to include "test-repo: foo"
+      expect(commit_content).to include "test-repo: bar"
     end
 
     it "pushes the changes" do
@@ -429,7 +426,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
 
         branch_name    = subject.branch_name # branch name from cloned repo
         branch         = repo.branches["origin/#{branch_name}"]
-        commit_content = repo.blob_at(branch.target.oid, ".travis.yml").content
+        commit_content = repo.blob_at(branch.target.oid, ".github/workflows/ci.yaml").content
 
         expect(branch).to_not be_nil
         expect(branch.target.message).to eq <<~MSG
@@ -438,9 +435,9 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
           From Pull Request:  ManageIQ/bar#1234
         MSG
 
-        expect(commit_content).to include "- REPOS=repo1,repo2"
-        expect(commit_content).to include "- TEST_REPO=foo"
-        expect(commit_content).to include "- TEST_REPO=bar"
+        expect(commit_content).to include "repos: repo1,repo2"
+        expect(commit_content).to include "test-repo: foo"
+        expect(commit_content).to include "test-repo: bar"
       end
     end
 

@@ -10,7 +10,7 @@ module GithubService
     #
     #    - validate the command
     #    - create a branch
-    #    - create a commit with the travis.yml changes
+    #    - create a commit with the .github/workflows/ci.yaml changes
     #    - push said branch to the origin
     #    - create a pull request for that branch
     #
@@ -37,7 +37,7 @@ module GithubService
     #   @miq-bot cross-repo-test manageiq-api,manageiq-ui-classic#5678 \
     #     including Fryguy/more_core_extensions@feature,Fryguy/linux_admin@feature
     #
-    # will create a commit with the .travis.yml changes:
+    # will create a commit with the .github/workflows/ci.yaml changes:
     #
     #   @@ -14,6 +14,6 @@ matrix:
     #      fast_finish: true
@@ -113,8 +113,8 @@ module GithubService
       def run_tests
         ensure_test_repo_clone
         create_cross_repo_test_branch
-        update_travis_yaml_content
-        commit_travis_yaml_changes
+        update_github_workflow_yaml_content
+        commit_github_workflow_yaml_changes
         push_commit_to_remote
         create_cross_repo_test_pull_request
       end
@@ -270,25 +270,30 @@ module GithubService
       #
       #   https://github.com/ManageIQ/manageiq/blob/06de0607/lib/git_worktree.rb#L102-L110
       #
-      def update_travis_yaml_content
-        raw_yaml = rugged_repo.blob_at(branch_ref.target.oid, ".travis.yml").content
+      def update_github_workflow_yaml_content
+        raw_yaml = rugged_repo.blob_at(branch_ref.target.oid, ".github/workflows/ci.yaml").content
         content  = YAML.safe_load(raw_yaml)
 
-        content["env"] = {} unless content["env"]
-        content["env"]["global"] = ["REPOS=#{repos.join(',')}"]
-        content["env"]["matrix"] = test_repos.map { |repo| "TEST_REPO=#{repo}" }
+        content["jobs"] = test_repos.each_with_object({}) do |test_repo, result|
+          result[test_repo] = {
+            "uses" => "ManageIQ/manageiq-cross_repo/.github/workflows/manageiq_cross_repo.yaml@master",
+            "with" => {
+              "test-repo" => test_repo,
+              "repos"     => repos.join(",")
+            }
+          }
+        end
 
         entry = {}
-        entry[:path]  = ".travis.yml"
+        entry[:path]  = ".github/workflows/ci.yaml"
         entry[:oid]   = @rugged_repo.write(content.to_yaml, :blob)
         entry[:mode]  = 0o100644
         entry[:mtime] = Time.now.utc
 
         rugged_index.add(entry)
-        # rugged_index.write (don't do this...)
       end
 
-      def commit_travis_yaml_changes
+      def commit_github_workflow_yaml_changes
         bot       = self.class.bot_name
         author    = {:name => issuer, :email => user_email(issuer),   :time => Time.now.utc}
         committer = {:name => bot,    :email => self.class.bot_email, :time => Time.now.utc}
