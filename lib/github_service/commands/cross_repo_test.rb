@@ -274,15 +274,15 @@ module GithubService
         raw_yaml = rugged_repo.blob_at(branch_ref.target.oid, ".github/workflows/ci.yaml").content
         content  = YAML.safe_load(raw_yaml)
 
-        content["jobs"] = test_repos.each_with_object({}) do |test_repo, result|
-          result[test_repo] = {
+        content["jobs"] = {
+          "cross-repo" => {
             "uses" => "ManageIQ/manageiq-cross_repo/.github/workflows/manageiq_cross_repo.yaml@master",
             "with" => {
-              "test-repo" => test_repo,
+              "test-repo" => test_repos.inspect,
               "repos"     => repos.join(",")
             }
           }
-        end
+        }
 
         entry = {}
         entry[:path]  = ".github/workflows/ci.yaml"

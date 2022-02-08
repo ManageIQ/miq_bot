@@ -386,14 +386,8 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       github_workflow_yml_content = repo.blob_at(branch.target.oid, ".github/workflows/ci.yaml").content
       content                     = YAML.safe_load(github_workflow_yml_content)
 
-      expect(content["jobs"].count).to eq(2)
-      expect(content["jobs"].keys).to match_array(["foo", "bar"])
-
-      expect(content["jobs"]["foo"]["with"]["test-repo"]).to eq("foo")
-      expect(content["jobs"]["bar"]["with"]["test-repo"]).to eq("bar")
-
-      expect(content["jobs"]["foo"]["with"]["repos"]).to eq("repo1,repo2")
-      expect(content["jobs"]["bar"]["with"]["repos"]).to eq("repo1,repo2")
+      expect(content["jobs"]["cross-repo"]["with"]["test-repo"]).to eq('["foo", "bar"]')
+      expect(content["jobs"]["cross-repo"]["with"]["repos"]).to eq("repo1,repo2")
     end
 
     it "commits the changes" do
@@ -414,8 +408,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       MSG
 
       expect(commit_content).to include "repos: repo1,repo2"
-      expect(commit_content).to include "test-repo: foo"
-      expect(commit_content).to include "test-repo: bar"
+      expect(commit_content).to include "test-repo: '[\"foo\", \"bar\"]'"
     end
 
     it "pushes the changes" do
@@ -436,8 +429,7 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
         MSG
 
         expect(commit_content).to include "repos: repo1,repo2"
-        expect(commit_content).to include "test-repo: foo"
-        expect(commit_content).to include "test-repo: bar"
+        expect(commit_content).to include "test-repo: '[\"foo\", \"bar\"]'"
       end
     end
 
