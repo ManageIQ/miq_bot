@@ -278,8 +278,8 @@ module GithubService
           "cross-repo" => {
             "uses" => "ManageIQ/manageiq-cross_repo/.github/workflows/manageiq_cross_repo.yaml@master",
             "with" => {
-              "test-repo" => test_repos.inspect,
-              "repos"     => repos.join(",")
+              "test-repos" => test_repos.inspect,
+              "repos"      => repos.join(",")
             }
           }
         }
