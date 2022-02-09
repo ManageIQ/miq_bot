@@ -284,9 +284,12 @@ module GithubService
           }
         }
 
+        updated_yaml = content.to_yaml
+        updated_yaml.gsub!(/^true:/, "on:") # YAML replaces on: with true:
+
         entry = {}
         entry[:path]  = ".github/workflows/ci.yaml"
-        entry[:oid]   = @rugged_repo.write(content.to_yaml, :blob)
+        entry[:oid]   = @rugged_repo.write(updated_yaml, :blob)
         entry[:mode]  = 0o100644
         entry[:mtime] = Time.now.utc
 
