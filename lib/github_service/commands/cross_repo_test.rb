@@ -133,7 +133,7 @@ module GithubService
         @value = value
 
         @test_repos, @repos = value.split(/\s+including\s+/)
-                                   .map { |repo_list| repo_list.split(",").map(&:strip) }
+                                   .map { |repo_list| repo_list.split(/[, ]+/).map(&:strip) }
         @repos ||= []
 
         # Expand repo groups (e.g. /providers) in the test repos
