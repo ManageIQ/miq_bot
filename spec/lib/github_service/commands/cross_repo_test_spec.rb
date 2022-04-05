@@ -148,49 +148,6 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
     end
 
     describe "with invalid repo names" do
-      context "when someone forgets a comma in the test repo list" do
-        let(:command_value) { "manageiq-ui-classic manageiq-api" }
-
-        it "is invalid" do
-          stub_issue_comment(<<~COMMENT)
-            @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
-
-            * `ManageIQ/manageiq-ui-classic manageiq-api`
-          COMMENT
-
-          assert_execute(:valid => false)
-        end
-      end
-
-      context "when someone forgets a comma in the included repo list" do
-        let(:command_value) { "manageiq-ui-classic including manageiq-api#1234 manageiq#1234" }
-
-        it "is invalid" do
-          stub_issue_comment(<<~COMMENT)
-            @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
-
-            * `ManageIQ/manageiq-api#1234 manageiq#1234`
-          COMMENT
-
-          assert_execute(:valid => false)
-        end
-      end
-
-      context "when someone forgets a comma in both the test repo list and included repo list" do
-        let(:command_value) { "manageiq-ui-classic manageiq-api including manageiq-api#1234 manageiq#1234" }
-
-        it "is invalid" do
-          stub_issue_comment(<<~COMMENT)
-            @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
-
-            * `ManageIQ/manageiq-api#1234 manageiq#1234`
-            * `ManageIQ/manageiq-ui-classic manageiq-api`
-          COMMENT
-
-          assert_execute(:valid => false)
-        end
-      end
-
       context "when there's a typo on the including directive" do
         let(:command_value) { "manageiq-ui-classic includes manageiq#1234" }
 
@@ -558,6 +515,15 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
 
       context "with no spaces" do
         let(:command_value) { "#{test_repos.join(',')} including #{repos.join(',')}" }
+
+        it "sets @test_repos and @repos" do
+          expect(subject.test_repos).to eq expected_test_repos
+          expect(subject.repos).to      eq expected_repos
+        end
+      end
+
+      context "with only spaces" do
+        let(:command_value) { "#{test_repos.join(' ')} including #{repos.join(' ')}" }
 
         it "sets @test_repos and @repos" do
           expect(subject.test_repos).to eq expected_test_repos
