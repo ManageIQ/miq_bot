@@ -147,22 +147,6 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
       end
     end
 
-    describe "with invalid repo names" do
-      context "when there's a typo on the including directive" do
-        let(:command_value) { "manageiq-ui-classic includes manageiq#1234" }
-
-        it "is invalid" do
-          stub_issue_comment(<<~COMMENT)
-            @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
-
-            * `ManageIQ/manageiq-ui-classic includes manageiq#1234`
-          COMMENT
-
-          assert_execute(:valid => false)
-        end
-      end
-    end
-
     describe "with conflicting repo names" do
       context "in the test repo list" do
         let(:command_value) { "manageiq-ui-classic#1234, manageiq-ui-classic#2345" }
@@ -428,6 +412,15 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
 
     context "with 'including' argument" do
       let(:command_value) { "manageiq-ui-classic#1234, manageiq-api including manageiq#2345" }
+
+      it "sets @test_repos and @repos" do
+        expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
+        expect(subject.repos).to      eq ["ManageIQ/manageiq#2345", "ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
+      end
+    end
+
+    context "with 'includes' argument" do
+      let(:command_value) { "manageiq-ui-classic#1234, manageiq-api includes manageiq#2345" }
 
       it "sets @test_repos and @repos" do
         expect(subject.test_repos).to eq ["ManageIQ/manageiq-api", "ManageIQ/manageiq-ui-classic#1234", issue_identifier].sort
