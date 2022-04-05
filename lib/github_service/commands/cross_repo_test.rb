@@ -132,7 +132,7 @@ module GithubService
       def parse_value(value)
         @value = value
 
-        @test_repos, @repos = value.split(/\s+including\s+/)
+        @test_repos, @repos = value.split(/\s+(?:including|includes)\s+/, 2)
                                    .map { |repo_list| repo_list.split(/[, ]+/).map(&:strip) }
         @repos ||= []
 
