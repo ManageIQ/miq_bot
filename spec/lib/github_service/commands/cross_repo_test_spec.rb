@@ -149,16 +149,46 @@ RSpec.describe GithubService::Commands::CrossRepoTest do
 
     describe "with invalid repo names" do
       context "when someone forgets a comma in the test repo list" do
-        let(:command_value) { "manageiq-ui-classic manageiq-api" }
+        context "with repo names" do
+          let(:command_value) { "manageiq-ui-classic manageiq-api" }
 
-        it "is invalid" do
-          stub_issue_comment(<<~COMMENT)
-            @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
+          it "is invalid" do
+            stub_issue_comment(<<~COMMENT)
+              @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
 
-            * `ManageIQ/manageiq-ui-classic manageiq-api`
-          COMMENT
+              * `ManageIQ/manageiq-ui-classic manageiq-api`
+            COMMENT
 
-          assert_execute(:valid => false)
+            assert_execute(:valid => false)
+          end
+        end
+
+        context "with short PR names" do
+          let(:command_value) { "manageiq-ui-classic#1234 manageiq-api#5678" }
+
+          it "is invalid" do
+            stub_issue_comment(<<~COMMENT)
+              @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
+
+              * `ManageIQ/manageiq-ui-classic#1234 manageiq-api#5678`
+            COMMENT
+
+            assert_execute(:valid => false)
+          end
+        end
+
+        context "with URLs" do
+          let(:command_value) { "https://github.com/ManageIQ/manageiq-ui-classic/pull/1234 https://github.com/ManageIQ/manageiq-api/pull/5678" }
+
+          it "is invalid" do
+            stub_issue_comment(<<~COMMENT)
+              @NickLaMuro 'cross-repo-test(s)' was given invalid repo names and cannot continue
+
+              * `https://github.com/ManageIQ/manageiq-ui-classic/pull/1234 https://github.com/ManageIQ/manageiq-api/pull/5678`
+            COMMENT
+
+            assert_execute(:valid => false)
+          end
         end
       end
 

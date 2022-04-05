@@ -177,7 +177,7 @@ module GithubService
 
       def normalize_repo_name(repo)
         repo = repo.strip
-        repo = URI.parse(repo).path[1..].sub("/pull/", "#") if URI.regexp.match?(repo)
+        repo = URI.parse(repo).path[1..].sub("/pull/", "#") if URI.regexp.match?(repo) && repo.exclude?(' ')
         repo = "#{issue.repo_name}#{repo}" if repo.start_with?("#")
         repo = "#{issue.organization_name}/#{repo}" unless repo.include?("/")
         repo
