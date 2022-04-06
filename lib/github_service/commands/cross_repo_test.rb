@@ -209,28 +209,13 @@ module GithubService
       end
 
       def valid?
-        validate_pull_request &&
-          validate_repo_names &&
-          validate_conflict_repos
+        validate_pull_request && validate_conflict_repos
       end
 
       def validate_pull_request
         return true if issue.pull_request?
 
         issue.add_comment("@#{issuer} 'cross-repo-test(s)' command is only valid on pull requests, ignoring...")
-        false
-      end
-
-      def validate_repo_names
-        invalid_repo_names = (@test_repos + @repos).select { |r| r.include?(" ") }.sort.uniq
-        return true if invalid_repo_names.empty?
-
-        message = "@#{issuer} 'cross-repo-test(s)' was given invalid repo names and cannot continue\n\n"
-        invalid_repo_names.each do |repo|
-          message << "* `#{repo}`\n"
-        end
-
-        issue.add_comment(message)
         false
       end
 
