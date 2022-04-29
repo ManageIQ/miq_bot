@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ -n "$CI" ]; then
+  echo "== Installing system packages =="
+  sudo pip install yamllint
+  echo
+
+  echo "== Setup git user for specs =="
+  git config --global user.name "ManageIQ Bot"
+  git config --global user.email "bot@manageiq.org"
+  echo
+fi

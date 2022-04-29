@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ -n "$CI" ]; then
+  cp config/database{.tmpl,}.yml
+  RAILS_ENV=test bin/rake db:setup
+fi
