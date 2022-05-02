@@ -1,7 +1,8 @@
 # ManageIQ Bot
 
-[![Build Status](https://travis-ci.org/ManageIQ/miq_bot.svg)](https://travis-ci.org/ManageIQ/miq_bot)
-[![Code Climate](https://codeclimate.com/github/ManageIQ/miq_bot/badges/gpa.svg)](https://codeclimate.com/github/ManageIQ/miq_bot)
+[![CI](https://github.com/ManageIQ/miq_bot/actions/workflows/ci.yaml/badge.svg)](https://github.com/ManageIQ/miq_bot/actions/workflows/ci.yaml)
+[![Code Climate](https://codeclimate.com/github/ManageIQ/miq_bot.svg)](https://codeclimate.com/github/ManageIQ/miq_bot)
+[![Test Coverage](https://codeclimate.com/github/ManageIQ/miq_bot/badges/coverage.svg)](https://codeclimate.com/github/ManageIQ/miq_bot/coverage)
 
 The ManageIQ bot is the ManageIQ team's helper to automate various developer problems.
 

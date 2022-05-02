@@ -52,6 +52,7 @@ gem 'faraday-http-cache', '~> 2.0.0'
 group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'
+  gem 'simplecov', '>= 0.21.2'
   gem 'timecop'
 end
 

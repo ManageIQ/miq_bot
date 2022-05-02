@@ -19,9 +19,6 @@
 /tmp
 /spec/tmp
 
-# Ignore binstubs
-/bin
-
 # Ignore configuration files
 /config/data_backup
 /config/database.yml
