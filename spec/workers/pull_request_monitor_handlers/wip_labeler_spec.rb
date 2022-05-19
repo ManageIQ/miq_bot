@@ -16,7 +16,7 @@ describe PullRequestMonitorHandlers::WipLabeler do
 
   context "when the PR title has [WIP]" do
     it "adds the wip label if it does not exist" do
-      branch.update_attributes(:pr_title => "[WIP] #{branch.pr_title}")
+      branch.update(:pr_title => "[WIP] #{branch.pr_title}")
 
       expect(GithubService).to receive(:add_labels_to_an_issue).with(branch.repo.name, branch.pr_number, ["wip"])
 

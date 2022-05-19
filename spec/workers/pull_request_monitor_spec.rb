@@ -27,7 +27,7 @@ describe PullRequestMonitor do
     end
 
     it "ignores a repo that can't have PRs (because of no upstream_user)" do
-      repo.update_attributes!(:name => "foo")
+      repo.update!(:name => "foo")
 
       expect(repo).to_not receive(:synchronize_pr_branches)
 

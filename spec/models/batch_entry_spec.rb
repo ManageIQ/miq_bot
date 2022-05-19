@@ -33,7 +33,7 @@ describe BatchEntry do
 
     context "when complete" do
       before do
-        entry.update_attributes(:state => "succeeded")
+        entry.update(:state => "succeeded")
       end
 
       it "with job still available" do

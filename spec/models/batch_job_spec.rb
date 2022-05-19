@@ -118,7 +118,7 @@ describe BatchJob do
       after  { Object.send(:remove_const, "OnCompleteWorker") }
 
       it "and there is an on_complete_class" do
-        job.update_attributes!(
+        job.update!(
           :on_complete_class => ::OnCompleteWorker,
           :on_complete_args  => %w(arg1 arg2)
         )

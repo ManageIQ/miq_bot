@@ -29,7 +29,7 @@ module BatchEntryWorkerMixin
 
   def update_batch_entry(updates)
     updates = updates.reverse_merge(:state => "succeeded")
-    batch_entry.update_attributes!(updates)
+    batch_entry.update!(updates)
   end
 
   def check_job_complete

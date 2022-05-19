@@ -5,7 +5,7 @@ class CollapseRepoUpstreamUserIntoName < ActiveRecord::Migration[4.2]
   def up
     say_with_time("Collapse Repo upstream_user into name") do
       Repo.all.each do |r|
-        r.update_attributes!(:name => [r.upstream_user, r.name].compact.join("/"))
+        r.update!(:name => [r.upstream_user, r.name].compact.join("/"))
       end
     end
 
@@ -17,7 +17,7 @@ class CollapseRepoUpstreamUserIntoName < ActiveRecord::Migration[4.2]
 
     say_with_time("Split out Repo upstream_user from name") do
       Repo.all.each do |r|
-        r.update_attributes!(:upstream_user => name_parts(r.name).first, :name => name_parts(r.name).last)
+        r.update!(:upstream_user => name_parts(r.name).first, :name => name_parts(r.name).last)
       end
     end
   end
