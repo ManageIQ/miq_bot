@@ -8,7 +8,7 @@ describe PullRequestMonitorHandlers::MergeTargetTitler do
 
   context "when the branch has a non-master merge target" do
     before do
-      branch.update_attributes!(:merge_target => "darga")
+      branch.update!(:merge_target => "darga")
     end
 
     it "and not already titled" do
@@ -18,7 +18,7 @@ describe PullRequestMonitorHandlers::MergeTargetTitler do
     end
 
     it "and already titled" do
-      branch.update_attributes!(:pr_title => "[DARGA] #{branch.pr_title}")
+      branch.update!(:pr_title => "[DARGA] #{branch.pr_title}")
 
       expect(GithubService).to_not receive(:pull_requests)
 
@@ -26,7 +26,7 @@ describe PullRequestMonitorHandlers::MergeTargetTitler do
     end
 
     it "and already titled, but not at the start" do
-      branch.update_attributes!(:pr_title => "[WIP] [DARGA] #{branch.pr_title}")
+      branch.update!(:pr_title => "[WIP] [DARGA] #{branch.pr_title}")
 
       expect(GithubService).to_not receive(:pull_requests)
 
@@ -35,7 +35,7 @@ describe PullRequestMonitorHandlers::MergeTargetTitler do
   end
 
   it "when the branch has a master merge target" do
-    branch.update_attributes!(:merge_target => "master")
+    branch.update!(:merge_target => "master")
 
     expect(GithubService).to_not receive(:pull_requests)
 

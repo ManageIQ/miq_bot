@@ -56,7 +56,7 @@ class BatchJob < ActiveRecord::Base
 
   def finalize!
     if on_complete_class
-      update_attributes!(:state => "finalizing")
+      update!(:state => "finalizing")
       on_complete_class.perform_async(id, *on_complete_args)
     else
       destroy

@@ -248,7 +248,7 @@ describe Repo do
 
   describe "#synchronize_pr_branches" do
     it "does not allow calling on a repo that can't have PRs (because of no upstream_user)" do
-      repo.update_attributes(:name => "foo")
+      repo.update(:name => "foo")
 
       expect { repo.synchronize_pr_branches([]) }.to raise_error(RuntimeError)
     end

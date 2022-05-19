@@ -8,7 +8,7 @@ class ReplaceTimestampsWithLastCheckedOnAndLastChangedOnForCommitMonitorBranches
 
     say_with_time("Moving commit_monitor_branches.updated_at to commit_monitor_branches.last_changed_on") do
       CommitMonitorBranch.all.each do |b|
-        b.update_attributes!(:last_changed_on => b.updated_at)
+        b.update!(:last_changed_on => b.updated_at)
       end
     end
 
