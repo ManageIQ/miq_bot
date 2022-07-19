@@ -44,9 +44,14 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
       shared-mime-info \
       sqlite-devel \
       yamllint && \
-      dnf -y update libarchive && \
-      dnf clean all && \
-      rm -rf /var/cache/dnf
+    dnf -y update libarchive && \
+    # Clean up all the things
+    dnf clean all && \
+    rm -rf /var/cache/dnf && \
+    rm -rf /var/lib/dnf/history* && \
+    rm -rf /var/log/dnf*.log && \
+    rm -rf /var/log/hawkey.log && \
+    rm -rf /var/lib/rpm/__db.*
 
 RUN mkdir -p $APP_ROOT && \
     curl -L https://github.com/ManageIQ/miq_bot/archive/$REF.tar.gz | tar xz -C $APP_ROOT --strip 1 && \
@@ -60,6 +65,7 @@ WORKDIR $APP_ROOT
 RUN echo "gem: --no-document" > ~/.gemrc && \
     gem install bundler -v 1.17.3 && \
     bundle install --jobs=3 --retry=3 && \
+    # Clean up all the things
     rm -rf /usr/share/gems/cache/* && \
     rm -rf /usr/share/gems/gems/rugged-*/vendor && \
     find /usr/share/gems/gems/ -name *.o -type f -delete && \
