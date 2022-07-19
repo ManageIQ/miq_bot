@@ -24,6 +24,9 @@ module MiqBot
     config.eager_load_paths << Rails.root.join("lib/github_service/concerns")
     config.eager_load_paths << Rails.root.join("lib")
 
+    # Use yaml_unsafe_load for column serialization to handle Symbols
+    config.active_record.use_yaml_unsafe_load = true
+
     console do
       TOPLEVEL_BINDING.eval('self').extend(ConsoleMethods)
     end
