@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ubi:8.3
+FROM registry.access.redhat.com/ubi8/ubi:latest
 MAINTAINER ManageIQ https://manageiq.org
 
 ARG REF=master
