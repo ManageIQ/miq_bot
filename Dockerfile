@@ -58,7 +58,7 @@ RUN mkdir -p $APP_ROOT && \
 WORKDIR $APP_ROOT
 
 RUN echo "gem: --no-document" > ~/.gemrc && \
-    gem install bundler -v 1.17.3 && \
+    gem install bundler -v 2.3.18 && \
     bundle install --jobs=3 --retry=3 && \
     rm -rf /usr/share/gems/cache/* && \
     rm -rf /usr/share/gems/gems/rugged-*/vendor && \
