@@ -4,12 +4,15 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::CommitMetadataCh
   let(:commit_message_1)   { "Adds SUPER FEATURE.  BREAKS NOTHING!" }
   let(:commit_message_2)   { "fix tests" }
   let(:commit_message_3)   { "fix moar tests" }
+  let(:merge_commit_1)     { false }
+  let(:merge_commit_2)     { false }
+  let(:merge_commit_3)     { false }
 
   let(:commits) do
     {
-      "abcd123" => {"message" => commit_message_1, "files" => ["app/models/super.rb"]},
-      "abcd234" => {"message" => commit_message_2, "files" => ["spec/models/super_spec.rb"]},
-      "abcd345" => {"message" => commit_message_3, "files" => ["spec/models/normal_spec.rb"]}
+      "abcd123" => {"message" => commit_message_1, "files" => ["app/models/super.rb"],        "merge_commit?" => merge_commit_1},
+      "abcd234" => {"message" => commit_message_2, "files" => ["spec/models/super_spec.rb"],  "merge_commit?" => merge_commit_2},
+      "abcd345" => {"message" => commit_message_3, "files" => ["spec/models/normal_spec.rb"], "merge_commit?" => merge_commit_3}
     }
   end
 
@@ -101,6 +104,27 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::CommitMetadataCh
       expect(batch_entry.result.third).to have_attributes(
         :group   => "https://github.com/#{branch.fq_repo_name}/commit/abcd234",
         :message => "Username `@NickLaMuro` detected in commit message. Consider removing."
+      )
+    end
+  end
+
+  context "with merge commits" do
+    let(:merge_commit_1) { true }
+    let(:merge_commit_2) { true }
+    let(:merge_commit_3) { false }
+
+    it "returns one offense for each merge commit" do
+      described_class.new.perform(batch_entry.id, branch.id, commits)
+
+      batch_entry.reload
+      expect(batch_entry.result.length).to eq(2)
+      expect(batch_entry.result.first).to have_attributes(
+        :group   => "https://github.com/#{branch.fq_repo_name}/commit/abcd123",
+        :message => "Merge commit abcd123 detected.  Consider rebasing."
+      )
+      expect(batch_entry.result.second).to have_attributes(
+        :group   => "https://github.com/#{branch.fq_repo_name}/commit/abcd234",
+        :message => "Merge commit abcd234 detected.  Consider rebasing."
       )
     end
   end
