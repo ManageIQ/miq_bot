@@ -22,6 +22,7 @@ module CommitMonitorHandlers::CommitRange
 
       new_commits.each do |commit_sha, data|
         check_for_usernames_in(commit_sha, data["message"])
+        check_for_merge_commit(commit_sha, data["merge_commit?"])
       end
 
       @offenses
@@ -59,6 +60,14 @@ module CommitMonitorHandlers::CommitRange
         message = "Username `@#{potential_username}` detected in commit message. Consider removing."
         @offenses << OffenseMessage::Entry.new(:low, message, group)
       end
+    end
+
+    def check_for_merge_commit(commit, merge_commit)
+      return unless merge_commit
+
+      group   = ::Branch.github_commit_uri(fq_repo_name, commit)
+      message = "Merge commit #{commit} detected.  Consider rebasing."
+      @offenses << OffenseMessage::Entry.new(:low, message, group)
     end
   end
 end
