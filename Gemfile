@@ -34,7 +34,6 @@ gem 'slim'
 # Services gems
 gem 'minigit',        '~> 0.0.4'
 gem 'net-ssh',        '~> 4.2.0'
-gem 'travis',         '~> 1.7.6'
 
 gem 'awesome_spawn',        '>= 1.4.1'
 gem 'default_value_for',    '>= 3.1.0'

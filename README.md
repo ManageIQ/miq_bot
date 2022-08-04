@@ -18,8 +18,6 @@ The ManageIQ bot is the ManageIQ team's helper to automate various developer pro
     [haml-lint](https://github.com/brigade/haml-lint) and
     [yamllint](https://yamllint.readthedocs.io/en/stable/index.html)
     against a PR diff and comment on any offenses found.
-- Travis monitoring
-  - Detecting stalled builds and automatically restarting them.
 
 ### Requested tasks
 
@@ -217,9 +215,8 @@ Metrics tracking is optional and you should not need to do these extra steps to 
 ### Enabling and Disabling workers
 
 By default, most workers are enabled for all repos (except for the MergeTargetTitler
-and the TravisBuildKiller, which are disabled for all repos), however if you would
-like to change which workers are enabled or disabled, the following configuration
-settings can be changed:
+which is disabled for all repos), however if you would like to change which workers
+are enabled or disabled, the following configuration settings can be changed:
 
 ```yaml
 worker_a:  # Will run in all repos
