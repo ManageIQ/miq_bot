@@ -26,8 +26,8 @@ gem 'listen'
 
 # Sidekiq specific gems
 gem 'celluloid', '~> 0.17.4', :require => false
-gem 'sidekiq', '~> 5.2.5'
-gem 'sidetiq', '~> 0.7.0'
+gem 'sidekiq', '~> 5.2.5', '< 5.2.10'
+gem 'sidetiq', '~> 0.7.2' # TODO: No longer maintained!!
 gem 'sinatra', :require => false
 gem 'slim'
 
