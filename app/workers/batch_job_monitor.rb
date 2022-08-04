@@ -2,9 +2,6 @@ class BatchJobMonitor
   include Sidekiq::Worker
   sidekiq_options :queue => :miq_bot, :retry => false
 
-  include Sidetiq::Schedulable
-  recurrence { minutely }
-
   include SidekiqWorkerMixin
 
   def perform
