@@ -248,7 +248,7 @@ GEM
     rb-fsevent (0.11.1)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    redis (4.5.1)
+    redis (4.1.4)
     regexp_parser (2.3.1)
     rexml (3.2.5)
     rspec (3.11.0)
@@ -307,11 +307,11 @@ GEM
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
-    sidekiq (5.2.10)
+    sidekiq (5.2.9)
       connection_pool (~> 2.2, >= 2.2.2)
       rack (~> 2.0)
       rack-protection (>= 1.5.0)
-      redis (~> 4.5, < 4.6.0)
+      redis (>= 3.3.5, < 4.2)
     sidetiq (0.7.2)
       celluloid (>= 0.17.3)
       ice_cube (~> 0.14.0)
@@ -406,8 +406,8 @@ DEPENDENCIES
   rspec-rails
   rugged
   sass-rails (~> 5.0.7)
-  sidekiq (~> 5.2.5)
-  sidetiq (~> 0.7.0)
+  sidekiq (~> 5.2.5, < 5.2.10)
+  sidetiq (~> 0.7.2)
   simplecov (>= 0.21.2)
   sinatra
   slim
