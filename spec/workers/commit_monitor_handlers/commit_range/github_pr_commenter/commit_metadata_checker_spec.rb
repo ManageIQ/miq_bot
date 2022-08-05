@@ -119,12 +119,14 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::CommitMetadataCh
       batch_entry.reload
       expect(batch_entry.result.length).to eq(2)
       expect(batch_entry.result.first).to have_attributes(
-        :group   => "https://github.com/#{branch.fq_repo_name}/commit/abcd123",
-        :message => "Merge commit abcd123 detected.  Consider rebasing."
+        :group    => "https://github.com/#{branch.fq_repo_name}/commit/abcd123",
+        :message  => "Merge commit abcd123 detected.  Consider rebasing.",
+        :severity => :warn
       )
       expect(batch_entry.result.second).to have_attributes(
-        :group   => "https://github.com/#{branch.fq_repo_name}/commit/abcd234",
-        :message => "Merge commit abcd234 detected.  Consider rebasing."
+        :group    => "https://github.com/#{branch.fq_repo_name}/commit/abcd234",
+        :message  => "Merge commit abcd234 detected.  Consider rebasing.",
+        :severity => :warn
       )
     end
   end
