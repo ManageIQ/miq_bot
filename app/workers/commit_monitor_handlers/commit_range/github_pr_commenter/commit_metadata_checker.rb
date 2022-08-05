@@ -67,7 +67,7 @@ module CommitMonitorHandlers::CommitRange
 
       group   = ::Branch.github_commit_uri(fq_repo_name, commit)
       message = "Merge commit #{commit} detected.  Consider rebasing."
-      @offenses << OffenseMessage::Entry.new(:low, message, group)
+      @offenses << OffenseMessage::Entry.new(:warn, message, group)
     end
   end
 end
