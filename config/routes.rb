@@ -1,5 +1,5 @@
 require 'sidekiq/web'
-require 'sidetiq/web'
+require 'sidecloq/web'
 
 MiqBot::Application.routes.draw do
   mount Sidekiq::Web, at: "/sidekiq"
