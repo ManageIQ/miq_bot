@@ -10,5 +10,3 @@
 #   config gem.
 merge_target_titler:
   included_repos: ''
-travis_build_killer:
-  included_repos: ''

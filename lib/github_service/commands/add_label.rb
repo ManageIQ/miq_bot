@@ -82,7 +82,7 @@ module GithubService
   end
 end
 
-# HACK: Travis / `bundle install --path ...` compat
+# HACK: CI / `bundle install --path ...` compat
 begin
   retry_require_dym = false
   require 'did_you_mean'

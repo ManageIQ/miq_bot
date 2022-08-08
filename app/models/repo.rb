@@ -70,13 +70,6 @@ class Repo < ActiveRecord::Base
     end
   end
 
-  def with_travis_service
-    raise "no block given" unless block_given?
-
-    Travis.github_auth(Settings.github_credentials.password)
-    yield Travis::Repository.find(name)
-  end
-
   def branch_names
     branches.pluck(:name)
   end

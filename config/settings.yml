@@ -21,5 +21,3 @@ merge_target_titler:
   included_repos: []
 path_based_labeler:
   rules: {}
-travis_build_killer:
-  included_repos: []
