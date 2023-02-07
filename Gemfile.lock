@@ -132,7 +132,7 @@ GEM
     fugit (1.5.3)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
-    globalid (1.0.0)
+    globalid (1.0.1)
       activesupport (>= 5.0)
     haml (5.1.2)
       temple (>= 0.8.0)
@@ -171,7 +171,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
     minigit (0.0.4)
-    minitest (5.16.2)
+    minitest (5.17.0)
     more_core_extensions (4.0.0)
       activesupport
     multipart-post (2.2.3)
