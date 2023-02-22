@@ -37,6 +37,8 @@ class GithubNotificationMonitor
     if notification.issue_number.present?
       issue = GithubService.issue(@fq_repo_name, notification.issue_number)
       process_issue_thread(issue)
+    else
+      logger.warn("Skipping processing of notification due to missing issue number: #{notification}")
     end
     notification.mark_thread_as_read
   end

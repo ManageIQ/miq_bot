@@ -7,7 +7,7 @@ module GithubService
     end
 
     def issue_number
-      subject.url.match(/\/([0-9]+)\Z/).try(:[], 1)
+      subject.url&.match(/\/([0-9]+)\Z/)&.try(:[], 1)
     end
 
     private
