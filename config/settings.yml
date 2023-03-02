@@ -21,3 +21,6 @@ merge_target_titler:
   included_repos: []
 path_based_labeler:
   rules: {}
+stale_issue_marker:
+  pinned_labels:
+  - pinned
