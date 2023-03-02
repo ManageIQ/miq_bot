@@ -4,8 +4,6 @@ class StaleIssueMarker
 
   include SidekiqWorkerMixin
 
-  # If an issue/pr has any of these labels, it will not be marked as stale or closed
-  PINNED_LABELS  = ['pinned'].freeze
   SEARCH_SORTING = {:sort => :updated, :direction => :asc}.freeze
   COMMENT_FOOTER = <<~FOOTER.sub("ManageIQ\n", "ManageIQ ").strip!
     Thank you for all your contributions!  More information about the ManageIQ
@@ -23,6 +21,11 @@ class StaleIssueMarker
   end
 
   private
+
+  # If an issue/pr has any of these labels, it will not be marked as stale or closed
+  def pinned_labels
+    Array(settings.pinned_labels || ["pinned"])
+  end
 
   # Triage logic:
   #
@@ -75,7 +78,7 @@ class StaleIssueMarker
   end
 
   def unpinned_query_filter
-    " #{PINNED_LABELS.map { |label| %(-label:"#{label}") }.join(" ")}"
+    " #{pinned_labels.map { |label| %(-label:"#{label}") }.join(" ")}"
   end
 
   def validate_repo_has_stale_label(repo)
