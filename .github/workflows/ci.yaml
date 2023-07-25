@@ -15,7 +15,7 @@ jobs:
         - '2.6'
     services:
       postgres:
-        image: manageiq/postgresql:10
+        image: manageiq/postgresql:13
         env:
           POSTGRESQL_USER: root
           POSTGRESQL_PASSWORD: smartvm
@@ -33,7 +33,7 @@ jobs:
       PGPASSWORD: smartvm
       CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up system
       run: bin/before_install
     - name: Set up Ruby
@@ -49,4 +49,4 @@ jobs:
     - name: Report code coverage
       if: ${{ github.ref == 'refs/heads/master' && matrix.ruby-version == '2.6' }}
       continue-on-error: true
-      uses: paambaati/codeclimate-action@v3.0.0
+      uses: paambaati/codeclimate-action@v5
