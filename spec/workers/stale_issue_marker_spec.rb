@@ -65,7 +65,6 @@ RSpec.describe StaleIssueMarker do
 
   let(:all_issues)        { issues + [stale_and_unmergable_pr] }
   let(:search_query)      { "#{issue_filter} #{update_filter} #{repo_filter} #{pinned_filter}" }
-  let(:unmergeable_query) { "#{issue_filter} is:pr #{labels_filter} #{repo_filter} #{pinned_filter}" }
   let(:issue_filter)      { "is:open archived:false" }
   let(:update_filter)     { "updated:<#{stale_date.strftime('%Y-%m-%d')}" }
   let(:repo_filter)       { %(repo:"#{fq_repo_name}") }
@@ -77,10 +76,7 @@ RSpec.describe StaleIssueMarker do
     allow(subject).to receive(:stale_date).and_return(stale_date)
     allow(GithubService).to receive(:search_issues)
       .with(search_query, :sort => :updated, :direction => :asc)
-      .and_return(issues)
-    allow(GithubService).to receive(:search_issues)
-      .with(unmergeable_query, :sort => :updated, :direction => :asc)
-      .and_return([stale_and_unmergable_pr])
+      .and_return(all_issues)
     allow(GithubService).to receive(:valid_label?).with(fq_repo_name, "stale").and_return(true)
     allow(Sidekiq).to receive(:logger).and_return(double(:info => nil))
     allow(subject).to receive(:first_unique_worker?).and_return(true)
@@ -90,7 +86,7 @@ RSpec.describe StaleIssueMarker do
     subject.perform
   end
 
-  it "closes stale PRs and marks stale issues, respecting pins and commenting accordingly" do
+  it "marks stale issues, respecting pins and commenting accordingly" do
     all_issues.each do |issue|
       if [already_stale_issue, stale_and_unmergable_pr].include?(issue)
         expect(issue).to_not receive(:add_labels)
@@ -98,13 +94,7 @@ RSpec.describe StaleIssueMarker do
         expect(issue).to receive(:add_labels).with(["stale"])
       end
 
-      if [already_stale_issue, stale_and_unmergable_pr, old_unmergable_pr].include?(issue)
-        expect(issue).to receive(:add_comment).with(/This (pull request|issue).*closed/)
-        expect(GithubService).to receive(:close_issue).with(fq_repo_name, issue.number)
-      else
-        expect(issue).to receive(:add_comment).with(/This (pull request|issue).*marked as stale/)
-        expect(GithubService).to_not receive(:close_issue).with(issue.number)
-      end
+      expect(issue).to receive(:add_comment).with(/This (pull request|issue).*marked as stale/)
     end
   end
 end

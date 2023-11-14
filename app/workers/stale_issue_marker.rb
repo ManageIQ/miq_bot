@@ -29,13 +29,12 @@ class StaleIssueMarker
 
   # Triage logic:
   #
-  # - Stale after 3 month of no activity
-  # - Close after stale and inactive for 3 more months
-  # - Stale and unmergeable should be closed (assume abandoned, can still be re-opened)
+  # After 3 month of no activity:
+  #   - add stale tag (if it is no there)
+  #   - add comment
   #
   def process_stale_issues
     handle_newly_stale_issues
-    handle_stale_and_unmergable_prs
   end
 
   def handle_newly_stale_issues
@@ -44,21 +43,8 @@ class StaleIssueMarker
     query << unpinned_query_filter
 
     GithubService.search_issues(query, SEARCH_SORTING).each do |issue|
-      if issue.stale? || issue.unmergeable?
-        comment_and_close(issue)
-      else
-        comment_as_stale(issue)
-      end
+      comment_as_stale(issue)
     end
-  end
-
-  def handle_stale_and_unmergable_prs
-    query  = "is:open archived:false is:pr"
-    query << %( label:"#{stale_label}" label:"#{unmergeable_label}")
-    query << enabled_repos_query_filter
-    query << unpinned_query_filter
-
-    GithubService.search_issues(query, SEARCH_SORTING).each { |issue| comment_and_close(issue) }
   end
 
   def stale_date
@@ -113,21 +99,6 @@ class StaleIssueMarker
     message << COMMENT_FOOTER
 
     logger.info("[#{Time.now.utc}] - Marking issue #{issue.fq_repo_name}##{issue.number} as stale")
-    issue.add_comment(message)
-  end
-
-  def comment_and_close(issue)
-    mark_as_stale(issue)
-
-    message  = "This #{issue.type} has been automatically closed because it " \
-               "has not been updated for at least 3 months.\n\n"
-    message << "Feel free to reopen this #{issue.type} if "
-    message << "these changes are still valid.\n\n" if issue.pull_request?
-    message << "this issue is still valid.\n\n"     unless issue.pull_request?
-    message << COMMENT_FOOTER
-
-    logger.info("[#{Time.now.utc}] - Closing stale #{issue.type} #{issue.fq_repo_name}##{issue.number}")
-    GithubService.close_issue(issue.fq_repo_name, issue.number)
     issue.add_comment(message)
   end
 end
