@@ -4,8 +4,6 @@ github_credentials:
   password:
 
 # General settings
-grafana:
-  url:
 labels:
   unassignable: {}
   unremovable: []
