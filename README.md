@@ -197,21 +197,6 @@ underscores replaced with hyphens.
     repository with any rubocop problems, such as `MixedCaseConstant = 1`.
     Wait a few minutes and see if it comments on your PR.
 
-### InfluxDB and Grafana setup
-
-The bot collects some optional data in a time series database
-([InfluxDB](https://github.com/influxdata/influxdb)) and displays it in an
-entirely separate user interface ([Grafana](http://grafana.org/)).
-
-To use these features:
-
-* Install and configure InfluxDB
-* Enter the database name and credentials in your local settings yaml
-* Install Grafana
-* Enter the url of the running Grafana instance in your local settings yaml
-
-Metrics tracking is optional and you should not need to do these extra steps to run miq_bot locally.
-
 ### Enabling and Disabling workers
 
 By default, most workers are enabled for all repos (except for the MergeTargetTitler

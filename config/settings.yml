@@ -2,10 +2,6 @@
 github_credentials:
   username:
   password:
-influxdb_credentials:
-  database:
-  username:
-  password:
 
 # General settings
 grafana:
