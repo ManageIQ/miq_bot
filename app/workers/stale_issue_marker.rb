@@ -5,16 +5,10 @@ class StaleIssueMarker
   include SidekiqWorkerMixin
 
   SEARCH_SORTING = {:sort => :updated, :direction => :asc}.freeze
-  COMMENT_FOOTER = <<~FOOTER.sub("ManageIQ\n", "ManageIQ ").strip!
-    Thank you for all your contributions!  More information about the ManageIQ
-    triage process can be found in [the triage process documentation][1].
-
-    [1]: https://www.manageiq.org/docs/guides/triage_process
-  FOOTER
 
   def perform
     if !first_unique_worker?
-      logger.info "#{self.class} is already running, skipping"
+      logger.info("#{self.class} is already running, skipping")
     else
       process_stale_issues
     end
@@ -39,8 +33,8 @@ class StaleIssueMarker
 
   def handle_newly_stale_issues
     query  = "is:open archived:false updated:<#{stale_date.strftime('%Y-%m-%d')}"
-    query << enabled_repos_query_filter
-    query << unpinned_query_filter
+    query << " " << enabled_repos_query_filter
+    query << " " << unpinned_query_filter
 
     GithubService.search_issues(query, SEARCH_SORTING).each do |issue|
       comment_as_stale(issue)
@@ -55,16 +49,12 @@ class StaleIssueMarker
     GithubService::Issue::STALE_LABEL
   end
 
-  def unmergeable_label
-    GithubService::Issue::UNMERGEABLE_LABEL
-  end
-
   def enabled_repos_query_filter
-    " #{enabled_repo_names.map { |repo| %(repo:"#{repo}") }.join(" ")}"
+    enabled_repo_names.map { |repo| %(repo:"#{repo}") }.join(" ")
   end
 
   def unpinned_query_filter
-    " #{pinned_labels.map { |label| %(-label:"#{label}") }.join(" ")}"
+    pinned_labels.map { |label| %(-label:"#{label}") }.join(" ")
   end
 
   def validate_repo_has_stale_label(repo)
@@ -85,18 +75,18 @@ class StaleIssueMarker
 
     message = "This #{issue.type} has been automatically marked as stale " \
               "because it has not been updated for at least 3 months.\n\n"
-    if issue.pull_request?
-      message << "If these changes are still valid, please remove the "    \
-                 "`stale` label, make any changes requested by reviewers " \
-                 "(if any), and ensure that this issue is being looked "   \
-                 "at by the assigned/reviewer(s)\n\n"
-    else
-      message << "If you can still reproduce this issue on the current " \
-                 "release or on `master`, please reply with all of the " \
-                 "information you have about it in order to keep the "   \
-                 "issue open.\n\n"
-    end
-    message << COMMENT_FOOTER
+    message <<
+      if issue.pull_request?
+        "If these changes are still valid, please remove the "    \
+          "`stale` label, make any changes requested by reviewers " \
+          "(if any), and ensure that this issue is being looked "   \
+          "at by the assigned/reviewer(s)."
+      else
+        "If you can still reproduce this issue on the current " \
+          "release or on `master`, please reply with all of the " \
+          "information you have about it in order to keep the "   \
+          "issue open."
+      end
 
     logger.info("[#{Time.now.utc}] - Marking issue #{issue.fq_repo_name}##{issue.number} as stale")
     issue.add_comment(message)
