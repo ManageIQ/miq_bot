@@ -1,7 +1,9 @@
 require 'sidekiq/web'
 require 'sidecloq/web'
 
-MiqBot::Application.routes.draw do
+Rails.application.routes.draw do
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
   mount Sidekiq::Web, at: "/sidekiq"
 
   root 'main#index'
