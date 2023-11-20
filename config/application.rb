@@ -13,9 +13,11 @@ module MiqBot
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    config.eager_load_paths << Rails.root.join("app/workers/concerns")
-    config.eager_load_paths << Rails.root.join("lib/github_service/concerns")
-    config.eager_load_paths << Rails.root.join("lib")
+    config.autoloader = :zeitwerk
+
+    config.eager_load_paths << Rails.root.join("app/workers/concerns").to_s
+    config.eager_load_paths << Rails.root.join("lib/github_service/concerns").to_s
+    config.eager_load_paths << Rails.root.join("lib").to_s
 
     # Use yaml_unsafe_load for column serialization to handle Symbols
     config.active_record.use_yaml_unsafe_load = true
