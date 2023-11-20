@@ -1,5 +1,5 @@
 class BatchJob < ActiveRecord::Base
-  has_many :entries, :class_name => "BatchEntry", :foreign_key => :batch_job_id, :dependent => :destroy
+  has_many :entries, :class_name => "BatchEntry", :dependent => :destroy, :inverse_of => :job
 
   serialize :on_complete_args, Array
 
