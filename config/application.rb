@@ -27,4 +27,8 @@ module MiqBot
       TOPLEVEL_BINDING.eval('self').extend(ConsoleMethods)
     end
   end
+
+  def self.version
+    @version ||= `GIT_DIR=#{Rails.root.join('.git')} git describe --tags`.chomp
+  end
 end
