@@ -46,6 +46,9 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
 
+  require "awesome_spawn/spec_helper"
+  config.include AwesomeSpawn::SpecHelper
+
   config.before do
     allow_any_instance_of(MinigitService).to receive(:service)
       .and_raise("Live execution is not allowed in specs.  Use stubs/expectations on service instead.")
