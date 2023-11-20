@@ -6,8 +6,9 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
-  # Do not eager load code on boot.
-  config.eager_load = false
+  # NOTE: This is enabled in order to autoload some of the dynamically loaded
+  # classes in development, such as the GithubService::Commands classes
+  config.eager_load = true
 
   # Show full error reports.
   config.consider_all_requests_local = true
