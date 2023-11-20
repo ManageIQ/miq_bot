@@ -1,4 +1,4 @@
-thin:            bundle exec rails s -p $PORT
+rails:           bundle exec rails s -p $PORT
 sidekiq:         bundle exec sidekiq -q miq_bot
 sidekiq_glacial: bundle exec sidekiq -q miq_bot_glacial
-#rails:           tail -f -n 0 log/development.log
+#development.log: tail -f -n 0 log/development.log

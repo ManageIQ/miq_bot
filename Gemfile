@@ -14,7 +14,7 @@ gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 
-gem 'thin'
+gem 'puma'
 gem 'foreman', '~> 0.64.0' # v0.65.0 breaks support for the older upstart on RHEL 6
 
 gem 'config'
