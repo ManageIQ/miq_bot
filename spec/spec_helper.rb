@@ -54,7 +54,13 @@ RSpec.configure do |config|
       .and_raise("Live execution is not allowed in specs.  Use stubs/expectations on service instead.")
   end
 
-  config.after { Module.clear_all_cache_with_timeout }
+  config.after do
+    Module.clear_all_cache_with_timeout
+
+    # Disable rubocop check because .empty? doesn't exist on a Sidekiq Queue
+    raise "miq_bot queue is not empty" unless Sidekiq::Queue.new("miq_bot").size == 0 # rubocop:disable Style/ZeroLengthPredicate
+    raise "miq_bot_glacial queue is not empty" unless Sidekiq::Queue.new("miq_bot_glacial").size == 0 # rubocop:disable Style/ZeroLengthPredicate
+  end
 end
 
 WebMock.disable_net_connect!(:allow_localhost => true)

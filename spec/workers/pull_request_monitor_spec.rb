@@ -44,7 +44,9 @@ describe PullRequestMonitor do
         :merge_target => "master",
         :pr_title     => "PR number 1"
       }]).and_call_original
-      expect(PullRequestMonitorHandlers::MergeTargetTitler).to receive(:perform_async)
+      PullRequestMonitorHandlers.constants.each do |c|
+        expect(PullRequestMonitorHandlers.const_get(c)).to receive(:perform_async)
+      end
 
       described_class.new.process_repo(repo)
     end
@@ -62,7 +64,9 @@ describe PullRequestMonitor do
           :merge_target => "master",
           :pr_title     => "PR number 1"
         }]).and_call_original
-        expect(PullRequestMonitorHandlers::MergeTargetTitler).to receive(:perform_async)
+        PullRequestMonitorHandlers.constants.each do |c|
+          expect(PullRequestMonitorHandlers.const_get(c)).to receive(:perform_async)
+        end
 
         described_class.new.process_repo(repo)
       end
@@ -73,7 +77,9 @@ describe PullRequestMonitor do
       stub_git_service
 
       expect(repo).to receive(:synchronize_pr_branches).with([]).and_call_original
-      expect(PullRequestMonitorHandlers::MergeTargetTitler).to_not receive(:perform_async)
+      PullRequestMonitorHandlers.constants.each do |c|
+        expect(PullRequestMonitorHandlers.const_get(c)).to_not receive(:perform_async)
+      end
 
       described_class.new.process_repo(repo)
     end
