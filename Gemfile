@@ -31,10 +31,9 @@ gem 'net-ssh', '~> 7.2.0'
 gem 'awesome_spawn',        '~> 1.6'
 gem 'default_value_for',    '~> 3.4'
 gem 'haml_lint',            '~> 0.51', :require => false
-gem 'manageiq-style',                  :require => false
+gem 'manageiq-style',       '>= 1.4',  :require => false
 gem 'more_core_extensions', '~> 4.4',  :require => 'more_core_extensions/all'
 gem 'rugged',                          :require => false
-
 
 gem 'octokit', '~> 4.8.0', :require => false
 gem 'faraday', '~> 0.9.2'
