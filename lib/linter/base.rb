@@ -45,26 +45,11 @@ module Linter
     end
 
     def collected_config_files(dir)
-      config_files.select { |path| extract_file(path, dir, branch.pull_request?) }
+      config_files.select { |path| branch_service.extract_file(path, dir, branch.pull_request?) }
     end
 
     def collected_files_to_lint(dir)
-      files_to_lint.select { |path| extract_file(path, dir) }
-    end
-
-    def extract_file(path, destination_dir, merged = false)
-      content = branch_service.content_at(path, merged)
-      return false unless content
-
-      perm      = branch_service.permission_for(path, merged)
-      temp_file = File.join(destination_dir, path)
-      FileUtils.mkdir_p(File.dirname(temp_file))
-
-      # Use "wb" to prevent Encoding::UndefinedConversionError: "\xD0" from
-      # ASCII-8BIT to UTF-8
-      File.write(temp_file, content, :mode => "wb", :perm => perm)
-
-      true
+      files_to_lint.select { |path| branch_service.extract_file(path, dir) }
     end
 
     def branch_service
@@ -97,12 +82,13 @@ module Linter
       # rubocop exits 1 both when there are errors and when there are style issues.
       #   Instead of relying on just exit_status, we check if there is anything on stderr.
       return result if result.exit_status.zero? || result.error.blank?
+
       FailedLinterRun.new(failed_linter_offenses("#{self.class.name} STDERR:\n```\n#{result.error}\n```"))
     end
 
     def failed_linter_offenses(message)
       {
-        "files" => [
+        "files"   => [
           {
             "path"     => "\\*\\*",
             "offenses" => [
@@ -128,6 +114,7 @@ module Linter
 
     class FailedLinterRun
       attr_reader :output
+
       def initialize(message)
         @output = message.to_json
       end
