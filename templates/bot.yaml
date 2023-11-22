@@ -132,7 +132,7 @@ objects:
           - name: POSTGRESQL_SHARED_BUFFERS
             value: 1GB
           image: docker.io/manageiq/postgresql:10
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: postgresql
           ports:
           - containerPort: 5432
@@ -209,7 +209,7 @@ objects:
       spec:
         containers:
         - image: docker.io/library/redis:5.0
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: redis
           ports:
           - containerPort: 6379
@@ -296,7 +296,7 @@ objects:
           - name: REDIS_URL
             value: "redis://redis:6379/0"
           image: docker.io/manageiq/miq_bot:v0.20.0
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: ui
           ports:
           - containerPort: 3000
@@ -379,7 +379,7 @@ objects:
           - name: REDIS_URL
             value: "redis://redis:6379/0"
           image: docker.io/manageiq/miq_bot:v0.20.0
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: queue-worker
           resources:
             limits:
@@ -427,7 +427,7 @@ objects:
           - name: REDIS_URL
             value: "redis://redis:6379/0"
           image: docker.io/manageiq/miq_bot:v0.20.0
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: queue-worker-glacial
           resources:
             limits:
