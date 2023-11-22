@@ -8,8 +8,8 @@ core_repos: &core_repos
 - ManageIQ/manageiq-consumption
 - ManageIQ/manageiq-content
 - ManageIQ/manageiq-decorators
+- ManageIQ/manageiq-documentation
 - ManageIQ/manageiq-gems-pending
-- ManageIQ/manageiq-graphql
 - ManageIQ/manageiq-pods
 - ManageIQ/manageiq-providers-amazon
 - ManageIQ/manageiq-providers-ansible_tower
@@ -42,8 +42,6 @@ core_repos: &core_repos
 - ManageIQ/manageiq-schema
 - ManageIQ/manageiq-ui-classic
 - ManageIQ/manageiq-ui-service
-- ManageIQ/manageiq-v2v
-- ManageIQ/manageiq_docs
 
 embedded_ansible_rule: &embedded_ansible_rule
   regex: !ruby/regexp /\/embedded_ansible/
