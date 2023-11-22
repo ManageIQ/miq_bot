@@ -1,4 +1,5 @@
 require 'rugged'
+require 'fileutils'
 
 module GitService
   class Branch
@@ -7,30 +8,29 @@ module GitService
       @branch = branch
     end
 
-    def content_at(path, merged = false)
-      blob_at(path, merged).try(:content)
-    end
+    def extract_file(path, dest_dir, merged = false)
+      content = content_at(path, merged)
+      return false unless content
 
-    def permission_for(path, merged = false)
-      git_perm = blob_data_for(path, merged).to_h[:filemode]
+      file_type, perm = filemode_at(path, merged)
 
-      # Since git stores file permissions in a different format:
-      #
-      #   https://unix.stackexchange.com/a/450488
-      #
-      # Convert what we get from Rugged to something that will work with File
-      #
-      #   git_perm = 0o100755
-      #   git_perm.to_s(8)
-      #   #=> "100755"
-      #   _.[-3,3]
-      #   #=> "755"
-      #   _.to_i(8)
-      #   #=> 493
-      #   0o755
-      #   #=> 493
-      #
-      git_perm ? git_perm.to_s(8)[-3,3].to_i(8) : 0o644
+      dest_file = File.join(dest_dir, path)
+      FileUtils.mkdir_p(File.dirname(dest_file))
+      case file_type
+      when :regular_file
+        # Use "wb" to prevent Encoding::UndefinedConversionError: "\xD0" from ASCII-8BIT to UTF-8
+        File.write(dest_file, content, :mode => "wb", :perm => perm)
+      when :symbolic_link
+        # For symlinks, file permissions are 0 anyway, so we ignore them
+        FileUtils.ln_sf(content, dest_file)
+
+        # TODO: Handle following symlinks as an option, otherwise we could extract a symlink with no target
+      when :git_link
+        # git links (submodules) are not yet supported
+        return false
+      end
+
+      true
     end
 
     def diff(merge_target = nil)
@@ -92,6 +92,32 @@ module GitService
     end
 
     private
+
+    def content_at(path, merged = false)
+      blob_at(path, merged).try(:content)
+    end
+
+    # Return file type and permissions
+    #
+    # Git stores file type and permissions in a subset of the POSIX layout:
+    #   https://unix.stackexchange.com/a/450488
+    # Extract them from this format into something more consumable
+    #
+    # @return [Symbol, Integer] Returns the file type and permissions
+    def filemode_at(path, merged = false)
+      mode = blob_data_for(path, merged).to_h.fetch(:filemode, 0o100644)
+      mode = mode.to_s(8)
+      type =
+        case mode[0, 2]
+        when "10" then :regular_file
+        when "12" then :symbolic_link
+        when "16" then :git_link
+        else raise "Unknown file type in mode"
+        end
+      perm = mode[3, 3].to_i(8)
+
+      return type, perm
+    end
 
     def list_files_in_tree(rugged_tree_oid, current_path = Pathname.new(""))
       rugged_repo.lookup(rugged_tree_oid).each_with_object([]) do |i, files|

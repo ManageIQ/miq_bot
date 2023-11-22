@@ -39,5 +39,4 @@
 # Ignore local seeds file
 db/seeds.local.rb
 
-# Ignore vagrant configuration/runtime files
-.vagrant/
+/config/master.key

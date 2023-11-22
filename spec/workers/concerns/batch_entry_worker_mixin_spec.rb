@@ -8,7 +8,8 @@ describe BatchEntryWorkerMixin do
       end
     end.new
   end
-  let(:entry) { BatchEntry.create! }
+  let!(:job)  { BatchJob.create!(:entries => [entry]) }
+  let(:entry) { BatchEntry.new }
 
   describe "#find_batch_entry" do
     it "with an existing entry" do
@@ -24,7 +25,6 @@ describe BatchEntryWorkerMixin do
   end
 
   it "#batch_job" do
-    job = BatchJob.create!(:entries => [entry])
     subject.find_batch_entry(entry.id)
 
     expect(subject.batch_job).to eq(job)

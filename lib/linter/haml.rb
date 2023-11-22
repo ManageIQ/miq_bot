@@ -7,7 +7,7 @@ module Linter
     end
 
     def linter_executable
-      'haml-lint *'
+      "haml-lint"
     end
 
     def linter_env

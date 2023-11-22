@@ -104,8 +104,8 @@ describe BatchJob do
 
     it "when entries are not complete" do
       job = described_class.create!(:entries => [
-        BatchEntry.create!,
-        BatchEntry.create!(:state => "succeeded")
+        BatchEntry.new,
+        BatchEntry.new(:state => "succeeded")
       ])
 
       expect(job).to_not receive(:finalize!)
@@ -143,8 +143,8 @@ describe BatchJob do
     context "when entries are complete" do
       let(:job) do
         described_class.create!(:entries => [
-          BatchEntry.create!(:state => "failed"),
-          BatchEntry.create!(:state => "succeeded")
+          BatchEntry.new(:state => "failed"),
+          BatchEntry.new(:state => "succeeded")
         ])
       end
 
@@ -156,8 +156,8 @@ describe BatchJob do
         described_class.create!(
           :expires_at => 10.minutes.ago,
           :entries    => [
-            BatchEntry.create!,
-            BatchEntry.create!(:state => "succeeded")
+            BatchEntry.new,
+            BatchEntry.new(:state => "succeeded")
           ]
         )
       end

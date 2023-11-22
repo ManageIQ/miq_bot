@@ -1,6 +1,6 @@
 class BatchEntry < ActiveRecord::Base
   serialize :result
-  belongs_to :job, :class_name => "BatchJob", :foreign_key => :batch_job_id
+  belongs_to :job, :class_name => "BatchJob", :foreign_key => :batch_job_id, :inverse_of => :entries
 
   validates :state, :inclusion => {:in => %w(started failed succeeded skipped), :allow_nil => true}
 

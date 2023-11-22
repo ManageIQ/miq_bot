@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.8', '>= 5.2.8.1'
+gem 'rails', '~> 6.1.0', '>= 6.1.7.6'
 
 # Use PostgreSQL as the database for Active Record
 gem 'pg'
@@ -15,31 +14,26 @@ gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 
-gem 'thin'
-gem 'foreman', '~> 0.64.0' # v0.65.0 breaks support for the older upstart on RHEL 6
+gem 'foreman'
+gem 'puma'
 
 gem 'config'
 gem 'listen'
 
 # Sidekiq specific gems
-gem 'celluloid', '~> 0.17.4', :require => false
 gem 'sidecloq'
-gem 'sidekiq', '~> 5.2.10'
-gem 'sinatra', :require => false
-gem 'slim'
+gem 'sidekiq'
 
 # Services gems
-gem 'minigit',        '~> 0.0.4'
-gem 'net-ssh',        '~> 4.2.0'
+gem 'minigit', '~> 0.0.4'
+gem 'net-ssh', '~> 7.2.0'
 
-gem 'awesome_spawn',        '>= 1.4.1'
-gem 'default_value_for',    '>= 3.1.0'
-gem 'haml',                 '~> 5.1',    :require => false # force newer version of haml
-gem 'haml_lint',            '~> 0.35.0', :require => false
-gem 'manageiq-style',                    :require => false
-gem 'more_core_extensions', '~> 4.0.0',  :require => 'more_core_extensions/all'
-gem 'sync',                              :require => false # required by more_core_extensions
-gem 'rugged',                            :require => false
+gem 'awesome_spawn',        '~> 1.6'
+gem 'default_value_for',    '~> 3.4'
+gem 'haml_lint',            '~> 0.51', :require => false
+gem 'manageiq-style',       '>= 1.4',  :require => false
+gem 'more_core_extensions', '~> 4.4',  :require => 'more_core_extensions/all'
+gem 'rugged',                          :require => false
 
 gem 'octokit', '~> 4.8.0', :require => false
 gem 'faraday', '~> 0.9.2'

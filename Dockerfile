@@ -15,7 +15,7 @@ LABEL name="miq-bot" \
       io.k8s.description="ManageIQ Bot is a developer automation tool." \
       io.openshift.tags="ManageIQ,miq-bot"
 
-RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_x86_64 && \
+RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 && \
     chmod +x /usr/bin/dumb-init
 
 RUN dnf config-manager --setopt=ubi-8-*.exclude=net-snmp*,dracut*,libcom_err*,python3-gobject*,redhat-release* --save && \
@@ -23,8 +23,8 @@ RUN dnf config-manager --setopt=ubi-8-*.exclude=net-snmp*,dracut*,libcom_err*,py
       http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/centos-stream-repos-8-2.el8.noarch.rpm \
       http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/centos-gpg-keys-8-2.el8.noarch.rpm \
       https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
-    dnf -y --disableplugin=subscription-manager module enable nodejs:12 && \
-    dnf -y --disableplugin=subscription-manager module enable ruby:2.6 && \
+    dnf -y --disableplugin=subscription-manager module enable nodejs:18 && \
+    dnf -y --disableplugin=subscription-manager module enable ruby:2.7 && \
     dnf clean all && \
     rm -rf /var/cache/dnf
 
@@ -63,7 +63,7 @@ RUN mkdir -p $APP_ROOT && \
 WORKDIR $APP_ROOT
 
 RUN echo "gem: --no-document" > ~/.gemrc && \
-    gem install bundler -v 2.3.18 && \
+    gem install bundler && \
     bundle config set --local build.rugged --with-ssh && \
     bundle install --jobs=3 --retry=3 && \
     # Clean up all the things
