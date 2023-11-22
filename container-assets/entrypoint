@@ -7,11 +7,10 @@ cp /root/ssh/* /root/.ssh/
 chown 600 /root/.ssh/miq-bot
 
 pushd /opt/miq_bot/config
-  ln -s /opt/miq_bot_config/settings.local.yml
   ln -s /opt/miq_bot_data/github_notification_monitor.yml
-popd
-pushd /opt/miq_bot/config/initializers
-  ln -s /opt/miq_bot_config/01_sidekiq_config.rb
+
+  ln -s /run/secrets/config/secrets/master.key
+  ln -s /run/secrets/config/secrets/settings.local.yml
 popd
 
 [[ -n $QUEUE_NAME ]] && COMMAND="sidekiq -q $QUEUE_NAME"

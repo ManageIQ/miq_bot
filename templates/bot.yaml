@@ -93,76 +93,86 @@ objects:
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: postgresql
     labels:
-      app: "bot"
+      app: bot
+    name: postgresql
+    namespace: bot
   spec:
-    strategy:
-      type: Recreate
     replicas: 1
     selector:
       matchLabels:
         name: postgresql
+    strategy:
+      type: Recreate
     template:
       metadata:
-        name: postgresql
         labels:
           name: postgresql
+        name: postgresql
       spec:
-        volumes:
-        - name: pgdb-volume
-          persistentVolumeClaim:
-            claimName: bot-postgres-pvc
-        - name: pg-configs
-          configMap:
-            name: postgresql-configs
-        initContainers:
-        - name: pgsql-data-permission-fix
-          image: busybox
-          command: ["/bin/chmod","-R","777", "/var/lib/pgsql/data"]
-          volumeMounts:
-          - name: pgdb-volume
-            mountPath: "/var/lib/pgsql/data"
         containers:
-        - name: postgresql
-          image: "docker.io/manageiq/postgresql:10"
+        - env:
+          - name: POSTGRESQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: postgresql-secrets
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgresql-secrets
+          - name: POSTGRESQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                key: dbname
+                name: postgresql-secrets
+          - name: POSTGRESQL_MAX_CONNECTIONS
+            value: "1000"
+          - name: POSTGRESQL_SHARED_BUFFERS
+            value: 1GB
+          image: docker.io/manageiq/postgresql:10
+          imagePullPolicy: Always
+          name: postgresql
           ports:
           - containerPort: 5432
+            protocol: TCP
           readinessProbe:
             initialDelaySeconds: 60
             tcpSocket:
               port: 5432
-          volumeMounts:
-          - name: pgdb-volume
-            mountPath: "/var/lib/pgsql/data"
-          - name: pg-configs
-            mountPath: "/opt/app-root/src/postgresql-cfg/"
-          env:
-          - name: POSTGRESQL_USER
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: username
-          - name: POSTGRESQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: password
-          - name: POSTGRESQL_DATABASE
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: dbname
-          - name: POSTGRESQL_MAX_CONNECTIONS
-            value: '1000'
-          - name: POSTGRESQL_SHARED_BUFFERS
-            value: 1GB
+            timeoutSeconds: 1
           resources:
-            requests:
-              memory: 2Gi
-              cpu: 500m
             limits:
               memory: 4Gi
+            requests:
+              cpu: 500m
+              memory: 2Gi
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: pgdb-volume
+          - mountPath: /opt/app-root/src/postgresql-cfg/
+            name: pg-configs
+        initContainers:
+        - command:
+          - /bin/chmod
+          - -R
+          - "777"
+          - /var/lib/pgsql/data
+          image: busybox
+          imagePullPolicy: Always
+          name: pgsql-data-permission-fix
+          volumeMounts:
+          - mountPath: /var/lib/pgsql/data
+            name: pgdb-volume
+        volumes:
+        - name: pgdb-volume
+          persistentVolumeClaim:
+            claimName: bot-postgres-pvc
+        - configMap:
+            defaultMode: 420
+            name: postgresql-configs
+          name: pg-configs
 
 ### Redis
 - apiVersion: v1
@@ -180,44 +190,48 @@ objects:
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: redis
     labels:
       app: bot
+    name: redis
+    namespace: bot
   spec:
-    strategy:
-      type: Recreate
     replicas: 1
     selector:
       matchLabels:
         name: redis
+    strategy:
+      type: Recreate
     template:
       metadata:
-        name: redis
         labels:
           name: redis
+        name: redis
       spec:
-        volumes:
-        - name: bot-redis-volume
-          persistentVolumeClaim:
-            claimName: bot-redis-pvc
         containers:
-        - name: redis
-          image: "docker.io/library/redis:5.0"
+        - image: docker.io/library/redis:5.0
+          imagePullPolicy: Always
+          name: redis
           ports:
           - containerPort: 6379
+            protocol: TCP
           readinessProbe:
             initialDelaySeconds: 60
             tcpSocket:
               port: 6379
-          volumeMounts:
-          - name: bot-redis-volume
-            mountPath: "/data"
+            timeoutSeconds: 1
           resources:
-            requests:
-              memory: 1Gi
-              cpu: 500m
             limits:
               memory: 4Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          volumeMounts:
+          - mountPath: /data
+            name: bot-redis-volume
+        volumes:
+        - name: bot-redis-volume
+          persistentVolumeClaim:
+            claimName: bot-redis-pvc
 
 ### Application
 - apiVersion: v1
@@ -235,190 +249,218 @@ objects:
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: ui
     labels:
-      app: "bot"
+      app: bot
+    name: ui
+    namespace: bot
   spec:
-    strategy:
-      type: Recreate
     replicas: 1
     selector:
       matchLabels:
         name: ui
+    strategy:
+      type: Recreate
     template:
       metadata:
-        name: ui
         labels:
           name: ui
+        name: ui
       spec:
-        volumes:
-        - name: bot-settings
-          configMap:
-            name: bot-settings
-        imagePullPolicy: Always
         containers:
-        - name: ui
-          image: "docker.io/ManageIQ/miq_bot:v0.11.2"
+        - env:
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: postgresql-secrets
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgresql-secrets
+          - name: DATABASE_HOSTNAME
+            valueFrom:
+              secretKeyRef:
+                key: hostname
+                name: postgresql-secrets
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                key: dbname
+                name: postgresql-secrets
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                key: port
+                name: postgresql-secrets
+          - name: REDIS_URL
+            value: "redis://redis:6379/0"
+          image: docker.io/manageiq/miq_bot:v0.20.0
+          imagePullPolicy: Always
+          name: ui
           ports:
           - containerPort: 3000
+            protocol: TCP
           readinessProbe:
             initialDelaySeconds: 60
             tcpSocket:
               port: 3000
-          volumeMounts:
-          - name: bot-settings
-            mountPath: "/opt/miq_bot_config"
+            timeoutSeconds: 1
           resources:
-            requests:
-              memory: 500Mi
-              cpu: 100m
             limits:
               memory: 2Gi
-          env:
-          - name: DATABASE_USER
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: username
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: password
-          - name: DATABASE_HOSTNAME
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: hostname
-          - name: DATABASE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: dbname
-          - name: DATABASE_PORT
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: port
+            requests:
+              cpu: 100m
+              memory: 500Mi
+          volumeMounts:
+          - mountPath: /run/secrets/config
+            name: bot-config
+        volumes:
+        - name: bot-config
+          secret:
+            defaultMode: 420
+            items:
+            - key: master.key
+              mode: 400
+              path: master.key
+            - key: settings.local.yml
+              mode: 400
+              path: settings.local.yml
+            secretName: config
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: queue-worker
     labels:
-      app: "bot"
+      app: bot
+    name: queue-worker
+    namespace: bot
   spec:
-    strategy:
-      type: Recreate
     replicas: 1
     selector:
       matchLabels:
         name: queue-worker
+    strategy:
+      type: Recreate
     template:
       metadata:
-        name: queue-worker
         labels:
           name: queue-worker
+        name: queue-worker
       spec:
-        volumes:
-        - name: bot-settings
-          configMap:
-            name: bot-settings
-        - name: bot-ssh
-          configMap:
+        containers:
+        - env:
+          - name: QUEUE_NAME
+            value: miq_bot
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: postgresql-secrets
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgresql-secrets
+          - name: DATABASE_HOSTNAME
+            valueFrom:
+              secretKeyRef:
+                key: hostname
+                name: postgresql-secrets
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                key: dbname
+                name: postgresql-secrets
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                key: port
+                name: postgresql-secrets
+          - name: REDIS_URL
+            value: "redis://redis:6379/0"
+          image: docker.io/manageiq/miq_bot:v0.20.0
+          imagePullPolicy: Always
+          name: queue-worker
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 500Mi
+          volumeMounts:
+          - mountPath: /run/secrets/config
+            name: bot-config
+          - mountPath: /root/ssh
             name: bot-ssh
+          - mountPath: /opt/miq_bot_data
+            name: bot-notification-monitor-volume
+          - mountPath: /opt/miq_bot/repos
+            name: bot-queue-worker-repos-volume
+        - env:
+          - name: QUEUE_NAME
+            value: miq_bot_glacial
+          - name: DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: postgresql-secrets
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: postgresql-secrets
+          - name: DATABASE_HOSTNAME
+            valueFrom:
+              secretKeyRef:
+                key: hostname
+                name: postgresql-secrets
+          - name: DATABASE_NAME
+            valueFrom:
+              secretKeyRef:
+                key: dbname
+                name: postgresql-secrets
+          - name: DATABASE_PORT
+            valueFrom:
+              secretKeyRef:
+                key: port
+                name: postgresql-secrets
+          - name: REDIS_URL
+            value: "redis://redis:6379/0"
+          image: docker.io/manageiq/miq_bot:v0.20.0
+          imagePullPolicy: Always
+          name: queue-worker-glacial
+          resources:
+            limits:
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 500Mi
+          volumeMounts:
+          - mountPath: /run/secrets/config
+            name: bot-config
+          - mountPath: /root/ssh
+            name: bot-ssh
+          - mountPath: /opt/miq_bot/repos
+            name: bot-queue-worker-repos-volume
+        volumes:
+        - name: bot-config
+          secret:
+            defaultMode: 420
+            items:
+            - key: master.key
+              mode: 400
+              path: master.key
+            - key: settings.local.yml
+              mode: 400
+              path: settings.local.yml
+            secretName: config
+        - configMap:
+            defaultMode: 420
+            name: bot-ssh
+          name: bot-ssh
         - name: bot-notification-monitor-volume
           persistentVolumeClaim:
             claimName: bot-notification-monitor-pvc
         - name: bot-queue-worker-repos-volume
           persistentVolumeClaim:
             claimName: bot-queue-worker-repos-pvc
-        imagePullPolicy: Always
-        containers:
-        - name: queue-worker
-          image: "docker.io/bdunne/miq_bot:v0.11.2"
-          volumeMounts:
-          - name: bot-settings
-            mountPath: "/opt/miq_bot_config"
-          - name: bot-ssh
-            mountPath: "/root/ssh"
-          - name: bot-notification-monitor-volume
-            mountPath: "/opt/miq_bot_data"
-          - name: bot-queue-worker-repos-volume
-            mountPath: "/opt/miq_bot/repos"
-          resources:
-            requests:
-              memory: 500Mi
-              cpu: 100m
-            limits:
-              memory: 2Gi
-          env:
-          - name: QUEUE_NAME
-            value: miq_bot
-          - name: DATABASE_USER
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: username
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: password
-          - name: DATABASE_HOSTNAME
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: hostname
-          - name: DATABASE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: dbname
-          - name: DATABASE_PORT
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: port
-        - name: queue-worker-glacial
-          image: "docker.io/bdunne/miq_bot:v0.11.2"
-          volumeMounts:
-          - name: bot-settings
-            mountPath: "/opt/miq_bot_config"
-          - name: bot-ssh
-            mountPath: "/root/ssh"
-          - name: bot-queue-worker-repos-volume
-            mountPath: "/opt/miq_bot/repos"
-          resources:
-            requests:
-              memory: 500Mi
-              cpu: 100m
-            limits:
-              memory: 2Gi
-          env:
-          - name: QUEUE_NAME
-            value: miq_bot_glacial
-          - name: DATABASE_USER
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: username
-          - name: DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: password
-          - name: DATABASE_HOSTNAME
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: hostname
-          - name: DATABASE_NAME
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: dbname
-          - name: DATABASE_PORT
-            valueFrom:
-              secretKeyRef:
-                name: postgresql-secrets
-                key: port
