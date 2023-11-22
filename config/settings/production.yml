@@ -1,0 +1,160 @@
+core_repos: &core_repos
+- ManageIQ/manageiq
+- ManageIQ/manageiq-api
+- ManageIQ/manageiq-api-mock
+- ManageIQ/manageiq-appliance
+- ManageIQ/manageiq-appliance-build
+- ManageIQ/manageiq-automation_engine
+- ManageIQ/manageiq-consumption
+- ManageIQ/manageiq-content
+- ManageIQ/manageiq-decorators
+- ManageIQ/manageiq-gems-pending
+- ManageIQ/manageiq-graphql
+- ManageIQ/manageiq-pods
+- ManageIQ/manageiq-providers-amazon
+- ManageIQ/manageiq-providers-ansible_tower
+- ManageIQ/manageiq-providers-autosde
+- ManageIQ/manageiq-providers-awx
+- ManageIQ/manageiq-providers-azure
+- ManageIQ/manageiq-providers-azure_stack
+- ManageIQ/manageiq-providers-cisco_intersight
+- ManageIQ/manageiq-providers-foreman
+- ManageIQ/manageiq-providers-google
+- ManageIQ/manageiq-providers-ibm_cic
+- ManageIQ/manageiq-providers-ibm_cloud
+- ManageIQ/manageiq-providers-ibm_power_hmc
+- ManageIQ/manageiq-providers-ibm_power_vc
+- ManageIQ/manageiq-providers-ibm_terraform
+- ManageIQ/manageiq-providers-kubernetes
+- ManageIQ/manageiq-providers-kubevirt
+- ManageIQ/manageiq-providers-lenovo
+- ManageIQ/manageiq-providers-nsxt
+- ManageIQ/manageiq-providers-nuage
+- ManageIQ/manageiq-providers-openshift
+- ManageIQ/manageiq-providers-openstack
+- ManageIQ/manageiq-providers-oracle_cloud
+- ManageIQ/manageiq-providers-ovirt
+- ManageIQ/manageiq-providers-red_hat_virtualization
+- ManageIQ/manageiq-providers-redfish
+- ManageIQ/manageiq-providers-scvmm
+- ManageIQ/manageiq-providers-vmware
+- ManageIQ/manageiq-providers-workflows
+- ManageIQ/manageiq-schema
+- ManageIQ/manageiq-ui-classic
+- ManageIQ/manageiq-ui-service
+- ManageIQ/manageiq-v2v
+- ManageIQ/manageiq_docs
+
+embedded_ansible_rule: &embedded_ansible_rule
+  regex: !ruby/regexp /\/embedded_ansible/
+  label: core/embedded ansible
+dependencies_rule: &dependencies_rule
+  regex: !ruby/regexp /(?:Gemfile|Gemfile\.lock|\.gemspec|package\.json)\z/
+  label: dependencies
+graphics_rule: &graphics_rule
+  regex: !ruby/regexp /\.(?:png|svg|jpe?g|gif)\z/
+  label: graphics
+sql_migration_rule: &sql_migration_rule
+  regex: !ruby/regexp /db\/migrate.+\.rb\z/
+  label: sql migration
+
+cross_repo_tests:
+  name: manageiq-cross_repo-tests
+  url: https://github.com/ManageIQ/manageiq-cross_repo-tests.git
+diff_content_checker:
+  offenses:
+    "^([^#]+|)\\bputs\\b":
+      type: :regexp
+      severity: :warn
+      message: Detected `puts`. Remove all debugging statements.
+      except:
+      - bin/
+      - tools/
+    pp:
+      severity: :warn
+      message: Detected `pp`. Remove all debugging statements.
+      except:
+      - tools/
+    cfme:
+      severity: :error
+      except:
+      - spec/models/manageiq/providers/microsoft/infra_manager/refresher_spec.rb
+      - spec/tools/
+    cloudforms:
+      severity: :error
+    binding.pry:
+      severity: :error
+      message: Detected `binding.pry`. Remove all debugging statements.
+    allow_any_instance_of:
+      severity: :warn
+      message: Detected `allow_any_instance_of`. This RSpec method is highly discouraged, please only use when absolutely necessary.
+    expect_any_instance_of:
+      severity: :warn
+      message: Detected `expect_any_instance_of`. This RSpec method is highly discouraged, please only use when absolutely necessary.
+    "it ['\"](works|stuff|things)['\"] do":
+      type: :regexp
+      severity: :warn
+      message: Detected unoriginal RSpec message. Please explain the spec purpose in more detail.
+merge_target_titler:
+  included_repos: *core_repos
+path_based_labeler:
+  included_repos:
+  - ManageIQ/manageiq
+  - ManageIQ/manageiq-ui-classic
+  rules:
+    ManageIQ/manageiq:
+    - *dependencies_rule
+    - *embedded_ansible_rule
+    - *sql_migration_rule
+    ManageIQ/manageiq-ui-classic:
+    - *graphics_rule
+    - *dependencies_rule
+stale_issue_marker:
+  pinned_labels:
+  - pinned
+  - help wanted
+  - security vulnerability
+
+labels:
+  :unassignable:
+    jansa/yes: jansa/yes?
+    kasparov/yes: kasparov/yes?
+    lasker/yes: lasker/yes?
+    morphy/yes: morphy/yes?
+    najdorf/yes: najdorf/yes?
+    oparin/yes: oparin/yes?
+    petrosian/yes: petrosian/yes?
+    quinteros/yes: quinteros/yes?
+  :unremovable:
+  - fine/backported
+  - fine/no
+  - gaprindashvili/backported
+  - gaprindashvili/no
+  - hammer/backported
+  - hammer/no
+  - ivanchuk/backported
+  - ivanchuk/no
+  - jansa/backported
+  - jansa/no
+  - jansa/yes
+  - kasparov/backported
+  - kasparov/no
+  - kasparov/yes
+  - lasker/backported
+  - lasker/no
+  - lasker/yes
+  - morphy/backported
+  - morphy/no
+  - morphy/yes
+  - najdorf/backported
+  - najdorf/no
+  - najdorf/yes
+  - oparin/backported
+  - oparin/no
+  - oparin/yes
+  - petrosian/backported
+  - petrosian/no
+  - petrosian/yes
+  - quinteros/backported
+  - quinteros/no
+  - quinteros/yes
