@@ -138,10 +138,8 @@ objects:
           - containerPort: 5432
             protocol: TCP
           readinessProbe:
-            initialDelaySeconds: 60
             tcpSocket:
               port: 5432
-            timeoutSeconds: 1
           resources:
             limits:
               memory: 4Gi
@@ -208,17 +206,15 @@ objects:
         name: redis
       spec:
         containers:
-        - image: docker.io/library/redis:5.0
+        - image: docker.io/library/redis:7
           imagePullPolicy: Always
           name: redis
           ports:
           - containerPort: 6379
             protocol: TCP
           readinessProbe:
-            initialDelaySeconds: 60
             tcpSocket:
               port: 6379
-            timeoutSeconds: 1
           resources:
             limits:
               memory: 4Gi
@@ -295,17 +291,15 @@ objects:
                 name: postgresql-secrets
           - name: REDIS_URL
             value: "redis://redis:6379/0"
-          image: docker.io/manageiq/miq_bot:v0.20.0
+          image: docker.io/manageiq/miq_bot:v0.20.3
           imagePullPolicy: Always
           name: ui
           ports:
           - containerPort: 3000
             protocol: TCP
           readinessProbe:
-            initialDelaySeconds: 60
             tcpSocket:
               port: 3000
-            timeoutSeconds: 1
           resources:
             limits:
               memory: 2Gi
@@ -378,7 +372,7 @@ objects:
                 name: postgresql-secrets
           - name: REDIS_URL
             value: "redis://redis:6379/0"
-          image: docker.io/manageiq/miq_bot:v0.20.0
+          image: docker.io/manageiq/miq_bot:v0.20.3
           imagePullPolicy: Always
           name: queue-worker
           resources:
@@ -426,7 +420,7 @@ objects:
                 name: postgresql-secrets
           - name: REDIS_URL
             value: "redis://redis:6379/0"
-          image: docker.io/manageiq/miq_bot:v0.20.0
+          image: docker.io/manageiq/miq_bot:v0.20.3
           imagePullPolicy: Always
           name: queue-worker-glacial
           resources:
