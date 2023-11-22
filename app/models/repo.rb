@@ -146,7 +146,10 @@ class Repo < ActiveRecord::Base
     b = branches.new(:name => branch_name)
 
     # Make sure the branch is a real git branch before continuing and saving a record
-    raise(ActiveRecord::RecordInvalid, "Branch not found in git") unless b.git_service.exists?
+    unless b.git_service.exists?
+      b.errors.add(:name, "of branch not found in git")
+      raise ActiveRecord::RecordInvalid.new(b) # rubocop:disable Style/RaiseArgs
+    end
 
     b.last_commit = b.git_service.merge_base("master")
 
