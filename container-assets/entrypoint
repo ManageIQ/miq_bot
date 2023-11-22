@@ -9,8 +9,8 @@ chown 600 /root/.ssh/miq-bot
 pushd /opt/miq_bot/config
   ln -s /opt/miq_bot_data/github_notification_monitor.yml
 
-  ln -s /run/secrets/config/secrets/master.key
-  ln -s /run/secrets/config/secrets/settings.local.yml
+  ln -s /run/secrets/config/master.key
+  ln -s /run/secrets/config/settings.local.yml
 popd
 
 [[ -n $QUEUE_NAME ]] && COMMAND="sidekiq -q $QUEUE_NAME"
