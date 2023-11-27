@@ -3,18 +3,6 @@ module Kubernetes
     !`which kubectl`.chomp.empty?
   end
 
-  def self.config_dir
-    @config_dir ||= Pathname.new("~/.kube").expand_path
-  end
-
-  def self.config_file
-    @config_file ||= config_dir.join("config")
-  end
-
-  def self.merge_config(file)
-    system({"KUBECONFIG" => "#{config_file}:#{file}"}, "kubectl config view --flatten > #{config_file}")
-  end
-
   def self.context?(context)
     !`kubectl config get-contexts --no-headers #{context} 2>/dev/null`.chomp.empty?
   end
@@ -67,9 +55,10 @@ end
 namespace :production do
   desc "Set the local kubernetes context to the production context"
   task :set_context do # rubocop:disable Rails/RakeEnvironment
-    context   = "do-nyc1-miq-prod"
-    name      = "miq-prod"
-    namespace = "bot"
+    cluster_name = "miq-cluster-us-east-2"
+    cluster_id   = "cgm83c8w0she4h8kofeg"
+    context      = "#{cluster_name}/#{cluster_id}"
+    namespace    = "bot"
 
     unless Kubernetes.available?
       $stderr.puts "ERROR: You must install kubectl command"
@@ -77,22 +66,12 @@ namespace :production do
     end
 
     unless Kubernetes.context?(context)
-      puts "Configuring Kubernetes context..."
-
-      config = Kubernetes.config_dir.join("#{name}-kubeconfig.yaml")
-      unless config.exist?
-        $stderr.puts
-        $stderr.puts "ERROR: Cannot find the context config file"
-        $stderr.puts
-        $stderr.puts "1. Go to digitalocean.com => Kubernetes => #{name} => Download Config File"
-        $stderr.puts "2. Place the file in #{Kubernetes.config_dir}"
-        exit 1
-      end
-
-      Kubernetes.merge_config(config)
-      config.delete
-
-      puts "Configuring Kubernetes context...Complete"
+      $stderr.puts "ERROR: kubernetes context does not exist"
+      $stderr.puts
+      $stderr.puts "1. Install the ibmcloud cli as per https://cloud.ibm.com/docs/containers?topic=containers-cli-install"
+      $stderr.puts "2. `ibmcloud login -r us-east -g manageiq --sso`"
+      $stderr.puts "3. `ibmcloud ks cluster config --cluster #{cluster_name}`"
+      exit 1
     end
 
     exit 1 unless Kubernetes.use_context(context) && Kubernetes.use_namespace(namespace)
