@@ -1,7 +1,11 @@
 core_repos: &core_repos
+- ManageIQ/amazon_ssa_support
+- ManageIQ/container-amazon-smartstate
+- ManageIQ/container-httpd
+- ManageIQ/container-memcached
+- ManageIQ/container-postgresql
 - ManageIQ/manageiq
 - ManageIQ/manageiq-api
-- ManageIQ/manageiq-api-mock
 - ManageIQ/manageiq-appliance
 - ManageIQ/manageiq-appliance-build
 - ManageIQ/manageiq-automation_engine
@@ -18,6 +22,7 @@ core_repos: &core_repos
 - ManageIQ/manageiq-providers-azure
 - ManageIQ/manageiq-providers-azure_stack
 - ManageIQ/manageiq-providers-cisco_intersight
+- ManageIQ/manageiq-providers-embedded_terraform
 - ManageIQ/manageiq-providers-foreman
 - ManageIQ/manageiq-providers-google
 - ManageIQ/manageiq-providers-ibm_cic
@@ -36,9 +41,9 @@ core_repos: &core_repos
 - ManageIQ/manageiq-providers-ovirt
 - ManageIQ/manageiq-providers-red_hat_virtualization
 - ManageIQ/manageiq-providers-redfish
-- ManageIQ/manageiq-providers-scvmm
 - ManageIQ/manageiq-providers-vmware
 - ManageIQ/manageiq-providers-workflows
+- ManageIQ/manageiq-rpm_build
 - ManageIQ/manageiq-schema
 - ManageIQ/manageiq-ui-classic
 - ManageIQ/manageiq-ui-service
@@ -123,6 +128,7 @@ labels:
     oparin/yes: oparin/yes?
     petrosian/yes: petrosian/yes?
     quinteros/yes: quinteros/yes?
+    radjabov/yes: radjabov/yes?
   :unremovable:
   - fine/backported
   - fine/no
@@ -156,3 +162,6 @@ labels:
   - quinteros/backported
   - quinteros/no
   - quinteros/yes
+  - radjabov/backported
+  - radjabov/no
+  - radjabov/yes
