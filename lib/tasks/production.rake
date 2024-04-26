@@ -122,6 +122,12 @@ task :release, [:version, :remote] => "production:set_context" do |_t, args|
 
   remote = args[:remote] || "upstream"
 
+  puts "Ensuring version number..."
+  unless File.readlines("templates/bot.yaml").grep(/image: .+miq_bot:v/).all? { |l| l.include?("miq_bot:#{version}") }
+    $stderr.puts "ERROR: images in templates/bot.yaml have not been updated to the expected version"
+    exit 1
+  end
+
   puts "Deploying version #{version}..."
 
   puts
@@ -140,7 +146,7 @@ task :release, [:version, :remote] => "production:set_context" do |_t, args|
 
   puts
   puts "Building docker image..."
-  exit 1 unless system("docker build . --no-cache -t #{image}")
+  exit 1 unless system("docker build . --no-cache --build-arg REF=#{version} -t #{image}")
   puts
   puts "Pushing docker image..."
   exit 1 unless system("docker login") && system("docker push #{image}")
