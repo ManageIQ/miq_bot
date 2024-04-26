@@ -63,7 +63,7 @@ RUN mkdir -p $APP_ROOT && \
 WORKDIR $APP_ROOT
 
 RUN echo "gem: --no-document" > ~/.gemrc && \
-    gem install bundler && \
+    gem install bundler -v "~> 2.4.22" && \
     bundle config set --local build.rugged --with-ssh && \
     bundle install --jobs=3 --retry=3 && \
     # Clean up all the things
