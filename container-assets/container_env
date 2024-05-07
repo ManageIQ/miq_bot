@@ -9,5 +9,10 @@ function urlescape() {
 
 safeuser=$(urlescape ${DATABASE_USER})
 safepass=$(urlescape ${DATABASE_PASSWORD})
+if [ -z "${safeuser}" -o -z "${safepass}" ]; then
+  DATABASE_USERINFO=""
+else
+  DATABASE_USERINFO="${safeuser}:${safepass}@"
+fi
 
-export DATABASE_URL="postgresql://${safeuser}:${safepass}@${DATABASE_HOSTNAME}:${DATABASE_PORT}/${DATABASE_NAME}?encoding=utf8&pool=25&wait_timeout=5"
+export DATABASE_URL="postgresql://${DATABASE_USERINFO}${DATABASE_HOSTNAME:-localhost}:${DATABASE_PORT:-5432}/${DATABASE_NAME:-miq_bot_production}?encoding=utf8&pool=25&wait_timeout=5"
