@@ -48,18 +48,12 @@ core_repos: &core_repos
 - ManageIQ/manageiq-ui-classic
 - ManageIQ/manageiq-ui-service
 
-embedded_ansible_rule: &embedded_ansible_rule
-  regex: !ruby/regexp /\/embedded_ansible/
-  label: core/embedded ansible
 dependencies_rule: &dependencies_rule
-  regex: !ruby/regexp /(?:Gemfile|Gemfile\.lock|\.gemspec|package\.json)\z/
+  regex: !ruby/regexp /(?:Gemfile|Gemfile\.lock|\.gemspec|package\.json|yarn\.lock|go\.mod|go\.sum|requirements\.txt)\z/
   label: dependencies
 graphics_rule: &graphics_rule
   regex: !ruby/regexp /\.(?:png|svg|jpe?g|gif)\z/
   label: graphics
-sql_migration_rule: &sql_migration_rule
-  regex: !ruby/regexp /db\/migrate.+\.rb\z/
-  label: sql migration
 
 cross_repo_tests:
   name: manageiq-cross_repo-tests
@@ -103,19 +97,28 @@ merge_target_titler:
 path_based_labeler:
   included_repos:
   - ManageIQ/manageiq
+  - ManageIQ/manageiq-pods
+  - ManageIQ/manageiq-rpm_build
   - ManageIQ/manageiq-ui-classic
+  - ManageIQ/manageiq-ui-service
   rules:
     ManageIQ/manageiq:
     - *dependencies_rule
-    - *embedded_ansible_rule
-    - *sql_migration_rule
+    ManageIQ/manageiq-pods:
+    - *dependencies_rule
+    ManageIQ/manageiq-rpm_build:
+    - *dependencies_rule
     ManageIQ/manageiq-ui-classic:
+    - *graphics_rule
+    - *dependencies_rule
+    ManageIQ/manageiq-ui-service:
     - *graphics_rule
     - *dependencies_rule
 stale_issue_marker:
   pinned_labels:
   - pinned
   - help wanted
+  - "Mend: dependency dashboard"
   - security vulnerability
 
 labels:
