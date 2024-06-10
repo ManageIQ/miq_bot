@@ -19,8 +19,8 @@ module Kubernetes
     current_namespace == namespace || system("kubectl config set-context --current --namespace=#{namespace}")
   end
 
-  def self.edit_config_map(name)
-    system("kubectl edit configmap #{name}")
+  def self.edit_secret(name)
+    system("kubectl edit secret #{name}")
   end
 
   def self.pod_from_deployment(deployment)
@@ -50,6 +50,34 @@ module Kubernetes
   end
 end
 
+module IbmCloud
+  def self.available?
+    !`which ibmcloud`.chomp.empty?
+  end
+
+  def self.api_key
+    ENV["IBMCLOUD_BOT_API_KEY"]
+  end
+
+  def self.logged_in_as
+    `ibmcloud target --output json | jq -r .user.user_email`.chomp
+  end
+
+  def self.logged_in?
+    logged_in_as.start_with?("imbot")
+  end
+
+  def self.login
+    return false unless api_key
+
+    system({"IBMCLOUD_API_KEY" => api_key}, "ibmcloud login -r us-east -g manageiq", [:out, :err] => "/dev/null")
+  end
+
+  def self.ks_cluster_config(cluster_name)
+    system("ibmcloud ks cluster config --cluster #{cluster_name}", [:out, :err] => "/dev/null")
+  end
+end
+
 # rubocop:disable Style/StderrPuts
 
 namespace :production do
@@ -60,22 +88,16 @@ namespace :production do
     context      = "#{cluster_name}/#{cluster_id}"
     namespace    = "bot"
 
-    unless Kubernetes.available?
-      $stderr.puts "ERROR: You must install kubectl command"
-      exit 1
-    end
-
-    unless Kubernetes.context?(context)
-      $stderr.puts "ERROR: kubernetes context does not exist"
-      $stderr.puts
-      $stderr.puts "1. Install the ibmcloud cli as per https://cloud.ibm.com/docs/containers?topic=containers-cli-install"
-      $stderr.puts "2. `ibmcloud login -r us-east -g manageiq --sso`"
-      $stderr.puts "3. `ibmcloud ks cluster config --cluster #{cluster_name}`"
-      exit 1
-    end
-
-    exit 1 unless Kubernetes.use_context(context) && Kubernetes.use_namespace(namespace)
-    puts
+    raise "kubectl command not installed" unless Kubernetes.available?
+    raise "ibmcloud command not installed" unless IbmCloud.available?
+    raise "Unable to login with ibmcloud command" unless IbmCloud.logged_in? || (IbmCloud.login && IbmCloud.logged_in?)
+    raise "Unable to configure the kubernetes cluster for ibmcloud command" unless IbmCloud.ks_cluster_config(cluster_name)
+    raise "Kubernetes context does not exist" unless Kubernetes.context?(context)
+    raise "Kubernetes context is invalid" unless Kubernetes.use_context(context)
+    raise "Unable to set kubernetes namespace" unless Kubernetes.use_namespace(namespace)
+  rescue => e
+    $stderr.puts "ERROR: #{e.message}"
+    exit 1
   end
 
   desc "Restart all production pods"
@@ -89,9 +111,9 @@ namespace :production do
     puts "Restarting the ui pod...Complete"
   end
 
-  desc "Edit the bot settings in production"
-  task :edit_settings => :set_context do
-    exit 1 unless Kubernetes.edit_config_map("bot-settings")
+  desc "Edit the bot token in production"
+  task :edit_token => :set_context do
+    exit 1 unless Kubernetes.edit_secret("config")
 
     puts "Restarting the queue-worker pod..."
     exit 1 unless Kubernetes.restart_deployment_pods("queue-worker")
