@@ -55,6 +55,14 @@ module IbmCloud
     !`which ibmcloud`.chomp.empty?
   end
 
+  def self.plugin_available?(plugin)
+    `ibmcloud plugin list --output json | jq -r .[].Name`.lines(chomp: true).include?(plugin)
+  end
+
+  def self.ks_plugin_available?
+    plugin_available?("container-service")
+  end
+
   def self.api_key
     ENV["IBMCLOUD_BOT_API_KEY"]
   end
@@ -90,6 +98,7 @@ namespace :production do
 
     raise "kubectl command not installed" unless Kubernetes.available?
     raise "ibmcloud command not installed" unless IbmCloud.available?
+    raise "ibmcloud container-service plugin not installed" unless IbmCloud.ks_plugin_available?
     raise "Unable to login with ibmcloud command" unless IbmCloud.logged_in? || (IbmCloud.login && IbmCloud.logged_in?)
     raise "Unable to configure the kubernetes cluster for ibmcloud command" unless IbmCloud.ks_cluster_config(cluster_name)
     raise "Kubernetes context does not exist" unless Kubernetes.context?(context)
@@ -131,56 +140,75 @@ namespace :production do
     container = args[:container] || "queue-worker"
     exit 1 unless Kubernetes.tail_log(container)
   end
+
+  def release_version(version)
+    if version.nil?
+      $stderr.puts "ERROR: must specify the version number to deploy"
+      exit 1
+    end
+    version = "v#{version}" unless version.start_with?("v")
+    version
+  end
+
+  desc "Release a new version to production"
+  task :release, [:version, :remote] do |_t, args|
+    version = release_version(args[:version])
+    remote  = args[:remote] || "upstream"
+
+    puts "Ensuring version number..."
+    unless File.readlines("templates/bot.yaml").grep(/image: .+miq_bot:v/).all? { |l| l.include?("miq_bot:#{version}") }
+      $stderr.puts "ERROR: images in templates/bot.yaml have not been updated to the expected version"
+      exit 1
+    end
+
+    puts "Deploying version #{version}..."
+
+    puts
+    puts "Tagging repository..."
+    if `git tag --list #{version}`.chomp.empty?
+      exit 1 unless system("git tag #{version}")
+    elsif `git tag --points-at HEAD`.chomp != version
+      $stderr.puts "ERROR: Already tagged '#{version}', but you are not on that commit"
+      exit 1
+    else
+      puts "Already tagged '#{version}'"
+    end
+    exit 1 unless system("git push #{remote} #{version}")
+  end
+
+  namespace :release do
+    desc "Build the specified version and push to docker.io"
+    task :build, [:version] do |_t, args|
+      version = release_version(args[:version])
+      image   = "docker.io/manageiq/miq_bot:#{version}"
+
+      puts "Building docker image..."
+      exit 1 unless system("docker build . --no-cache --build-arg REF=#{version} -t #{image}")
+      puts
+      puts "Pushing docker image..."
+      exit 1 unless system("docker login docker.io") && system("docker push #{image}")
+      puts
+    end
+
+    desc "Deploy the specified version to Kubernetes"
+    task :deploy, [:version] => "production:set_context" do |_t, args|
+      version = release_version(args[:version])
+      image   = "docker.io/manageiq/miq_bot:#{version}"
+
+      puts "Updating queue-worker deployment..."
+      exit 1 unless Kubernetes.update_deployment_image("queue-worker", image)
+      puts "Updating ui deployment..."
+      exit 1 unless Kubernetes.update_deployment_image("ui", image)
+
+      puts
+      puts "Deploying version #{version}...Complete"
+    end
+  end
 end
 
-desc "Release a new version to production"
-task :release, [:version, :remote] => "production:set_context" do |_t, args|
-  version = args[:version]
-  if version.nil?
-    $stderr.puts "ERROR: must specify the version number to deploy"
-    exit 1
-  end
-  version = "v#{version}" unless version.start_with?("v")
-
-  remote = args[:remote] || "upstream"
-
-  puts "Ensuring version number..."
-  unless File.readlines("templates/bot.yaml").grep(/image: .+miq_bot:v/).all? { |l| l.include?("miq_bot:#{version}") }
-    $stderr.puts "ERROR: images in templates/bot.yaml have not been updated to the expected version"
-    exit 1
-  end
-
-  puts "Deploying version #{version}..."
-
-  puts
-  puts "Tagging repository..."
-  if `git tag --list #{version}`.chomp.empty?
-    exit 1 unless system("git tag #{version}")
-  elsif `git tag --points-at HEAD`.chomp != version
-    $stderr.puts "ERROR: Already tagged '#{version}', but you are not on that commit"
-    exit 1
-  else
-    puts "Already tagged '#{version}'"
-  end
-  exit 1 unless system("git push #{remote} #{version}")
-
-  image = "docker.io/manageiq/miq_bot:#{version}"
-
-  puts
-  puts "Building docker image..."
-  exit 1 unless system("docker build . --no-cache --build-arg REF=#{version} -t #{image}")
-  puts
-  puts "Pushing docker image..."
-  exit 1 unless system("docker login") && system("docker push #{image}")
-  puts
-
-  puts "Updating queue-worker deployment..."
-  exit 1 unless Kubernetes.update_deployment_image("queue-worker", image)
-  puts "Updating ui deployment..."
-  exit 1 unless Kubernetes.update_deployment_image("ui", image)
-
-  puts
-  puts "Deploying version #{version}...Complete"
+desc "Release a new version to production (alias of production:release)"
+task :release, [:version, :remote] do |_t, args|
+  Rake::Task["production:release"].invoke(*args)
 end
 
 # rubocop:enable Style/StderrPuts
