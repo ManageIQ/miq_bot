@@ -84,7 +84,7 @@ class Branch < ActiveRecord::Base
   end
 
   def pr_title_tags
-    pr_title.to_s.match(/^(?:\s*\[\w+\])+/).to_s.gsub("[", " [").split.map { |s| s[1...-1] }
+    pr_title.to_s.match(/^(?:\s*\[[\w-]+\])+/).to_s.gsub("[", " [").split.map { |s| s[1...-1] }
   end
 
   def github_pr_uri

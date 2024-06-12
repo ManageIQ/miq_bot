@@ -152,6 +152,11 @@ describe Branch do
       expect(branch.pr_title_tags).to eq ["WIP", "foo_bar"]
     end
 
+    it "with a pr_title with tags with dashes" do
+      branch.pr_title = "[WIP] [2-EL9] This is a PR title"
+      expect(branch.pr_title_tags).to eq ["WIP", "2-EL9"]
+    end
+
     it "with a pr_title with tag-like strings not at the start" do
       branch.pr_title = "This is a [PR] title"
       expect(branch.pr_title_tags).to eq []
