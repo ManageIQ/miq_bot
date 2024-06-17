@@ -21,12 +21,15 @@ RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/dow
 RUN ARCH=$(uname -m) && \
     dnf -y --setopt=protected_packages= remove redhat-release && \
     dnf -y install \
-      http://mirror.stream.centos.org/9-stream/BaseOS/${ARCH}/os/Packages/centos-stream-release-9.0-12.el9.noarch.rpm \
-      http://mirror.stream.centos.org/9-stream/BaseOS/${ARCH}/os/Packages/centos-stream-repos-9.0-12.el9.noarch.rpm \
-      http://mirror.stream.centos.org/9-stream/BaseOS/${ARCH}/os/Packages/centos-gpg-keys-9.0-12.el9.noarch.rpm && \
+      http://mirror.stream.centos.org/9-stream/BaseOS/${ARCH}/os/Packages/centos-stream-release-9.0-26.el9.noarch.rpm \
+      http://mirror.stream.centos.org/9-stream/BaseOS/${ARCH}/os/Packages/centos-stream-repos-9.0-26.el9.noarch.rpm \
+      http://mirror.stream.centos.org/9-stream/BaseOS/${ARCH}/os/Packages/centos-gpg-keys-9.0-26.el9.noarch.rpm && \
     dnf -y install \
       https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm && \
     dnf -y --disableplugin=subscription-manager module enable nodejs:18 && \
+    dnf -y module enable ruby:3.1 && \
+    dnf config-manager --save --setopt=tsflags=nodocs --setopt=exclude=openssl*-3.2* && \
+    dnf -y update && \
     dnf clean all && \
     rm -rf /var/cache/dnf
 

@@ -313,7 +313,7 @@ module GithubService
         end
 
         remote = @rugged_repo.remotes['origin']
-        remote.push(["refs/heads/#{branch_name}"], push_options)
+        remote.push(["refs/heads/#{branch_name}"], **push_options)
       end
 
       def create_cross_repo_test_pull_request
