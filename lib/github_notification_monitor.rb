@@ -76,7 +76,7 @@ class GithubNotificationMonitor
 
   def timestamps_full_hash
     @timestamps_full_hash ||=
-      (YAML.load_file(GITHUB_NOTIFICATION_MONITOR_YAML_FILE) || {}).tap do |h|
+      (YAML.load_file(GITHUB_NOTIFICATION_MONITOR_YAML_FILE, :permitted_classes => [Time]) || {}).tap do |h|
         h["timestamps"] ||= {}
         h["timestamps"][@fq_repo_name] ||= {}
       end

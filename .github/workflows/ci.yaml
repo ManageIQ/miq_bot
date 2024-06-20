@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         ruby-version:
-        - '2.7'
+        - '3.1'
     services:
       postgres:
         image: manageiq/postgresql:13
@@ -47,6 +47,8 @@ jobs:
     - name: Run tests
       run: bundle exec rake
     - name: Report code coverage
-      if: ${{ github.ref == 'refs/heads/master' && matrix.ruby-version == '2.7' }}
+      if: ${{ github.ref == 'refs/heads/master' && matrix.ruby-version == '3.1' }}
       continue-on-error: true
       uses: paambaati/codeclimate-action@v5
+    - name: Container Build
+      run: docker build .

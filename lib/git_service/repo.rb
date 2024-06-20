@@ -18,7 +18,7 @@ module GitService
 
         fetch_options[:credentials] = credentials if credentials
 
-        rugged_repo.fetch(remote.name, fetch_options)
+        rugged_repo.fetch(remote.name, **fetch_options)
       end
     end
 

@@ -36,7 +36,7 @@ class StaleIssueMarker
     query << " " << enabled_repos_query_filter
     query << " " << unpinned_query_filter
 
-    GithubService.search_issues(query, SEARCH_SORTING).each do |issue|
+    GithubService.search_issues(query, **SEARCH_SORTING).each do |issue|
       comment_as_stale(issue)
     end
   end
