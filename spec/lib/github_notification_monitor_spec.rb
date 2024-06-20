@@ -37,7 +37,7 @@ RSpec.describe GithubNotificationMonitor do
       allow(File).to receive(:write)
         .with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE, anything)
       allow(YAML).to receive(:load_file)
-        .with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE, {:permitted_classes=>[Time]}) do
+        .with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE, {:permitted_classes=>[Date, Time]}) do
         { "timestamps" => { fq_repo_name => { issue.number => 10.minutes.ago } } }
       end
       allow(GithubService).to receive(:repository_notifications)
