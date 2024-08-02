@@ -249,7 +249,7 @@ GEM
     redlock (2.0.6)
       redis-client (>= 0.14.1, < 1.0.0)
     regexp_parser (2.8.2)
-    rexml (3.3.0)
+    rexml (3.3.3)
       strscan
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
