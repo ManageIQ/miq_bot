@@ -155,25 +155,32 @@ namespace :production do
     version = release_version(args[:version])
     remote  = args[:remote] || "upstream"
 
+    puts "Deploying version #{version}..."
+
+    puts
     puts "Ensuring version number..."
+    lines = File.readlines("templates/bot.yaml")
+    lines.map! { |line| line.gsub(/(image: .+miq_bot:)v\d+\.\d+\.\d/, "\\1#{version}") }
+    File.write("templates/bot.yaml", lines.join)
+    unless system("git diff --quiet templates/bot.yaml")
+      exit 1 unless system("git add templates/bot.yaml && git commit -m 'Release #{version}'")
+    end
     unless File.readlines("templates/bot.yaml").grep(/image: .+miq_bot:v/).all? { |l| l.include?("miq_bot:#{version}") }
       $stderr.puts "ERROR: images in templates/bot.yaml have not been updated to the expected version"
       exit 1
     end
 
-    puts "Deploying version #{version}..."
-
     puts
     puts "Tagging repository..."
     if `git tag --list #{version}`.chomp.empty?
-      exit 1 unless system("git tag #{version}")
+      exit 1 unless system("git tag #{version} -m 'Release #{version}'")
     elsif `git tag --points-at HEAD`.chomp != version
       $stderr.puts "ERROR: Already tagged '#{version}', but you are not on that commit"
       exit 1
     else
       puts "Already tagged '#{version}'"
     end
-    exit 1 unless system("git push #{remote} #{version}")
+    exit 1 unless system("git push #{remote} #{version} master")
   end
 
   namespace :release do
