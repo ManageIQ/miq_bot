@@ -28,7 +28,7 @@ RUN ARCH=$(uname -m) && \
       https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm && \
     dnf -y --disableplugin=subscription-manager module enable nodejs:18 && \
     dnf -y module enable ruby:3.1 && \
-    dnf config-manager --save --setopt=tsflags=nodocs --setopt=exclude=openssl*-3.2* && \
+    dnf -y --disablerepo=ubi-9-baseos-rpms swap openssl-fips-provider openssl-libs && \
     dnf -y update && \
     dnf clean all && \
     rm -rf /var/cache/dnf
@@ -40,6 +40,7 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
       libcurl-devel \
       libffi-devel \
       libssh2-devel \
+      libyaml-devel \
       libxml2-devel \
       openssl \
       openssl-devel \
