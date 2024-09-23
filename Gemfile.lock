@@ -76,8 +76,8 @@ GEM
     crass (1.0.6)
     date (3.3.4)
     deep_merge (1.2.2)
-    default_value_for (3.4.0)
-      activerecord (>= 3.2.0, < 7.0)
+    default_value_for (4.0.0)
+      activerecord (>= 6.1, < 7.3)
     diff-lcs (1.5.1)
     docile (1.4.0)
     dry-configurable (1.0.1)
@@ -381,7 +381,7 @@ PLATFORMS
 DEPENDENCIES
   awesome_spawn (~> 1.6)
   config
-  default_value_for (~> 3.4)
+  default_value_for (~> 4.0)
   factory_bot_rails
   faraday
   faraday-http-cache (~> 2.0.0)
