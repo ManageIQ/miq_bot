@@ -163,7 +163,7 @@ GEM
       timeout
     net-smtp (0.5.0)
       net-protocol
-    net-ssh (7.2.3)
+    net-ssh (7.3.0)
     nio4r (2.7.3)
     nokogiri (1.16.7)
       mini_portile2 (~> 2.8.2)
@@ -364,7 +364,7 @@ DEPENDENCIES
   manageiq-style (>= 1.4)
   minigit (~> 0.0.4)
   more_core_extensions (~> 4.4)
-  net-ssh (~> 7.2.0)
+  net-ssh (~> 7.3.0)
   octokit (~> 4.8.0)
   pg
   puma
