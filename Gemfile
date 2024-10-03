@@ -29,7 +29,7 @@ gem 'sidekiq'
 
 # Services gems
 gem 'minigit', '~> 0.0.4'
-gem 'net-ssh', '~> 7.2.0'
+gem 'net-ssh', '~> 7.3.0'
 
 gem 'awesome_spawn',        '~> 1.6'
 gem 'default_value_for',    '~> 4.0'
