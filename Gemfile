@@ -9,7 +9,7 @@ gem 'rails', '~> 6.1.0', '>= 6.1.7.8'
 gem 'pg'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.1.0'
+gem 'sass-rails', '~> 6.0.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
