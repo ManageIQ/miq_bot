@@ -168,9 +168,9 @@ GEM
     marcel (1.0.4)
     method_source (1.1.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.7)
+    mini_portile2 (2.8.8)
     minigit (0.0.4)
-    minitest (5.25.1)
+    minitest (5.25.2)
     more_core_extensions (4.5.0)
       activesupport
       sync
