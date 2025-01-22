@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+# The Ruby version should match the lowest acceptable version of the application
+raise "Ruby 3.1 required" unless RUBY_VERSION >= "3.1" && RUBY_VERSION < "3.2"
+
 plugin 'bundler-inject'
 require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
 

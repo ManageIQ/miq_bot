@@ -2,7 +2,7 @@ require 'faraday'
 
 module GithubService
   module Response
-    class RatelimitLogger < Faraday::Response::Middleware
+    class RatelimitLogger < Faraday::Middleware
       attr_accessor :logger
 
       def initialize(app, logger = nil)
