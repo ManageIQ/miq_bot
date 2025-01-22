@@ -6,7 +6,7 @@ raise "Ruby 3.1 required" unless RUBY_VERSION >= "3.1" && RUBY_VERSION < "3.2"
 plugin 'bundler-inject'
 require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
 
-gem 'rails', '~> 6.1.0', '>= 6.1.7.10'
+gem 'rails', '~> 8.0.0', '>= 8.0.1'
 gem 'concurrent-ruby', '< 1.3.5' # Temporary pin down as concurrent-ruby 1.3.5 breaks Rails 6.1 & 7.0, and rails-core doesn't
                                  # plan to ship a new 6.1 or 7.0 to fix it. See https://github.com/rails/rails/pull/54264
 
