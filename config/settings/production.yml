@@ -132,6 +132,7 @@ labels:
     petrosian/yes: petrosian/yes?
     quinteros/yes: quinteros/yes?
     radjabov/yes: radjabov/yes?
+    spassky/yes: spassky/yes?
   :unremovable:
   - fine/backported
   - fine/no
@@ -168,3 +169,6 @@ labels:
   - radjabov/backported
   - radjabov/no
   - radjabov/yes
+  - spassky/backported
+  - spassky/no
+  - spassky/yes
