@@ -63,7 +63,8 @@ RUN mkdir -p $APP_ROOT && \
     chgrp -R 0 $APP_ROOT && \
     chmod -R g=u $APP_ROOT && \
     cp $APP_ROOT/container-assets/container_env /usr/local/bin && \
-    cp $APP_ROOT/container-assets/entrypoint /usr/local/bin
+    cp $APP_ROOT/container-assets/entrypoint /usr/local/bin && \
+    echo "$REF" > $APP_ROOT/VERSION
 
 WORKDIR $APP_ROOT
 

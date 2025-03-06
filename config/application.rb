@@ -32,6 +32,13 @@ module MiqBot
   end
 
   def self.version
-    @version ||= `GIT_DIR=#{Rails.root.join('.git')} git describe --tags`.chomp
+    @version ||=
+      if Rails.root.join('.git').exist?
+        `GIT_DIR=#{Rails.root.join('.git')} git describe --tags`.chomp
+      elsif Rails.root.join("VERSION").exist?
+        Rails.root.join("VERSION").read.chomp
+      else
+        ""
+      end
   end
 end
