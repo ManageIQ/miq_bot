@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_03_05_205548) do
-
+ActiveRecord::Schema[7.0].define(version: 2025_03_05_205548) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -23,9 +22,9 @@ ActiveRecord::Schema.define(version: 2025_03_05_205548) do
   end
 
   create_table "batch_jobs", id: :serial, force: :cascade do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "expires_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.datetime "expires_at", precision: nil
     t.string "on_complete_class", limit: 255
     t.text "on_complete_args"
     t.string "state", limit: 255
@@ -37,8 +36,8 @@ ActiveRecord::Schema.define(version: 2025_03_05_205548) do
     t.string "last_commit", limit: 255
     t.integer "repo_id"
     t.boolean "pull_request"
-    t.datetime "last_checked_on"
-    t.datetime "last_changed_on"
+    t.datetime "last_checked_on", precision: nil
+    t.datetime "last_changed_on", precision: nil
     t.text "commits_list"
     t.boolean "mergeable"
     t.string "merge_target"
@@ -49,8 +48,8 @@ ActiveRecord::Schema.define(version: 2025_03_05_205548) do
 
   create_table "repos", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
 end
