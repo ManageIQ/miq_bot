@@ -162,7 +162,7 @@ GEM
     mini_portile2 (2.8.8)
     minigit (0.0.4)
     minitest (5.25.4)
-    more_core_extensions (4.5.0)
+    more_core_extensions (4.5.1)
       activesupport
       sync
     net-http (0.6.0)
