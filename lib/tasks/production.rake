@@ -146,7 +146,13 @@ namespace :production do
       $stderr.puts "ERROR: must specify the version number to deploy"
       exit 1
     end
+
     version = "v#{version}" unless version.start_with?("v")
+    unless version.match?(/^v\d+\.\d+\.\d+$/)
+      $stderr.puts "ERROR: version is not in the expected format"
+      exit 1
+    end
+
     version
   end
 
