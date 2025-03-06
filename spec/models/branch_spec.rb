@@ -16,6 +16,21 @@ describe Branch do
     )
   end
 
+  context "database uniqueness on repo and name" do
+    let(:branch_model_stub) { Class.new(ActiveRecord::Base) { self.table_name = "branches" } }
+    let(:duplicate_branch)  { branch_model_stub.new(branch.slice(:name, :repo_id, :last_commit, :commit_uri)) }
+
+    it "with the same data fails" do
+      branch
+      expect { duplicate_branch.save! }.to raise_error(ActiveRecord::RecordNotUnique)
+    end
+
+    it "with a different name succeeds" do
+      branch
+      expect { duplicate_branch.tap { |b| b.name += "different" }.save! }.not_to raise_error(ActiveRecord::RecordNotUnique)
+    end
+  end
+
   context ".github_commit_uri" do
     it "(repo_name)" do
       actual = described_class.github_commit_uri("ManageIQ/sandbox")
