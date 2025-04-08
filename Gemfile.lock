@@ -68,7 +68,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    ast (2.4.2)
+    ast (2.4.3)
     awesome_spawn (1.6.0)
     base64 (0.1.2)
     bigdecimal (3.1.9)
@@ -117,7 +117,7 @@ GEM
       temple (>= 0.8.2)
       thor
       tilt
-    haml_lint (0.61.0)
+    haml_lint (0.62.0)
       haml (>= 5.0)
       parallel (~> 1.10)
       rainbow
@@ -191,13 +191,14 @@ GEM
     optimist (3.2.0)
     ostruct (0.6.1)
     parallel (1.26.3)
-    parser (3.3.7.1)
+    parser (3.3.7.4)
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
+    prism (1.4.0)
     psych (5.2.3)
       date
       stringio
@@ -285,8 +286,9 @@ GEM
       rubocop-ast (>= 1.28.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.38.1)
-      parser (>= 3.3.1.0)
+    rubocop-ast (1.44.0)
+      parser (>= 3.3.7.2)
+      prism (~> 1.4)
     rubocop-performance (1.23.1)
       rubocop (>= 1.48.1, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
