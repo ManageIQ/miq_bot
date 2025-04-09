@@ -41,6 +41,7 @@ core_repos: &core_repos
 - ManageIQ/manageiq-providers-ovirt
 - ManageIQ/manageiq-providers-red_hat_virtualization
 - ManageIQ/manageiq-providers-redfish
+- ManageIQ/manageiq-providers-terraform_enterprise
 - ManageIQ/manageiq-providers-vmware
 - ManageIQ/manageiq-providers-workflows
 - ManageIQ/manageiq-rpm_build
