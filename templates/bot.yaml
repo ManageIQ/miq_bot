@@ -291,7 +291,7 @@ objects:
                 name: postgresql-secrets
           - name: REDIS_URL
             value: "redis://redis:6379/0"
-          image: docker.io/manageiq/miq_bot:v0.22.0
+          image: docker.io/manageiq/miq_bot:v0.23.0
           imagePullPolicy: Always
           name: ui
           ports:
@@ -372,7 +372,7 @@ objects:
                 name: postgresql-secrets
           - name: REDIS_URL
             value: "redis://redis:6379/0"
-          image: docker.io/manageiq/miq_bot:v0.22.0
+          image: docker.io/manageiq/miq_bot:v0.23.0
           imagePullPolicy: Always
           name: queue-worker
           resources:
@@ -420,7 +420,7 @@ objects:
                 name: postgresql-secrets
           - name: REDIS_URL
             value: "redis://redis:6379/0"
-          image: docker.io/manageiq/miq_bot:v0.22.0
+          image: docker.io/manageiq/miq_bot:v0.23.0
           imagePullPolicy: Always
           name: queue-worker-glacial
           resources:
