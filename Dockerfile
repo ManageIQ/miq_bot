@@ -26,7 +26,7 @@ RUN ARCH=$(uname -m) && \
       http://mirror.stream.centos.org/9-stream/BaseOS/${ARCH}/os/Packages/centos-gpg-keys-9.0-26.el9.noarch.rpm && \
     dnf -y install \
       https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm && \
-    dnf config-manager --save --setopt=appstream.exclude=openssl* --setopt=baseos.exclude=openssl* && \
+    dnf -y --disablerepo=ubi-9-baseos-rpms swap openssl-fips-provider openssl-libs && \
     dnf -y --disableplugin=subscription-manager module enable nodejs:18 && \
     dnf -y module enable ruby:3.1 && \
     dnf -y update && \
