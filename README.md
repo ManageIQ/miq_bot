@@ -105,9 +105,14 @@ underscores replaced with hyphens.
 
   Example: `@miq-bot cross_repo_tests ManageIQ/manageiq#1234 including more_core_extensions@1234abcd`
 
+  * The `test_repos` part adds code changes (via the `Gemfile`) and adds entries into the test matrix
+  * The `including` part adds code changes (via the `Gemfile`) but does not add test to the matrix.
+
   Also accepts repository groups, e.g. `/providers`, `/core`, `/all`
 
-  Example: `@miq-bot cross_repo_tests ManageIQ/manageiq#1234, /providers including more_core_extensions@1234abcd
+  Example: `@miq-bot cross_repo_tests ManageIQ/manageiq#1234, /providers including more_core_extensions@1234abcd`
+
+  * This runs the PR, core PR 1234, and providers tests with changes from the PR and more_core_extension
 
 ## Development
 
