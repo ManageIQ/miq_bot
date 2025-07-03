@@ -40,7 +40,7 @@ gem 'awesome_spawn',        '~> 1.6'
 gem 'default_value_for',    '~> 4.0'
 gem 'haml_lint',            '~> 0.51', :require => false
 gem 'irb'
-gem 'manageiq-style',       '>= 1.4',  :require => false
+gem 'manageiq-style',       '~> 1.5', ">=1.5.6", :require => false
 gem 'more_core_extensions', '~> 4.4',  :require => 'more_core_extensions/all'
 gem 'rugged',                          :require => false
 
