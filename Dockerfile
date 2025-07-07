@@ -1,5 +1,4 @@
 FROM registry.access.redhat.com/ubi9/ubi:latest
-MAINTAINER ManageIQ https://manageiq.org
 
 ARG REF=master
 
