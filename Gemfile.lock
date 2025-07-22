@@ -246,7 +246,7 @@ GEM
       ffi (~> 1.0)
     rdoc (6.11.0)
       psych (>= 4.0.0)
-    redis-client (0.24.0)
+    redis-client (0.25.1)
       connection_pool
     redlock (2.0.6)
       redis-client (>= 0.14.1, < 1.0.0)
