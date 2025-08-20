@@ -398,7 +398,7 @@ DEPENDENCIES
   irb
   jquery-rails
   listen
-  manageiq-style (~> 1.5.6)
+  manageiq-style (~> 1.5, >= 1.5.6)
   minigit (~> 0.0.4)
   more_core_extensions (~> 4.4)
   net-ssh (~> 7.3)
