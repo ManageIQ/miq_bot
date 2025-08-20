@@ -57,9 +57,10 @@ RSpec.configure do |config|
   config.after do
     Module.clear_all_cache_with_timeout
 
-    # Disable rubocop check because .empty? doesn't exist on a Sidekiq Queue
-    raise "miq_bot queue is not empty" unless Sidekiq::Queue.new("miq_bot").size == 0 # rubocop:disable Style/ZeroLengthPredicate
-    raise "miq_bot_glacial queue is not empty" unless Sidekiq::Queue.new("miq_bot_glacial").size == 0 # rubocop:disable Style/ZeroLengthPredicate
+    # Check that Sidekiq queues are empty before exiting tests
+    require 'sidekiq/api'
+    raise "miq_bot queue is not empty" unless Sidekiq.redis { |c| c.llen("queue:miq_bot") } == 0
+    raise "miq_bot_glacial queue is not empty" unless Sidekiq.redis { |c| c.llen("queue:miq_bot_glacial") } == 0
   end
 end
 
