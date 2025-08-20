@@ -137,12 +137,17 @@ module GitRepoHelper
       git_add_all
       @commit_count += 1
 
+      # Set default author for tests
+      author = {:name => "Test User", :email => "test@example.com", :time => Time.now}
+
       @last_commit = Rugged::Commit.create(
         repo,
         :message    => msg || "Commit ##{@commit_count}",
         :parents    => [@last_commit].compact,
         :tree       => index.write_tree(repo),
-        :update_ref => "HEAD"
+        :update_ref => "HEAD",
+        :author     => author,
+        :committer  => author
       )
     end
 

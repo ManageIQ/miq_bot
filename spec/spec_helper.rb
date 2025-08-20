@@ -12,7 +12,7 @@ Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
-ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
+ActiveRecord::Migration.check_all_pending! if defined?(ActiveRecord::Migration)
 
 RSpec.configure do |config|
   # ## Mock Framework
@@ -24,7 +24,7 @@ RSpec.configure do |config|
   # config.mock_with :rr
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = ["#{::Rails.root}/spec/fixtures"]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -57,9 +57,10 @@ RSpec.configure do |config|
   config.after do
     Module.clear_all_cache_with_timeout
 
-    # Disable rubocop check because .empty? doesn't exist on a Sidekiq Queue
-    raise "miq_bot queue is not empty" unless Sidekiq::Queue.new("miq_bot").size == 0 # rubocop:disable Style/ZeroLengthPredicate
-    raise "miq_bot_glacial queue is not empty" unless Sidekiq::Queue.new("miq_bot_glacial").size == 0 # rubocop:disable Style/ZeroLengthPredicate
+    # Check that Sidekiq queues are empty before exiting tests
+    require 'sidekiq/api'
+    raise "miq_bot queue is not empty" unless Sidekiq.redis { |c| c.llen("queue:miq_bot") } == 0
+    raise "miq_bot_glacial queue is not empty" unless Sidekiq.redis { |c| c.llen("queue:miq_bot_glacial") } == 0
   end
 end
 
