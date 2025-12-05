@@ -19,10 +19,6 @@ module Kubernetes
     current_namespace == namespace || system("kubectl config set-context --current --namespace=#{namespace}")
   end
 
-  def self.edit_secret(name)
-    system("kubectl edit secret #{name}")
-  end
-
   def self.pod_from_deployment(deployment)
     `kubectl get pods -l name=#{deployment} --output jsonpath={.items..metadata.name}`.chomp
   end
@@ -86,11 +82,88 @@ module IbmCloud
   end
 end
 
-# rubocop:disable Style/StderrPuts
+# rubocop:disable Rails/RakeEnvironment, Style/StderrPuts
+
+module Helpers
+  def self.edit_github_password(secret_name, settings_key)
+    require 'base64'
+    require 'tempfile'
+    require 'yaml'
+
+    secret_yaml = `kubectl get secret #{secret_name} -o yaml`
+    return false unless $?.success?
+
+    # Extract the github_credentials/password field from the secret
+    secret_data = YAML.safe_load(secret_yaml)
+
+    encoded_settings = secret_data.dig("data", settings_key)
+    unless encoded_settings
+      $stderr.puts "ERROR: Key '#{settings_key}' not found in secret '#{secret_name}'"
+      return false
+    end
+
+    decoded_settings = Base64.decode64(encoded_settings)
+    settings_yaml = YAML.safe_load(decoded_settings)
+
+    old_password = settings_yaml.dig("github_credentials", "password")
+    unless old_password
+      $stderr.puts "ERROR: github_credentials/password not found in '#{settings_key}'"
+      return false
+    end
+
+    # Edit the password in a temporary file
+    new_password = nil
+    Tempfile.create(['github_credentials-password-', '.txt'], mode: 0600) do |tempfile|
+      tempfile.write(old_password)
+      tempfile.close
+
+      # Open in editor
+      editor = ENV.fetch('EDITOR', 'vi')
+      unless system("#{editor} #{tempfile.path}")
+        $stderr.puts "ERROR: Failed to run editor '#{editor}'"
+        return false
+      end
+
+      new_password = File.read(tempfile.path).strip
+    end
+
+    if new_password.empty?
+      $stderr.puts "ERROR: Password cannot be blank"
+      return false
+    end
+
+    # Check if password changed and update if needed
+    if new_password != old_password
+      puts "Password has changed. Updating secret..."
+
+      settings_yaml["github_credentials"]["password"] = new_password
+
+      new_settings_yaml = YAML.dump(settings_yaml)
+      secret_data["data"][settings_key] = Base64.strict_encode64(new_settings_yaml)
+
+      # Write to temporary file for kubectl replace
+      Tempfile.create(['secret-', '.yaml']) do |secret_file|
+        secret_file.write(YAML.dump(secret_data))
+        secret_file.close
+
+        # Replace the updated secret
+        unless system("kubectl replace -f #{secret_file.path}")
+          $stderr.puts "ERROR: Failed to replace updated secret"
+          return false
+        end
+        puts "Secret updated successfully!"
+      end
+    else
+      puts "Password unchanged. No update needed."
+    end
+
+    true
+  end
+end
 
 namespace :production do
   desc "Set the local kubernetes context to the production context"
-  task :set_context do # rubocop:disable Rails/RakeEnvironment
+  task :set_context do
     cluster_name = "miq-cluster-us-east-2"
     cluster_id   = "cgm83c8w0she4h8kofeg"
     context      = "#{cluster_name}/#{cluster_id}"
@@ -122,7 +195,7 @@ namespace :production do
 
   desc "Edit the bot token in production"
   task :edit_token => :set_context do
-    exit 1 unless Kubernetes.edit_secret("config")
+    exit 1 unless Helpers.edit_github_password("config", "settings.local.yml")
 
     puts "Restarting the queue-worker pod..."
     exit 1 unless Kubernetes.restart_deployment_pods("queue-worker")
@@ -224,4 +297,4 @@ task :release, [:version, :remote] do |_t, args|
   Rake::Task["production:release"].invoke(*args)
 end
 
-# rubocop:enable Style/StderrPuts
+# rubocop:enable Rails/RakeEnvironment, Style/StderrPuts
