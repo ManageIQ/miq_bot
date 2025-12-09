@@ -1,8 +1,14 @@
 name: Build and Deploy
 on:
   push:
-    tags:
-    - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches-ignore:
+    - dependabot/*
+    - renovate/*
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+permissions:
+  contents: read
 jobs:
   build_and_deploy:
     if: github.repository_owner == 'ManageIQ'
@@ -12,7 +18,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: "3.1"
+        ruby-version: '3.3'
         bundler-cache: true
     - name: Docker login
       run: echo ${{ secrets.DOCKER_REGISTRY_PASSWORD }} | docker login docker.io --password-stdin --username ${{ secrets.DOCKER_REGISTRY_USERNAME }}
@@ -23,7 +29,7 @@ jobs:
     - name: Set up ibmcloud CLI
       uses: IBM/actions-ibmcloud-cli@v1
       with:
-        api_key: ${{ secrets.IBMCLOUD_API_KEY }}
+        api_key: "${{ secrets.IBMCLOUD_API_KEY }}"
         region: us-east
         group: manageiq
         plugins: container-service
