@@ -7,7 +7,7 @@ plugin 'bundler-inject'
 require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
 
 gem 'rails', '~> 7.0.8', '>= 7.0.8.7'
-gem 'concurrent-ruby', '< 1.3.5' # Temporary pin down as concurrent-ruby 1.3.5 breaks Rails 7.0, and rails-core doesn't
+gem 'concurrent-ruby', '< 1.3.7' # Temporary pin down as concurrent-ruby 1.3.5 breaks Rails 7.0, and rails-core doesn't
                                  # plan to ship a new 7.0 to fix it. See https://github.com/rails/rails/pull/54264
 
 # Use PostgreSQL as the database for Active Record
