@@ -1,5 +1,5 @@
 RSpec.describe GithubNotificationMonitor do
-  subject(:notification_monitor) { described_class.new(fq_repo_name) }
+  subject(:notification_monitor) { described_class.new(fq_repo_name, [notification]) }
 
   let(:notification) { double('notification', :issue_number => issue.number) }
   let(:issue) do
@@ -40,8 +40,6 @@ RSpec.describe GithubNotificationMonitor do
         .with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE, {:permitted_classes=>[Date, Time]}) do
         { "timestamps" => { fq_repo_name => { issue.number => 10.minutes.ago } } }
       end
-      allow(GithubService).to receive(:repository_notifications)
-        .with(fq_repo_name, a_hash_including("all" => false)).and_return([notification])
       allow(GithubService).to receive(:issue)
         .with(fq_repo_name, notification.issue_number).and_return(issue)
       allow(GithubService).to receive(:issue_comments)

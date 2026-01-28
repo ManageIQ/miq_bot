@@ -56,8 +56,8 @@ module GithubService
       end
     end
 
-    def repository_notifications(*args)
-      service.repository_notifications(*args).map do |notification|
+    def notifications(*args)
+      service.notifications(*args).map do |notification|
         Notification.new(notification)
       end
     end
