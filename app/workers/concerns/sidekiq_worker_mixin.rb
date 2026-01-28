@@ -71,11 +71,11 @@ module SidekiqWorkerMixin
     def workers
       queue = sidekiq_queue.to_s
 
-      workers = Sidekiq::Workers.new
+      workers = Sidekiq::WorkSet.new
       workers = workers.select do |_processid, _threadid, work|
-        work["queue"] == queue && work.fetch_path("payload", "class") == name
+        work.job.queue == queue && work.job.klass == name
       end
-      workers.sort_by! { |_processid, _threadid, work| work.fetch_path("payload", "enqueued_at") }
+      workers.sort_by! { |_processid, _threadid, work| work.job.enqueued_at }
 
       workers
     end
@@ -91,6 +91,6 @@ module SidekiqWorkerMixin
 
   def first_unique_worker?(workers = nil)
     _processid, _threadid, work = (workers || self.workers).first
-    work.nil? || work.fetch_path("payload", "jid") == jid
+    work.nil? || work.job.jid == jid
   end
 end
