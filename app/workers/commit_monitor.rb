@@ -47,7 +47,10 @@ class CommitMonitor
   end
 
   def process_repos
-    enabled_repos.includes(:branches).each { |repo| process_repo(repo) }
+    enabled_repos.includes(:branches).each do |repo|
+      process_repo(repo)
+      Thread.pass # Allow Sidekiq to do other work (see https://github.com/sidekiq/sidekiq/discussions/5039)
+    end
   end
 
   private

@@ -13,7 +13,10 @@ class GithubNotificationMonitorWorker
   end
 
   def process_repos
-    enabled_repos.each { |repo| process_repo(repo) }
+    enabled_repos.each do |repo|
+      process_repo(repo)
+      Thread.pass # Allow Sidekiq to do other work (see https://github.com/sidekiq/sidekiq/discussions/5039)
+    end
   end
 
   def process_repo(repo)
