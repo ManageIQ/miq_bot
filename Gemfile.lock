@@ -117,11 +117,11 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    haml (6.3.0)
+    haml (6.4.0)
       temple (>= 0.8.2)
       thor
       tilt
-    haml_lint (0.64.0)
+    haml_lint (0.69.0)
       haml (>= 5.0)
       parallel (~> 1.10)
       rainbow
@@ -256,7 +256,7 @@ GEM
       connection_pool
     redlock (2.0.6)
       redis-client (>= 0.14.1, < 1.0.0)
-    regexp_parser (2.10.0)
+    regexp_parser (2.11.3)
     reline (0.6.3)
       io-console (~> 0.5)
     rexml (3.4.4)
@@ -350,9 +350,9 @@ GEM
     stringio (3.1.9)
     sync (0.5.0)
     sysexits (1.2.0)
-    temple (0.10.3)
-    thor (1.4.0)
-    tilt (2.6.0)
+    temple (0.10.4)
+    thor (1.5.0)
+    tilt (2.7.0)
     timecop (0.9.10)
     timeout (0.4.3)
     tsort (0.2.0)
