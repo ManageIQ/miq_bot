@@ -16,13 +16,14 @@ class GithubNotificationMonitor
     "set_milestone"   => :set_milestone
   ).freeze
 
-  def initialize(fq_repo_name)
+  def initialize(fq_repo_name, notifications)
     @username = Settings.github_credentials.username
     @fq_repo_name = fq_repo_name
+    @notifications = notifications
   end
 
   def process_notifications
-    GithubService.repository_notifications(@fq_repo_name, "all" => false).each do |notification|
+    @notifications.each do |notification|
       process_notification(notification)
     end
   end

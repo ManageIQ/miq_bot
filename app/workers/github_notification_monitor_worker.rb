@@ -13,11 +13,15 @@ class GithubNotificationMonitorWorker
   end
 
   def process_repos
-    enabled_repos.each { |repo| process_repo(repo) }
+    notifications_by_repo_name = GithubService.notifications("all" => false).group_by { |n| n.repository.full_name }
+    notifications_by_repo_name.select! { |repo_name, _notifications| enabled_repo_names.include?(repo_name) }
+    notifications_by_repo_name.each do |repo_name, notifications|
+      process_repo(repo_name, notifications)
+    end
   end
 
-  def process_repo(repo)
-    GithubNotificationMonitor.new(repo.name).process_notifications
+  def process_repo(repo_name, notifications)
+    GithubNotificationMonitor.new(repo_name, notifications).process_notifications
   rescue => err
     logger.error err.message
     logger.error err.backtrace.join("\n")
