@@ -99,14 +99,14 @@ GEM
     factory_bot_rails (6.5.1)
       factory_bot (~> 6.5)
       railties (>= 6.1.0)
-    faraday (2.13.2)
+    faraday (2.14.0)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
     faraday-http-cache (2.5.1)
       faraday (>= 0.8)
-    faraday-net_http (3.4.1)
-      net-http (>= 0.5.0)
+    faraday-net_http (3.4.2)
+      net-http (~> 0.5)
     ffi (1.17.1)
     ffi (1.17.1-arm64-darwin)
     ffi (1.17.1-x86_64-linux-gnu)
@@ -138,7 +138,7 @@ GEM
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
-    json (2.12.2)
+    json (2.18.0)
     language_server-protocol (3.17.0.5)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -170,8 +170,8 @@ GEM
     more_core_extensions (4.5.1)
       activesupport
       sync
-    net-http (0.6.0)
-      uri
+    net-http (0.9.1)
+      uri (>= 0.11.1)
     net-imap (0.5.7)
       date
       net-protocol
@@ -361,7 +361,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.6.0)
-    uri (1.0.4)
+    uri (1.1.1)
     webmock (3.25.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
