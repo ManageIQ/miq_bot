@@ -152,11 +152,11 @@ GEM
       net-imap
       net-pop
       net-smtp
-    manageiq-style (1.5.6)
+    manageiq-style (1.5.9)
       more_core_extensions
       optimist
-      rack (>= 2.2.17, < 4)
-      rexml (>= 3.3.9)
+      rack (>= 2.2.19, < 4)
+      rexml (>= 3.4.4)
       rubocop (= 1.56.3)
       rubocop-ast (~> 1.40.0)
       rubocop-performance
@@ -196,7 +196,7 @@ GEM
     optimist (3.2.1)
     ostruct (0.6.1)
     parallel (1.27.0)
-    parser (3.3.8.0)
+    parser (3.3.10.1)
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
@@ -258,7 +258,7 @@ GEM
     regexp_parser (2.10.0)
     reline (0.6.3)
       io-console (~> 0.5)
-    rexml (3.4.1)
+    rexml (3.4.4)
     rspec (3.13.1)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
