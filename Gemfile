@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # The Ruby version should match the lowest acceptable version of the application
-ruby "~> 3.1.4"
+ruby "~> 3.3.10"
 
 plugin 'bundler-inject'
 require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
@@ -59,3 +59,7 @@ group :test do
   gem 'factory_bot_rails'
   gem 'webmock'
 end
+
+# Gems listed to avoid warnings about their removal in future rubies
+gem 'drb'     # Used by activesupport-7.0.8.7/lib/active_support/testing/parallelization.rb
+gem 'mutex_m' # Used by activesupport-7.0.8.7/lib/active_support/notifications.rb
