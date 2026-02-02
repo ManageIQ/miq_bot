@@ -6,7 +6,7 @@ class Branch < ActiveRecord::Base
   validates :last_commit, :presence => true
   validates :repo,        :presence => true
 
-  serialize :commits_list, Array
+  serialize :commits_list, Array, :coder => YAML
 
   default_value_for(:commits_list) { [] }
   default_value_for :mergeable, true
