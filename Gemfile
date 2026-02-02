@@ -42,8 +42,9 @@ gem 'manageiq-style',       '~> 1.5', '>=1.5.6', :require => false
 gem 'more_core_extensions', '~> 4.4',  :require => 'more_core_extensions/all'
 gem 'rugged',                          :require => false
 
-gem 'faraday'
+gem 'faraday', '~> 2.14'
 gem 'faraday-http-cache', '~> 2.5.0'
+gem 'faraday-retry'
 gem 'octokit', '~> 4.25.0', :require => false
 
 group :development, :test do

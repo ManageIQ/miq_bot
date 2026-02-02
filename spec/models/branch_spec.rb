@@ -27,7 +27,7 @@ describe Branch do
 
     it "with a different name succeeds" do
       branch
-      expect { duplicate_branch.tap { |b| b.name += "different" }.save! }.not_to raise_error(ActiveRecord::RecordNotUnique)
+      expect { duplicate_branch.tap { |b| b.name += "different" }.save! }.not_to raise_error
     end
   end
 
