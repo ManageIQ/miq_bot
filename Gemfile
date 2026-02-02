@@ -14,7 +14,7 @@ gem 'concurrent-ruby', '< 1.3.5' # Temporary pin down as concurrent-ruby 1.3.5 b
 gem 'pg'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.1.0'
+gem 'sass-rails', '~> 6.0.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
