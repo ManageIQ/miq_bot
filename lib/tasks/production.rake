@@ -238,11 +238,23 @@ namespace :production do
 
     puts
     puts "Ensuring version number..."
-    lines = File.readlines("templates/bot.yaml")
-    lines.map! { |line| line.gsub(/(image: .+miq_bot:)v\d+\.\d+\.\d/, "\\1#{version}") }
-    File.write("templates/bot.yaml", lines.join)
-    unless system("git diff --quiet templates/bot.yaml")
-      exit 1 unless system("git add templates/bot.yaml && git commit -m 'Release #{version}'")
+    # Modify the versions
+    content = File.read("config/application.rb")
+    content.sub!(/(?<=VERSION = ")\d+\.\d+\.\d+/, version[1..])
+    File.write("config/application.rb", content)
+    content = File.read("templates/bot.yaml")
+    content.gsub!(/(image: .+miq_bot:)v\d+\.\d+\.\d+/, "\\1#{version}")
+    File.write("templates/bot.yaml", content)
+
+    # Commit the changes
+    unless system("git diff --quiet config/application.rb templates/bot.yaml")
+      exit 1 unless system("git add config/application.rb templates/bot.yaml && git commit -m 'Release #{version}'")
+    end
+
+    # Double check the versions
+    unless File.read("config/application.rb").include?("VERSION = \"#{version[1..]}\".freeze")
+      $stderr.puts "ERROR: config/application.rb has not been updated to the expected version"
+      exit 1
     end
     unless File.readlines("templates/bot.yaml").grep(/image: .+miq_bot:v/).all? { |l| l.include?("miq_bot:#{version}") }
       $stderr.puts "ERROR: images in templates/bot.yaml have not been updated to the expected version"
@@ -259,7 +271,11 @@ namespace :production do
     else
       puts "Already tagged '#{version}'"
     end
-    exit 1 unless system("git push #{remote} #{version} master")
+    if ENV.fetch("DRY_RUN", false)
+      puts "** dry-run: git push #{remote} #{version} master"
+    else
+      exit 1 unless system("git push #{remote} #{version} master")
+    end
   end
 
   namespace :release do
@@ -268,12 +284,27 @@ namespace :production do
       version = release_version(args[:version])
       image   = "docker.io/manageiq/miq_bot:#{version}"
 
+      puts "Asserting that the source is on the tagged version..."
+      unless `git tag --points-at HEAD`.chomp == version
+        $stderr.puts "ERROR: Source is not on the tagged version '#{version}'."
+        exit 1
+      end
+      puts "Asserting that the source has no changes from the tagged version..."
+      unless `git status --porcelain`.chomp.empty?
+        $stderr.puts "ERROR: Source has local changes from the tagged version."
+        exit 1
+      end
+
+      puts
       puts "Building docker image..."
-      exit 1 unless system("docker build . --no-cache --build-arg REF=#{version} -t #{image}")
+      exit 1 unless system("docker build . --platform=linux/amd64 --no-cache -t #{image}")
       puts
       puts "Pushing docker image..."
-      exit 1 unless system("docker login docker.io") && system("docker push #{image}")
-      puts
+      if ENV.fetch("DRY_RUN", false)
+        puts "** dry-run: docker login docker.io && docker push #{image}"
+      else
+        exit 1 unless system("docker login docker.io") && system("docker push #{image}")
+      end
     end
 
     desc "Deploy the specified version to Kubernetes"
