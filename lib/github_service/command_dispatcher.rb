@@ -1,16 +1,23 @@
 module GithubService
   class CommandDispatcher
     class << self
-      def registry
-        @registry ||= Hash.new do |h, k|
-          normalized = k.to_s.tr("-", "_")              # Support - or _ in command
-          normalized.chop! if normalized.end_with?("s") # Support singular or plural
-          h[normalized]    if h.key?(normalized)
-        end
+      def find_command_class(command_name)
+        # Normalize the command name: support - or _, and singular or plural
+        normalized = command_name.to_s.tr("-", "_")
+        normalized.chop! if normalized.end_with?("s")
+
+        command_classes.detect { |klass| klass.match_command?(normalized) }
       end
 
-      def register_command(command_name, command_class)
-        registry[command_name.to_s] = command_class
+      def available_commands
+        command_classes.map(&:command_name).sort
+      end
+
+      def command_classes
+        @command_classes ||= begin
+          Rails.application.autoloaders.main.eager_load_dir(File.expand_path("commands", __dir__))
+          GithubService::Commands::Base.descendants
+        end
       end
     end
 
@@ -30,7 +37,7 @@ module GithubService
 
         command       = match[:command]
         command_value = match[:command_value]
-        command_class = self.class.registry[command]
+        command_class = self.class.find_command_class(command)
 
         if command_class.present?
           Rails.logger.info("Dispatching '#{command}' to #{command_class} on issue ##{issue.number} | issuer: #{issuer}, value: #{command_value}")
@@ -39,7 +46,7 @@ module GithubService
           message = <<-EOMSG
 @#{issuer} unrecognized command '#{command}', ignoring...
 
-Accepted commands are: #{self.class.registry.keys.join(", ")}
+Accepted commands are: #{self.class.available_commands.join(", ")}
           EOMSG
           issue.add_comment(message)
         end

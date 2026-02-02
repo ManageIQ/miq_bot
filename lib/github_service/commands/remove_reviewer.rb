@@ -1,6 +1,8 @@
 module GithubService
   module Commands
     class RemoveReviewer < Base
+      alias_as 'rm_reviewer'
+
       private
 
       def _execute(issuer:, value:)

@@ -4,13 +4,11 @@ module GithubService
       class << self
         def inherited(subclass)
           subclass.extend(CommandMethods)
-
-          class_name = subclass.to_s.demodulize
-          subclass.register_as(class_name.underscore)
         end
       end
 
       class_attribute :restriction
+      class_attribute :command_aliases, default: []
 
       attr_reader :issue
 
@@ -65,10 +63,17 @@ module GithubService
       VALID_RESTRICTIONS = [:organization].freeze
 
       module CommandMethods
-        def register_as(command_name)
-          CommandDispatcher.register_command(command_name, self)
+        def command_name
+          self.name.demodulize.underscore
         end
-        alias alias_as register_as
+
+        def alias_as(command_name)
+          self.command_aliases = [*command_aliases, command_name.to_s]
+        end
+
+        def match_command?(command_name)
+          self.command_name == command_name || self.command_aliases.include?(command_name)
+        end
 
         def restrict_to(restriction)
           unless VALID_RESTRICTIONS.include?(restriction)
