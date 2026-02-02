@@ -7,6 +7,17 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 
 module MiqBot
+  VERSION = "0.25.0".freeze
+
+  def self.version
+    @version ||=
+      if Rails.root.join('.git').exist?
+        `GIT_DIR=#{Rails.root.join('.git')} git describe --tags`.chomp
+      else
+        "v#{VERSION}"
+      end
+  end
+
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
@@ -29,16 +40,5 @@ module MiqBot
     console do
       TOPLEVEL_BINDING.eval('self').extend(ConsoleMethods)
     end
-  end
-
-  def self.version
-    @version ||=
-      if Rails.root.join('.git').exist?
-        `GIT_DIR=#{Rails.root.join('.git')} git describe --tags`.chomp
-      elsif Rails.root.join("VERSION").exist?
-        Rails.root.join("VERSION").read.chomp
-      else
-        ""
-      end
   end
 end

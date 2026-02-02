@@ -1,7 +1,5 @@
 FROM registry.access.redhat.com/ubi9/ubi:latest
 
-ARG REF=master
-
 ENV TERM=xterm \
     APP_ROOT=/opt/miq_bot
 
@@ -26,13 +24,10 @@ RUN ARCH=$(uname -m) && \
     dnf -y install \
       https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm && \
     dnf -y --disablerepo=ubi-9-baseos-rpms swap openssl-fips-provider openssl-libs && \
-    dnf -y --disableplugin=subscription-manager module enable nodejs:18 && \
+    dnf -y module enable nodejs:18 && \
     dnf -y module enable ruby:3.3 && \
     dnf -y update && \
-    dnf clean all && \
-    rm -rf /var/cache/dnf
-
-RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install \
+    dnf -y --setopt=tsflags=nodocs install \
       @development \
       cmake \
       git \
@@ -58,15 +53,14 @@ RUN dnf -y --disableplugin=subscription-manager --setopt=tsflags=nodocs install 
     rm -rf /var/log/hawkey.log && \
     rm -rf /var/lib/rpm/__db.*
 
-RUN mkdir -p $APP_ROOT && \
-    curl -L https://github.com/ManageIQ/miq_bot/archive/$REF.tar.gz | tar xz -C $APP_ROOT --strip 1 && \
-    chgrp -R 0 $APP_ROOT && \
+WORKDIR $APP_ROOT
+
+COPY . .
+
+RUN chgrp -R 0 $APP_ROOT && \
     chmod -R g=u $APP_ROOT && \
     cp $APP_ROOT/container-assets/container_env /usr/local/bin && \
-    cp $APP_ROOT/container-assets/entrypoint /usr/local/bin && \
-    echo "$REF" > $APP_ROOT/VERSION
-
-WORKDIR $APP_ROOT
+    cp $APP_ROOT/container-assets/entrypoint /usr/local/bin
 
 RUN echo "gem: --no-document" > ~/.gemrc && \
     bundle config set --local build.rugged --with-ssh && \
