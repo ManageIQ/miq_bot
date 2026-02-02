@@ -271,7 +271,11 @@ namespace :production do
     else
       puts "Already tagged '#{version}'"
     end
-    exit 1 unless system("git push #{remote} #{version} master")
+    if ENV.fetch("DRY_RUN", false)
+      puts "** dry-run: git push #{remote} #{version} master"
+    else
+      exit 1 unless system("git push #{remote} #{version} master")
+    end
   end
 
   namespace :release do
@@ -296,8 +300,11 @@ namespace :production do
       exit 1 unless system("docker build . --platform=linux/amd64 --no-cache -t #{image}")
       puts
       puts "Pushing docker image..."
-      exit 1 unless system("docker login docker.io") && system("docker push #{image}")
-      puts
+      if ENV.fetch("DRY_RUN", false)
+        puts "** dry-run: docker login docker.io && docker push #{image}"
+      else
+        exit 1 unless system("docker login docker.io") && system("docker push #{image}")
+      end
     end
 
     desc "Deploy the specified version to Kubernetes"
