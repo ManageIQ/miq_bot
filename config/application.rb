@@ -7,7 +7,7 @@ require "rails/all"
 Bundler.require(*Rails.groups)
 
 module MiqBot
-  VERSION = "0.26.1".freeze
+  VERSION = "0.26.2".freeze
 
   def self.version
     @version ||=
