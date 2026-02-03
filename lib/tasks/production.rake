@@ -285,13 +285,16 @@ namespace :production do
       image   = "docker.io/manageiq/miq_bot:#{version}"
 
       puts "Asserting that the source is on the tagged version..."
-      unless `git tag --points-at HEAD`.chomp == version
-        $stderr.puts "ERROR: Source is not on the tagged version '#{version}'."
+      source_version = `git tag --points-at HEAD`.chomp
+      unless source_version == version
+        $stderr.puts "ERROR: Source is on '#{source_version}', but expected to be on '#{version}'."
         exit 1
       end
       puts "Asserting that the source has no changes from the tagged version..."
-      unless `git status --porcelain`.chomp.empty?
-        $stderr.puts "ERROR: Source has local changes from the tagged version."
+      source_changes = `git status --porcelain`.chomp
+      unless source_changes.empty?
+        $stderr.puts "ERROR: Source has local changes from the tagged version:"
+        $stderr.puts source_changes
         exit 1
       end
 
