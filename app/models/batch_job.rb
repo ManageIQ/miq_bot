@@ -1,7 +1,7 @@
 class BatchJob < ActiveRecord::Base
   has_many :entries, :class_name => "BatchEntry", :dependent => :destroy, :inverse_of => :job
 
-  serialize :on_complete_args, Array
+  serialize :on_complete_args, :coder => YAML, :type => Array
 
   validates :state, :inclusion => {:in => %w(finalizing), :allow_nil => true}
 
