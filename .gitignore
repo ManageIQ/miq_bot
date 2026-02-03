@@ -33,6 +33,9 @@
 # Ignore production artifacts
 /public/assets
 
+# Ignore CI vendor files
+/vendor/bundle
+
 # Ignore local repos folder
 /repos
 
