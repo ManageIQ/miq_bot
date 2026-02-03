@@ -24,7 +24,7 @@ RUN ARCH=$(uname -m) && \
     dnf -y install \
       https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm && \
     dnf -y --disablerepo=ubi-9-baseos-rpms swap openssl-fips-provider openssl-libs && \
-    dnf -y module enable nodejs:18 && \
+    dnf -y module enable nodejs:24 && \
     dnf -y module enable ruby:3.3 && \
     dnf -y update && \
     dnf -y --setopt=tsflags=nodocs install \
