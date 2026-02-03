@@ -8,14 +8,8 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.enable_reloading = true
 
-  # NOTE: This is enabled in order to autoload some of the dynamically loaded
-  # classes in development, such as the GithubService::Commands classes
-  #
-  # Without this change:
-  #   GithubService::CommandDispatcher.registry["add-label"] # => nil
-  # With this change:
-  #   GithubService::CommandDispatcher.registry["add-label"] # => GithubService::Commands::AddLabel
-  config.eager_load = true
+  # Do not eager load code on boot.
+  config.eager_load = false
 
   # Show full error reports.
   config.consider_all_requests_local = true

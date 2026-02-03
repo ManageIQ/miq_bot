@@ -1,19 +1,72 @@
 RSpec.describe GithubService::CommandDispatcher do
-  subject(:command_dispatcher) { described_class.new(issue) }
+  describe ".find_command_class" do
+    it "with direct names" do
+      expect(described_class.find_command_class("assign")).to eq(GithubService::Commands::Assign)
+    end
 
-  let(:bot_name)       { "miq-bot" }
-  let(:command_issuer) { "chessbyte" }
-  let(:fq_repo_name)   { "foo/bar" }
-  let(:issue) do
-    double('issue',
-           :user           => double(:login => "chrisarcand"),
-           :body           => "Opened this issue",
-           :number         => 1,
-           :labels         => [],
-           :repository_url => "https://api.fakegithub.com/repos/#{fq_repo_name}")
+    it "with underscore name" do
+      expect(described_class.find_command_class("add_label")).to eq(GithubService::Commands::AddLabel)
+    end
+
+    it "with hyphenated name" do
+      expect(described_class.find_command_class("add-label")).to eq(GithubService::Commands::AddLabel)
+    end
+
+    it "with plural underscore name" do
+      expect(described_class.find_command_class("add_labels")).to eq(GithubService::Commands::AddLabel)
+    end
+
+    it "with plural hyphenated name" do
+      expect(described_class.find_command_class("add-labels")).to eq(GithubService::Commands::AddLabel)
+    end
+
+    it "with underscore alias" do
+      expect(described_class.find_command_class("rm_label")).to eq(GithubService::Commands::RemoveLabel)
+    end
+
+    it "with hyphenated alias" do
+      expect(described_class.find_command_class("rm-label")).to eq(GithubService::Commands::RemoveLabel)
+    end
+
+    it "with plural underscore alias" do
+      expect(described_class.find_command_class("rm_labels")).to eq(GithubService::Commands::RemoveLabel)
+    end
+
+    it "with plural hyphenated alias" do
+      expect(described_class.find_command_class("rm-labels")).to eq(GithubService::Commands::RemoveLabel)
+    end
+
+    it "with an unknown command" do
+      expect(described_class.find_command_class("does-not-exist")).to be_nil
+    end
+  end
+
+  describe ".available_commands" do
+    it "returns a list of all commands" do
+      expect(described_class.available_commands).to include("add_label")
+      expect(described_class.available_commands).to include("remove_label")
+    end
+
+    it "does not include aliases" do
+      expect(described_class.available_commands).to_not include("rm_label")
+    end
   end
 
   describe "#dispatch!" do
+    subject(:command_dispatcher) { described_class.new(issue) }
+
+    let(:bot_name)       { "miq-bot" }
+    let(:command_issuer) { "chessbyte" }
+    let(:fq_repo_name)   { "foo/bar" }
+    let(:issue) do
+      double('issue',
+            :user           => double(:login => "chrisarcand"),
+            :body           => "Opened this issue",
+            :number         => 1,
+            :labels         => [],
+            :repository_url => "https://api.fakegithub.com/repos/#{fq_repo_name}")
+    end
+
     before do
       allow(Settings).to receive(:github_credentials).and_return(double(:username => bot_name))
     end
