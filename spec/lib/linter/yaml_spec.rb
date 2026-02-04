@@ -1,11 +1,11 @@
 RSpec.describe Linter::Yaml do
   describe "#parse_output" do
     it "formats the output in the same form as rubocop" do
-      output = <<-EOOUTPUT
-config/settings.yml:8:5: [warning] wrong indentation: expected 2 but found 4 (indentation)
-config/settings.yml:11:1: [error] duplication of key ":a" in mapping (key-duplicates)
-lib/generators/provider/templates/config/settings.yml:8:15: [error] syntax error: could not find expected ':'
-EOOUTPUT
+      output = <<~EOOUTPUT
+        config/settings.yml:8:5: [warning] wrong indentation: expected 2 but found 4 (indentation)
+        config/settings.yml:11:1: [error] duplication of key ":a" in mapping (key-duplicates)
+        lib/generators/provider/templates/config/settings.yml:8:15: [error] syntax error: could not find expected ':'
+      EOOUTPUT
 
       actual = described_class.new(double("branch")).send(:parse_output, output)
 

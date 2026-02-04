@@ -1,22 +1,19 @@
 describe PullRequestMonitor do
   describe "#process_repo" do
-    let(:repo)   { create(:repo) }
+    let(:repo) { create(:repo) }
 
     let(:github_pr_head_repo) { double("Github repo", :html_url => "https://github.com/SomeUser/some_repo") }
     let(:github_pr) do
       double("Github PR",
-        :number => 1,
-        :title  => "PR number 1",
+             :number => 1,
+             :title  => "PR number 1",
 
-        :base => double("Github PR base",
-          :ref  => "master",
-          :repo => double("Github repo", :html_url => "https://github.com/#{repo.name}")
-        ),
+             :base   => double("Github PR base",
+                               :ref  => "master",
+                               :repo => double("Github repo", :html_url => "https://github.com/#{repo.name}")),
 
-        :head => double("Github PR head",
-          :repo => github_pr_head_repo
-        )
-      )
+             :head   => double("Github PR head",
+                               :repo => github_pr_head_repo))
     end
 
     def stub_git_service
@@ -39,11 +36,11 @@ describe PullRequestMonitor do
       stub_git_service
 
       expect(repo).to receive(:synchronize_pr_branches).with([{
-        :number       => 1,
-        :html_url     => "https://github.com/SomeUser/some_repo",
-        :merge_target => "master",
-        :pr_title     => "PR number 1"
-      }]).and_call_original
+                                                               :number       => 1,
+                                                               :html_url     => "https://github.com/SomeUser/some_repo",
+                                                               :merge_target => "master",
+                                                               :pr_title     => "PR number 1"
+                                                             }]).and_call_original
       PullRequestMonitorHandlers.constants.each do |c|
         expect(PullRequestMonitorHandlers.const_get(c)).to receive(:perform_async)
       end
@@ -59,11 +56,11 @@ describe PullRequestMonitor do
         stub_git_service
 
         expect(repo).to receive(:synchronize_pr_branches).with([{
-          :number       => 1,
-          :html_url     => "https://github.com/#{repo.name}",
-          :merge_target => "master",
-          :pr_title     => "PR number 1"
-        }]).and_call_original
+                                                                 :number       => 1,
+                                                                 :html_url     => "https://github.com/#{repo.name}",
+                                                                 :merge_target => "master",
+                                                                 :pr_title     => "PR number 1"
+                                                               }]).and_call_original
         PullRequestMonitorHandlers.constants.each do |c|
           expect(PullRequestMonitorHandlers.const_get(c)).to receive(:perform_async)
         end

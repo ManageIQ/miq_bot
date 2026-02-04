@@ -43,10 +43,10 @@ module GithubService
           Rails.logger.info("Dispatching '#{command}' to #{command_class} on issue ##{issue.number} | issuer: #{issuer}, value: #{command_value}")
           command_class.new(issue).execute!(:issuer => issuer, :value => command_value)
         else
-          message = <<-EOMSG
-@#{issuer} unrecognized command '#{command}', ignoring...
+          message = <<~EOMSG
+            @#{issuer} unrecognized command '#{command}', ignoring...
 
-Accepted commands are: #{self.class.available_commands.join(", ")}
+            Accepted commands are: #{self.class.available_commands.join(", ")}
           EOMSG
           issue.add_comment(message)
         end

@@ -17,6 +17,7 @@ module ServiceMixin
   module ClassMethods
     def call(*options)
       raise "no block given" unless block_given?
+
       yield new(*options)
     end
   end

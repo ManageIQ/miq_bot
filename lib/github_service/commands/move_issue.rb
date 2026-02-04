@@ -40,12 +40,12 @@ module GithubService
       end
 
       def new_issue_body
-        <<-EOS
-#{issue.body}
+        <<~EOS
+          #{issue.body}
 
----
+          ---
 
-*This issue was moved to this repository from #{issue.html_url}, originally opened by @#{issue.author}*
+          *This issue was moved to this repository from #{issue.html_url}, originally opened by @#{issue.author}*
         EOS
       end
     end

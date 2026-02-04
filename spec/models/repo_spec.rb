@@ -264,25 +264,25 @@ describe Repo do
       allow_any_instance_of(Branch).to receive(:git_service).and_return(git_service)
 
       results = repo.synchronize_pr_branches([
-        {
-          :number       => pr_branch_to_keep.pr_number,
-          :html_url     => "https://example.com/#{repo.name}",
-          :merge_target => pr_branch_to_keep.merge_target,
-          :pr_title     => pr_branch_to_keep.pr_title
-        },
-        {
-          :number       => pr_branch_to_change.pr_number,
-          :html_url     => "https://example.com/#{repo.name}",
-          :merge_target => pr_branch_to_change.merge_target,
-          :pr_title     => "New Title"
-        },
-        {
-          :number       => pr_number_to_create,
-          :html_url     => "https://example.com/SomeOtherUser/some_other_repo",
-          :merge_target => "master",
-          :pr_title     => "New PR"
-        }
-      ])
+                                               {
+                                                 :number       => pr_branch_to_keep.pr_number,
+                                                 :html_url     => "https://example.com/#{repo.name}",
+                                                 :merge_target => pr_branch_to_keep.merge_target,
+                                                 :pr_title     => pr_branch_to_keep.pr_title
+                                               },
+                                               {
+                                                 :number       => pr_branch_to_change.pr_number,
+                                                 :html_url     => "https://example.com/#{repo.name}",
+                                                 :merge_target => pr_branch_to_change.merge_target,
+                                                 :pr_title     => "New Title"
+                                               },
+                                               {
+                                                 :number       => pr_number_to_create,
+                                                 :html_url     => "https://example.com/SomeOtherUser/some_other_repo",
+                                                 :merge_target => "master",
+                                                 :pr_title     => "New PR"
+                                               }
+                                             ])
 
       branches = repo.branches.order(:id)
       expect(branches.size).to eq(3)

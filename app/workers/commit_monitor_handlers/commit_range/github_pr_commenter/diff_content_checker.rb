@@ -28,6 +28,7 @@ module CommitMonitorHandlers::CommitRange
     def check_diff_lines
       branch.git_service.diff.with_each_line do |line, _parent_hunk, parent_patch|
         next unless line.addition?
+
         check_line(line, parent_patch)
       end
     rescue GitService::UnmergeableError

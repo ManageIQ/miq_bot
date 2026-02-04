@@ -35,6 +35,7 @@ module CommitMonitorHandlers::CommitRange
 
     def validate_migration_timestamp(file)
       return unless file.include?("db/migrate/")
+
       ts = File.basename(file).split("_").first
       return if valid_timestamp?(ts)
 

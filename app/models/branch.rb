@@ -39,7 +39,7 @@ class Branch < ActiveRecord::Base
     "https://github.com/#{repo_name}/commit/#{sha}"
   end
 
-  def self.github_compare_uri(repo_name, sha1 = "$commit1", sha2 ="$commit2")
+  def self.github_compare_uri(repo_name, sha1 = "$commit1", sha2 = "$commit2")
     "https://github.com/#{repo_name}/compare/#{sha1}~...#{sha2}"
   end
 

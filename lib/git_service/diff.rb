@@ -1,6 +1,7 @@
 module GitService
   class Diff
     attr_reader :raw_diff
+
     def initialize(raw_diff)
       @raw_diff = raw_diff
     end

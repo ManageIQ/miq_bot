@@ -68,17 +68,17 @@ describe BatchJob do
 
     it "with entries that are not complete" do
       job = described_class.new(:entries => [
-        BatchEntry.new,
-        BatchEntry.new(:state => "succeeded")
-      ])
+                                  BatchEntry.new,
+                                  BatchEntry.new(:state => "succeeded")
+                                ])
       expect(job.entries_complete?).to be_falsey
     end
 
     it "with entries that are complete" do
       job = described_class.new(:entries => [
-        BatchEntry.new(:state => "failed"),
-        BatchEntry.new(:state => "succeeded")
-      ])
+                                  BatchEntry.new(:state => "failed"),
+                                  BatchEntry.new(:state => "succeeded")
+                                ])
       expect(job.entries_complete?).to be_truthy
     end
   end
@@ -104,9 +104,9 @@ describe BatchJob do
 
     it "when entries are not complete" do
       job = described_class.create!(:entries => [
-        BatchEntry.new,
-        BatchEntry.new(:state => "succeeded")
-      ])
+                                      BatchEntry.new,
+                                      BatchEntry.new(:state => "succeeded")
+                                    ])
 
       expect(job).to_not receive(:finalize!)
 
@@ -143,9 +143,9 @@ describe BatchJob do
     context "when entries are complete" do
       let(:job) do
         described_class.create!(:entries => [
-          BatchEntry.new(:state => "failed"),
-          BatchEntry.new(:state => "succeeded")
-        ])
+                                  BatchEntry.new(:state => "failed"),
+                                  BatchEntry.new(:state => "succeeded")
+                                ])
       end
 
       include_examples "#finalize!"
