@@ -6,6 +6,8 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+require "sidekiq/api"
+
 module MiqBot
   VERSION = "0.26.2".freeze
 
