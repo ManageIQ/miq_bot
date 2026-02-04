@@ -1,5 +1,5 @@
 describe PullRequestMonitorHandlers::WipLabeler do
-  let(:branch)         { create(:pr_branch) }
+  let(:branch) { create(:pr_branch) }
 
   before do
     stub_sidekiq_logger

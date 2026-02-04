@@ -8,6 +8,7 @@ class PrMergeabilityChecker
 
   def perform(branch_id)
     return unless find_branch(branch_id, :pr)
+
     logger.info("Determining mergeability of PR #{branch.fq_pr_number}.")
 
     process_mergeability

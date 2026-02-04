@@ -84,11 +84,11 @@ module GithubService
 
       def self.test_repo_clone_dir
         @test_repo_clone_dir ||= begin
-                                   url_parts = test_repo_url.split("/")[-2, 2]
-                                   repo_org  = url_parts.first
-                                   repo_dir  = test_repo_name
-                                   ::Repo::BASE_PATH.join(repo_org, repo_dir).to_s
-                                 end
+          url_parts = test_repo_url.split("/")[-2, 2]
+          repo_org  = url_parts.first
+          repo_dir  = test_repo_name
+          ::Repo::BASE_PATH.join(repo_org, repo_dir).to_s
+        end
       end
 
       def self.bot_name
@@ -102,12 +102,12 @@ module GithubService
       # The new branch name for this particular run of the command (uniq)
       def branch_name
         @branch_name ||= begin
-                           uuid     = SecureRandom.uuid
-                           bot_name = self.class.bot_name
-                           issue_id = "#{issue.repo_name}-#{issue.number}"
+          uuid = SecureRandom.uuid
+          bot_name = self.class.bot_name
+          issue_id = "#{issue.repo_name}-#{issue.number}"
 
-                           "#{uuid}-#{bot_name}-run-tests-#{issue_id}"
-                         end
+          "#{uuid}-#{bot_name}-run-tests-#{issue_id}"
+        end
       end
 
       def run_tests

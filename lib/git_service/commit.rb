@@ -1,6 +1,7 @@
 module GitService
   class Commit
     attr_reader :commit_oid, :rugged_repo
+
     def initialize(rugged_repo, commit_oid)
       @commit_oid  = commit_oid
       @rugged_repo = rugged_repo

@@ -14,6 +14,7 @@ class MessageCollector
     if max_size && line.length >= max_size
       raise ArgumentError, "line length must be less than #{max_size}"
     end
+
     @lines << line
   end
 

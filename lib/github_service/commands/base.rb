@@ -79,6 +79,7 @@ module GithubService
           unless VALID_RESTRICTIONS.include?(restriction)
             raise RestrictionError, "'#{restriction}' is not a valid restriction"
           end
+
           self.restriction = restriction
         end
       end

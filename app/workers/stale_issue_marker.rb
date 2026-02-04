@@ -77,14 +77,14 @@ class StaleIssueMarker
               "because it has not been updated for at least 3 months.\n\n"
     message <<
       if issue.pull_request?
-        "If these changes are still valid, please remove the "    \
+        "If these changes are still valid, please remove the " \
           "`stale` label, make any changes requested by reviewers " \
-          "(if any), and ensure that this issue is being looked "   \
+          "(if any), and ensure that this issue is being looked " \
           "at by the assigned/reviewer(s)."
       else
         "If you can still reproduce this issue on the current " \
           "release or on `master`, please reply with all of the " \
-          "information you have about it in order to keep the "   \
+          "information you have about it in order to keep the " \
           "issue open."
       end
 

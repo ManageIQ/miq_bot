@@ -64,6 +64,7 @@ class Repo < ActiveRecord::Base
 
   def with_git_service
     raise "no block given" unless block_given?
+
     MinigitService.call(path) do |git|
       git.fetch("--all")
       yield git

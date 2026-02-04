@@ -52,6 +52,7 @@ module GithubService
       end
 
       return false if actual_labels_to_add.empty?
+
       wipify_title if actual_labels_to_add.include?("wip")
 
       # GithubService itself uses this method to override the Octokit method.
@@ -62,6 +63,7 @@ module GithubService
 
     def remove_label(label_to_remove)
       return false unless labels.delete?(label_to_remove)
+
       unwipify_title if label_to_remove.include?("wip")
 
       # GithubService itself uses this method to override the Octokit method.

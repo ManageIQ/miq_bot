@@ -1,6 +1,7 @@
 module Linter
   class Base
     attr_reader :branch
+
     delegate :logger, :to => :branch
 
     def initialize(branch)
@@ -23,7 +24,7 @@ module Linter
         else
           files += collected_files_to_lint(dir)
           logger.info("#{log_header} Collected #{files.length} files.")
-          logger.debug { "#{log_header} File list: #{files.inspect}"}
+          logger.debug { "#{log_header} File list: #{files.inspect}" }
           run_linter(dir)
         end
       end

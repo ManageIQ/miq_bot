@@ -42,9 +42,9 @@ describe MinigitService do
   end
 
   it "#new_commits" do
-    expect(service).to receive(:rev_list).and_return(<<-EOGIT)
-03168b97d19a2f7954e5b29a5cb18862e707ab6c
-7575fbbc4919aa64ea34c30102964b6ca6523707
+    expect(service).to receive(:rev_list).and_return(<<~EOGIT)
+      03168b97d19a2f7954e5b29a5cb18862e707ab6c
+      7575fbbc4919aa64ea34c30102964b6ca6523707
     EOGIT
 
     with_service do |git|
@@ -73,29 +73,29 @@ describe MinigitService do
 
   context "#diff_details" do
     it "parses the diff contents" do
-      expect(service).to receive(:diff).with("--patience", "-U0", "--no-color", "6c4a4487~...6c4a4487").and_return(<<-EOGIT)
-diff --git a/new_file.rb b/new_file.rb
-new file mode 100644
-index 0000000..b4c1281
---- /dev/null
-+++ b/new_file.rb
-@@ -0,0 +1,39 @@
-+class SomeClass
-+end
-+
-diff --git a/changed_file.rb b/changed_file.rb
-index 4f807bb..57e5993 100644
---- a/changed_file.rb
-+++ b/changed_file.rb
-@@ -29,0 +30 @@ def method1
-+    x = 1
-@@ -30,0 +32 @@ def method2
-+    x = 2
-@@ -68,3 +69,0 @@ def method 3
--    if x == 1
--      x = 3
--    end
-    EOGIT
+      expect(service).to receive(:diff).with("--patience", "-U0", "--no-color", "6c4a4487~...6c4a4487").and_return(<<~EOGIT)
+        diff --git a/new_file.rb b/new_file.rb
+        new file mode 100644
+        index 0000000..b4c1281
+        --- /dev/null
+        +++ b/new_file.rb
+        @@ -0,0 +1,39 @@
+        +class SomeClass
+        +end
+        +
+        diff --git a/changed_file.rb b/changed_file.rb
+        index 4f807bb..57e5993 100644
+        --- a/changed_file.rb
+        +++ b/changed_file.rb
+        @@ -29,0 +30 @@ def method1
+        +    x = 1
+        @@ -30,0 +32 @@ def method2
+        +    x = 2
+        @@ -68,3 +69,0 @@ def method 3
+        -    if x == 1
+        -      x = 3
+        -    end
+      EOGIT
 
       with_service do |git|
         expect(git.diff_details("6c4a4487")).to eq(
@@ -124,10 +124,10 @@ index 4f807bb..57e5993 100644
 
   context "#diff_file_names" do
     it "parses the output" do
-      expect(service).to receive(:diff).with("--name-only", "6c4a4487~...6c4a4487").and_return(<<-EOGIT)
-/path/to/file/a.rb
-/path/to/file/b.rb
-    EOGIT
+      expect(service).to receive(:diff).with("--name-only", "6c4a4487~...6c4a4487").and_return(<<~EOGIT)
+        /path/to/file/a.rb
+        /path/to/file/b.rb
+      EOGIT
 
       with_service do |git|
         expect(git.diff_file_names("6c4a4487")).to eq [

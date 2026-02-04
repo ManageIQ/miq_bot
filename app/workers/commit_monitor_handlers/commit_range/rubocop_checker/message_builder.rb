@@ -116,6 +116,7 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   def format_line(file, offense)
     line = offense.fetch_path("location", "line")
     return nil unless line
+
     uri = File.join(line_uri, "blob", commits.last, file["path"]) << "#L#{line}"
     "[Line #{line}](#{uri})"
   end

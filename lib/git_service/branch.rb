@@ -4,6 +4,7 @@ require 'fileutils'
 module GitService
   class Branch
     attr_reader :branch
+
     def initialize(branch)
       @branch = branch
     end
@@ -139,6 +140,7 @@ module GitService
 
     def ref_name
       return "refs/#{branch.name}" if branch.name.include?("prs/")
+
       "refs/remotes/origin/#{branch.name}"
     end
 

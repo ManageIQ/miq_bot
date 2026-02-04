@@ -27,6 +27,7 @@ module SidekiqWorkerMixin
       i = settings.included_repos.try(:flatten)
       e = settings.excluded_repos.try(:flatten)
       raise "Do not specify both excluded_repos and included_repos in settings for #{settings_key.inspect}" if i && e
+
       return i, e
     end
     private :included_and_excluded_repos

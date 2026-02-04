@@ -48,6 +48,7 @@ class BatchJob < ActiveRecord::Base
 
       return if finalizing?
       return unless expired? || entries_complete?
+
       finalize!
     end
   end

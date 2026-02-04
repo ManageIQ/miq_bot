@@ -4,10 +4,9 @@ module BatchJobWorkerMixin
   module ClassMethods
     def perform_batch_async(*args)
       BatchJob.perform_async(batch_workers, args,
-        :on_complete_class => self,
-        :on_complete_args  => args,
-        :expires_at        => 5.minutes.from_now
-      )
+                             :on_complete_class => self,
+                             :on_complete_args  => args,
+                             :expires_at        => 5.minutes.from_now)
     end
   end
 

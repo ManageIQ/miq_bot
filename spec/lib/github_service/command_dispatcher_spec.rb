@@ -60,11 +60,11 @@ RSpec.describe GithubService::CommandDispatcher do
     let(:fq_repo_name)   { "foo/bar" }
     let(:issue) do
       double('issue',
-            :user           => double(:login => "chrisarcand"),
-            :body           => "Opened this issue",
-            :number         => 1,
-            :labels         => [],
-            :repository_url => "https://api.fakegithub.com/repos/#{fq_repo_name}")
+             :user           => double(:login => "chrisarcand"),
+             :body           => "Opened this issue",
+             :number         => 1,
+             :labels         => [],
+             :repository_url => "https://api.fakegithub.com/repos/#{fq_repo_name}")
     end
 
     before do

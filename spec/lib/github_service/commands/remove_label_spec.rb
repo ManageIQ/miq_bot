@@ -79,7 +79,7 @@ RSpec.describe GithubService::Commands::RemoveLabel do
 
       context "without a triage team" do
         before do
-          message = "@chessbyte Cannot remove the following labels since they require "              \
+          message = "@chessbyte Cannot remove the following labels since they require " \
                     "[triage team permissions](https://github.com/orgs/ManageIQ/teams/core-triage)" \
                     ": jansa/no, jansa/yes"
 
@@ -96,7 +96,7 @@ RSpec.describe GithubService::Commands::RemoveLabel do
 
       context "with a triage team" do
         before do
-          message = "@chessbyte Cannot remove the following labels since they require "              \
+          message = "@chessbyte Cannot remove the following labels since they require " \
                     "[triage team permissions](https://github.com/orgs/ManageIQ/teams/core-triage)" \
                     ": jansa/no, jansa/yes"
 

@@ -15,7 +15,8 @@ class OffenseMessage
 
     def initialize(severity, message, group = nil, locator = nil)
       raise ArgumentError, "severity must be one of #{SEVERITY.keys.join(", ")}" unless SEVERITY.key?(severity)
-      raise ArgumentError, "message is required"  if message.blank?
+      raise ArgumentError, "message is required" if message.blank?
+
       @severity = severity
       @message  = message
       @group    = group
