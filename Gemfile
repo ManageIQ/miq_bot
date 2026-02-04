@@ -6,7 +6,7 @@ ruby "~> 3.3.10"
 plugin 'bundler-inject'
 require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
 
-gem 'rails', '~> 7.2.3'
+gem 'rails', '~> 8.0.4'
 
 # Use PostgreSQL as the database for Active Record
 gem 'pg'
@@ -58,7 +58,3 @@ group :test do
   gem 'factory_bot_rails'
   gem 'webmock'
 end
-
-# Gems listed to avoid warnings about their removal in future rubies
-gem 'drb'     # Used by activesupport-7.0.8.7/lib/active_support/testing/parallelization.rb
-gem 'mutex_m' # Used by activesupport-7.0.8.7/lib/active_support/notifications.rb
