@@ -24,21 +24,21 @@ RSpec.describe GithubService::Commands::RemoveLabel do
 
   context "with valid labels" do
     before do
-      %w(question wontfix).each do |label|
+      %w[question wontfix].each do |label|
         allow(GithubService).to receive(:valid_label?).with("foo/bar", label).and_return(true)
       end
     end
 
     context "when the labels are applied" do
       before do
-        %w(question wontfix).each do |label|
+        %w[question wontfix].each do |label|
           expect(issue).to receive(:applied_label?)
             .with(label).and_return(true)
         end
       end
 
       it "removes the labels" do
-        %w(question wontfix).each do |label|
+        %w[question wontfix].each do |label|
           expect(issue).to receive(:remove_label).with(label)
         end
       end

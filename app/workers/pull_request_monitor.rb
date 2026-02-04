@@ -24,7 +24,7 @@ class PullRequestMonitor
 
   def perform
     if !first_unique_worker?
-      logger.info "#{self.class} is already running, skipping"
+      logger.info("#{self.class} is already running, skipping")
     else
       process_repos
     end

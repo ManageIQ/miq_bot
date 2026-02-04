@@ -7,7 +7,7 @@ module Schedulers
 
     def perform
       if !first_unique_worker?
-        logger.info "#{self.class} is already running, skipping"
+        logger.info("#{self.class} is already running, skipping")
       else
         process_stale_issues
       end

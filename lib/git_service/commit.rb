@@ -40,7 +40,7 @@ module GitService
       rugged_commit.committer[:time].to_time.strftime("%c %z")
     end
 
-    # Note:  really not needed, but keeps it consistent
+    # NOTE: really not needed, but keeps it consistent
     def formatted_commit_message
       rugged_commit.message
     end

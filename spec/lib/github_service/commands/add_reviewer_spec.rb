@@ -24,7 +24,7 @@ RSpec.describe GithubService::Commands::AddReviewer do
     let(:command_value) { "good_user, good_user" }
 
     it "review request that user" do
-      expect(issue).to receive(:add_reviewer).with(%w(good_user good_user))
+      expect(issue).to receive(:add_reviewer).with(%w[good_user good_user])
     end
   end
 

@@ -44,7 +44,7 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
         1 file checked, 0 offenses detected
         Everything looks fine.
       EOMSG
-      expect(subject.first.split(" ").last).to match /:[\w\d\+]+:/ # Ends with an emoji ;)
+      expect(subject.first.split(" ").last).to match /:[\w\d+]+:/ # Ends with an emoji ;)
     end
 
     it "with results generating multiple comments" do

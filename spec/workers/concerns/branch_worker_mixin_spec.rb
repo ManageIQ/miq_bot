@@ -62,29 +62,29 @@ describe BranchWorkerMixin do
   end
 
   it "#commits" do
-    pr_branch.update(:commits_list => %w(a b c))
+    pr_branch.update(:commits_list => %w[a b c])
     subject.find_branch(pr_branch.id)
 
-    expect(subject.commits).to eq(%w(a b c))
+    expect(subject.commits).to eq(%w[a b c])
   end
 
   it "#commit_range" do
-    pr_branch.update(:commits_list => %w(a b c))
+    pr_branch.update(:commits_list => %w[a b c])
     subject.find_branch(pr_branch.id)
 
-    expect(subject.commit_range).to eq(%w(a c))
+    expect(subject.commit_range).to eq(%w[a c])
   end
 
   describe "#commit_range_text" do
     it "with a range of commits" do
-      pr_branch.update(:commits_list => %w(a b c))
+      pr_branch.update(:commits_list => %w[a b c])
       subject.find_branch(pr_branch.id)
 
       expect(subject.commit_range_text).to eq("https://example.com/SomeUser/some_repo/compare/a~...c")
     end
 
     it "with a single commit" do
-      pr_branch.update(:commits_list => %w(a))
+      pr_branch.update(:commits_list => %w[a])
       subject.find_branch(pr_branch.id)
 
       expect(subject.commit_range_text).to eq("https://example.com/SomeUser/some_repo/commit/a")

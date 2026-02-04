@@ -23,7 +23,7 @@ module Linter
         file.end_with?(".rb") ||
           file.end_with?(".ru") ||
           file.end_with?(".rake") ||
-          File.basename(file).in?(%w(Gemfile Rakefile))
+          File.basename(file).in?(%w[Gemfile Rakefile])
       end.reject do |file|
         file.end_with?("db/schema.rb")
       end

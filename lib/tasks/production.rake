@@ -52,7 +52,7 @@ module IbmCloud
   end
 
   def self.plugin_available?(plugin)
-    `ibmcloud plugin list --output json | jq -r .[].Name`.lines(chomp: true).include?(plugin)
+    `ibmcloud plugin list --output json | jq -r .[].Name`.lines(:chomp => true).include?(plugin)
   end
 
   def self.ks_plugin_available?
@@ -60,7 +60,7 @@ module IbmCloud
   end
 
   def self.api_key
-    ENV["IBMCLOUD_BOT_API_KEY"]
+    ENV.fetch("IBMCLOUD_BOT_API_KEY", nil)
   end
 
   def self.logged_in_as
@@ -113,7 +113,7 @@ module Helpers
 
     # Edit the password in a temporary file
     new_password = nil
-    Tempfile.create(['github_credentials-password-', '.txt'], mode: 0600) do |tempfile|
+    Tempfile.create(['github_credentials-password-', '.txt'], :mode => 0o600) do |tempfile|
       tempfile.write(old_password)
       tempfile.close
 
@@ -247,8 +247,8 @@ namespace :production do
     File.write("templates/bot.yaml", content)
 
     # Commit the changes
-    unless system("git diff --quiet config/application.rb templates/bot.yaml")
-      exit 1 unless system("git add config/application.rb templates/bot.yaml && git commit -m 'Release #{version}'")
+    if !system("git diff --quiet config/application.rb templates/bot.yaml") && !system("git add config/application.rb templates/bot.yaml && git commit -m 'Release #{version}'")
+      exit 1
     end
 
     # Double check the versions

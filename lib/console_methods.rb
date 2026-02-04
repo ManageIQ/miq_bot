@@ -1,7 +1,7 @@
 module ConsoleMethods
   def simulate_sidekiq(*queue_names, run_once: false)
     run = true
-    while run do
+    while run
       queue_names.each do |queue_name|
         puts "[#{Time.now}] Processing '#{queue_name}'..."
         Sidekiq::Queue.new(queue_name).each do |job|

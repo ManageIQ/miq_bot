@@ -25,7 +25,7 @@ module CommitMonitorHandlers
         def filter_on_diff
           @results["files"].each do |f|
             f["offenses"].select! do |o|
-              o["severity"].in?(%w(error fatal)) ||
+              o["severity"].in?(%w[error fatal]) ||
                 @diff_details[f["path"]].include?(o["location"]["line"])
             end
           end
@@ -33,10 +33,10 @@ module CommitMonitorHandlers
 
         def filter_void_warnings_in_spec_files
           @results["files"].each do |f|
-            next unless f["path"].match %r{(?:^|/)spec/.+_spec.rb}
+            next unless f["path"].match(%r{(?:^|/)spec/.+_spec.rb})
 
             f["offenses"].reject! do |o|
-              o["cop_name"].in?(%w(Void Lint/Void))
+              o["cop_name"].in?(%w[Void Lint/Void])
             end
           end
         end

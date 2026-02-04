@@ -3,7 +3,7 @@ class BatchJob < ActiveRecord::Base
 
   serialize :on_complete_args, :coder => YAML, :type => Array
 
-  validates :state, :inclusion => {:in => %w(finalizing), :allow_nil => true}
+  validates :state, :inclusion => {:in => %w[finalizing], :allow_nil => true}
 
   SEMAPHORE = Mutex.new
 

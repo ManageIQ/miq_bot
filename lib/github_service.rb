@@ -29,10 +29,10 @@ module GithubService
 
     # Deletes the issue comments found by the provided block, then creates new
     # issue comments from those provided.
-    def replace_comments(fq_repo_name, issue_number, new_comments)
+    def replace_comments(fq_repo_name, issue_number, new_comments, &block)
       raise "no block given" unless block_given?
 
-      to_delete = issue_comments(fq_repo_name, issue_number).select { |c| yield c }
+      to_delete = issue_comments(fq_repo_name, issue_number).select(&block)
       delete_comments(fq_repo_name, to_delete.map(&:id))
       add_comments(fq_repo_name, issue_number, new_comments)
     end
@@ -121,14 +121,13 @@ module GithubService
       if username_lookup_cache.key?(username)
         username_lookup_cache[username]
       else
-        username_lookup_cache[username] ||= begin
+        username_lookup_cache[username] ||=
           case Net::HTTP.new("github.com", 443).tap { |h| h.use_ssl = true }.request_head("/#{username}")
           when Net::HTTPNotFound then nil # invalid username
           when Net::HTTPOK       then service.user(username)[:id]
           else
             raise "Error on GitHub with username lookup"
           end
-        end
       end
     end
 
@@ -146,10 +145,10 @@ module GithubService
               c.auto_paginate = true
 
               c.middleware = Faraday::RackBuilder.new do |builder|
-                builder.use GithubService::Response::RatelimitLogger
-                builder.use Octokit::Response::RaiseError
-                builder.use Octokit::Response::FeedParser
-                builder.adapter Faraday.default_adapter
+                builder.use(GithubService::Response::RatelimitLogger)
+                builder.use(Octokit::Response::RaiseError)
+                builder.use(Octokit::Response::FeedParser)
+                builder.adapter(Faraday.default_adapter)
               end
             end
           end
@@ -178,9 +177,9 @@ module GithubService
       service.respond_to?(method_name, include_private)
     end
 
-    def method_missing(method_name, *args, &block)
+    def method_missing(method_name, ...)
       if service.respond_to?(method_name)
-        service.send(method_name, *args, &block)
+        service.send(method_name, ...)
       else
         super
       end

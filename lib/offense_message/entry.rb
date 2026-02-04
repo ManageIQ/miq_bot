@@ -1,9 +1,6 @@
 class OffenseMessage
   class Entry
-    attr_reader :severity
-    attr_reader :message
-    attr_reader :group
-    attr_reader :locator
+    attr_reader :severity, :message, :group, :locator
 
     SEVERITY = {
       :error   => ":bomb: :boom: :fire: :fire_engine:",

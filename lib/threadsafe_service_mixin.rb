@@ -14,8 +14,8 @@ module ThreadsafeServiceMixin
       @mutex ||= Mutex.new
     end
 
-    def synchronize
-      mutex.synchronize { yield }
+    def synchronize(&block)
+      mutex.synchronize(&block)
     end
   end
 end

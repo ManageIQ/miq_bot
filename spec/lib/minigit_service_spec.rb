@@ -5,8 +5,8 @@ describe MinigitService do
     allow_any_instance_of(described_class).to receive(:service).and_return(service)
   end
 
-  def with_service
-    described_class.call("/path/to/repo") { |git| yield git }
+  def with_service(&block)
+    described_class.call("/path/to/repo", &block)
   end
 
   it_should_behave_like "ThreadsafeServiceMixin service"

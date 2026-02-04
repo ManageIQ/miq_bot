@@ -10,8 +10,8 @@ module GitService
       raw_diff.deltas.collect { |delta| delta.try(:new_file).try(:[], :path) }.compact
     end
 
-    def with_each_patch
-      raw_diff.patches.each { |patch| yield(patch) }
+    def with_each_patch(&block)
+      raw_diff.patches.each(&block)
     end
 
     def with_each_hunk
