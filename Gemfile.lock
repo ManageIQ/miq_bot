@@ -179,7 +179,6 @@ GEM
     more_core_extensions (4.5.1)
       activesupport
       sync
-    mutex_m (0.3.0)
     net-http (0.9.1)
       uri (>= 0.11.1)
     net-imap (0.5.7)
@@ -399,7 +398,6 @@ DEPENDENCIES
   awesome_spawn (~> 1.6)
   config
   default_value_for (~> 4.0)
-  drb
   factory_bot_rails
   faraday (~> 2.14)
   faraday-http-cache (~> 2.6.0)
@@ -412,7 +410,6 @@ DEPENDENCIES
   manageiq-style (~> 1.5, >= 1.5.6)
   minigit (~> 0.0.4)
   more_core_extensions (~> 4.4)
-  mutex_m
   net-ssh (~> 7.3.0)
   octokit (~> 4.25.0)
   pg
