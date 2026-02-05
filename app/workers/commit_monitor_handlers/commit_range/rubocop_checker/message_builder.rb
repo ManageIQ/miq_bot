@@ -19,14 +19,14 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
 
   attr_reader :results, :message_builder
 
-  SUCCESS_EMOJI = %w{:+1: :cookie: :star: :cake: :trophy:}
+  SUCCESS_EMOJI = %w[:+1: :cookie: :star: :cake: :trophy:]
 
   SEVERITY_MAP = Hash.new(:unknown).merge(
     "fatal"      => :error,
     "error"      => :error,
     "warning"    => :warn,
     "convention" => :high,
-    "refactor"   => :low,
+    "refactor"   => :low
   ).freeze
 
   COP_URIS = RuboCop::Cop::Base.descendants.each_with_object({}) do |cop, h|

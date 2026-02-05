@@ -54,7 +54,7 @@ class MinigitService
     ret = Hash.new { |h, k| h[k] = [] }
     path = line_number = nil
     output.each_line do |line|
-      # Note: We are intentionally ignoring deletes "-" for now
+      # NOTE: We are intentionally ignoring deletes "-" for now
       case line
       when /^--- (?:a\/)?/
         next

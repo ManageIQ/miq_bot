@@ -19,10 +19,10 @@ describe BatchJobWorkerMixin do
   it ".perform_batch_async" do
     expect(BatchJob).to receive(:perform_async) do |workers, worker_args, job_attributes|
       expect(workers).to     eq(includer_class.batch_workers)
-      expect(worker_args).to eq(%w(arg1 arg2))
+      expect(worker_args).to eq(%w[arg1 arg2])
 
       expect(job_attributes[:on_complete_class]).to eq(includer_class)
-      expect(job_attributes[:on_complete_args]).to  eq(%w(arg1 arg2))
+      expect(job_attributes[:on_complete_args]).to  eq(%w[arg1 arg2])
       expect(job_attributes[:expires_at]).to        be_kind_of(Time)
     end
 

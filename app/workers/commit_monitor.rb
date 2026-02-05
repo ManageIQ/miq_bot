@@ -40,7 +40,7 @@ class CommitMonitor
 
   def perform
     if !first_unique_worker?
-      logger.info "#{self.class} is already running, skipping"
+      logger.info("#{self.class} is already running, skipping")
     else
       process_repos
     end
@@ -71,13 +71,13 @@ class CommitMonitor
   end
 
   def process_branch
-    logger.info "Processing #{repo.name}/#{branch.name}"
+    logger.info("Processing #{repo.name}/#{branch.name}")
 
     @new_commits, @all_commits = detect_commits
 
     statistics[branch.name] = {:new_commits => new_commits} unless branch.pull_request?
 
-    logger.info "Detected new commits #{new_commits}" if new_commits.any?
+    logger.info("Detected new commits #{new_commits}") if new_commits.any?
 
     save_branch_record
     process_handlers

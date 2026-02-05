@@ -45,12 +45,12 @@ module CommitMonitorHandlers::CommitRange
     # without underscores (`@foobarbaz`).
     #
     USERNAME_REGEXP = /
-      (?<=^@|\s@)     # must start with a '@' (don't capture)
-      [a-zA-Z0-9]     # first character must be alphanumeric
-      [a-zA-Z0-9\-]*  # middle chars may be alphanumeric or hyphens
-      [a-zA-Z0-9]     # last character must be alphanumeric
-      (?=[\s])        # allow only variables without "_" (not captured)
-    /x.freeze
+      (?<=^@|\s@)   # must start with a '@' (don't capture)
+      [a-zA-Z0-9]   # first character must be alphanumeric
+      [a-zA-Z0-9-]* # middle chars may be alphanumeric or hyphens
+      [a-zA-Z0-9]   # last character must be alphanumeric
+      (?=\s)        # allow only variables without "_" (not captured)
+    /x
 
     def check_for_usernames_in(commit, message)
       message.scan(USERNAME_REGEXP).each do |potential_username|

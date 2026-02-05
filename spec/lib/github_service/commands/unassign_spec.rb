@@ -19,7 +19,7 @@ RSpec.describe GithubService::Commands::Unassign do
 
     it "unassigns pull request or issue from that user" do
       allow(issue).to receive(:number).and_return(42)
-      expect(subject).to receive(:octokit_remove_assignees).with("org/repo", 42, %w(listed_user)).once
+      expect(subject).to receive(:octokit_remove_assignees).with("org/repo", 42, %w[listed_user]).once
     end
   end
 
@@ -33,17 +33,17 @@ RSpec.describe GithubService::Commands::Unassign do
   end
 
   context "with users who are in the list of assignees" do
-    let(:assigned_users) { %w(listed_user1 listed_user2) }
+    let(:assigned_users) { %w[listed_user1 listed_user2] }
     let(:command_value) { "listed_user1, listed_user2" }
 
     it "unassigns pull request or issue from these users" do
       allow(issue).to receive(:number).and_return(42)
-      expect(subject).to receive(:octokit_remove_assignees).with("org/repo", 42, %w(listed_user1 listed_user2)).once
+      expect(subject).to receive(:octokit_remove_assignees).with("org/repo", 42, %w[listed_user1 listed_user2]).once
     end
   end
 
   context "with users who are not in the list of assignees" do
-    let(:assigned_users) { %w(listed_user1 listed_user2) }
+    let(:assigned_users) { %w[listed_user1 listed_user2] }
     let(:command_value) { "non_listed_user1, non_listed_user2" }
 
     it "do not unassign pull request or issue from these users" do

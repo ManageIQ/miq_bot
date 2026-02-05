@@ -5,15 +5,15 @@ describe BatchJob do
 
     described_class.perform_async(
       workers,
-      %w(arg1 arg2),
+      %w[arg1 arg2],
       :on_complete_class => String,
-      :on_complete_args  => %w(arga argb),
+      :on_complete_args  => %w[arga argb],
       :expires_at        => expires_at
     )
 
     job = described_class.first
     expect(job.on_complete_class).to   eq(String)
-    expect(job.on_complete_args).to    eq(%w(arga argb))
+    expect(job.on_complete_args).to    eq(%w[arga argb])
     expect(job.expires_at.round(5)).to eq(expires_at.round(5))
 
     entries = job.entries.order(:id)
@@ -119,8 +119,8 @@ describe BatchJob do
 
       it "and there is an on_complete_class" do
         job.update!(
-          :on_complete_class => ::OnCompleteWorker,
-          :on_complete_args  => %w(arg1 arg2)
+          :on_complete_class => OnCompleteWorker,
+          :on_complete_args  => %w[arg1 arg2]
         )
 
         expect(OnCompleteWorker).to receive(:perform_async).with(job.id, "arg1", "arg2")

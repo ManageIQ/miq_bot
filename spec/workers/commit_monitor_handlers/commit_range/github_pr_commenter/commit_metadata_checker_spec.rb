@@ -62,7 +62,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::CommitMetadataCh
       COMMIT_MSG
     end
 
-    # Note:  `@dbrecords` in this message are all cases that will not get
+    # NOTE: `@dbrecords` in this message are all cases that will not get
     # picked up as a username in this example.
     let(:commit_message_2) do
       <<~COMMIT_MSG

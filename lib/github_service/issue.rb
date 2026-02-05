@@ -6,7 +6,7 @@ module GithubService
 
     STALE_LABEL       = 'stale'.freeze
     UNMERGEABLE_LABEL = 'unmergeable'.freeze
-    WIP_REGEX         = /^(?:\s*\[wip\])+/i.freeze
+    WIP_REGEX         = /^(?:\s*\[wip\])+/i
 
     def assign(user)
       GithubService.update_issue(fq_repo_name, number, "assignee" => user)
@@ -37,7 +37,7 @@ module GithubService
       labels.include?(label_text)
     end
 
-    # Note: This method creates labels on the repo if they don't exist,
+    # NOTE: This method creates labels on the repo if they don't exist,
     # and assumes that the labels being passed in have already been validated
     # if you don't want that behavior.
     #

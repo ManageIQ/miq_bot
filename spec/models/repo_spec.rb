@@ -309,7 +309,7 @@ describe Repo do
         :pull_request => true,
         :merge_target => "master",
         :pr_title     => "New PR",
-        :last_commit  => "123abc",
+        :last_commit  => "123abc"
       )
 
       expect { pr_branch_to_delete.reload }.to raise_error(ActiveRecord::RecordNotFound)

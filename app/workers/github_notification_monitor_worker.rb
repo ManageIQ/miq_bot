@@ -6,7 +6,7 @@ class GithubNotificationMonitorWorker
 
   def perform
     if !first_unique_worker?
-      logger.info "#{self.class} is already running, skipping"
+      logger.info("#{self.class} is already running, skipping")
     else
       process_repos
     end
@@ -23,7 +23,7 @@ class GithubNotificationMonitorWorker
   def process_repo(repo_name, notifications)
     GithubNotificationMonitor.new(repo_name, notifications).process_notifications
   rescue => err
-    logger.error err.message
-    logger.error err.backtrace.join("\n")
+    logger.error(err.message)
+    logger.error(err.backtrace.join("\n"))
   end
 end

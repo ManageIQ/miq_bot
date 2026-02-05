@@ -18,5 +18,5 @@
 require "parser/ruby#{RbConfig::CONFIG["MAJOR"]}#{RbConfig::CONFIG["MINOR"]}"
 
 module Parser
-  CurrentRuby = self.const_get("Ruby#{RbConfig::CONFIG["MAJOR"]}#{RbConfig::CONFIG["MINOR"]}")
+  CurrentRuby = const_get("Ruby#{RbConfig::CONFIG["MAJOR"]}#{RbConfig::CONFIG["MINOR"]}")
 end

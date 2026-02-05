@@ -10,7 +10,7 @@ module CodeAnalysisMixin
     }
 
     run_all_linters.each do |result|
-      %w(offense_count target_file_count inspected_file_count).each do |m|
+      %w[offense_count target_file_count inspected_file_count].each do |m|
         results['summary'][m] += result['summary'][m]
       end
       results['files'] += result['files']

@@ -8,7 +8,7 @@ module GithubService
       end
 
       class_attribute :restriction
-      class_attribute :command_aliases, default: []
+      class_attribute :command_aliases, :default => []
 
       attr_reader :issue
 
@@ -64,7 +64,7 @@ module GithubService
 
       module CommandMethods
         def command_name
-          self.name.demodulize.underscore
+          name.demodulize.underscore
         end
 
         def alias_as(command_name)
@@ -72,7 +72,7 @@ module GithubService
         end
 
         def match_command?(command_name)
-          self.command_name == command_name || self.command_aliases.include?(command_name)
+          self.command_name == command_name || command_aliases.include?(command_name)
         end
 
         def restrict_to(restriction)
