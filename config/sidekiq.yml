@@ -1,0 +1,18 @@
+scheduler:
+  listened_queues_only: true
+  schedule:
+    BatchJobMonitor:
+      cron: "* * * * *"
+      description: Check for completed batch jobs every minute
+    CommitMonitor:
+      cron: "*/5 * * * *"
+      description: Check for new commits every 5 minutes
+    GithubNotificationMonitorWorker:
+      cron: "* * * * *"
+      description: Check for new GitHub notifications every minute
+    PullRequestMonitor:
+      cron: "*/5 * * * *"
+      description: Check for Pull Request updates every 5 minutes
+    StaleIssueMarker:
+      cron: "0 0 * * 1"
+      description: Mark stale issues at midnight every Monday
