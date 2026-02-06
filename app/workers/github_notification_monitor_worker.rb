@@ -17,6 +17,7 @@ class GithubNotificationMonitorWorker
     notifications_by_repo_name.select! { |repo_name, _notifications| enabled_repo_names.include?(repo_name) }
     notifications_by_repo_name.each do |repo_name, notifications|
       process_repo(repo_name, notifications)
+      Thread.pass
     end
   end
 
