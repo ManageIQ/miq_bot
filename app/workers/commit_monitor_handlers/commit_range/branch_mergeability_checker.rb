@@ -5,15 +5,23 @@ class CommitMonitorHandlers::CommitRange::BranchMergeabilityChecker
   include BranchWorkerMixin
 
   def self.handled_branch_modes
-    [:regular]
+    [:regular, :pr]
   end
 
   def perform(branch_id, _new_commits)
-    return unless find_branch(branch_id, :regular)
+    return unless find_branch(branch_id)
 
-    repo.pr_branches.where(:merge_target => branch.name).each do |pr|
-      logger.info("Queueing PrMergeabilityChecker for PR #{pr.fq_pr_number}.")
-      PrMergeabilityChecker.perform_async(pr.id)
+    case branch.mode
+    when :pr
+      # When a PR branch updates, run the mergeability check inline
+      logger.info("Running PrMergeabilityChecker for PR #{branch.fq_pr_number}.")
+      PrMergeabilityChecker.perform_sync(branch.id)
+    when :regular
+      # When a regular branch updates, find all PRs that target it and queue up mergeability checks
+      repo.pr_branches.where(:merge_target => branch.name).each do |pr|
+        logger.info("Queueing PrMergeabilityChecker for PR #{pr.fq_pr_number}.")
+        PrMergeabilityChecker.perform_async(pr.id)
+      end
     end
   end
 end
