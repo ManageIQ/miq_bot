@@ -100,7 +100,7 @@ GEM
     erb (4.0.4)
       cgi (>= 0.3.3)
     erubi (1.13.1)
-    et-orbi (1.2.11)
+    et-orbi (1.4.0)
       tzinfo
     factory_bot (6.5.6)
       activesupport (>= 6.1.0)
@@ -121,8 +121,8 @@ GEM
     ffi (1.17.3-x86_64-linux-gnu)
     foreman (0.90.0)
       thor (~> 1.4)
-    fugit (1.11.1)
-      et-orbi (~> 1, >= 1.2.11)
+    fugit (1.12.1)
+      et-orbi (~> 1.4)
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -267,8 +267,6 @@ GEM
       tsort
     redis-client (0.24.0)
       connection_pool
-    redlock (2.0.6)
-      redis-client (>= 0.14.1, < 1.0.0)
     regexp_parser (2.11.3)
     reline (0.6.3)
       io-console (~> 0.5)
@@ -335,18 +333,15 @@ GEM
       addressable (>= 2.3.5)
       faraday (>= 0.17.3, < 3)
     securerandom (0.4.1)
-    sidecloq (0.5.0)
-      concurrent-ruby
-      redis-client (>= 0.14.0)
-      redlock (>= 2.0.0, < 3)
-      rufus-scheduler (~> 3.9)
-      sidekiq (>= 6.0.0, < 8)
     sidekiq (7.3.10)
       base64
       connection_pool (>= 2.3.0, < 3)
       logger
       rack (>= 2.2.4, < 3.3)
       redis-client (>= 0.23.0, < 1)
+    sidekiq-scheduler (6.0.1)
+      rufus-scheduler (~> 3.2)
+      sidekiq (>= 7.3, < 9)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -419,8 +414,8 @@ DEPENDENCIES
   rspec-rails
   rugged
   sass-rails (~> 5.1.0)
-  sidecloq
   sidekiq
+  sidekiq-scheduler
   simplecov (>= 0.21.2)
   timecop
   turbolinks

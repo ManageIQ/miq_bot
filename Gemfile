@@ -27,8 +27,8 @@ gem 'config'
 gem 'listen'
 
 # Sidekiq specific gems
-gem 'sidecloq'
 gem 'sidekiq'
+gem 'sidekiq-scheduler'
 
 # Services gems
 gem 'minigit', '~> 0.0.4'
