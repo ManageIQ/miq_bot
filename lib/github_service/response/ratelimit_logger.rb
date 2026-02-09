@@ -7,7 +7,7 @@ module GithubService
 
       def initialize(app, logger = nil)
         super(app)
-        @logger = logger || begin
+        @logger = logger || Sidekiq.logger || begin
           require 'logger'
           ::Logger.new(STDOUT)
         end
