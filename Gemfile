@@ -6,7 +6,7 @@ ruby "~> 3.3.10"
 plugin 'bundler-inject'
 require File.join(Bundler::Plugin.index.load_paths("bundler-inject")[0], "bundler-inject") rescue nil
 
-gem 'rails', '~> 8.0.4'
+gem 'rails', '~> 8.1.0'
 
 # Use PostgreSQL as the database for Active Record
 gem 'pg'
