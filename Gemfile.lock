@@ -162,10 +162,10 @@ GEM
       net-imap
       net-pop
       net-smtp
-    manageiq-style (1.5.9)
+    manageiq-style (1.5.10)
       more_core_extensions
       optimist
-      rack (>= 2.2.19, < 4)
+      rack (>= 2.2.22, < 4)
       rexml (>= 3.4.4)
       rubocop (= 1.56.3)
       rubocop-ast (~> 1.40.0)
