@@ -128,7 +128,7 @@ GEM
       temple (>= 0.8.2)
       thor
       tilt
-    haml_lint (0.69.0)
+    haml_lint (0.70.0)
       haml (>= 5.0)
       parallel (~> 1.10)
       rainbow
@@ -202,7 +202,7 @@ GEM
     optimist (3.2.1)
     ostruct (0.6.3)
     parallel (1.27.0)
-    parser (3.3.10.1)
+    parser (3.3.10.2)
       ast (~> 2.4.1)
       racc
     pg (1.6.3-arm64-darwin)
