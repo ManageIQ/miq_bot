@@ -140,7 +140,10 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
   end
 
   def yamllint_version
-    _out, err, _ps = Open3.capture3("yamllint -v")
-    err.split.last
+    self.class.yamllint_version
+  end
+
+  def self.yamllint_version
+    @yamllint_version ||= `yamllint -v 2>&1`.split.last
   end
 end

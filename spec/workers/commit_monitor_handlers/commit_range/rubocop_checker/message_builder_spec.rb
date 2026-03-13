@@ -67,4 +67,24 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
       EOMSG
     end
   end
+
+  context "with stubbed yamllint" do
+    before do
+      described_class.instance_variable_set(:@yamllint_version, nil) # Clear caching
+      expect(described_class).to receive(:`).with("yamllint -v 2>&1").and_return("yamllint 1.35.1\n")
+    end
+
+    after do
+      described_class.instance_variable_set(:@yamllint_version, nil) # Clear caching
+    end
+
+    it ".yamllint_version" do
+      expect(described_class.yamllint_version).to eq("1.35.1")
+    end
+
+    it "#yamllint_version (private)" do
+      subject = described_class.new(nil, nil)
+      expect(subject.send(:yamllint_version)).to eq("1.35.1")
+    end
+  end
 end

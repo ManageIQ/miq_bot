@@ -50,6 +50,5 @@ def hamllint_version
 end
 
 def yamllint_version
-  _out, err, _ps = Open3.capture3("yamllint -v")
-  err.split.last
+  @yamllint_version ||= `yamllint -v 2>&1`.split.last
 end
