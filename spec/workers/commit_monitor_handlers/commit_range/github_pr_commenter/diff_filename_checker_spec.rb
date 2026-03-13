@@ -20,7 +20,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffFilenameChec
       end
 
       it "with one bad, one good, one ignored" do
-        described_class.new.perform(batch_entry.id, branch.id, nil)
+        described_class.new.perform(batch_entry.id, branch.id, nil, nil)
 
         batch_entry.reload
         expect(batch_entry.result.length).to eq(1)
@@ -39,7 +39,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffFilenameChec
       end
 
       it "with two bad, one good, one ignored" do
-        described_class.new.perform(batch_entry.id, branch.id, nil)
+        described_class.new.perform(batch_entry.id, branch.id, nil, nil)
 
         batch_entry.reload
         expect(batch_entry.result.length).to eq(2)
@@ -58,7 +58,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffFilenameChec
       end
 
       it "one good, one ignored" do
-        described_class.new.perform(batch_entry.id, branch.id, nil)
+        described_class.new.perform(batch_entry.id, branch.id, nil, nil)
 
         expect(batch_entry.reload.result).to eq([])
       end
@@ -72,7 +72,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffFilenameChec
       end
 
       it "one ignored" do
-        described_class.new.perform(batch_entry.id, branch.id, nil)
+        described_class.new.perform(batch_entry.id, branch.id, nil, nil)
 
         expect(batch_entry.reload.result).to eq([])
       end

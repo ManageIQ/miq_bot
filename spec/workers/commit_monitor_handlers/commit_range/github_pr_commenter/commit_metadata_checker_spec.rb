@@ -8,12 +8,17 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::CommitMetadataCh
   let(:merge_commit_2)     { false }
   let(:merge_commit_3)     { false }
 
-  let(:commits) do
+  let(:all_commits_details) do
     {
       "abcd123" => {"message" => commit_message_1, "files" => ["app/models/super.rb"],        "merge_commit?" => merge_commit_1},
       "abcd234" => {"message" => commit_message_2, "files" => ["spec/models/super_spec.rb"],  "merge_commit?" => merge_commit_2},
-      "abcd345" => {"message" => commit_message_3, "files" => ["spec/models/normal_spec.rb"], "merge_commit?" => merge_commit_3}
+      "abcd345" => {"message" => commit_message_3, "files" => ["spec/models/normal_spec.rb"], "merge_commit?" => merge_commit_3},
+      "abcd456" => {"message" => "Another commit", "files" => ["app/models/normal.rb"],       "merge_commit?" => false},
     }
+  end
+
+  let(:new_commits) do
+    all_commits_details.keys.last(1)
   end
 
   let(:username_lookup_cache) do
@@ -35,7 +40,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::CommitMetadataCh
 
   context "with basic commit messages" do
     it "doesn't create any offenses" do
-      described_class.new.perform(batch_entry.id, branch.id, commits)
+      described_class.new.perform(batch_entry.id, branch.id, new_commits, all_commits_details)
 
       batch_entry.reload
       expect(batch_entry.result.length).to eq(0)
@@ -89,7 +94,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::CommitMetadataCh
     end
 
     it "returns one offense for each valid username" do
-      described_class.new.perform(batch_entry.id, branch.id, commits)
+      described_class.new.perform(batch_entry.id, branch.id, new_commits, all_commits_details)
 
       batch_entry.reload
       expect(batch_entry.result.length).to eq(3)
@@ -114,7 +119,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::CommitMetadataCh
     let(:merge_commit_3) { false }
 
     it "returns one offense for each merge commit" do
-      described_class.new.perform(batch_entry.id, branch.id, commits)
+      described_class.new.perform(batch_entry.id, branch.id, new_commits, all_commits_details)
 
       batch_entry.reload
       expect(batch_entry.result.length).to eq(2)

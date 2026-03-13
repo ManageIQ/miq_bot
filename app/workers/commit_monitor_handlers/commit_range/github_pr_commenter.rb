@@ -14,7 +14,7 @@ module CommitMonitorHandlers::CommitRange
       [:pr]
     end
 
-    def perform(batch_job_id, branch_id, _new_commits)
+    def perform(batch_job_id, branch_id, _new_commits, _all_commits_details)
       return unless find_batch_job(batch_job_id)
       return skip_batch_job unless find_branch(branch_id, :pr)
 
