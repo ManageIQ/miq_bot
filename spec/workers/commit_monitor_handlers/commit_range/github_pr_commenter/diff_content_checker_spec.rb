@@ -27,7 +27,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffContentCheck
   context "with offending word" do
     it "with one offender in the diff" do
       stub_settings(:diff_content_checker => {"offenses" => {"puts" => {:severity => :error}}})
-      described_class.new.perform(batch_entry.id, branch.id, nil)
+      described_class.new.perform(batch_entry.id, branch.id, nil, nil)
 
       batch_entry.reload
       expect(batch_entry.result.length).to eq(2)
@@ -45,7 +45,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffContentCheck
 
     it "with one offender in the diff of an ignored file" do
       stub_settings(:diff_content_checker => {"offenses" => {"puts" => {:except => ["tools/"], :severity => :error}}})
-      described_class.new.perform(batch_entry.id, branch.id, nil)
+      described_class.new.perform(batch_entry.id, branch.id, nil, nil)
 
       batch_entry.reload
       expect(batch_entry.result.length).to eq(0)
@@ -57,7 +57,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffContentCheck
 
       it do
         stub_settings(:diff_content_checker => {"offenses" => {"puts" => {:severity => :error}}})
-        described_class.new.perform(batch_entry.id, branch.id, nil)
+        described_class.new.perform(batch_entry.id, branch.id, nil, nil)
 
         batch_entry.reload
         expect(batch_entry.result.length).to eq(0)
@@ -68,7 +68,7 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffContentCheck
   context "with offending regex" do
     it "with one offender in the diff" do
       stub_settings(:diff_content_checker => {"offenses" => {"^([^#]+|)\\bputs\\b" => {:severity => :error, :type => :regexp, :message => "Detected `puts`"}}})
-      described_class.new.perform(batch_entry.id, branch.id, nil)
+      described_class.new.perform(batch_entry.id, branch.id, nil, nil)
 
       batch_entry.reload
       expect(batch_entry.result.length).to eq(1)

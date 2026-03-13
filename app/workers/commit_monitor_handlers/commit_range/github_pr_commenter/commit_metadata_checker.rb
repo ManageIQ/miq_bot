@@ -8,19 +8,19 @@ module CommitMonitorHandlers::CommitRange
     include BatchEntryWorkerMixin
     include BranchWorkerMixin
 
-    def perform(batch_entry_id, branch_id, new_commits)
+    def perform(batch_entry_id, branch_id, _new_commits, all_commits_details)
       return unless find_batch_entry(batch_entry_id)
       return skip_batch_entry unless find_branch(branch_id, :pr)
 
-      complete_batch_entry(:result => process_commits(new_commits))
+      complete_batch_entry(:result => process_commits(all_commits_details))
     end
 
     private
 
-    def process_commits(new_commits)
+    def process_commits(all_commits_details)
       @offenses = []
 
-      new_commits.each do |commit_sha, data|
+      all_commits_details.each do |commit_sha, data|
         check_for_usernames_in(commit_sha, data["message"])
         check_for_merge_commit(commit_sha, data["merge_commit?"])
       end

@@ -67,7 +67,7 @@ class CommitMonitor
     sorted_branches = repo.branches.sort_by { |b| b.pull_request? ? 1 : -1 }
 
     sorted_branches.each do |branch|
-      @new_commits_details = nil
+      @all_commits_details = nil
       @branch = branch
       process_branch
     end
@@ -112,9 +112,9 @@ class CommitMonitor
     {:same => same, :left_only => left_only, :right_only => right_only}
   end
 
-  def new_commits_details
-    @new_commits_details ||=
-      new_commits.each_with_object({}) do |commit, h|
+  def all_commits_details
+    @all_commits_details ||=
+      all_commits.each_with_object({}) do |commit, h|
         h[commit] = branch.git_service.commit(commit).details_hash
       end
   end
@@ -199,7 +199,8 @@ class CommitMonitor
   end
 
   def process_commit_handlers
-    new_commits_details.each do |commit, details|
+    new_commits.each do |commit|
+      details = all_commits_details[commit]
       commit_handlers.each do |h|
         logger.info("Queueing #{h.name.split("::").last} for commit #{commit} on branch #{branch.name}")
         h.perform_async(branch.id, commit, details)
@@ -226,7 +227,7 @@ class CommitMonitor
   def process_batch_handlers
     batch_handlers.each do |h|
       logger.info("Queueing #{h.name} for branch #{branch.name}")
-      h.perform_batch_async(branch.id, new_commits_details)
+      h.perform_batch_async(branch.id, new_commits, all_commits_details)
     end
   end
 end

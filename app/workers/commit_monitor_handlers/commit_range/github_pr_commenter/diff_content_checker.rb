@@ -8,7 +8,7 @@ module CommitMonitorHandlers::CommitRange
     include BatchEntryWorkerMixin
     include BranchWorkerMixin
 
-    def perform(batch_entry_id, branch_id, _new_commits)
+    def perform(batch_entry_id, branch_id, _new_commits, _all_commits_details)
       return unless find_batch_entry(batch_entry_id)
       return skip_batch_entry unless find_branch(branch_id, :pr)
 
