@@ -22,18 +22,18 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
         5 files checked, 5 offenses detected
 
         **spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/coding_convention.rb**
-        - [ ] :exclamation: - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/coding_convention.rb#L3), Col 5 - [Layout/HashAlignment](https://docs.rubocop.org/rubocop/#{rubocop_version_short}/cops_layout.html#layouthashalignment) - Align the keys and values of a hash literal if they span more than one line.
-        - [ ] :exclamation: - [Line 4](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/coding_convention.rb#L4), Col 5 - [Layout/HashAlignment](https://docs.rubocop.org/rubocop/#{rubocop_version_short}/cops_layout.html#layouthashalignment) - Align the keys and values of a hash literal if they span more than one line.
+        - [ ] :exclamation: - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/coding_convention.rb#L3), Col 5 - [Layout/HashAlignment](https://docs.rubocop.org/rubocop/latest/cops_layout.html#layouthashalignment) - Align the keys and values of a hash literal if they span more than one line.
+        - [ ] :exclamation: - [Line 4](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/coding_convention.rb#L4), Col 5 - [Layout/HashAlignment](https://docs.rubocop.org/rubocop/latest/cops_layout.html#layouthashalignment) - Align the keys and values of a hash literal if they span more than one line.
 
         **spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_with_offenses/rails.rb**
-        - [ ] :exclamation: - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_with_offenses/rails.rb#L3), Col 5 - [Rails/DynamicFindBy](https://docs.rubocop.org/rubocop-rails/#{rubocop_rails_version_short}/cops_rails.html#railsdynamicfindby) - Use `find_by` instead of dynamic `find_by_name`.
+        - [ ] :exclamation: - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_with_offenses/rails.rb#L3), Col 5 - [Rails/DynamicFindBy](https://docs.rubocop.org/rubocop-rails/latest/cops_rails.html#railsdynamicfindby) - Use `find_by` instead of dynamic `find_by_name`.
 
         **spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_syntax_error.rb**
-        - [ ] :bomb: :boom: :fire: :fire_engine: - [Line 6](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_syntax_error.rb#L6), Col 1 - [Lint/Syntax](https://docs.rubocop.org/rubocop/#{rubocop_version_short}/cops_lint.html#lintsyntax) - unexpected token kEND
+        - [ ] :bomb: :boom: :fire: :fire_engine: - [Line 6](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_syntax_error.rb#L6), Col 1 - [Lint/Syntax](https://docs.rubocop.org/rubocop/latest/cops_lint.html#lintsyntax) - unexpected token kEND
         (Using Ruby 2.6 parser; configure using `TargetRubyVersion` parameter, under `AllCops`)
 
         **spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_warning.rb**
-        - [ ] :warning: - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_warning.rb#L3), Col 5 - [Lint/UselessAssignment](https://docs.rubocop.org/rubocop/#{rubocop_version_short}/cops_lint.html#lintuselessassignment) - Useless assignment to variable - `unused_variable`.
+        - [ ] :warning: - [Line 3](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/ruby_warning.rb#L3), Col 5 - [Lint/UselessAssignment](https://docs.rubocop.org/rubocop/latest/cops_lint.html#lintuselessassignment) - Useless assignment to variable - `unused_variable`.
       EOMSG
     end
 
@@ -65,6 +65,20 @@ describe CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder do
         **spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/#{rubocop_check_directory}/example.haml**
         - [ ] :warning: - [Line 2](https://github.com/some_user/some_repo/blob/8942a195a0bfa69ceb82c020c60565408cb46d3e/spec/workers/commit_monitor_handlers/commit_range/rubocop_checker/data/with_results_without_column_numbers_and_cop_names/example.haml#L2) - The - symbol should have one space separating it from code
       EOMSG
+    end
+  end
+
+  describe "::COP_URIS" do
+    it "generates documentation URLs for builtin cops" do
+      expect(described_class::COP_URIS['Style/StringLiterals']).to match(/\[Style\/StringLiterals\]\(https:\/\/docs\.rubocop\.org\/rubocop\/latest\/cops_style\.html#stylestringliterals\)/)
+    end
+
+    it "generates documentation URLs for Rails cops" do
+      expect(described_class::COP_URIS['Rails/DynamicFindBy']).to match(/\[Rails\/DynamicFindBy\]\(https:\/\/docs\.rubocop\.org\/rubocop-rails\/latest\/cops_rails\.html#railsdynamicfindby\)/)
+    end
+
+    it "generates documentation URLs for Performance cops" do
+      expect(described_class::COP_URIS['Performance/StringInclude']).to match(/\[Performance\/StringInclude\]\(https:\/\/docs\.rubocop\.org\/rubocop-performance\/latest\/cops_performance\.html#performancestringinclude\)/)
     end
   end
 
