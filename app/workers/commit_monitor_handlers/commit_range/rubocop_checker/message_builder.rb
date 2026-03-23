@@ -1,5 +1,6 @@
 require 'rubocop'
 require 'rubocop-rails'
+require 'rubocop-performance'
 require 'haml_lint'
 
 class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
@@ -29,25 +30,23 @@ class CommitMonitorHandlers::CommitRange::RubocopChecker::MessageBuilder
     "refactor"   => :low
   ).freeze
 
-  COP_URIS = RuboCop::Cop::Base.descendants.each_with_object({}) do |cop, h|
-    plugin, version = nil
+  COP_URIS = begin
+    # Load configuration to get plugin DocumentationBaseURL settings
+    config = RuboCop::ConfigLoader.configuration_from_file('.rubocop.yml')
 
-    case cop.department
-    when :Rails
-      plugin  = "rubocop-rails"
-      version = RuboCop::Rails::Version.document_version
-    else
-      plugin  = "rubocop"
-      version = RuboCop::Version.document_version
+    RuboCop::Cop::Registry.global.cops.each_with_object({}) do |cop, h|
+      url_string = RuboCop::Cop::Documentation.url_for(cop, config)
+      next unless url_string # Skip cops without documentation URLs
+
+      # Insert "latest" version into URL path to avoid redirect that loses fragment
+      # e.g., /rubocop/cops_layout.html -> /rubocop/latest/cops_layout.html
+      url = URI(url_string)
+      url_path_parts = url.path.split("/")
+      url_path_parts.insert(2, "latest") unless url_path_parts[2] == "latest"
+      url.path = url_path_parts.join("/")
+
+      h[cop.cop_name] = "[#{cop.cop_name}](#{url})"
     end
-
-    url               = URI(RuboCop::Cop::Documentation.url_for(cop))
-    url_path_parts    = url.path.split("/")
-    url_path_parts[1] = plugin
-    url_path_parts.insert(2, version) unless url_path_parts[2] == version
-
-    url.path        = url_path_parts.join("/")
-    h[cop.cop_name] = "[#{cop.cop_name}](#{url})"
   end.freeze
 
   def tag
