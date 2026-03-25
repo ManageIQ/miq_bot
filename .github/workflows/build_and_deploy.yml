@@ -19,7 +19,7 @@ jobs:
     - name: Build
       run: bundle exec rake production:release:build[${{ github.ref_name }}]
     - name: Set up kubectl
-      uses: azure/setup-kubectl@v4
+      uses: azure/setup-kubectl@v5
     - name: Set up ibmcloud CLI
       uses: IBM/actions-ibmcloud-cli@v2
       with:
