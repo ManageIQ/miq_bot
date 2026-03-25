@@ -21,7 +21,7 @@ jobs:
     - name: Set up kubectl
       uses: azure/setup-kubectl@v4
     - name: Set up ibmcloud CLI
-      uses: IBM/actions-ibmcloud-cli@v1
+      uses: IBM/actions-ibmcloud-cli@v2
       with:
         api_key: ${{ secrets.IBMCLOUD_API_KEY }}
         region: us-east
