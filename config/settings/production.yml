@@ -126,15 +126,7 @@ stale_issue_marker:
 
 labels:
   :unassignable:
-    jansa/yes: jansa/yes?
-    kasparov/yes: kasparov/yes?
-    lasker/yes: lasker/yes?
-    morphy/yes: morphy/yes?
-    najdorf/yes: najdorf/yes?
-    oparin/yes: oparin/yes?
-    petrosian/yes: petrosian/yes?
-    quinteros/yes: quinteros/yes?
-    radjabov/yes: radjabov/yes?
-    spassky/yes: spassky/yes?
+  - pattern: !ruby/regexp /\A(.+)\/yes\z/
+    replacement: '\1/yes?'
   :unremovable:
   - !ruby/regexp /\/(?:backported|no|yes)\z/

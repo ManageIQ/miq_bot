@@ -1,6 +1,9 @@
 :labels:
   :unassignable:
-    jansa/yes: jansa/yes?
+  - pattern: jansa/yes
+    replacement: jansa/yes?
+  - pattern: !ruby/regexp /\A(.+)\/foo\z/
+    replacement: '\1/foo?'
   :unremovable:
   - jansa/no
   - jansa/yes
