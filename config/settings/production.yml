@@ -126,52 +126,7 @@ stale_issue_marker:
 
 labels:
   :unassignable:
-    jansa/yes: jansa/yes?
-    kasparov/yes: kasparov/yes?
-    lasker/yes: lasker/yes?
-    morphy/yes: morphy/yes?
-    najdorf/yes: najdorf/yes?
-    oparin/yes: oparin/yes?
-    petrosian/yes: petrosian/yes?
-    quinteros/yes: quinteros/yes?
-    radjabov/yes: radjabov/yes?
-    spassky/yes: spassky/yes?
+  - pattern: !ruby/regexp /\A(.+)\/yes\z/
+    replacement: '\1/yes?'
   :unremovable:
-  - fine/backported
-  - fine/no
-  - gaprindashvili/backported
-  - gaprindashvili/no
-  - hammer/backported
-  - hammer/no
-  - ivanchuk/backported
-  - ivanchuk/no
-  - jansa/backported
-  - jansa/no
-  - jansa/yes
-  - kasparov/backported
-  - kasparov/no
-  - kasparov/yes
-  - lasker/backported
-  - lasker/no
-  - lasker/yes
-  - morphy/backported
-  - morphy/no
-  - morphy/yes
-  - najdorf/backported
-  - najdorf/no
-  - najdorf/yes
-  - oparin/backported
-  - oparin/no
-  - oparin/yes
-  - petrosian/backported
-  - petrosian/no
-  - petrosian/yes
-  - quinteros/backported
-  - quinteros/no
-  - quinteros/yes
-  - radjabov/backported
-  - radjabov/no
-  - radjabov/yes
-  - spassky/backported
-  - spassky/no
-  - spassky/yes
+  - !ruby/regexp /\/(?:backported|no|yes)\z/

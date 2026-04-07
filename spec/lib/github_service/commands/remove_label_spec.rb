@@ -66,15 +66,11 @@ RSpec.describe GithubService::Commands::RemoveLabel do
                                 :response_body => miq_teams.to_json
         github_service_add_stub :url           => "/teams/3456/members?per_page=100",
                                 :response_body => triage_members.to_json
-      end
 
-      before do
-        %w[wontfix jansa/no jansa/yes jansa/yes?].each do |label|
-          allow(GithubService).to receive(:valid_label?).with("foo/bar", label).and_return(true)
-        end
-
-        expect(issue).to receive(:applied_label?).with("wontfix").and_return(true)
-        expect(issue).to receive(:applied_label?).with("jansa/yes?").and_return(true)
+        # Assume all labels are valid
+        allow(GithubService).to receive(:valid_label?).and_return(true)
+        # Assume all labels are currently applied
+        allow(issue).to receive(:applied_label?).and_return(true)
       end
 
       context "without a triage team" do
@@ -121,9 +117,6 @@ RSpec.describe GithubService::Commands::RemoveLabel do
         end
 
         before do
-          expect(issue).to receive(:applied_label?).with("jansa/no").and_return(true)
-          expect(issue).to receive(:applied_label?).with("jansa/yes").and_return(true)
-
           stub_settings(:member_organization_name => "ManageIQ", :triage_team_name => "my-triage-team")
         end
 
@@ -132,6 +125,24 @@ RSpec.describe GithubService::Commands::RemoveLabel do
           expect(issue).to receive(:remove_label).with("jansa/no")
           expect(issue).to receive(:remove_label).with("jansa/yes")
           expect(issue).to receive(:remove_label).with("jansa/yes?")
+        end
+      end
+
+      context "with string and regex patterns in unremovable labels" do
+        let(:command_value) { "wontfix, jansa/no, test/foo" }
+
+        before do
+          message = "@chessbyte Cannot remove the following labels since they require " \
+                    "[triage team permissions](https://github.com/orgs/ManageIQ/teams/core-triage)" \
+                    ": jansa/no, test/foo"
+
+          expect(issue).to receive(:add_comment).with(message)
+        end
+
+        it "treats exact strings and regexps as unremovable" do
+          expect(issue).to     receive(:remove_label).with("wontfix")
+          expect(issue).not_to receive(:remove_label).with("jansa/no")
+          expect(issue).not_to receive(:remove_label).with("test/foo")
         end
       end
     end
