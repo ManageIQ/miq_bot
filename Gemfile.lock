@@ -75,7 +75,7 @@ GEM
     addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
-    awesome_spawn (1.6.0)
+    awesome_spawn (1.7.0)
     base64 (0.3.0)
     benchmark (0.5.0)
     bigdecimal (4.0.1)
