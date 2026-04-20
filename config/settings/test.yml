@@ -1,9 +1,13 @@
 :labels:
   :unassignable:
-    jansa/yes: jansa/yes?
+  - pattern: jansa/yes
+    replacement: jansa/yes?
+  - pattern: !ruby/regexp /\A(.+)\/foo\z/
+    replacement: '\1/foo?'
   :unremovable:
   - jansa/no
   - jansa/yes
+  - !ruby/regexp /\/foo\z/
 # In test, turn everything on by default
 #   NOTE: Using empty string is a HACK until we can get
 #   https://github.com/danielsdeleo/deep_merge/pull/33 released via the

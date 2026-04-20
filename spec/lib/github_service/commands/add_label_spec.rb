@@ -94,7 +94,7 @@ RSpec.describe GithubService::Commands::AddLabel do
     end
   end
 
-  context "un-assignable labels" do
+  context "unassignable labels" do
     let(:command_value)  { "jansa/yes" }
     let(:triage_members) { [{"login" => "Fryguy"}] }
 
@@ -103,14 +103,14 @@ RSpec.describe GithubService::Commands::AddLabel do
                               :response_body => miq_teams.to_json
       github_service_add_stub :url           => "/teams/3456/members?per_page=100",
                               :response_body => triage_members.to_json
+
+      # Assume all labels are valid
+      allow(GithubService).to receive(:valid_label?).and_return(true)
+      # Assume all labels are not currently applied
+      allow(issue).to receive(:applied_label?).and_return(false)
     end
 
     context "without a triage team" do
-      before do
-        allow(issue).to receive(:applied_label?).with("jansa/yes?").and_return(false)
-        allow(GithubService).to receive(:valid_label?).with("foo/bar", command_value).and_return(true)
-      end
-
       it "corrects the label to 'jansa/yes?'" do
         expect(issue).to receive(:add_labels).with(["jansa/yes?"])
         expect(issue).not_to receive(:add_comment)
@@ -119,8 +119,6 @@ RSpec.describe GithubService::Commands::AddLabel do
 
     context "with a non-triage user" do
       before do
-        allow(issue).to receive(:applied_label?).with("jansa/yes?").and_return(false)
-        allow(GithubService).to receive(:valid_label?).with("foo/bar", command_value).and_return(true)
         stub_settings(:member_organization_name => "ManageIQ", :triage_team_name => "my-triage-team")
       end
 
@@ -139,13 +137,20 @@ RSpec.describe GithubService::Commands::AddLabel do
       end
 
       before do
-        allow(issue).to receive(:applied_label?).with("jansa/yes").and_return(false)
-        allow(GithubService).to receive(:valid_label?).with("foo/bar", command_value).and_return(true)
         stub_settings(:member_organization_name => "ManageIQ", :triage_team_name => "my-triage-team")
       end
 
       it "applies the original label" do
         expect(issue).to receive(:add_labels).with(["jansa/yes"])
+        expect(issue).not_to receive(:add_comment)
+      end
+    end
+
+    context "with string and regex patterns in unassignable labels" do
+      let(:command_value) { "jansa/yes, test/foo" }
+
+      it "replaces labels with their substitution patterns" do
+        expect(issue).to receive(:add_labels).with(["jansa/yes?", "test/foo?"])
         expect(issue).not_to receive(:add_comment)
       end
     end

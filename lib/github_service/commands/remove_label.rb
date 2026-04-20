@@ -38,8 +38,14 @@ module GithubService
 
       def process_extracted_labels(issuer, valid_labels, _invalid_labels, unremovable)
         unless triage_member?(issuer)
-          valid_labels.each { |label| unremovable << label if Settings.labels.unremovable.include?(label) }
+          valid_labels.each { |label| unremovable << label if unremovable_label?(label) }
           unremovable.each  { |label| valid_labels.delete(label) }
+        end
+      end
+
+      def unremovable_label?(label)
+        Array(Settings.labels.unremovable).any? do |unremovable_label_check|
+          unremovable_label_check.kind_of?(Regexp) ? label.match?(unremovable_label_check) : unremovable_label_check == label
         end
       end
 
