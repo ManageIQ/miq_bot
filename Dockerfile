@@ -12,9 +12,6 @@ LABEL name="miq-bot" \
       io.k8s.description="ManageIQ Bot is a developer automation tool." \
       io.openshift.tags="ManageIQ,miq-bot"
 
-RUN curl -L -o /usr/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 && \
-    chmod +x /usr/bin/dumb-init
-
 RUN ARCH=$(uname -m) && \
     dnf -y --setopt=protected_packages= remove redhat-release && \
     dnf -y install \
@@ -30,6 +27,7 @@ RUN ARCH=$(uname -m) && \
     dnf -y --setopt=tsflags=nodocs install \
       @development \
       cmake \
+      dumb-init \
       git \
       libcurl-devel \
       libffi-devel \
