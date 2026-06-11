@@ -79,4 +79,49 @@ describe CommitMonitorHandlers::CommitRange::GithubPrCommenter::DiffContentCheck
       )
     end
   end
+
+  context "with case-insensitive matching" do
+    context "for string type" do
+      let(:content_1) { "def a(variable)" }
+      let(:content_2) { "PUTS 'hi'" }
+      let(:content_3) { "Puts 'hello'" }
+
+      it "matches case-insensitively" do
+        stub_settings(:diff_content_checker => {"offenses" => {"puts" => {:severity => :error}}})
+        described_class.new.perform(batch_entry.id, branch.id, nil, nil)
+
+        batch_entry.reload
+        expect(batch_entry.result.length).to eq(2)
+        expect(batch_entry.result.first).to have_attributes(
+          :group   => file_path,
+          :locator => 2,
+          :message => "Detected `puts`"
+        )
+        expect(batch_entry.result.last).to have_attributes(
+          :group   => file_path,
+          :locator => 3,
+          :message => "Detected `puts`"
+        )
+      end
+    end
+
+    context "for regexp type" do
+      let(:content_1) { "def a(variable)" }
+      let(:content_2) { "# PUTS 'hi'" }
+      let(:content_3) { "Puts 'hello'" }
+
+      it "matches case-insensitively" do
+        stub_settings(:diff_content_checker => {"offenses" => {"^([^#]+|)\\bputs\\b" => {:severity => :error, :type => :regexp, :message => "Detected `puts`"}}})
+        described_class.new.perform(batch_entry.id, branch.id, nil, nil)
+
+        batch_entry.reload
+        expect(batch_entry.result.length).to eq(1)
+        expect(batch_entry.result.first).to have_attributes(
+          :group   => file_path,
+          :locator => 3,
+          :message => "Detected `puts`"
+        )
+      end
+    end
+  end
 end
