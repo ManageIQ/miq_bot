@@ -8,7 +8,7 @@ RSpec.describe GithubService::Commands::RemoveReviewer do
     allow(GithubService).to receive(:valid_assignee?).with("org/repo", "good_user").and_return(true)
     allow(GithubService).to receive(:valid_assignee?).with("org/repo", "bad_user").and_return(false)
 
-    allow(subject).to receive(:requested_reviewers).and_return(["listed_user"])
+    allow(issue).to receive(:requested_reviewers).and_return(["listed_user"])
   end
 
   after do

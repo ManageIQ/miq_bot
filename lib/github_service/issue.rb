@@ -20,6 +20,10 @@ module GithubService
       GithubService.delete_pull_request_review_request(fq_repo_name, number, "reviewers" => [user]) if pull_request?
     end
 
+    def requested_reviewers
+      GithubService.pull_request_review_requests(fq_repo_name, number).users.map(&:login) if pull_request?
+    end
+
     def set_milestone(milestone)
       if GithubService.valid_milestone?(fq_repo_name, milestone)
         milestone_id = GithubService.milestones(fq_repo_name)[milestone]
