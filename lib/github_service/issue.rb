@@ -13,11 +13,11 @@ module GithubService
     end
 
     def add_reviewer(users)
-      GithubService.request_pull_request_review(fq_repo_name, number, users) if pull_request?
+      GithubService.request_pull_request_review(fq_repo_name, number, "reviewers" => Array(users)) if pull_request?
     end
 
-    def remove_reviewer(user)
-      GithubService.delete_pull_request_review_request(fq_repo_name, number, "reviewers" => [user]) if pull_request?
+    def remove_reviewer(users)
+      GithubService.delete_pull_request_review_request(fq_repo_name, number, "reviewers" => Array(users)) if pull_request?
     end
 
     def requested_reviewers
