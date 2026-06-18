@@ -39,7 +39,7 @@ jobs:
       PGUSER: root
       PGPASSWORD: smartvm
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Set up system
       run: bin/before_install
     - name: Set up Ruby
@@ -55,6 +55,6 @@ jobs:
   ci-container-build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Test Container Build
       run: docker build .
