@@ -46,6 +46,10 @@ module GithubService
     end
     alias issues list_issues
 
+    def title_tags(title)
+      title.to_s.match(/^(?:\s*\[[\w-]+\])+/).to_s.scan(/\[([\w-]+)\]/).flatten
+    end
+
     def search_issues(*args)
       service.search_issues(*args).items.map { |issue| Issue.new(issue) }
     end
