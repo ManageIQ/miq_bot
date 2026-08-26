@@ -124,7 +124,7 @@ module GithubService
       tags = GithubService.title_tags(title)
       return unless tags.any? { |tag| tag.casecmp?("wip") }
 
-      title_without_tags = title.sub(/^(?:\s*\[[\w-]+\])+/, "").lstrip
+      title_without_tags = title.sub(GithubService::TITLE_TAGS_REGEX, "").lstrip
       tags.reject! { |tag| tag.casecmp?("wip") }
       update(:title => [tags.map { |tag| "[#{tag}]" }.join(" "), title_without_tags].reject(&:empty?).join(" "))
     end
