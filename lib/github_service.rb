@@ -1,4 +1,6 @@
 module GithubService
+  TITLE_TAGS_REGEX = /^(?:\s*\[[\w-]+\])+/
+
   ##
   # GithubService is miq-bot's interface to the Github API. It acts as a
   # wrapper around Octokit, delegating calls directly to the Octokit client as
@@ -45,6 +47,10 @@ module GithubService
       service.list_issues(*args).map { |issue| Issue.new(issue) }
     end
     alias issues list_issues
+
+    def title_tags(title)
+      title.to_s.match(TITLE_TAGS_REGEX).to_s.scan(/\[([\w-]+)\]/).flatten
+    end
 
     def search_issues(*args)
       service.search_issues(*args).items.map { |issue| Issue.new(issue) }

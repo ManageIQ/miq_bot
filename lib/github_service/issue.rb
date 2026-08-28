@@ -6,7 +6,6 @@ module GithubService
 
     STALE_LABEL       = 'stale'.freeze
     UNMERGEABLE_LABEL = 'unmergeable'.freeze
-    WIP_REGEX         = /^(?:\s*\[wip\])+/i
 
     def assign(user)
       GithubService.update_issue(fq_repo_name, number, "assignee" => user)
@@ -118,15 +117,20 @@ module GithubService
     private
 
     def wipify_title
-      if title !~ WIP_REGEX
-        update(:title => "[WIP] #{title}")
-      end
+      update(:title => "[WIP] #{title}") unless wip_title_tag?
     end
 
     def unwipify_title
-      if (match = title.match(WIP_REGEX))
-        update(:title => match.post_match.lstrip)
-      end
+      tags = GithubService.title_tags(title)
+      return unless tags.any? { |tag| tag.casecmp?("wip") }
+
+      title_without_tags = title.sub(GithubService::TITLE_TAGS_REGEX, "").lstrip
+      tags.reject! { |tag| tag.casecmp?("wip") }
+      update(:title => [tags.map { |tag| "[#{tag}]" }.join(" "), title_without_tags].reject(&:empty?).join(" "))
+    end
+
+    def wip_title_tag?
+      GithubService.title_tags(title).any? { |tag| tag.casecmp?("wip") }
     end
 
     def update(options)
