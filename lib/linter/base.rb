@@ -22,12 +22,19 @@ module Linter
           logger.error("#{log_header} Failed to run due to missing config files.")
           return failed_linter_offenses("missing config files")
         else
-          files += collected_files_to_lint(dir)
+          target_files = collected_files_to_lint(dir)
+          if target_files.empty?
+            logger.info("#{log_header} Skipping run due to no extractable files.")
+            next
+          end
+
+          files += target_files
           logger.info("#{log_header} Collected #{files.length} files.")
           logger.debug { "#{log_header} File list: #{files.inspect}" }
           run_linter(dir)
         end
       end
+      return if result.nil?
 
       offenses = parse_output(result.output)
       logger.info("#{log_header} Completed run with #{offenses.fetch_path('summary', 'offense_count')} offenses")
