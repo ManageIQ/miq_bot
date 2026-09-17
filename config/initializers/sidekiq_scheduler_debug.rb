@@ -9,23 +9,21 @@ module SidekiqScheduler
             job_name = job.tags[0]
             return unless job_name
 
-            Sidekiq.logger.debug("[SidekiqScheduler debug] on_post_trigger fired for #{job_name} at #{triggered_time}")
+            Sidekiq.logger.info("[SidekiqScheduler debug] on_post_trigger fired for #{job_name} at #{triggered_time}")
 
             begin
               SidekiqScheduler::Utils.update_job_last_time(job_name, triggered_time)
-            rescue => e
+            rescue Exception => e # rubocop:disable Lint/RescueException
               Sidekiq.logger.error("[SidekiqScheduler debug] update_job_last_time failed for #{job_name}: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
               raise
             end
 
             begin
               SidekiqScheduler::Utils.update_job_next_time(job_name, job.next_time)
-            rescue => e
+            rescue Exception => e # rubocop:disable Lint/RescueException
               Sidekiq.logger.error("[SidekiqScheduler debug] update_job_next_time failed for #{job_name}: #{e.class}: #{e.message}\n#{e.backtrace.join("\n")}")
               raise
             end
-
-            Sidekiq.logger.debug("[SidekiqScheduler debug] on_post_trigger completed for #{job_name}")
           end
         end
       end
