@@ -31,8 +31,8 @@ module Kubernetes
     system("kubectl delete pod #{pod_from_deployment(deployment)}")
   end
 
-  def self.console(deployment, cmd = "/bin/bash")
-    system("kubectl exec --stdin --tty #{pod_from_deployment(deployment)} -- #{cmd}")
+  def self.console(container, cmd = "/bin/bash")
+    system("kubectl exec --stdin --tty #{pod_from_container(container)} --container #{container} -- #{cmd}")
   end
 
   def self.tail_log(container)
@@ -202,10 +202,10 @@ namespace :production do
     puts "Restarting the queue-worker pod...Complete"
   end
 
-  desc "Open a console in production (deployment defaults to 'queue-worker')"
-  task :console, [:deployment] => :set_context do |_t, args|
-    deployment = args[:deployment] || "queue-worker"
-    exit 1 unless Kubernetes.console(deployment, "/bin/bash -c \"source container-assets/container_env; bash\"")
+  desc "Open a console in production (container defaults to 'queue-worker')"
+  task :console, [:container] => :set_context do |_t, args|
+    container = args[:container] || "queue-worker"
+    exit 1 unless Kubernetes.console(container, "/bin/bash -c \"source container-assets/container_env; bash\"")
   end
 
   desc "Tail container logs in production (container defaults to 'queue-worker')"
