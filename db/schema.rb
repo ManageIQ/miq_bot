@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_05_205548) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_01_165054) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_table "batch_entries", id: :serial, force: :cascade do |t|
     t.integer "batch_job_id"
@@ -46,9 +46,19 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_05_205548) do
     t.index ["name", "repo_id"], name: "index_branches_on_name_and_repo_id", unique: true
   end
 
+  create_table "issues", force: :cascade do |t|
+    t.bigint "repo_id", null: false
+    t.integer "number", null: false
+    t.datetime "last_processed_at"
+    t.index ["repo_id", "number"], name: "index_issues_on_repo_id_and_number", unique: true
+    t.index ["repo_id"], name: "index_issues_on_repo_id"
+  end
+
   create_table "repos", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
   end
+
+  add_foreign_key "issues", "repos"
 end
