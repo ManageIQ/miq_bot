@@ -1,4 +1,7 @@
 RSpec.describe GithubNotificationMonitor do
+  let(:repo)         { create(:repo, :name => fq_repo_name) }
+  let(:fq_repo_name) { "foo/bar" }
+
   subject(:notification_monitor) { described_class.new(fq_repo_name, [notification]) }
 
   let(:notification) { double('notification', :issue_number => issue.number) }
@@ -27,19 +30,13 @@ RSpec.describe GithubNotificationMonitor do
              :body       => "This is also a new comment.")
     ]
   end
-  let(:username)     { "miq-bot" }
-  let(:fq_repo_name) { "foo/bar" }
+  let(:username)           { "miq-bot" }
   let(:command_dispatcher) { double }
 
   describe "#process_notifications" do
     before do
       allow(Settings).to receive(:github_credentials).and_return(double(:username => username))
-      allow(File).to receive(:write)
-        .with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE, anything)
-      allow(YAML).to receive(:load_file)
-        .with(described_class::GITHUB_NOTIFICATION_MONITOR_YAML_FILE, {:permitted_classes=>[Date, Time]}) do
-        {"timestamps" => {fq_repo_name => {issue.number => 10.minutes.ago}}}
-      end
+      create(:issue, :repo => repo, :number => issue.number, :last_processed_at => 10.minutes.ago)
       allow(GithubService).to receive(:issue)
         .with(fq_repo_name, notification.issue_number).and_return(issue)
       allow(GithubService).to receive(:issue_comments)
