@@ -2,6 +2,7 @@ class Repo < ActiveRecord::Base
   BASE_PATH = Rails.root.join("repos")
 
   has_many :branches, :dependent => :destroy
+  has_many :issues,   :dependent => :destroy
 
   validates :name, :presence => true, :uniqueness => true
 

@@ -1,8 +1,6 @@
 class GithubNotificationMonitor
-  GITHUB_NOTIFICATION_MONITOR_YAML_FILE = Rails.root.join("config", "github_notification_monitor.yml")
-
   COMMANDS = Hash.new do |h, k|
-    normalized = k.to_s.gsub("-", "_")            # Support - or _ in command
+    normalized = k.to_s.tr("-", "_")              # Support - or _ in command
     normalized.chop! if normalized.end_with?("s") # Support singular or plural
     h[normalized]    if h.key?(normalized)
   end.merge(
@@ -18,6 +16,7 @@ class GithubNotificationMonitor
 
   def initialize(fq_repo_name, notifications)
     @username = Settings.github_credentials.username
+    @repo = Repo.find_by!(:name => fq_repo_name)
     @fq_repo_name = fq_repo_name
     @notifications = notifications
   end
@@ -32,7 +31,7 @@ class GithubNotificationMonitor
 
   # A notification only notifies about a change to an issue thread, but
   # not which specific comments were added.  Thus, we keep track of the
-  # last_processed_timestamp, and check every comment in the issue thread
+  # last_processed_at timestamp, and check every comment in the issue thread
   # skipping them until we are at the last processed comment.
   def process_notification(notification)
     if notification.issue_number.present?
@@ -59,36 +58,11 @@ class GithubNotificationMonitor
       return
     end
 
-    last_processed_timestamp = timestamps[issue.number] || Time.at(0)
-    return if timestamp <= last_processed_timestamp
+    issue_record = @repo.issues.find_or_initialize_by(:number => issue.number)
+    return if issue_record.last_processed_at && timestamp <= issue_record.last_processed_at
 
     @dispatcher.dispatch!(:issuer => author, :text => body)
-    update_timestamp(timestamp, issue.number)
-  end
-
-  def timestamps
-    timestamps_full_hash["timestamps"][@fq_repo_name]
-  end
-
-  def update_timestamp(updated_at, issue_number)
-    timestamps[issue_number] = updated_at
-    save_timestamps
-  end
-
-  def timestamps_full_hash
-    @timestamps_full_hash ||=
-      (YAML.load_file(GITHUB_NOTIFICATION_MONITOR_YAML_FILE, :permitted_classes => [Date, Time]) || {}).tap do |h|
-        h["timestamps"] ||= {}
-        h["timestamps"][@fq_repo_name] ||= {}
-      end
-  rescue Errno::ENOENT
-    logger.warn("#{Time.now} #{GITHUB_NOTIFICATION_MONITOR_YAML_FILE} was missing, recreating it...")
-    FileUtils.touch(GITHUB_NOTIFICATION_MONITOR_YAML_FILE)
-    retry
-  end
-
-  def save_timestamps
-    File.write(GITHUB_NOTIFICATION_MONITOR_YAML_FILE, timestamps_full_hash.to_yaml)
+    issue_record.update!(:last_processed_at => timestamp)
   end
 
   def logger
