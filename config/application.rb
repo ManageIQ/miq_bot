@@ -9,7 +9,7 @@ Bundler.require(*Rails.groups)
 require "sidekiq/api"
 
 module MiqBot
-  VERSION = "0.32.4".freeze
+  VERSION = "0.32.5".freeze
 
   def self.version
     @version ||=
