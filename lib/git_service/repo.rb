@@ -20,7 +20,8 @@ module GitService
 
         Rails.logger.info("[git_fetch] Fetching #{@repo.name} remote=#{remote.name}")
         started = Time.now
-        rugged_repo.fetch(remote.name, **fetch_options)
+        # Workaround for a suspected libgit2 deadlock if GC runs mid-fetch. See GcGuard.
+        GcGuard.without_gc { rugged_repo.fetch(remote.name, **fetch_options) }
         Rails.logger.info("[git_fetch] Fetched #{@repo.name} remote=#{remote.name} elapsed=#{((Time.now - started) * 1000).round}ms")
       end
     end
