@@ -10,15 +10,19 @@
 # different orderings -- confirm against the bundled libgit2 version.
 #   GIT_OPT_SET_SERVER_CONNECT_TIMEOUT = 39
 #   GIT_OPT_SET_SERVER_TIMEOUT         = 41
+#
+# git_libgit2_opts is variadic in C, so it must be declared with
+# TYPE_VARIADIC and typed arguments. Declaring it as a fixed (int, int)
+# function silently fails to pass the value on some ABIs (e.g. arm64).
 require 'fiddle'
 require 'rugged'
 
 git_libgit2_opts = Fiddle::Function.new(
   Fiddle::Handle::DEFAULT["git_libgit2_opts"],
-  [Fiddle::TYPE_INT, Fiddle::TYPE_INT],
+  [Fiddle::TYPE_INT, Fiddle::TYPE_VARIADIC],
   Fiddle::TYPE_INT
 )
 
 timeout_ms = 5.minutes.in_milliseconds.to_i
-git_libgit2_opts.call(39, timeout_ms) # GIT_OPT_SET_SERVER_CONNECT_TIMEOUT
-git_libgit2_opts.call(41, timeout_ms) # GIT_OPT_SET_SERVER_TIMEOUT
+git_libgit2_opts.call(39, Fiddle::TYPE_INT, timeout_ms) # GIT_OPT_SET_SERVER_CONNECT_TIMEOUT
+git_libgit2_opts.call(41, Fiddle::TYPE_INT, timeout_ms) # GIT_OPT_SET_SERVER_TIMEOUT
