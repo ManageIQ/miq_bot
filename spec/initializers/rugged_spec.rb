@@ -25,25 +25,30 @@ RSpec.describe "config/initializers/rugged" do
     expect(libgit2_enum_value("GIT_OPT_SET_SERVER_TIMEOUT")).to eq(41)
   end
 
-  # GIT_OPT_SET_SERVER_CONNECT_TIMEOUT and GIT_OPT_SET_SERVER_TIMEOUT write to
-  # these two exported globals in libgit2's socket stream. Read them back
-  # directly via dlsym rather than calling git_libgit2_opts as a variadic GET,
-  # which crashes on arm64 due to Fiddle's variadic ABI limitations.
-  def libgit2_stream_global(name)
+  # Read the values back through the public GET options. git_libgit2_opts is
+  # variadic, so it must be declared with TYPE_VARIADIC; a fixed-arity
+  # declaration silently drops the argument on some ABIs (e.g. arm64).
+  def libgit2_get_int_opt(opt)
     require 'fiddle'
-    sym = Fiddle::Handle::DEFAULT[name]
-    Fiddle::Pointer.new(sym)[0, Fiddle::SIZEOF_INT].unpack1("i")
-  rescue Fiddle::DLError
-    skip "#{name} is not exported by the bundled libgit2 (internal symbol)"
+    git_libgit2_opts = Fiddle::Function.new(
+      Fiddle::Handle::DEFAULT["git_libgit2_opts"],
+      [Fiddle::TYPE_INT, Fiddle::TYPE_VARIADIC],
+      Fiddle::TYPE_INT
+    )
+    buf = Fiddle::Pointer.malloc(Fiddle::SIZEOF_INT, Fiddle::RUBY_FREE)
+    rc  = git_libgit2_opts.call(opt, Fiddle::TYPE_VOIDP, buf)
+    raise "git_libgit2_opts(#{opt}) failed with #{rc}" unless rc.zero?
+
+    buf[0, Fiddle::SIZEOF_INT].unpack1("i")
   end
 
   it "sets libgit2 server connect timeout to 5 minutes" do
-    expect(libgit2_stream_global("git_socket_stream__connect_timeout"))
+    expect(libgit2_get_int_opt(libgit2_enum_value("GIT_OPT_GET_SERVER_CONNECT_TIMEOUT")))
       .to eq(5.minutes.in_milliseconds.to_i)
   end
 
   it "sets libgit2 server read/write timeout to 5 minutes" do
-    expect(libgit2_stream_global("git_socket_stream__timeout"))
+    expect(libgit2_get_int_opt(libgit2_enum_value("GIT_OPT_GET_SERVER_TIMEOUT")))
       .to eq(5.minutes.in_milliseconds.to_i)
   end
 end
