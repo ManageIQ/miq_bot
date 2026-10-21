@@ -11,17 +11,20 @@ module GitService
       Diff.new(rugged_diff(other_ref))
     end
 
+    # Object database reads run inside GcGuard. See GitService::GcGuard.
     def parent_oids
       @parent_oids ||= rugged_commit.parent_oids
     end
 
     def rugged_commit
-      @rugged_commit ||= Rugged::Commit.lookup(rugged_repo, commit_oid)
+      @rugged_commit ||= GcGuard.without_gc { Rugged::Commit.lookup(rugged_repo, commit_oid) }
     end
 
     def rugged_diff(other_ref = parent_oids.first)
-      other_commit = Rugged::Commit.lookup(rugged_repo, other_ref)
-      other_commit.diff(rugged_commit)
+      GcGuard.without_gc do
+        other_commit = Rugged::Commit.lookup(rugged_repo, other_ref)
+        other_commit.diff(rugged_commit)
+      end
     end
 
     def formatted_author
