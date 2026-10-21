@@ -10,7 +10,7 @@ module GitService
     end
 
     def extract_file(path, dest_dir, merged = false)
-      content = content_at(path, merged)
+      content = GcGuard.without_gc { content_at(path, merged) }
       return false unless content
 
       file_type, perm = filemode_at(path, merged)
@@ -35,11 +35,16 @@ module GitService
     end
 
     def diff(merge_target = nil)
-      Diff.new(target_for_reference(merge_target_ref_name(merge_target)).diff(merge_tree))
+      GcGuard.without_gc do
+        Diff.new(target_for_reference(merge_target_ref_name(merge_target)).diff(merge_tree))
+      end
     end
 
+    # Methods below that read from the object database run inside GcGuard, since
+    # libgit2 can deadlock if a GC finalizes another Rugged::Repository while it
+    # holds the mwindow mutex. See GitService::GcGuard.
     def exists?
-      rugged_repo.branches.exists?(ref_name)
+      GcGuard.without_gc { rugged_repo.branches.exists?(ref_name) }
     end
 
     def mergeable?
@@ -50,16 +55,22 @@ module GitService
     end
 
     def merge_base(merge_target = nil)
-      rugged_repo.merge_base(target_for_reference(merge_target_ref_name(merge_target)), target_for_reference(ref_name))
+      GcGuard.without_gc do
+        rugged_repo.merge_base(target_for_reference(merge_target_ref_name(merge_target)), target_for_reference(ref_name))
+      end
     end
 
     def merge_index(merge_target = nil) # Rugged::Index for a merge of this branch
-      rugged_repo.merge_commits(target_for_reference(merge_target_ref_name(merge_target)), target_for_reference(ref_name))
+      GcGuard.without_gc do
+        rugged_repo.merge_commits(target_for_reference(merge_target_ref_name(merge_target)), target_for_reference(ref_name))
+      end
     end
 
     def merge_tree # Rugged::Tree object for the merge of this branch
-      tree_ref = merge_index.write_tree(rugged_repo)
-      rugged_repo.lookup(tree_ref)
+      GcGuard.without_gc do
+        tree_ref = merge_index.write_tree(rugged_repo)
+        rugged_repo.lookup(tree_ref)
+      end
     rescue Rugged::IndexError
       raise UnmergeableError
     ensure
@@ -73,23 +84,28 @@ module GitService
     end
 
     def tip_tree
-      tip_commit.tree
+      GcGuard.without_gc { tip_commit.tree }
     end
 
     def target_for_reference(reference) # Rugged::Commit for a given refname i.e. "refs/remotes/origin/master"
-      rugged_repo.references[reference].target
+      GcGuard.without_gc { rugged_repo.references[reference].target }
     end
 
     def tip_files
-      list_files_in_tree(tip_tree.oid)
+      GcGuard.without_gc { list_files_in_tree(tip_tree.oid) }
     end
 
     def commit_ids_since(starting_point)
-      range_walker(starting_point).collect(&:oid).reverse
+      GcGuard.without_gc { range_walker(starting_point).collect(&:oid).reverse }
     end
 
     def commit(commit_oid)
       Commit.new(rugged_repo, commit_oid)
+    end
+
+    # @return [Hash{String => Hash}] Commit#details_hash for each commit oid
+    def commits_details(commit_oids)
+      commit_oids.each_with_object({}) { |oid, h| h[oid] = commit(oid).details_hash }
     end
 
     private
