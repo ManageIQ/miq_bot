@@ -113,10 +113,7 @@ class CommitMonitor
   end
 
   def all_commits_details
-    @all_commits_details ||=
-      all_commits.each_with_object({}) do |commit, h|
-        h[commit] = branch.git_service.commit(commit).details_hash
-      end
+    @all_commits_details ||= branch.git_service.commits_details(all_commits)
   end
 
   def save_branch_record

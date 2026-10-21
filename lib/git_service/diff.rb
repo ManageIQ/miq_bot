@@ -6,12 +6,14 @@ module GitService
       @raw_diff = raw_diff
     end
 
+    # Rugged diffs load blobs lazily from the object database, so these run
+    # inside GcGuard. See GitService::GcGuard.
     def new_files
-      raw_diff.deltas.collect { |delta| delta.try(:new_file).try(:[], :path) }.compact
+      GcGuard.without_gc { raw_diff.deltas.collect { |delta| delta.try(:new_file).try(:[], :path) }.compact }
     end
 
     def with_each_patch(&block)
-      raw_diff.patches.each(&block)
+      GcGuard.without_gc { raw_diff.patches.each(&block) }
     end
 
     def with_each_hunk
@@ -27,20 +29,22 @@ module GitService
     end
 
     def file_status
-      raw_diff.patches.each_with_object({}) do |patch, h|
-        if new_file = patch.delta.new_file.try(:[], :path)
-          additions = h.fetch_path(new_file, :additions) || 0
-          h.store_path(new_file, :additions, (additions + patch.additions))
-        end
-        if old_file = patch.delta.old_file.try(:[], :path)
-          deletions = h.fetch_path(old_file, :deletions) || 0
-          h.store_path(new_file, :deletions, (deletions + patch.deletions))
+      GcGuard.without_gc do
+        raw_diff.patches.each_with_object({}) do |patch, h|
+          if new_file = patch.delta.new_file.try(:[], :path)
+            additions = h.fetch_path(new_file, :additions) || 0
+            h.store_path(new_file, :additions, (additions + patch.additions))
+          end
+          if old_file = patch.delta.old_file.try(:[], :path)
+            deletions = h.fetch_path(old_file, :deletions) || 0
+            h.store_path(new_file, :deletions, (deletions + patch.deletions))
+          end
         end
       end
     end
 
     def status_summary
-      changed, added, deleted = raw_diff.stat
+      changed, added, deleted = GcGuard.without_gc { raw_diff.stat }
       [
         changed.positive? ? "#{changed} #{"file".pluralize(changed)} changed" : nil,
         added.positive? ? "#{added} #{"insertion".pluralize(added)}(+)" : nil,
