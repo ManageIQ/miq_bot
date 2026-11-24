@@ -74,7 +74,7 @@ module IbmCloud
   def self.login
     return false unless api_key
 
-    system({"IBMCLOUD_API_KEY" => api_key}, "ibmcloud login -r us-east -g manageiq", [:out, :err] => "/dev/null")
+    system({"IBMCLOUD_API_KEY" => api_key, "IBMCLOUD_VERSION_CHECK" => "false"}, "ibmcloud login -r us-east -g manageiq", [:out, :err] => "/dev/null")
   end
 
   def self.ks_cluster_config(cluster_name)
